@@ -28,20 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             this.SuspendLayout();
+            // 
+            // bigLabel1
+            // 
+            this.bigLabel1.AutoSize = true;
+            this.bigLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.bigLabel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bigLabel1.Font = new System.Drawing.Font("Segoe UI", 25F);
+            this.bigLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.bigLabel1.Location = new System.Drawing.Point(0, 0);
+            this.bigLabel1.Name = "bigLabel1";
+            this.bigLabel1.Size = new System.Drawing.Size(123, 57);
+            this.bigLabel1.TabIndex = 1;
+            this.bigLabel1.Text = "inicio";
             // 
             // inicioForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.bigLabel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "inicioForm";
             this.Text = "inicioForm";
             this.Load += new System.EventHandler(this.inicioForm_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+
+        private ReaLTaiizor.Controls.BigLabel bigLabel1;
     }
 }

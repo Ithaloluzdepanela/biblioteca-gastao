@@ -75,6 +75,7 @@
     <Compile Include="mainForm.Designer.cs">
       <DependentUpon>mainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="mdiProperties.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="relForm.cs">
@@ -89,6 +90,12 @@
     <Compile Include="userForm.Designer.cs">
       <DependentUpon>userForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="empresForm.resx">
+      <DependentUpon>empresForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="findForm.resx">
+      <DependentUpon>findForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="inicioForm.resx">
       <DependentUpon>inicioForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -105,6 +112,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="relForm.resx">
+      <DependentUpon>relForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="userForm.resx">
+      <DependentUpon>userForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

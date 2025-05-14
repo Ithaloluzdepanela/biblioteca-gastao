@@ -23,6 +23,7 @@ namespace gastao_Biblioteca
         public mainForm()
         {
             InitializeComponent();
+            mdiProp();
             inicio = new inicioForm();
             inicio.FormClosed += Inicio_FormClosed;
             inicio.MdiParent = this;
@@ -31,6 +32,14 @@ namespace gastao_Biblioteca
             picTheme.BackgroundImage = BibliotecaGastao.Properties.Resources.icons8_símbolo_da_lua_16;
             theme = false;
         }
+
+        //Imersão das telas dentro da aplicação
+        private void mdiProp()
+        {
+            this.SetBevel(false);
+            Controls.OfType<MdiClient>().FirstOrDefault().BackColor = Color.FromArgb(232, 234, 237);
+        }
+
         //Variantes Usadas
         bool bookExpand = false,
              menuExpand = false,
@@ -244,7 +253,7 @@ namespace gastao_Biblioteca
             empres = null;
         }
 
-       
+
         //Painel Relatórios
         private void btnRel_Click(object sender, EventArgs e)
         {

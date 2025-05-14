@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8127EF53-902F-4773-9B4C-B901C1FB1FE7}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>gastao_Biblioteca</RootNamespace>
+    <AssemblyName>gastao_Biblioteca</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="ReaLTaiizor, Version=3.8.1.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReaLTaiizor.3.8.1.2\lib\net48\ReaLTaiizor.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="empresForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="empresForm.Designer.cs">
+      <DependentUpon>empresForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="findForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="findForm.Designer.cs">
+      <DependentUpon>findForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="inicioForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inicioForm.Designer.cs">
+      <DependentUpon>inicioForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="mainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mainForm.Designer.cs">
+      <DependentUpon>mainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="relForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="relForm.Designer.cs">
+      <DependentUpon>relForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="userForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="userForm.Designer.cs">
+      <DependentUpon>userForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="empresForm.resx">
+      <DependentUpon>empresForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="findForm.resx">
+      <DependentUpon>findForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inicioForm.resx">
+      <DependentUpon>inicioForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mainForm.resx">
+      <DependentUpon>mainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="relForm.resx">
+      <DependentUpon>relForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="userForm.resx">
+      <DependentUpon>userForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\eepgv-icon.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-adicionar-usuário-masculino-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-cardápio-16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-cardápio-50.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-casa-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-configurações-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-estante-20 %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-estante-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-grupo-de-usuários-16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-grupo-de-usuários-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-grupo-de-usuários-30.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-grupo-de-usuários-30B.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-livro-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-livroentrar-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-livros-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-livrosair-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-pesquisar-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-relatório-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-remover-usuário-masculino-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-sair-10.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-sair-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-símbolo-da-lua-16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-símbolo-da-lua-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-sol-16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-sol-20.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

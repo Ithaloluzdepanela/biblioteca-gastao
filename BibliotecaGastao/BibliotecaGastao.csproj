@@ -57,6 +57,7 @@
     <Compile Include="empresForm.Designer.cs">
       <DependentUpon>empresForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="emprestimo.cs" />
     <Compile Include="findForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,6 +70,7 @@
     <Compile Include="inicioForm.Designer.cs">
       <DependentUpon>inicioForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="livro.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +92,7 @@
     <Compile Include="userForm.Designer.cs">
       <DependentUpon>userForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="usuarios.cs" />
     <EmbeddedResource Include="empresForm.resx">
       <DependentUpon>empresForm.cs</DependentUpon>
     </EmbeddedResource>

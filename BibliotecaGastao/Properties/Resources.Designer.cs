@@ -63,6 +63,26 @@ namespace BibliotecaGastao.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Brasão_Gastão {
+            get {
+                object obj = ResourceManager.GetObject("Brasão Gastão", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Brasão_Gastão_1_ {
+            get {
+                object obj = ResourceManager.GetObject("Brasão Gastão(1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap eepgv_icon {
             get {
                 object obj = ResourceManager.GetObject("eepgv-icon", resourceCulture);

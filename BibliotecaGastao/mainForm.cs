@@ -22,13 +22,13 @@ namespace gastao_Biblioteca
 
         public mainForm()
         {
+            this.Hide();
             InitializeComponent();
             mdiProp();
             inicio = new inicioForm();
-            inicio.FormClosed += Inicio_FormClosed;
             inicio.MdiParent = this;
-            inicio.Dock = DockStyle.Fill;
             inicio.Show();
+            inicio.Dock = DockStyle.Fill;
             picTheme.BackgroundImage = BibliotecaGastao.Properties.Resources.icons8_símbolo_da_lua_16;
             theme = false;
         }

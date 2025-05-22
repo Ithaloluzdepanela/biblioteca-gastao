@@ -13,11 +13,26 @@ namespace BibliotecaGastao
         /// Ponto de entrada principal para o aplicativo.
         /// </summary>
         [STAThread]
+
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new mainForm());
+
+
+            // Mostra o Login primeiro
+            loginForm login = new loginForm();
+
+
+            if (login.ShowDialog() == DialogResult.OK)
+            {
+                Application.Run(new mainForm());
+            }
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new loginForm());
+            
         }
     }
 }

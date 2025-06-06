@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class Usuario
+public class Usuarios
 {
     public int Id { get; set; }
     public string Nome { get; set; }
@@ -15,11 +15,11 @@ public class Usuario
     public string ConfirmarSenha { get; set; }
 
     // Lista compartilhada
-    public static List<Usuario> ListaUsuarios { get; set; } = new List<Usuario>();
+    public static List<Usuarios> ListaUsuarios { get; set; } = new List<Usuarios>();
 
-    public Usuario() { }
+    public Usuarios() { }
 
-    public Usuario(int id, string nome, string tipoUsuario, string cpf, DateTime dataNascimento,
+    public Usuarios(int id, string nome, string tipoUsuario, string cpf, DateTime dataNascimento,
                    string telefone, string email, string turma, string senha, string confirmarSenha)
     {
         Id = id;

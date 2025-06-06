@@ -17,7 +17,7 @@ namespace BibliotecaApp
     public partial class UsuarioForm : Form
     {
 
-        public UsuarioForm(List<Usuario> usuarios)
+        public UsuarioForm(List<Usuarios> usuarios)
         {
 
             InitializeComponent();
@@ -579,9 +579,9 @@ namespace BibliotecaApp
             // Limpar campos
             LimparCampos();
 
-            int novoId = Usuario.ListaUsuarios.Count + 1;
+            int novoId = Usuarios.ListaUsuarios.Count + 1;
 
-            Usuario usuario = new Usuario
+            Usuarios usuario = new Usuarios
             {
                 Id = novoId,
                 Nome = nome,
@@ -595,7 +595,7 @@ namespace BibliotecaApp
                 ConfirmarSenha = confirmar
             };
 
-            Usuario.ListaUsuarios.Add(usuario);
+            Usuarios.ListaUsuarios.Add(usuario);
             MessageBox.Show("Cadastro concluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             this.DialogResult = DialogResult.OK;

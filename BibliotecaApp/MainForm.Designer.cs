@@ -102,7 +102,7 @@
             // picMax
             // 
             this.picMax.BackColor = System.Drawing.Color.Transparent;
-            this.picMax.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_verificar_todos_os_20;
+            this.picMax.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_quadrado_arredondado_20;
             this.picMax.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.picMax.Cursor = System.Windows.Forms.Cursors.Hand;
             this.picMax.Location = new System.Drawing.Point(39, 3);

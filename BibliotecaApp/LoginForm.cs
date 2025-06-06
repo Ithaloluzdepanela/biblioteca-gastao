@@ -17,9 +17,26 @@ namespace BibliotecaApp
             InitializeComponent();
         }
         // teste de commit
+        public static bool cancelar = false;
 
-        private void LoginForm_Load(object sender, EventArgs e)
+        private void pictureBox2_Click(object sender, EventArgs e)
         {
+            Application.Exit();
+        }
+
+        private void Btn_Login_Click(object sender, EventArgs e)
+        {
+            if (Txt_Email.Text =="Admin" && Txt_Senha.Text =="1234")
+            {
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("Acesso negado");
+                Txt_Email.Text = "";
+                Txt_Senha.Text = "";
+                Txt_Email.Focus();
+            }
 
         }
     }

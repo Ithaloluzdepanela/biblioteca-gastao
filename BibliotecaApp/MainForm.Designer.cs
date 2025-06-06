@@ -30,38 +30,53 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.picMenu = new System.Windows.Forms.PictureBox();
             this.menu = new System.Windows.Forms.FlowLayoutPanel();
             this.incioContainer = new System.Windows.Forms.Panel();
-            this.usuarioContainer = new System.Windows.Forms.Panel();
-            this.livroContainer = new System.Windows.Forms.Panel();
-            this.relContainer = new System.Windows.Forms.Panel();
-            this.sairContainer = new System.Windows.Forms.Panel();
-            this.menuTransition = new System.Windows.Forms.Timer(this.components);
             this.btnInicio = new System.Windows.Forms.Button();
+            this.usuarioContainer = new System.Windows.Forms.Panel();
             this.btnUsuario = new System.Windows.Forms.Button();
+            this.livroContainer = new System.Windows.Forms.Panel();
             this.btnLivro = new System.Windows.Forms.Button();
+            this.relContainer = new System.Windows.Forms.Panel();
             this.btnRel = new System.Windows.Forms.Button();
+            this.sairContainer = new System.Windows.Forms.Panel();
             this.btnSair = new System.Windows.Forms.Button();
-            this.picMenu = new System.Windows.Forms.PictureBox();
+            this.menuTransition = new System.Windows.Forms.Timer(this.components);
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picMenu)).BeginInit();
             this.menu.SuspendLayout();
             this.incioContainer.SuspendLayout();
             this.usuarioContainer.SuspendLayout();
             this.livroContainer.SuspendLayout();
             this.relContainer.SuspendLayout();
             this.sairContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picMenu)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.pictureBox2);
             this.panel1.Controls.Add(this.picMenu);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1024, 30);
             this.panel1.TabIndex = 0;
+            // 
+            // picMenu
+            // 
+            this.picMenu.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_cardápio_25;
+            this.picMenu.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.picMenu.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picMenu.Location = new System.Drawing.Point(5, 0);
+            this.picMenu.Name = "picMenu";
+            this.picMenu.Size = new System.Drawing.Size(30, 30);
+            this.picMenu.TabIndex = 2;
+            this.picMenu.TabStop = false;
+            this.picMenu.Click += new System.EventHandler(this.picMenu_Click);
             // 
             // menu
             // 
@@ -87,51 +102,6 @@
             this.incioContainer.Size = new System.Drawing.Size(200, 70);
             this.incioContainer.TabIndex = 2;
             // 
-            // usuarioContainer
-            // 
-            this.usuarioContainer.Controls.Add(this.btnUsuario);
-            this.usuarioContainer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.usuarioContainer.Location = new System.Drawing.Point(3, 79);
-            this.usuarioContainer.Name = "usuarioContainer";
-            this.usuarioContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.usuarioContainer.Size = new System.Drawing.Size(200, 70);
-            this.usuarioContainer.TabIndex = 4;
-            // 
-            // livroContainer
-            // 
-            this.livroContainer.Controls.Add(this.btnLivro);
-            this.livroContainer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.livroContainer.Location = new System.Drawing.Point(3, 155);
-            this.livroContainer.Name = "livroContainer";
-            this.livroContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.livroContainer.Size = new System.Drawing.Size(200, 70);
-            this.livroContainer.TabIndex = 5;
-            // 
-            // relContainer
-            // 
-            this.relContainer.Controls.Add(this.btnRel);
-            this.relContainer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.relContainer.Location = new System.Drawing.Point(3, 231);
-            this.relContainer.Name = "relContainer";
-            this.relContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.relContainer.Size = new System.Drawing.Size(200, 70);
-            this.relContainer.TabIndex = 6;
-            // 
-            // sairContainer
-            // 
-            this.sairContainer.Controls.Add(this.btnSair);
-            this.sairContainer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sairContainer.Location = new System.Drawing.Point(3, 307);
-            this.sairContainer.Name = "sairContainer";
-            this.sairContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.sairContainer.Size = new System.Drawing.Size(200, 70);
-            this.sairContainer.TabIndex = 7;
-            // 
-            // menuTransition
-            // 
-            this.menuTransition.Interval = 15;
-            this.menuTransition.Tick += new System.EventHandler(this.menuTransition_Tick);
-            // 
             // btnInicio
             // 
             this.btnInicio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
@@ -147,6 +117,16 @@
             this.btnInicio.Text = "Início";
             this.btnInicio.UseVisualStyleBackColor = false;
             this.btnInicio.Click += new System.EventHandler(this.btnInicio_Click);
+            // 
+            // usuarioContainer
+            // 
+            this.usuarioContainer.Controls.Add(this.btnUsuario);
+            this.usuarioContainer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.usuarioContainer.Location = new System.Drawing.Point(3, 79);
+            this.usuarioContainer.Name = "usuarioContainer";
+            this.usuarioContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.usuarioContainer.Size = new System.Drawing.Size(200, 70);
+            this.usuarioContainer.TabIndex = 4;
             // 
             // btnUsuario
             // 
@@ -164,6 +144,16 @@
             this.btnUsuario.UseVisualStyleBackColor = false;
             this.btnUsuario.Click += new System.EventHandler(this.btnUsuario_Click);
             // 
+            // livroContainer
+            // 
+            this.livroContainer.Controls.Add(this.btnLivro);
+            this.livroContainer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.livroContainer.Location = new System.Drawing.Point(3, 155);
+            this.livroContainer.Name = "livroContainer";
+            this.livroContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.livroContainer.Size = new System.Drawing.Size(200, 70);
+            this.livroContainer.TabIndex = 5;
+            // 
             // btnLivro
             // 
             this.btnLivro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
@@ -179,6 +169,16 @@
             this.btnLivro.Text = "Livros";
             this.btnLivro.UseVisualStyleBackColor = false;
             this.btnLivro.Click += new System.EventHandler(this.btnLivro_Click);
+            // 
+            // relContainer
+            // 
+            this.relContainer.Controls.Add(this.btnRel);
+            this.relContainer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.relContainer.Location = new System.Drawing.Point(3, 231);
+            this.relContainer.Name = "relContainer";
+            this.relContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.relContainer.Size = new System.Drawing.Size(200, 70);
+            this.relContainer.TabIndex = 6;
             // 
             // btnRel
             // 
@@ -196,6 +196,16 @@
             this.btnRel.UseVisualStyleBackColor = false;
             this.btnRel.Click += new System.EventHandler(this.btnRel_Click);
             // 
+            // sairContainer
+            // 
+            this.sairContainer.Controls.Add(this.btnSair);
+            this.sairContainer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.sairContainer.Location = new System.Drawing.Point(3, 307);
+            this.sairContainer.Name = "sairContainer";
+            this.sairContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.sairContainer.Size = new System.Drawing.Size(200, 70);
+            this.sairContainer.TabIndex = 7;
+            // 
             // btnSair
             // 
             this.btnSair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
@@ -211,17 +221,22 @@
             this.btnSair.Text = "Sair";
             this.btnSair.UseVisualStyleBackColor = false;
             // 
-            // picMenu
+            // menuTransition
             // 
-            this.picMenu.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_cardápio_25;
-            this.picMenu.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.picMenu.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picMenu.Location = new System.Drawing.Point(5, 0);
-            this.picMenu.Name = "picMenu";
-            this.picMenu.Size = new System.Drawing.Size(30, 30);
-            this.picMenu.TabIndex = 2;
-            this.picMenu.TabStop = false;
-            this.picMenu.Click += new System.EventHandler(this.picMenu_Click);
+            this.menuTransition.Interval = 15;
+            this.menuTransition.Tick += new System.EventHandler(this.menuTransition_Tick);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox2.Image = global::BibliotecaApp.Properties.Resources.icons8_x_20;
+            this.pictureBox2.Location = new System.Drawing.Point(1001, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox2.TabIndex = 3;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // MainForm
             // 
@@ -235,14 +250,16 @@
             this.IsMdiContainer = true;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainForm";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picMenu)).EndInit();
             this.menu.ResumeLayout(false);
             this.incioContainer.ResumeLayout(false);
             this.usuarioContainer.ResumeLayout(false);
             this.livroContainer.ResumeLayout(false);
             this.relContainer.ResumeLayout(false);
             this.sairContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picMenu)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -263,6 +280,7 @@
         private System.Windows.Forms.Panel sairContainer;
         private System.Windows.Forms.Button btnSair;
         private System.Windows.Forms.Timer menuTransition;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }
 

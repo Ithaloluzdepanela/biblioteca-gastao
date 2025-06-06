@@ -10,17 +10,21 @@ using System.Windows.Forms;
 
 namespace BibliotecaApp
 {
-    public partial class LivrosForm : Form
+    public partial class CadastroLivroForm : Form
     {
-        public LivrosForm()
+        public CadastroLivroForm()
         {
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void CadastroLivroForm_Load(object sender, EventArgs e)
         {
-            CadastroLivroForm popup = new CadastroLivroForm ();
-            popup.ShowDialog();
+
+        }
+
+        private void Btn_Cancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

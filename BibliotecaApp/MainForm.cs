@@ -19,6 +19,7 @@ namespace BibliotecaApp
             mdiProp();
             btnIn();
         }
+       
 
 
         InicioForm inicio;
@@ -149,6 +150,21 @@ namespace BibliotecaApp
         private void Relatorios_FormClosed(object sender, FormClosedEventArgs e)
         {
             rel = null;
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            LoginForm f = new LoginForm();
+            f.ShowDialog();
+            if (LoginForm.cancelar = false)
+            {
+                Application.Exit();
+            }
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
         //
     }

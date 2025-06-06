@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CadastroLivroForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CadastroLivroForm.Designer.cs">
+      <DependentUpon>CadastroLivroForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="InicioForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +96,9 @@
     <Compile Include="UsuarioForm.Designer.cs">
       <DependentUpon>UsuarioForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CadastroLivroForm.resx">
+      <DependentUpon>CadastroLivroForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InicioForm.resx">
       <DependentUpon>InicioForm.cs</DependentUpon>
     </EmbeddedResource>

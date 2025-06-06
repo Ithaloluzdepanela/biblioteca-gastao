@@ -17,9 +17,10 @@ namespace BibliotecaApp
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Pic_Cadastrar_Click(object sender, EventArgs e)
         {
-            CadastroLivroForm popup = new CadastroLivroForm ();
+            CadastroLivroForm popup = new CadastroLivroForm();
+            Location = popup.Location;
             popup.ShowDialog();
         }
     }

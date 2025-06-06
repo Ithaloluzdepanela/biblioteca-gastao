@@ -15,10 +15,7 @@ namespace BibliotecaApp
         public CadastroLivroForm()
         {
             InitializeComponent();
-        }
-
-        private void CadastroLivroForm_Load(object sender, EventArgs e)
-        {
+            this.StartPosition = FormStartPosition.CenterScreen;
 
         }
 
@@ -26,5 +23,6 @@ namespace BibliotecaApp
         {
             this.Close();
         }
+
     }
 }

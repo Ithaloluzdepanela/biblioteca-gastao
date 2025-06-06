@@ -30,7 +30,8 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.Pic_Cadastrar = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -46,28 +47,32 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Livros";
             // 
-            // button1
+            // Pic_Cadastrar
             // 
-            this.button1.Location = new System.Drawing.Point(311, 199);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(232, 174);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.Pic_Cadastrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
+            this.Pic_Cadastrar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Pic_Cadastrar.Image = global::BibliotecaApp.Properties.Resources.icons8_livros_30;
+            this.Pic_Cadastrar.Location = new System.Drawing.Point(712, 528);
+            this.Pic_Cadastrar.Name = "Pic_Cadastrar";
+            this.Pic_Cadastrar.Size = new System.Drawing.Size(40, 40);
+            this.Pic_Cadastrar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.Pic_Cadastrar.TabIndex = 2;
+            this.Pic_Cadastrar.TabStop = false;
+            this.Pic_Cadastrar.Click += new System.EventHandler(this.Pic_Cadastrar_Click);
             // 
             // LivrosForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 600);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.Pic_Cadastrar);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "LivrosForm";
             this.Text = "InicioForm";
+            ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -76,6 +81,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PictureBox Pic_Cadastrar;
     }
 }

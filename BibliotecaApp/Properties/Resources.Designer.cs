@@ -63,6 +63,26 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _8d7e22bfe4da9ba08eb4b469ea8c532f_quadrado_quadrado_arredondado {
+            get {
+                object obj = ResourceManager.GetObject("8d7e22bfe4da9ba08eb4b469ea8c532f-quadrado-quadrado-arredondado", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap botão_redondo {
+            get {
+                object obj = ResourceManager.GetObject("botão redondo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Brasão_da_Gastão {
             get {
                 object obj = ResourceManager.GetObject("Brasão da Gastão", resourceCulture);
@@ -176,6 +196,16 @@ namespace BibliotecaApp.Properties {
         internal static System.Drawing.Bitmap icons8_grupo_de_usuário_homem_homem_30 {
             get {
                 object obj = ResourceManager.GetObject("icons8-grupo-de-usuário-homem-homem-30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_grupo_de_usuário_homem_homem_301 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-grupo-de-usuário-homem-homem-301", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

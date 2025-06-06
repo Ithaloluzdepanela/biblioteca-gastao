@@ -20,29 +20,22 @@ namespace BibliotecaApp
             mdiProp();
             btnIn();
         }
-       
 
-
+        //Nome dos Forms
         InicioForm inicio;
         UsuarioForm usuario;
         LivrosForm livros;
         RelForm rel;
 
-
-        
         //Proporção dos Forms
         private void mdiProp()
         {
             this.SetBevel(false);
             Controls.OfType<MdiClient>().FirstOrDefault().BackColor = Color.FromArgb(232, 234, 237);
         }
-        //
         
-
-        //Expansão do menu
+        #region Expansão do menu
         bool menuExpand = false;
-       
-
         private void picMenu_Click(object sender, EventArgs e)
         {
             menuTransition.Start();
@@ -79,11 +72,12 @@ namespace BibliotecaApp
                 }
             }
         }
-        //
-        
+        #endregion
 
+        #region Botões forms
+        //Form Inicio
         
-        //Form inicio
+        //Variável criada para inicialização do Form de inicio no MDI
         private void btnInicio_Click(object sender, EventArgs e)
         {
             btnIn();
@@ -96,15 +90,11 @@ namespace BibliotecaApp
                 inicio.Dock = DockStyle.Fill;
                 inicio.Show();
          }
-        
-
         private void Inicio_FormClosed(object sender, FormClosedEventArgs e)
         {
             inicio = null;
         }
-        //
-
-
+        
         //Form usuário
         private void btnUsuario_Click(object sender, EventArgs e)
         {
@@ -119,9 +109,7 @@ namespace BibliotecaApp
         {
             usuario = null;
         }
-        //
-
-
+        
         //Form Livros
         private void btnLivro_Click(object sender, EventArgs e)
         {
@@ -136,7 +124,6 @@ namespace BibliotecaApp
         {
             livros = null;
         }
-        
 
         //Form rel
         private void btnRel_Click(object sender, EventArgs e)
@@ -162,8 +149,9 @@ namespace BibliotecaApp
                 Application.Exit();
             }
         }
+        #endregion
 
-        //Control box
+        #region Control box
         private void picExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -218,13 +206,6 @@ namespace BibliotecaApp
         {
             picMin.BackColor = Color.Transparent;
         }
-
-        
-        //
-
-
-
-
-       
+        #endregion
     }
 }

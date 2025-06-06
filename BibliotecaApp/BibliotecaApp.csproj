@@ -241,5 +241,14 @@
   <ItemGroup>
     <None Include="Resources\icons8-adicionar-usuário-masculino-30.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8d7e22bfe4da9ba08eb4b469ea8c532f-quadrado-quadrado-arredondado.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-grupo-de-usuário-homem-homem-301.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\botão redondo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

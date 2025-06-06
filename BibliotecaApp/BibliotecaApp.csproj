@@ -52,6 +52,10 @@
     <Compile Include="CadastroLivroForm.Designer.cs">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Elements\RoundedButton.cs" />
+    <Compile Include="Elements\RoundedComboBox.cs" />
+    <Compile Include="Elements\RoundedMaskedTextBox.cs" />
+    <Compile Include="Elements\RoundedTextBox.cs" />
     <Compile Include="InicioForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -153,6 +153,16 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_fuga_de_equipes_20 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-fuga-de-equipes-20", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_grupo_de_usuário_homem_homem_30 {
             get {
                 object obj = ResourceManager.GetObject("icons8-grupo-de-usuário-homem-homem-30", resourceCulture);
@@ -193,6 +203,16 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_menos_20 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-menos-20", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_página_inicial_20 {
             get {
                 object obj = ResourceManager.GetObject("icons8-página-inicial-20", resourceCulture);
@@ -226,6 +246,16 @@ namespace BibliotecaApp.Properties {
         internal static System.Drawing.Bitmap icons8_página_inicial_30_white {
             get {
                 object obj = ResourceManager.GetObject("icons8-página-inicial-30-white", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_quadrado_arredondado_20 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-quadrado-arredondado-20", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -286,6 +316,16 @@ namespace BibliotecaApp.Properties {
         internal static System.Drawing.Bitmap icons8_sair_30 {
             get {
                 object obj = ResourceManager.GetObject("icons8-sair-30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_verificar_todos_os_20 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-verificar-todos-os-20", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

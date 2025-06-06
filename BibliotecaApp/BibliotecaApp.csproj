@@ -52,10 +52,18 @@
     <Compile Include="CadastroLivroForm.Designer.cs">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Elements\RoundedButton.cs" />
-    <Compile Include="Elements\RoundedComboBox.cs" />
-    <Compile Include="Elements\RoundedMaskedTextBox.cs" />
-    <Compile Include="Elements\RoundedTextBox.cs" />
+    <Compile Include="Elements\RoundedButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Elements\RoundedComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Elements\RoundedMaskedTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Elements\RoundedTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="InicioForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -207,6 +215,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icons8-x-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-verificar-todos-os-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-menos-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-fuga-de-equipes-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-quadrado-arredondado-20.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

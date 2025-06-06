@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BibliotecaApp.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -162,10 +163,68 @@ namespace BibliotecaApp
             }
         }
 
-        private void pictureBox2_Click(object sender, EventArgs e)
+        //Control box
+        private void picExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+
         }
+        bool janela = false;
+        private void picMax_Click(object sender, EventArgs e)
+        {
+            if (janela == false)
+            {
+                this.WindowState = FormWindowState.Maximized;
+                picMax.BackgroundImage = Resources.icons8_verificar_todos_os_20;
+                janela = true;
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+                picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
+                janela = false;
+            }
+        }
+        private void picMin_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+        private void picExit_MouseEnter(object sender, EventArgs e)
+        {
+            picExit.BackColor = Color.Gainsboro;
+        }
+
+        private void picExit_MouseLeave(object sender, EventArgs e)
+        {
+            picExit.BackColor = Color.Transparent;
+        }
+
+        private void picMax_MouseEnter(object sender, EventArgs e)
+        {
+            picMax.BackColor = Color.Gainsboro;
+        }
+
+        private void picMax_MouseLeave(object sender, EventArgs e)
+        {
+            picMax.BackColor = Color.Transparent;
+        }
+
+        private void picMin_MouseEnter(object sender, EventArgs e)
+        {
+            picMin.BackColor = Color.Gainsboro;
+        }
+
+        private void picMin_MouseLeave(object sender, EventArgs e)
+        {
+            picMin.BackColor = Color.Transparent;
+        }
+
+        
+        //
+
+
+
+
         //
     }
 }

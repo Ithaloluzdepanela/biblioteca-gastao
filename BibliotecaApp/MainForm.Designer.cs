@@ -30,6 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ControlPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.picMin = new System.Windows.Forms.PictureBox();
+            this.picMax = new System.Windows.Forms.PictureBox();
+            this.picExit = new System.Windows.Forms.PictureBox();
             this.picMenu = new System.Windows.Forms.PictureBox();
             this.menu = new System.Windows.Forms.FlowLayoutPanel();
             this.incioContainer = new System.Windows.Forms.Panel();
@@ -43,8 +47,11 @@
             this.sairContainer = new System.Windows.Forms.Panel();
             this.btnSair = new System.Windows.Forms.Button();
             this.menuTransition = new System.Windows.Forms.Timer(this.components);
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
+            this.ControlPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picMin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMax)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picExit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMenu)).BeginInit();
             this.menu.SuspendLayout();
             this.incioContainer.SuspendLayout();
@@ -52,19 +59,75 @@
             this.livroContainer.SuspendLayout();
             this.relContainer.SuspendLayout();
             this.sairContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.pictureBox2);
+            this.panel1.Controls.Add(this.ControlPanel);
             this.panel1.Controls.Add(this.picMenu);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1024, 30);
             this.panel1.TabIndex = 0;
+            // 
+            // ControlPanel
+            // 
+            this.ControlPanel.BackColor = System.Drawing.Color.Transparent;
+            this.ControlPanel.Controls.Add(this.picMin);
+            this.ControlPanel.Controls.Add(this.picMax);
+            this.ControlPanel.Controls.Add(this.picExit);
+            this.ControlPanel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.ControlPanel.Location = new System.Drawing.Point(916, 0);
+            this.ControlPanel.Name = "ControlPanel";
+            this.ControlPanel.Size = new System.Drawing.Size(108, 30);
+            this.ControlPanel.TabIndex = 4;
+            // 
+            // picMin
+            // 
+            this.picMin.BackColor = System.Drawing.Color.Transparent;
+            this.picMin.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_menos_20;
+            this.picMin.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.picMin.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picMin.Location = new System.Drawing.Point(3, 3);
+            this.picMin.Name = "picMin";
+            this.picMin.Size = new System.Drawing.Size(30, 30);
+            this.picMin.TabIndex = 5;
+            this.picMin.TabStop = false;
+            this.picMin.Click += new System.EventHandler(this.picMin_Click);
+            this.picMin.MouseEnter += new System.EventHandler(this.picMin_MouseEnter);
+            this.picMin.MouseLeave += new System.EventHandler(this.picMin_MouseLeave);
+            // 
+            // picMax
+            // 
+            this.picMax.BackColor = System.Drawing.Color.Transparent;
+            this.picMax.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_verificar_todos_os_20;
+            this.picMax.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.picMax.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picMax.Location = new System.Drawing.Point(39, 3);
+            this.picMax.Name = "picMax";
+            this.picMax.Size = new System.Drawing.Size(30, 30);
+            this.picMax.TabIndex = 6;
+            this.picMax.TabStop = false;
+            this.picMax.Click += new System.EventHandler(this.picMax_Click);
+            this.picMax.MouseEnter += new System.EventHandler(this.picMax_MouseEnter);
+            this.picMax.MouseLeave += new System.EventHandler(this.picMax_MouseLeave);
+            // 
+            // picExit
+            // 
+            this.picExit.BackColor = System.Drawing.Color.Transparent;
+            this.picExit.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_x_20;
+            this.picExit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.picExit.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picExit.Location = new System.Drawing.Point(75, 3);
+            this.picExit.Name = "picExit";
+            this.picExit.Size = new System.Drawing.Size(30, 30);
+            this.picExit.TabIndex = 3;
+            this.picExit.TabStop = false;
+            this.picExit.Click += new System.EventHandler(this.picExit_Click);
+            this.picExit.MouseEnter += new System.EventHandler(this.picExit_MouseEnter);
+            this.picExit.MouseLeave += new System.EventHandler(this.picExit_MouseLeave);
             // 
             // picMenu
             // 
@@ -226,18 +289,6 @@
             this.menuTransition.Interval = 15;
             this.menuTransition.Tick += new System.EventHandler(this.menuTransition_Tick);
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox2.Image = global::BibliotecaApp.Properties.Resources.icons8_x_20;
-            this.pictureBox2.Location = new System.Drawing.Point(1001, 3);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(20, 20);
-            this.pictureBox2.TabIndex = 3;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -252,6 +303,10 @@
             this.Name = "MainForm";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.panel1.ResumeLayout(false);
+            this.ControlPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picMin)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMax)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picExit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMenu)).EndInit();
             this.menu.ResumeLayout(false);
             this.incioContainer.ResumeLayout(false);
@@ -259,7 +314,6 @@
             this.livroContainer.ResumeLayout(false);
             this.relContainer.ResumeLayout(false);
             this.sairContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -280,7 +334,10 @@
         private System.Windows.Forms.Panel sairContainer;
         private System.Windows.Forms.Button btnSair;
         private System.Windows.Forms.Timer menuTransition;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox picExit;
+        private System.Windows.Forms.FlowLayoutPanel ControlPanel;
+        private System.Windows.Forms.PictureBox picMin;
+        private System.Windows.Forms.PictureBox picMax;
     }
 }
 

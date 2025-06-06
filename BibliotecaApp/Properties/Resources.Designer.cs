@@ -93,6 +93,16 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_adicionar_usuário_masculino_30 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-adicionar-usuário-masculino-30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_cardápio_20 {
             get {
                 object obj = ResourceManager.GetObject("icons8-cardápio-20", resourceCulture);

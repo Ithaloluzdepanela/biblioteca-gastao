@@ -102,12 +102,18 @@
     <Compile Include="RelForm.Designer.cs">
       <DependentUpon>RelForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Usuarios.cs" />
     <Compile Include="UsuarioForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UsuarioForm.Designer.cs">
       <DependentUpon>UsuarioForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Usuarios.cs" />
+    <Compile Include="CadUsuario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CadUsuario.Designer.cs">
+      <DependentUpon>CadUsuario.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="CadastroLivroForm.resx">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
@@ -131,6 +137,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RelForm.resx">
       <DependentUpon>RelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CadUsuario.resx">
+      <DependentUpon>CadUsuario.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UsuarioForm.resx">
       <DependentUpon>UsuarioForm.cs</DependentUpon>
@@ -228,6 +237,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icons8-quadrado-arredondado-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-adicionar-usuário-masculino-30.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

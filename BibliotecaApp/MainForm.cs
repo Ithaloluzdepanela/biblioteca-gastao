@@ -157,7 +157,7 @@ namespace BibliotecaApp
         {
             LoginForm f = new LoginForm();
             f.ShowDialog();
-            if (LoginForm.cancelar = false)
+            if (LoginForm.cancelar == false)
             {
                 Application.Exit();
             }
@@ -225,6 +225,6 @@ namespace BibliotecaApp
 
 
 
-        //
+       
     }
 }

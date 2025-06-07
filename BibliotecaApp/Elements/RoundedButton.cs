@@ -3,9 +3,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
+
+
 public class RoundedButton : Button
-{
-    private int borderRadius = 20;
+    {
+        private BackgroundWorker backgroundWorker1;
+        private int borderRadius = 20;
 
     [Category("Custom")]
     public int BorderRadius
@@ -33,4 +36,14 @@ public class RoundedButton : Button
 
         this.Region = new Region(path);
     }
-}
+
+        private void InitializeComponent()
+        {
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.SuspendLayout();
+            this.ResumeLayout(false);
+
+        }
+    }
+
+

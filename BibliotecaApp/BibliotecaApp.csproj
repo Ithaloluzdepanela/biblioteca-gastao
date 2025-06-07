@@ -52,6 +52,19 @@
     <Compile Include="CadastroLivroForm.Designer.cs">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Class\Emprestimo.cs" />
+    <Compile Include="Component1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Component1.Designer.cs">
+      <DependentUpon>Component1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EmprestimoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EmprestimoForm.Designer.cs">
+      <DependentUpon>EmprestimoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Elements\RoundedButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -108,7 +121,7 @@
     <Compile Include="UsuarioForm.Designer.cs">
       <DependentUpon>UsuarioForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Usuarios.cs" />
+    <Compile Include="Class\Usuarios.cs" />
     <Compile Include="CadUsuario.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +130,12 @@
     </Compile>
     <EmbeddedResource Include="CadastroLivroForm.resx">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Elements\RoundedButton.resx">
+      <DependentUpon>RoundedButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EmprestimoForm.resx">
+      <DependentUpon>EmprestimoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InicioForm.resx">
       <DependentUpon>InicioForm.cs</DependentUpon>

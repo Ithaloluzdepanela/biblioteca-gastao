@@ -94,14 +94,14 @@
             // 
             this.Txt_Email.Location = new System.Drawing.Point(125, 287);
             this.Txt_Email.Name = "Txt_Email";
-            this.Txt_Email.Size = new System.Drawing.Size(210, 27);
+            this.Txt_Email.Size = new System.Drawing.Size(210, 23);
             this.Txt_Email.TabIndex = 3;
             // 
             // Txt_Senha
             // 
             this.Txt_Senha.Location = new System.Drawing.Point(125, 388);
             this.Txt_Senha.Name = "Txt_Senha";
-            this.Txt_Senha.Size = new System.Drawing.Size(210, 27);
+            this.Txt_Senha.Size = new System.Drawing.Size(210, 23);
             this.Txt_Senha.TabIndex = 4;
             this.Txt_Senha.UseSystemPasswordChar = true;
             // 
@@ -111,7 +111,7 @@
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label1.Location = new System.Drawing.Point(125, 265);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 20);
+            this.label1.Size = new System.Drawing.Size(36, 15);
             this.label1.TabIndex = 5;
             this.label1.Text = "Email";
             // 
@@ -121,7 +121,7 @@
             this.label2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label2.Location = new System.Drawing.Point(125, 366);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 20);
+            this.label2.Size = new System.Drawing.Size(39, 15);
             this.label2.TabIndex = 6;
             this.label2.Text = "Senha";
             // 
@@ -132,13 +132,13 @@
             this.label3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label3.Location = new System.Drawing.Point(129, 422);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(132, 20);
+            this.label3.Size = new System.Drawing.Size(105, 15);
             this.label3.TabIndex = 7;
             this.label3.Text = "Esqueceu a senha?";
             // 
             // LoginForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.ClientSize = new System.Drawing.Size(458, 600);
@@ -154,6 +154,9 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "LoginForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "InicioForm";
             this.Load += new System.EventHandler(this.LoginForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

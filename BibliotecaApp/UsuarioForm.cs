@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BibliotecaApp;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,6 +23,12 @@ namespace BibliotecaApp
             CadUsuario popup = new CadUsuario();
             popup.ShowDialog();
             
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            EmprestimoForm popup = new EmprestimoForm();
+            popup.ShowDialog();
         }
     }
 }

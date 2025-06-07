@@ -53,6 +53,7 @@
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Class\Emprestimo.cs" />
+    <Compile Include="Class\Livro.cs" />
     <Compile Include="Component1.cs">
       <SubType>Component</SubType>
     </Compile>

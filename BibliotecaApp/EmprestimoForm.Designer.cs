@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.dtpDataDevolucao = new System.Windows.Forms.DateTimePicker();
+            this.dtpDataEmprestimo = new System.Windows.Forms.DateTimePicker();
             this.btnEmprestar = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -36,21 +38,21 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.roundedTextBox1 = new RoundedTextBox();
-            this.txtNome = new RoundedTextBox();
-            this.biblio = new RoundedComboBox();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
+            this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
+            this.txtLivro = new RoundedTextBox();
+            this.txtNomeUsuario = new RoundedTextBox();
+            this.cbBibliotecaria = new RoundedComboBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.dateTimePicker2);
-            this.panel1.Controls.Add(this.dateTimePicker1);
-            this.panel1.Controls.Add(this.roundedTextBox1);
-            this.panel1.Controls.Add(this.txtNome);
-            this.panel1.Controls.Add(this.biblio);
+            this.panel1.Controls.Add(this.lstSugestoesUsuario);
+            this.panel1.Controls.Add(this.dtpDataDevolucao);
+            this.panel1.Controls.Add(this.dtpDataEmprestimo);
+            this.panel1.Controls.Add(this.txtLivro);
+            this.panel1.Controls.Add(this.txtNomeUsuario);
+            this.panel1.Controls.Add(this.cbBibliotecaria);
             this.panel1.Controls.Add(this.btnEmprestar);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label5);
@@ -65,6 +67,20 @@
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
+            // dtpDataDevolucao
+            // 
+            this.dtpDataDevolucao.Location = new System.Drawing.Point(78, 484);
+            this.dtpDataDevolucao.Name = "dtpDataDevolucao";
+            this.dtpDataDevolucao.Size = new System.Drawing.Size(200, 20);
+            this.dtpDataDevolucao.TabIndex = 97;
+            // 
+            // dtpDataEmprestimo
+            // 
+            this.dtpDataEmprestimo.Location = new System.Drawing.Point(78, 403);
+            this.dtpDataEmprestimo.Name = "dtpDataEmprestimo";
+            this.dtpDataEmprestimo.Size = new System.Drawing.Size(200, 20);
+            this.dtpDataEmprestimo.TabIndex = 96;
+            // 
             // btnEmprestar
             // 
             this.btnEmprestar.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -75,7 +91,7 @@
             this.btnEmprestar.Name = "btnEmprestar";
             this.btnEmprestar.Size = new System.Drawing.Size(149, 57);
             this.btnEmprestar.TabIndex = 91;
-            this.btnEmprestar.Text = "CADASTRAR";
+            this.btnEmprestar.Text = "EMPRESTRAR";
             this.btnEmprestar.UseVisualStyleBackColor = false;
             // 
             // label6
@@ -149,101 +165,97 @@
             this.label1.TabIndex = 16;
             this.label1.Text = "Empréstimo de Livro";
             // 
-            // roundedTextBox1
+            // lstSugestoesUsuario
             // 
-            this.roundedTextBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.roundedTextBox1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.roundedTextBox1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.roundedTextBox1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.roundedTextBox1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.roundedTextBox1.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.roundedTextBox1.BorderRadius = 10;
-            this.roundedTextBox1.BorderThickness = 1;
-            this.roundedTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.roundedTextBox1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.roundedTextBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.roundedTextBox1.HoverBackColor = System.Drawing.Color.LightGray;
-            this.roundedTextBox1.Location = new System.Drawing.Point(78, 215);
-            this.roundedTextBox1.Name = "roundedTextBox1";
-            this.roundedTextBox1.Padding = new System.Windows.Forms.Padding(7);
-            this.roundedTextBox1.PlaceholderColor = System.Drawing.Color.Gray;
-            this.roundedTextBox1.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.roundedTextBox1.PlaceholderMarginLeft = 12;
-            this.roundedTextBox1.PlaceholderText = "Digite aqui o livro...";
-            this.roundedTextBox1.Size = new System.Drawing.Size(509, 40);
-            this.roundedTextBox1.TabIndex = 95;
-            this.roundedTextBox1.TextColor = System.Drawing.Color.Black;
-            this.roundedTextBox1.UseSystemPasswordChar = false;
-            this.roundedTextBox1.Load += new System.EventHandler(this.roundedTextBox1_Load);
+            this.lstSugestoesUsuario.FormattingEnabled = true;
+            this.lstSugestoesUsuario.Location = new System.Drawing.Point(359, 173);
+            this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(228, 82);
+            this.lstSugestoesUsuario.TabIndex = 98;
+            this.lstSugestoesUsuario.Visible = false;
+            this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
             // 
-            // txtNome
+            // txtLivro
             // 
-            this.txtNome.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtNome.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtNome.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtNome.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtNome.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtNome.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtNome.BorderRadius = 10;
-            this.txtNome.BorderThickness = 1;
-            this.txtNome.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtNome.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNome.Location = new System.Drawing.Point(78, 137);
-            this.txtNome.Name = "txtNome";
-            this.txtNome.Padding = new System.Windows.Forms.Padding(7);
-            this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNome.PlaceholderMarginLeft = 12;
-            this.txtNome.PlaceholderText = "Digite aqui o usuário...";
-            this.txtNome.Size = new System.Drawing.Size(509, 40);
-            this.txtNome.TabIndex = 94;
-            this.txtNome.TextColor = System.Drawing.Color.Black;
-            this.txtNome.UseSystemPasswordChar = false;
-            this.txtNome.Load += new System.EventHandler(this.txtNome_Load);
+            this.txtLivro.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtLivro.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtLivro.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtLivro.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtLivro.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtLivro.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtLivro.BorderRadius = 10;
+            this.txtLivro.BorderThickness = 1;
+            this.txtLivro.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtLivro.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLivro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtLivro.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtLivro.Location = new System.Drawing.Point(78, 215);
+            this.txtLivro.Name = "txtLivro";
+            this.txtLivro.Padding = new System.Windows.Forms.Padding(7);
+            this.txtLivro.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtLivro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLivro.PlaceholderMarginLeft = 12;
+            this.txtLivro.PlaceholderText = "Digite aqui o livro...";
+            this.txtLivro.Size = new System.Drawing.Size(509, 40);
+            this.txtLivro.TabIndex = 95;
+            this.txtLivro.TextColor = System.Drawing.Color.Black;
+            this.txtLivro.UseSystemPasswordChar = false;
+            this.txtLivro.Load += new System.EventHandler(this.roundedTextBox1_Load);
             // 
-            // biblio
+            // txtNomeUsuario
             // 
-            this.biblio.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.biblio.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.biblio.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.biblio.BorderRadius = 8;
-            this.biblio.BorderThickness = 1;
-            this.biblio.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.biblio.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.biblio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.biblio.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.biblio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.biblio.FormattingEnabled = true;
-            this.biblio.Items.AddRange(new object[] {
+            this.txtNomeUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtNomeUsuario.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtNomeUsuario.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtNomeUsuario.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtNomeUsuario.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtNomeUsuario.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtNomeUsuario.BorderRadius = 10;
+            this.txtNomeUsuario.BorderThickness = 1;
+            this.txtNomeUsuario.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtNomeUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNomeUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtNomeUsuario.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtNomeUsuario.Location = new System.Drawing.Point(78, 137);
+            this.txtNomeUsuario.Name = "txtNomeUsuario";
+            this.txtNomeUsuario.Padding = new System.Windows.Forms.Padding(7);
+            this.txtNomeUsuario.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNomeUsuario.PlaceholderMarginLeft = 12;
+            this.txtNomeUsuario.PlaceholderText = "Digite aqui o usuário...";
+            this.txtNomeUsuario.Size = new System.Drawing.Size(509, 40);
+            this.txtNomeUsuario.TabIndex = 94;
+            this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
+            this.txtNomeUsuario.UseSystemPasswordChar = false;
+            this.txtNomeUsuario.Load += new System.EventHandler(this.txtNome_Load);
+            // 
+            // cbBibliotecaria
+            // 
+            this.cbBibliotecaria.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cbBibliotecaria.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cbBibliotecaria.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.cbBibliotecaria.BorderRadius = 8;
+            this.cbBibliotecaria.BorderThickness = 1;
+            this.cbBibliotecaria.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cbBibliotecaria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBibliotecaria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbBibliotecaria.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbBibliotecaria.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.cbBibliotecaria.FormattingEnabled = true;
+            this.cbBibliotecaria.Items.AddRange(new object[] {
             "Aluno(a)",
             "Bibliotecário(a)",
             "Professor(a)",
             "Outros"});
-            this.biblio.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.biblio.Location = new System.Drawing.Point(78, 299);
-            this.biblio.Name = "biblio";
-            this.biblio.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.biblio.PlaceholderMargin = 10;
-            this.biblio.PlaceholderText = "Selecione o Bliotecária responsável...";
-            this.biblio.Size = new System.Drawing.Size(367, 34);
-            this.biblio.TabIndex = 93;
-            this.biblio.SelectedIndexChanged += new System.EventHandler(this.biblio_SelectedIndexChanged);
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(78, 403);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker1.TabIndex = 96;
-            // 
-            // dateTimePicker2
-            // 
-            this.dateTimePicker2.Location = new System.Drawing.Point(78, 484);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker2.TabIndex = 97;
+            this.cbBibliotecaria.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbBibliotecaria.Location = new System.Drawing.Point(78, 299);
+            this.cbBibliotecaria.Name = "cbBibliotecaria";
+            this.cbBibliotecaria.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbBibliotecaria.PlaceholderMargin = 10;
+            this.cbBibliotecaria.PlaceholderText = "Selecione o Bliotecária responsável...";
+            this.cbBibliotecaria.Size = new System.Drawing.Size(367, 34);
+            this.cbBibliotecaria.TabIndex = 93;
+            this.cbBibliotecaria.SelectedIndexChanged += new System.EventHandler(this.biblio_SelectedIndexChanged);
             // 
             // EmprestimoForm
             // 
@@ -271,10 +283,11 @@
         private System.Windows.Forms.Label label2;
         public System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnEmprestar;
-        private RoundedComboBox biblio;
-        private RoundedTextBox roundedTextBox1;
-        private RoundedTextBox txtNome;
-        private System.Windows.Forms.DateTimePicker dateTimePicker2;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private RoundedComboBox cbBibliotecaria;
+        private RoundedTextBox txtLivro;
+        private RoundedTextBox txtNomeUsuario;
+        private System.Windows.Forms.DateTimePicker dtpDataDevolucao;
+        private System.Windows.Forms.DateTimePicker dtpDataEmprestimo;
+        private System.Windows.Forms.ListBox lstSugestoesUsuario;
     }
 }

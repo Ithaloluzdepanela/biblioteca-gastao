@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+//classe provisoria totalmente sujeita a alteraçoes (DESCONSIDERE)
 public class Usuarios
 {
     public int Id { get; set; }
@@ -14,7 +15,7 @@ public class Usuarios
     public string Senha { get; set; }
     public string ConfirmarSenha { get; set; }
 
-    // Lista compartilhada
+   
     public static List<Usuarios> ListaUsuarios { get; set; } = new List<Usuarios>();
 
     public Usuarios() { }

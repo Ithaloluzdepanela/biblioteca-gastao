@@ -1,5 +1,6 @@
 ﻿using System;
 
+//classe provisoria totalmente sujeita a alteraçoes (DESCONSIDERE)
 public class Emprestimo
 {
     public int Id { get; set; }

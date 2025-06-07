@@ -43,7 +43,7 @@ namespace BibliotecaApp
         }
 
 
-        private void UsuarioForm_Load(object sender, EventArgs e)
+        private void CadUsuario_Load(object sender, EventArgs e)
         {
             dtpDataNasc.Value = DateTime.Today;
             HabilitarCampos(false);
@@ -869,6 +869,8 @@ namespace BibliotecaApp
         {
 
         }
+
+      
     }
 
 

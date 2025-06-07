@@ -45,6 +45,9 @@ namespace BibliotecaApp
         public EmprestimoForm()
         {
             InitializeComponent();
+            Usuarios = new List<Usuarios>();
+            Livros = new List<Livro>();
+            Emprestimos = new List<Emprestimo>();
         }
 
         private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
@@ -78,12 +81,13 @@ namespace BibliotecaApp
                     if (usuario.TipoUsuario == "Professor")
                     {
                         dtpDataDevolucao.Value = DateTime.Today;
-                        dtpDataDevolucao.Enabled = false;
+                        dtpDataDevolucao.Enabled = false;                               
+                        
                     }
                     else
                     {
                         dtpDataDevolucao.Value = DateTime.Today.AddDays(7);
-                        dtpDataDevolucao.Enabled = true;
+                        
                     }
                 }
             }
@@ -134,10 +138,7 @@ namespace BibliotecaApp
 
         }
 
-        private void txtNome_Load(object sender, EventArgs e)
-        {
-
-        }
+       
 
         private void biblio_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -187,5 +188,27 @@ namespace BibliotecaApp
             }
         }
 
+        private void dtpDataEmprestimo_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtNomeUsuario_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chkDevolucaoPersonalizada_CheckedChanged(object sender, EventArgs e)
+        {
+
+            // Habilita o DateTimePicker para seleção de data personalizada
+            dtpDataDevolucao.Enabled = chkDevolucaoPersonalizada.Checked; 
+
+            if (!chkDevolucaoPersonalizada.Checked)
+            {
+                // Se a opção não estiver marcada, define a data de devolução para 7 dias após o empréstimo
+                dtpDataDevolucao.Value = DateTime.Today.AddDays(7);
+            }
+        }
     }
 }

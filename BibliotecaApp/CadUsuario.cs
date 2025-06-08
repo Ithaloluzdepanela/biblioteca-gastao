@@ -59,6 +59,7 @@ namespace BibliotecaApp
             DataNascAst.ForeColor = Color.Transparent;
             SenhaAst.ForeColor = Color.Transparent;
             ConfirmSenhaAst.ForeColor = Color.Transparent;
+            EmailAst.ForeColor = Color.Transparent;
 
 
 
@@ -220,7 +221,7 @@ namespace BibliotecaApp
                 mtxCPF.ForeColor = Color.WhiteSmoke;
 
                 NomeAst.ForeColor = Color.Transparent;
-
+                EmailAst.ForeColor = Color.Transparent;
 
                 TurmaAst.ForeColor = Color.Red;
 
@@ -233,7 +234,7 @@ namespace BibliotecaApp
             if (funcaoSelecionada == "Bibliotecário(a)")
             {
 
-                txtEmail.Enabled = false;
+               
                 txtTurma.Enabled = false;
                 txtNome.Enabled = true;
                 txtSenha.Enabled = true;
@@ -241,6 +242,7 @@ namespace BibliotecaApp
                 mtxCPF.Enabled = true;
                 mtxTelefone.Enabled = true;
                 dtpDataNasc.Enabled = true;
+                txtEmail.Enabled = true;
 
 
                 lblNome.ForeColor = Color.FromArgb(20, 41, 60);
@@ -249,11 +251,12 @@ namespace BibliotecaApp
                 lblCPF.ForeColor = Color.FromArgb(20, 41, 60);
                 lblDataNasc.ForeColor = Color.FromArgb(20, 41, 60);
                 lblTelefone.ForeColor = Color.FromArgb(20, 41, 60);
-                lblEmail.ForeColor = Color.LightGray;
+                lblEmail.ForeColor = Color.FromArgb(20, 41, 60);
                 lblTurma.ForeColor = Color.LightGray;
-                txtEmail.BackColor = Color.White;
+                txtEmail.BackColor = Color.WhiteSmoke;
+                txtEmail.BorderColor = Color.LightGray;
                 txtTurma.BackColor = Color.White;
-                txtEmail.BorderColor = Color.WhiteSmoke;
+               
                 txtTurma.BorderColor = Color.WhiteSmoke;
                 txtSenha.BorderColor = Color.LightGray;
                 txtConfirmSenha.BorderColor = Color.LightGray;
@@ -282,18 +285,18 @@ namespace BibliotecaApp
                 ConfirmSenhaAst.ForeColor = Color.Red;
                 TelefoneAst.ForeColor = Color.Red;
                 DataNascAst.ForeColor = Color.Red;
-
+                EmailAst.ForeColor = Color.Red;
 
                 txtSenha.Text = "";
                 txtConfirmSenha.Text = "";
 
                 txtTurma.Text = "";
-                txtEmail.Text = "";
+               
 
                 txtSenha.PlaceholderText = $"Digite aqui uma senha...";
                 txtConfirmSenha.PlaceholderText = $"Confirme a senha...";
-                txtEmail.PlaceholderText = $"";
-                txtEmail.PlaceholderColor = Color.WhiteSmoke;
+                txtEmail.PlaceholderText = "Digite aqui o email...";
+                txtEmail.PlaceholderColor = Color.Gray;
                 txtTurma.PlaceholderText = $"";
                 txtTurma.PlaceholderColor = Color.WhiteSmoke;
 
@@ -328,6 +331,7 @@ namespace BibliotecaApp
                 ConfirmSenhaAst.ForeColor = Color.Transparent;
                 NomeAst.ForeColor = Color.Red;
                 TelefoneAst.ForeColor = Color.Red;
+                EmailAst.ForeColor = Color.Transparent;
                 DataNascAst.ForeColor = Color.Red;
 
                 txtSenha.BorderColor = Color.WhiteSmoke;
@@ -396,6 +400,7 @@ namespace BibliotecaApp
                 NomeAst.ForeColor = Color.Red;
                 TelefoneAst.ForeColor = Color.Red;
                 DataNascAst.ForeColor = Color.Red;
+                EmailAst.ForeColor = Color.Transparent;
 
                 txtNome.BackColor = Color.WhiteSmoke;
                 txtNome.BorderColor = Color.FromArgb(204, 204, 204);
@@ -473,6 +478,7 @@ namespace BibliotecaApp
                 NomeAst.ForeColor = Color.Red;
                 TelefoneAst.ForeColor = Color.Red;
                 DataNascAst.ForeColor = Color.Red;
+                EmailAst.ForeColor = Color.Transparent;
 
                 txtEmail.BorderColor = Color.LightGray;
                 txtTurma.BorderColor = Color.LightGray;

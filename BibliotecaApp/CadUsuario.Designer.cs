@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.EmailAst = new System.Windows.Forms.Label();
             this.btnCadastrar = new System.Windows.Forms.Button();
             this.btnLimpar = new System.Windows.Forms.Button();
             this.dtpDataNasc = new System.Windows.Forms.DateTimePicker();
@@ -67,6 +68,7 @@
             // 
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.EmailAst);
             this.panel1.Controls.Add(this.btnCadastrar);
             this.panel1.Controls.Add(this.btnLimpar);
             this.panel1.Controls.Add(this.dtpDataNasc);
@@ -104,6 +106,19 @@
             this.panel1.Size = new System.Drawing.Size(775, 1001);
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint_1);
+            // 
+            // EmailAst
+            // 
+            this.EmailAst.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.EmailAst.AutoSize = true;
+            this.EmailAst.BackColor = System.Drawing.Color.Transparent;
+            this.EmailAst.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EmailAst.ForeColor = System.Drawing.Color.Red;
+            this.EmailAst.Location = new System.Drawing.Point(123, 290);
+            this.EmailAst.Name = "EmailAst";
+            this.EmailAst.Size = new System.Drawing.Size(13, 17);
+            this.EmailAst.TabIndex = 91;
+            this.EmailAst.Text = "*";
             // 
             // btnCadastrar
             // 
@@ -657,5 +672,6 @@
         private System.Windows.Forms.Label DataNascAst;
         private System.Windows.Forms.Button btnCadastrar;
         private System.Windows.Forms.Button btnLimpar;
+        private System.Windows.Forms.Label EmailAst;
     }
 }

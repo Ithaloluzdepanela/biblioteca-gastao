@@ -52,6 +52,8 @@
     <Compile Include="CadastroLivroForm.Designer.cs">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Emprestimo.cs" />
+    <Compile Include="Livro.cs" />
     <Compile Include="Models\Emprestimo.cs" />
     <Compile Include="Models\Livro.cs" />
     <Compile Include="Component1.cs">
@@ -113,6 +115,7 @@
     <Compile Include="RelForm.Designer.cs">
       <DependentUpon>RelForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Usuario.cs" />
     <Compile Include="UsuarioForm.cs">
       <SubType>Form</SubType>
     </Compile>

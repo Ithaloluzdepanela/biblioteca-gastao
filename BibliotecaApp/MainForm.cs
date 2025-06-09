@@ -148,6 +148,12 @@ namespace BibliotecaApp
             {
                 Application.Exit();
             }
+
+            //Inicializar com tela cheia
+            if (LoginForm.cancelar == true)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
         }
         #endregion
 
@@ -158,6 +164,8 @@ namespace BibliotecaApp
 
         }
         bool janela = false;
+
+        //Funcionalidade dos botões
         private void picMax_Click(object sender, EventArgs e)
         {
             if (janela == false)
@@ -177,6 +185,8 @@ namespace BibliotecaApp
         {
             this.WindowState = FormWindowState.Minimized;
         }
+
+        //Animação de fundo
         private void picExit_MouseEnter(object sender, EventArgs e)
         {
             picExit.BackColor = Color.Gainsboro;

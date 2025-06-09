@@ -41,10 +41,22 @@ namespace BibliotecaApp
             }
 
         }
+        #region Exit
 
-        private void LoginForm_Load(object sender, EventArgs e)
+        private void picExit_Click(object sender, EventArgs e)
         {
-
+            Application.Exit();
         }
+
+        private void picExit_MouseEnter(object sender, EventArgs e)
+        {
+            picExit.BackColor = Color.Gainsboro;
+        }
+
+        private void picExit_MouseLeave(object sender, EventArgs e)
+        {
+            picExit.BackColor = Color.Transparent;
+        }
+        #endregion
     }
 }

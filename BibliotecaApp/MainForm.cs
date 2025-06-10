@@ -5,11 +5,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace BibliotecaApp
 {
@@ -155,7 +156,13 @@ namespace BibliotecaApp
         //Botão de sair
         private void btnSair_Click(object sender, EventArgs e)
         {
-            this.Close();
+            const string msg = "Tem certeza de que quer finalizar a sessão?";
+            const string box = "Confirmação de logout";
+            var confirma = MessageBox.Show(msg, box,MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if(confirma == DialogResult.Yes)
+            {
+                this.Close();
+            } 
         }
 
         #endregion

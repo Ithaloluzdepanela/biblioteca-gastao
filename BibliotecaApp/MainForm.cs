@@ -28,7 +28,7 @@ namespace BibliotecaApp
 
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
+            
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HTCAPTION = 0x2;
 
@@ -155,11 +155,9 @@ namespace BibliotecaApp
         //Botão de sair
         private void btnSair_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            LoginForm login = new LoginForm();
-            login.Show();
-
+            this.Close();
         }
+
         #endregion
 
         #region Control box
@@ -229,8 +227,7 @@ namespace BibliotecaApp
         //Load para fechar o Login
         private void MainForm_Load(object sender, EventArgs e)
         {
-            LoginForm f = new LoginForm();
-            f.ShowDialog();
+            
             if (LoginForm.cancelar == false)
             {
                 Application.Exit();
@@ -266,6 +263,5 @@ namespace BibliotecaApp
             }
         }
         #endregion
-
     }
 }

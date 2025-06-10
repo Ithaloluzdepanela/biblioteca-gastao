@@ -77,19 +77,21 @@
             // 
             // Btn_Login
             // 
+            this.Btn_Login.BackColor = System.Drawing.Color.White;
             this.Btn_Login.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Btn_Login.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.Btn_Login.FlatAppearance.BorderSize = 2;
             this.Btn_Login.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.Btn_Login.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.Btn_Login.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Btn_Login.ForeColor = System.Drawing.Color.White;
+            this.Btn_Login.Font = new System.Drawing.Font("Segoe UI Semibold", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Btn_Login.ForeColor = System.Drawing.Color.DimGray;
             this.Btn_Login.Location = new System.Drawing.Point(165, 507);
             this.Btn_Login.Name = "Btn_Login";
             this.Btn_Login.Size = new System.Drawing.Size(127, 44);
             this.Btn_Login.TabIndex = 2;
-            this.Btn_Login.Text = "Logar";
-            this.Btn_Login.UseVisualStyleBackColor = true;
+            this.Btn_Login.Text = "Entrar";
+            this.Btn_Login.UseVisualStyleBackColor = false;
             this.Btn_Login.Click += new System.EventHandler(this.Btn_Login_Click);
             // 
             // Txt_Email
@@ -110,20 +112,22 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label1.Location = new System.Drawing.Point(125, 265);
+            this.label1.Location = new System.Drawing.Point(125, 262);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 20);
+            this.label1.Size = new System.Drawing.Size(51, 23);
             this.label1.TabIndex = 5;
             this.label1.Text = "Email";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label2.Location = new System.Drawing.Point(125, 366);
+            this.label2.Location = new System.Drawing.Point(125, 362);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 20);
+            this.label2.Size = new System.Drawing.Size(57, 23);
             this.label2.TabIndex = 6;
             this.label2.Text = "Senha";
             // 
@@ -131,10 +135,11 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label3.Location = new System.Drawing.Point(129, 422);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(132, 20);
+            this.label3.Size = new System.Drawing.Size(154, 23);
             this.label3.TabIndex = 7;
             this.label3.Text = "Esqueceu a senha?";
             // 

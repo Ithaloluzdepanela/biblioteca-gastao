@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,20 +18,16 @@ namespace BibliotecaApp
         {
             InitializeComponent();
         }
-        // teste de commit
+        //Variável para checagem de aba
         public static bool cancelar = false;
-
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
+        
         private void Btn_Login_Click(object sender, EventArgs e)
         {
             if (Txt_Email.Text =="admin" && Txt_Senha.Text =="123")
             {
                cancelar = true;
-               Close();
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
             else
             {
@@ -38,6 +36,7 @@ namespace BibliotecaApp
                 Txt_Senha.Text = "";
                 Txt_Email.Focus();
             }
+            
 
         }
         #region Exit

@@ -16,7 +16,22 @@ namespace BibliotecaApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            
+            //Repetição para quando clicar no logout reiniciar a aplicação
+            while (true)
+            {
+                using (LoginForm login = new LoginForm())
+                {
+                    if (login.ShowDialog() == DialogResult.OK)
+                    {
+                        Application.Run(new MainForm());
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
         }
     }
 }

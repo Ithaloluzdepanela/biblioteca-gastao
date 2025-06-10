@@ -159,6 +159,8 @@ namespace BibliotecaApp
         }
 
         #endregion
+        
+        #region Interações/Funcionalidades do Form
 
         #region Control box
         private void picExit_Click(object sender, EventArgs e)
@@ -219,11 +221,8 @@ namespace BibliotecaApp
         {
             picMin.BackColor = Color.Transparent;
         }
-
-
         #endregion
 
-        #region Interações do Form
         //Load para fechar o Login
         private void MainForm_Load(object sender, EventArgs e)
         {

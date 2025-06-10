@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panelControl = new System.Windows.Forms.Panel();
             this.ControlPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.picExit = new System.Windows.Forms.PictureBox();
             this.picMax = new System.Windows.Forms.PictureBox();
@@ -47,7 +47,7 @@
             this.sairContainer = new System.Windows.Forms.Panel();
             this.btnSair = new System.Windows.Forms.Button();
             this.menuTransition = new System.Windows.Forms.Timer(this.components);
-            this.panel1.SuspendLayout();
+            this.panelControl.SuspendLayout();
             this.ControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMax)).BeginInit();
@@ -61,16 +61,19 @@
             this.sairContainer.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // panelControl
             // 
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.ControlPanel);
-            this.panel1.Controls.Add(this.picMenu);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1024, 30);
-            this.panel1.TabIndex = 0;
+            this.panelControl.AllowDrop = true;
+            this.panelControl.BackColor = System.Drawing.Color.White;
+            this.panelControl.Controls.Add(this.ControlPanel);
+            this.panelControl.Controls.Add(this.picMenu);
+            this.panelControl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelControl.Location = new System.Drawing.Point(0, 0);
+            this.panelControl.Name = "panelControl";
+            this.panelControl.Size = new System.Drawing.Size(1024, 30);
+            this.panelControl.TabIndex = 0;
+            this.panelControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelControl_MouseDown);
+            this.panelControl.MouseEnter += new System.EventHandler(this.panelControl_MouseEnter);
             // 
             // ControlPanel
             // 
@@ -103,7 +106,7 @@
             // picMax
             // 
             this.picMax.BackColor = System.Drawing.Color.Transparent;
-            this.picMax.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_quadrado_arredondado_20;
+            this.picMax.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_verificar_todos_os_20;
             this.picMax.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.picMax.Cursor = System.Windows.Forms.Cursors.Hand;
             this.picMax.Location = new System.Drawing.Point(49, 3);
@@ -284,6 +287,7 @@
             this.btnSair.TabIndex = 3;
             this.btnSair.Text = "Sair";
             this.btnSair.UseVisualStyleBackColor = false;
+            this.btnSair.Click += new System.EventHandler(this.btnSair_Click);
             // 
             // menuTransition
             // 
@@ -292,18 +296,19 @@
             // 
             // MainForm
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1024, 768);
             this.Controls.Add(this.menu);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panelControl);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.IsMdiContainer = true;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainForm";
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.panel1.ResumeLayout(false);
+            this.panelControl.ResumeLayout(false);
             this.ControlPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMax)).EndInit();
@@ -321,7 +326,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panelControl;
         private System.Windows.Forms.PictureBox picMenu;
         private System.Windows.Forms.FlowLayoutPanel menu;
         private System.Windows.Forms.Panel incioContainer;

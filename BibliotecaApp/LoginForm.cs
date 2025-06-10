@@ -12,7 +12,6 @@ namespace BibliotecaApp
 {
     public partial class LoginForm : Form
     {
-        LoginForm login;
         public LoginForm()
         {
             InitializeComponent();
@@ -27,7 +26,7 @@ namespace BibliotecaApp
 
         private void Btn_Login_Click(object sender, EventArgs e)
         {
-            if (Txt_Email.Text =="Admin" && Txt_Senha.Text =="1234")
+            if (Txt_Email.Text =="admin" && Txt_Senha.Text =="123")
             {
                cancelar = true;
                Close();

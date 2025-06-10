@@ -9,6 +9,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace BibliotecaApp
 {
@@ -20,6 +21,16 @@ namespace BibliotecaApp
             mdiProp();
             btnIn();
         }
+        #region Componentes de inicialização
+        //Funções da API para movimentar a aba
+        [DllImport("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+        private const int HTCAPTION = 0x2;
 
         //Nome dos Forms
         InicioForm inicio;
@@ -34,6 +45,13 @@ namespace BibliotecaApp
             Controls.OfType<MdiClient>().FirstOrDefault().BackColor = Color.FromArgb(232, 234, 237);
         }
         
+        //Variável criada para inicialização do Form de inicio no MDI
+        private void btnInicio_Click(object sender, EventArgs e)
+        {
+            btnIn();
+        }
+        #endregion
+
         #region Expansão do menu
         bool menuExpand = false;
         private void picMenu_Click(object sender, EventArgs e)
@@ -74,14 +92,8 @@ namespace BibliotecaApp
         }
         #endregion
 
-        #region Botões forms
+        #region Botões
         //Form Inicio
-        
-        //Variável criada para inicialização do Form de inicio no MDI
-        private void btnInicio_Click(object sender, EventArgs e)
-        {
-            btnIn();
-        }
         public void btnIn()
         {
                 inicio = new InicioForm();
@@ -140,20 +152,13 @@ namespace BibliotecaApp
             rel = null;
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        //Botão de sair
+        private void btnSair_Click(object sender, EventArgs e)
         {
-            LoginForm f = new LoginForm();
-            f.ShowDialog();
-            if (LoginForm.cancelar == false)
-            {
-                Application.Exit();
-            }
+            this.Hide();
+            LoginForm login = new LoginForm();
+            login.Show();
 
-            //Inicializar com tela cheia
-            if (LoginForm.cancelar == true)
-            {
-                this.WindowState = FormWindowState.Maximized;
-            }
         }
         #endregion
 
@@ -163,7 +168,7 @@ namespace BibliotecaApp
             Application.Exit();
 
         }
-        bool janela = false;
+        bool janela = true;
 
         //Funcionalidade dos botões
         private void picMax_Click(object sender, EventArgs e)
@@ -216,6 +221,51 @@ namespace BibliotecaApp
         {
             picMin.BackColor = Color.Transparent;
         }
+
+
         #endregion
+
+        #region Interações do Form
+        //Load para fechar o Login
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            LoginForm f = new LoginForm();
+            f.ShowDialog();
+            if (LoginForm.cancelar == false)
+            {
+                Application.Exit();
+            }
+
+            //Inicializar com tela cheia
+            if (LoginForm.cancelar == true)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
+
+        }
+
+        //Locomoção do painel
+        private void panelControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Maximized)
+            {
+                picMax.BackgroundImage = Resources.icons8_verificar_todos_os_20;
+                janela = true;
+            }
+            ReleaseCapture();
+            SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+        }
+
+        //Correção para o icone da control box
+        private void panelControl_MouseEnter(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
+                janela = false;
+            }
+        }
+        #endregion
+
     }
 }

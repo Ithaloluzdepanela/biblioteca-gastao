@@ -105,7 +105,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(775, 1001);
             this.panel1.TabIndex = 0;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint_1);
             // 
             // EmailAst
             // 
@@ -157,7 +156,6 @@
             this.dtpDataNasc.Name = "dtpDataNasc";
             this.dtpDataNasc.Size = new System.Drawing.Size(329, 33);
             this.dtpDataNasc.TabIndex = 88;
-            this.dtpDataNasc.ValueChanged += new System.EventHandler(this.dtpDataNasc_ValueChanged);
             // 
             // lblUsuario
             // 
@@ -197,7 +195,6 @@
             this.txtNome.TabIndex = 63;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
-            this.txtNome.Load += new System.EventHandler(this.txtNome_Load);
             // 
             // SenhaAst
             // 
@@ -326,7 +323,6 @@
             this.txtConfirmSenha.TabIndex = 71;
             this.txtConfirmSenha.TextColor = System.Drawing.Color.Black;
             this.txtConfirmSenha.UseSystemPasswordChar = true;
-            this.txtConfirmSenha.Load += new System.EventHandler(this.txtConfirmSenha_Load);
             // 
             // label3
             // 
@@ -415,7 +411,6 @@
             this.txtEmail.TabIndex = 64;
             this.txtEmail.TextColor = System.Drawing.Color.Black;
             this.txtEmail.UseSystemPasswordChar = false;
-            this.txtEmail.Load += new System.EventHandler(this.txtEmail_Load);
             // 
             // txtTurma
             // 
@@ -442,7 +437,6 @@
             this.txtTurma.TabIndex = 66;
             this.txtTurma.TextColor = System.Drawing.Color.Black;
             this.txtTurma.UseSystemPasswordChar = false;
-            this.txtTurma.Load += new System.EventHandler(this.txtTurma_Load);
             // 
             // cbUsuario
             // 
@@ -497,7 +491,6 @@
             this.txtSenha.TabIndex = 69;
             this.txtSenha.TextColor = System.Drawing.Color.Black;
             this.txtSenha.UseSystemPasswordChar = true;
-            this.txtSenha.Load += new System.EventHandler(this.txtSenha_Load);
             // 
             // mtxTelefone
             // 

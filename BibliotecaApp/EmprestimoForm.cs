@@ -1,38 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace BibliotecaApp
 {
     public partial class EmprestimoForm : Form
     {
+        #region Propriedades
+
         public List<Usuarios> Usuarios { get; set; }
         public List<Livro> Livros { get; set; }
         public List<Emprestimo> Emprestimos { get; set; }
+
         private List<Livro> _cacheLivros = new List<Livro>();
 
+        #endregion
+
+        #region Construtores
 
         public EmprestimoForm(List<Usuarios> usuarios, List<Livro> livros)
         {
-            // Configuração de AutoComplete
-            AutoCompleteStringCollection nomes = new AutoCompleteStringCollection();
-            nomes.AddRange(Usuarios.Select(u => u.Nome).ToArray());
-            txtNomeUsuario.AutoCompleteCustomSource = nomes;
+            InitializeComponent();
 
-            AutoCompleteStringCollection nomesLivros = new AutoCompleteStringCollection();
-            nomesLivros.AddRange(Livros.Select(l => l.Nome).ToArray());
-            txtLivro.AutoCompleteCustomSource = nomesLivros;
             Usuarios = usuarios;
             Livros = livros;
-            Emprestimos = new List<Emprestimo>();  // Definir corretamente a lista de empréstimos
+            Emprestimos = new List<Emprestimo>();
+
+            // Configurações de AutoComplete para usuário e livro
+            txtNomeUsuario.AutoCompleteCustomSource = new AutoCompleteStringCollection();
+            txtNomeUsuario.AutoCompleteCustomSource.AddRange(Usuarios.Select(u => u.Nome).ToArray());
+
+            txtLivro.AutoCompleteCustomSource = new AutoCompleteStringCollection();
+            txtLivro.AutoCompleteCustomSource.AddRange(Livros.Select(l => l.Nome).ToArray());
+
+            txtLivro.KeyDown += txtLivro_KeyDown;
+            lstLivros.Click += lstLivros_Click;
+            lstLivros.KeyDown += lstLivros_KeyDown;
         }
+
+        public EmprestimoForm() // Construtor alternativo para design ou testes
+        {
+            InitializeComponent();
+            Usuarios = new List<Usuarios>();
+            Livros = new List<Livro>();
+            Emprestimos = new List<Emprestimo>();
+
+            txtLivro.KeyDown += txtLivro_KeyDown;
+            lstLivros.Click += lstLivros_Click;
+            lstLivros.KeyDown += lstLivros_KeyDown;
+        }
+
+        #endregion
+
+        #region Evento de carregamento do formulário
 
         private void EmprestimoForm_Load(object sender, EventArgs e)
         {
@@ -45,73 +68,9 @@ namespace BibliotecaApp
             this.KeyDown += Form_KeyDown;
         }
 
-        public EmprestimoForm()
-        {
-            InitializeComponent();
-            Usuarios = new List<Usuarios>();
-            Livros = new List<Livro>();
-            Emprestimos = new List<Emprestimo>();
+        #endregion
 
-            
-            txtLivro.KeyDown += txtLivro_KeyDown;
-            lstLivros.Click += lstLivros_Click;
-            lstLivros.KeyDown += lstLivros_KeyDown;
-        }
-
-        private void lstLivros_KeyDown(object sender, KeyEventArgs e)
-        {
-           
-            if (e.KeyCode == Keys.Enter && lstLivros.SelectedIndex >= 0)
-            {
-                e.Handled = true;  // evita o som padrão de “ding”
-                SelecionarLivro(lstLivros.SelectedIndex);
-            }
-        }
-
-        private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
-        {
-            string texto = txtNomeUsuario.Text.ToLower();
-            var sugestoes = Usuarios.Where(u => u.Nome.ToLower().Contains(texto)).ToList();
-
-            lstSugestoesUsuario.Items.Clear();  // Limpa os itens antes de adicionar novos
-
-            // Adiciona as sugestões ao ListBox
-            foreach (var usuario in sugestoes)
-            {
-                lstSugestoesUsuario.Items.Add(usuario.Nome);
-            }
-
-            // Exibe ou esconde a lista de sugestões
-            lstSugestoesUsuario.Visible = sugestoes.Any();
-        }
-
-        private void lstSugestoesUsuario_Click(object sender, EventArgs e)
-        {
-            if (lstSugestoesUsuario.SelectedItem != null)
-            {
-                txtNomeUsuario.Text = lstSugestoesUsuario.SelectedItem.ToString();
-                lstSugestoesUsuario.Visible = false;  // esconde a lista de sugestões ao selecionar
-
-
-                var usuario = Usuarios.FirstOrDefault(u => u.Nome == txtNomeUsuario.Text);
-                if (usuario != null)
-                {
-                    if (usuario.TipoUsuario == "Professor")
-                    {
-                        dtpDataDevolucao.Value = DateTime.Today;
-                        dtpDataDevolucao.Enabled = false;                               
-                        
-                    }
-                    else
-                    {
-                        dtpDataDevolucao.Value = DateTime.Today.AddDays(7);
-                        
-                    }
-                }
-            }
-        }
-
-
+        #region Emprestar Livro
 
         private void btnEmprestar_Click(object sender, EventArgs e)
         {
@@ -144,80 +103,73 @@ namespace BibliotecaApp
 
             Emprestimos.Add(novoEmprestimo);
 
-            // Atualiza a quantidade do livro
+            // Atualiza a disponibilidade
             livro.Quantidade--;
             livro.Disponibilidade = livro.Quantidade > 0;
 
             MessageBox.Show("Empréstimo registrado com sucesso!");
         }
 
-        
-       
+        #endregion
 
-        private void biblio_SelectedIndexChanged(object sender, EventArgs e)
+        #region Seleção e sugestão de usuários
+
+        private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
         {
+            string texto = txtNomeUsuario.Text.ToLower();
+            var sugestoes = Usuarios.Where(u => u.Nome.ToLower().Contains(texto)).ToList();
 
-        }
+            lstSugestoesUsuario.Items.Clear();
 
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void Form_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
+            foreach (var usuario in sugestoes)
             {
-                e.SuppressKeyPress = true;
-                this.SelectNextControl(this.ActiveControl, true, true, true, true);
+                lstSugestoesUsuario.Items.Add(usuario.Nome);
+            }
+
+            lstSugestoesUsuario.Visible = sugestoes.Any();
+        }
+
+        private void lstSugestoesUsuario_Click(object sender, EventArgs e)
+        {
+            if (lstSugestoesUsuario.SelectedItem != null)
+            {
+                txtNomeUsuario.Text = lstSugestoesUsuario.SelectedItem.ToString();
+                lstSugestoesUsuario.Visible = false;
+
+                var usuario = Usuarios.FirstOrDefault(u => u.Nome == txtNomeUsuario.Text);
+                if (usuario != null)
+                {
+                    if (usuario.TipoUsuario == "Professor")
+                    {
+                        dtpDataDevolucao.Value = DateTime.Today;
+                        dtpDataDevolucao.Enabled = false;
+                    }
+                    else
+                    {
+                        dtpDataDevolucao.Value = DateTime.Today.AddDays(7);
+                        dtpDataDevolucao.Enabled = true;
+                    }
+                }
             }
         }
 
+        #endregion
+
+        #region AutoComplete para livros
 
         private void txtLivro_KeyDown(object sender, KeyEventArgs e)
         {
             if (lstLivros.Visible)
             {
-                if (e.KeyCode == Keys.Down)
+                if (e.KeyCode == Keys.Down && lstLivros.SelectedIndex < lstLivros.Items.Count - 1)
                 {
                     e.Handled = true;
-                    if (lstLivros.SelectedIndex < lstLivros.Items.Count - 1)
-                        lstLivros.SelectedIndex++;
+                    lstLivros.SelectedIndex++;
                 }
-                else if (e.KeyCode == Keys.Up)
+                else if (e.KeyCode == Keys.Up && lstLivros.SelectedIndex > 0)
                 {
                     e.Handled = true;
-                    if (lstLivros.SelectedIndex > 0)
-                        lstLivros.SelectedIndex--;
+                    lstLivros.SelectedIndex--;
                 }
                 else if (e.KeyCode == Keys.Enter && lstLivros.SelectedIndex >= 0)
                 {
@@ -233,51 +185,55 @@ namespace BibliotecaApp
                 SelecionarLivro(lstLivros.SelectedIndex);
         }
 
+        private void lstLivros_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && lstLivros.SelectedIndex >= 0)
+            {
+                e.Handled = true;
+                SelecionarLivro(lstLivros.SelectedIndex);
+            }
+        }
+
         private void SelecionarLivro(int index)
         {
             var livro = _cacheLivros[index];
 
-            // Preenche txtLivro e esconde autocomplete
             txtLivro.Text = livro.Nome;
             lstLivros.Visible = false;
 
-            // Preenche txtBarcode
             txtBarcode.Enabled = true;
             txtBarcode.Text = livro.CodigoDeBarras;
             txtBarcode.Enabled = false;
         }
 
-        private void dtpDataEmprestimo_ValueChanged(object sender, EventArgs e)
-        {
+        #endregion
 
-        }
-
-        private void txtNomeUsuario_Load(object sender, EventArgs e)
-        {
-
-        }
+        #region Data de devolução personalizada
 
         private void chkDevolucaoPersonalizada_CheckedChanged(object sender, EventArgs e)
         {
-
-            // Habilita o DateTimePicker para seleção de data personalizada
-            dtpDataDevolucao.Enabled = chkDevolucaoPersonalizada.Checked; 
+            dtpDataDevolucao.Enabled = chkDevolucaoPersonalizada.Checked;
 
             if (!chkDevolucaoPersonalizada.Checked)
-            {
-                // Se a opção não estiver marcada, define a data de devolução para 7 dias após o empréstimo
                 dtpDataDevolucao.Value = DateTime.Today.AddDays(7);
+        }
+
+        #endregion
+
+        #region Navegação com ENTER
+
+        private void Form_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                this.SelectNextControl(this.ActiveControl, true, true, true, true);
             }
         }
 
-        private void txtBarcode_Load(object sender, EventArgs e)
-        {
+        #endregion
 
-        }
-
-
-        //bar code scanner
-
+        #region Scanner de código de barras
 
         private void txtBarcode_KeyDown(object sender, KeyEventArgs e)
         {
@@ -286,14 +242,12 @@ namespace BibliotecaApp
                 string codigo = txtBarcode.Text.Trim();
                 if (!string.IsNullOrEmpty(codigo))
                 {
-                    
                     BuscarLivroPorCodigo(codigo);
                 }
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
         }
-
 
         private void BuscarLivroPorCodigo(string codigo)
         {
@@ -312,29 +266,14 @@ namespace BibliotecaApp
                     if (resultado != null)
                     {
                         string titulo = resultado.ToString();
-
-                        // 1) Preenche txtLivro com o título
                         txtLivro.Text = titulo;
-
-                        // 2) Atualiza txtBarcode (normalmente ele já contém, mas só pra garantir)
                         txtBarcode.Enabled = true;
                         txtBarcode.Text = codigo;
                         txtBarcode.Enabled = false;
-
-                        // se você estiver usando lstResultados e quiser selecionar o item:
-                        // for (int i = 0; i < lstResultados.Items.Count; i++)
-                        // {
-                        //     if ((lstResultados.Items[i] as Livro)?.CodigoBarra == codigo)
-                        //     {
-                        //         lstResultados.SelectedIndex = i;
-                        //         break;
-                        //     }
-                        // }
                     }
                     else
                     {
                         MessageBox.Show("Livro não encontrado!");
-                        // limpa campos ou faz outro tratamento...
                     }
                 }
             }
@@ -345,13 +284,14 @@ namespace BibliotecaApp
         }
 
 
-       
 
-        private void txtLivro_Load(object sender, EventArgs e)
+        #endregion
+
+        private void cbBibliotecaria_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            cbBibliotecaria.DrawMode = DrawMode.OwnerDrawFixed;
+            cbBibliotecaria.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbBibliotecaria.ItemHeight = 35; // define a altura dos itens
         }
-
-        
     }
 }

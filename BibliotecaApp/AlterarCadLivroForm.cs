@@ -1,5 +1,4 @@
-﻿using BibliotecaApp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,20 +10,11 @@ using System.Windows.Forms;
 
 namespace BibliotecaApp
 {
-    public partial class UsuarioForm : Form
+    public partial class AlterarCadLivroForm : Form
     {
-        public UsuarioForm()
+        public AlterarCadLivroForm()
         {
             InitializeComponent();
         }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            CadUsuario popup = new CadUsuario();
-            popup.ShowDialog();
-            
-        }
-
- 
     }
 }

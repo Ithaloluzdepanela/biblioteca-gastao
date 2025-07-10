@@ -28,219 +28,297 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.Titulo = new System.Windows.Forms.Label();
+            this.lblNome = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.Btn_Cadastrar = new System.Windows.Forms.Button();
-            this.Btn_Cancelar = new System.Windows.Forms.Button();
+            this.btnLimpar = new System.Windows.Forms.Button();
+            this.btnCadastrar = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.mtxCodigoBarras = new RoundedMaskedTextBox();
+            this.txtAutor = new RoundedTextBox();
+            this.txtQuantidade = new RoundedTextBox();
+            this.txtGenero = new RoundedTextBox();
+            this.txtNome = new RoundedTextBox();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // Titulo
+            // 
+            this.Titulo.AutoSize = true;
+            this.Titulo.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.Titulo.Location = new System.Drawing.Point(91, 9);
+            this.Titulo.Name = "Titulo";
+            this.Titulo.Size = new System.Drawing.Size(414, 50);
+            this.Titulo.TabIndex = 93;
+            this.Titulo.Text = "CADASTRO DE LIVROS";
+            // 
+            // lblNome
+            // 
+            this.lblNome.AutoSize = true;
+            this.lblNome.BackColor = System.Drawing.Color.Transparent;
+            this.lblNome.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.lblNome.ForeColor = System.Drawing.Color.LightGray;
+            this.lblNome.Location = new System.Drawing.Point(221, 141);
+            this.lblNome.Name = "lblNome";
+            this.lblNome.Size = new System.Drawing.Size(159, 30);
+            this.lblNome.TabIndex = 94;
+            this.lblNome.Text = "Nome Do Livro";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(121, 33);
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.LightGray;
+            this.label1.Location = new System.Drawing.Point(259, 212);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(257, 38);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Cadastro de Livros";
-            // 
-            // textBox1
-            // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Location = new System.Drawing.Point(79, 146);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(138, 25);
-            this.textBox1.TabIndex = 1;
-            // 
-            // textBox2
-            // 
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Location = new System.Drawing.Point(302, 146);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(138, 25);
-            this.textBox2.TabIndex = 2;
+            this.label1.Size = new System.Drawing.Size(83, 30);
+            this.label1.TabIndex = 96;
+            this.label1.Text = "Gênero";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(76, 126);
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label2.ForeColor = System.Drawing.Color.LightGray;
+            this.label2.Location = new System.Drawing.Point(238, 283);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 17);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Nome";
+            this.label2.Size = new System.Drawing.Size(125, 30);
+            this.label2.TabIndex = 98;
+            this.label2.Text = "Quantidade";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(302, 126);
+            this.label3.BackColor = System.Drawing.Color.Transparent;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label3.ForeColor = System.Drawing.Color.LightGray;
+            this.label3.Location = new System.Drawing.Point(266, 354);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(40, 17);
-            this.label3.TabIndex = 4;
+            this.label3.Size = new System.Drawing.Size(68, 30);
+            this.label3.TabIndex = 100;
             this.label3.Text = "Autor";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(76, 206);
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label4.ForeColor = System.Drawing.Color.LightGray;
+            this.label4.Location = new System.Drawing.Point(211, 427);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(51, 17);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Gênero";
+            this.label4.Size = new System.Drawing.Size(179, 30);
+            this.label4.TabIndex = 103;
+            this.label4.Text = "Codigo de Barras";
             // 
-            // textBox3
+            // btnLimpar
             // 
-            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox3.Location = new System.Drawing.Point(79, 226);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(138, 25);
-            this.textBox3.TabIndex = 6;
+            this.btnLimpar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.btnLimpar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnLimpar.ForeColor = System.Drawing.Color.White;
+            this.btnLimpar.Location = new System.Drawing.Point(296, 587);
+            this.btnLimpar.Name = "btnLimpar";
+            this.btnLimpar.Size = new System.Drawing.Size(150, 60);
+            this.btnLimpar.TabIndex = 104;
+            this.btnLimpar.Text = "LIMPAR";
+            this.btnLimpar.UseVisualStyleBackColor = false;
+            this.btnLimpar.Click += new System.EventHandler(this.btnLimpar_Click);
             // 
-            // label5
+            // btnCadastrar
             // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(76, 282);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(76, 17);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "Quantidade";
+            this.btnCadastrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.btnCadastrar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnCadastrar.ForeColor = System.Drawing.Color.White;
+            this.btnCadastrar.Location = new System.Drawing.Point(141, 587);
+            this.btnCadastrar.Name = "btnCadastrar";
+            this.btnCadastrar.Size = new System.Drawing.Size(150, 60);
+            this.btnCadastrar.TabIndex = 105;
+            this.btnCadastrar.Text = "CADASTRAR";
+            this.btnCadastrar.UseVisualStyleBackColor = false;
+            this.btnCadastrar.Click += new System.EventHandler(this.btnCadastrar_Click);
             // 
-            // label6
+            // panel1
             // 
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(299, 282);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(111, 17);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "Código de Barras";
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.btnCadastrar);
+            this.panel1.Controls.Add(this.btnLimpar);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.mtxCodigoBarras);
+            this.panel1.Controls.Add(this.txtAutor);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.txtQuantidade);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.txtGenero);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.txtNome);
+            this.panel1.Controls.Add(this.lblNome);
+            this.panel1.Controls.Add(this.Titulo);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(602, 703);
+            this.panel1.TabIndex = 93;
             // 
-            // label7
+            // mtxCodigoBarras
             // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(302, 206);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(99, 17);
-            this.label7.TabIndex = 9;
-            this.label7.Text = "Disponibilidade";
+            this.mtxCodigoBarras.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.mtxCodigoBarras.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.mtxCodigoBarras.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.mtxCodigoBarras.BorderRadius = 10;
+            this.mtxCodigoBarras.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.mtxCodigoBarras.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mtxCodigoBarras.ForeColor = System.Drawing.Color.Gray;
+            this.mtxCodigoBarras.HoverBackColor = System.Drawing.Color.LightGray;
+            this.mtxCodigoBarras.HoverBorderColor = System.Drawing.Color.DarkGray;
+            this.mtxCodigoBarras.LeftMargin = 0;
+            this.mtxCodigoBarras.Location = new System.Drawing.Point(100, 460);
+            this.mtxCodigoBarras.Mask = "0 000000 000000";
+            this.mtxCodigoBarras.MaskTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.mtxCodigoBarras.Name = "mtxCodigoBarras";
+            this.mtxCodigoBarras.Padding = new System.Windows.Forms.Padding(10, 2, 7, 6);
+            this.mtxCodigoBarras.Size = new System.Drawing.Size(400, 35);
+            this.mtxCodigoBarras.TabIndex = 102;
             // 
-            // textBox4
+            // txtAutor
             // 
-            this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox4.Location = new System.Drawing.Point(79, 302);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(138, 25);
-            this.textBox4.TabIndex = 10;
+            this.txtAutor.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtAutor.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtAutor.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtAutor.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtAutor.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtAutor.BorderRadius = 10;
+            this.txtAutor.BorderThickness = 1;
+            this.txtAutor.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtAutor.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAutor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtAutor.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtAutor.Location = new System.Drawing.Point(100, 387);
+            this.txtAutor.Name = "txtAutor";
+            this.txtAutor.Padding = new System.Windows.Forms.Padding(7);
+            this.txtAutor.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtAutor.PlaceholderFont = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAutor.PlaceholderMarginLeft = 12;
+            this.txtAutor.PlaceholderText = "Digite aqui a quantidade";
+            this.txtAutor.Size = new System.Drawing.Size(400, 35);
+            this.txtAutor.TabIndex = 101;
+            this.txtAutor.TextColor = System.Drawing.Color.Black;
+            this.txtAutor.UseSystemPasswordChar = false;
             // 
-            // textBox5
+            // txtQuantidade
             // 
-            this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox5.Location = new System.Drawing.Point(302, 226);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(138, 25);
-            this.textBox5.TabIndex = 11;
+            this.txtQuantidade.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtQuantidade.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtQuantidade.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtQuantidade.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtQuantidade.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtQuantidade.BorderRadius = 10;
+            this.txtQuantidade.BorderThickness = 1;
+            this.txtQuantidade.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtQuantidade.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtQuantidade.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtQuantidade.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtQuantidade.Location = new System.Drawing.Point(100, 316);
+            this.txtQuantidade.Name = "txtQuantidade";
+            this.txtQuantidade.Padding = new System.Windows.Forms.Padding(7);
+            this.txtQuantidade.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtQuantidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtQuantidade.PlaceholderMarginLeft = 12;
+            this.txtQuantidade.PlaceholderText = "Digite aqui a quantidade";
+            this.txtQuantidade.Size = new System.Drawing.Size(400, 35);
+            this.txtQuantidade.TabIndex = 99;
+            this.txtQuantidade.TextColor = System.Drawing.Color.Black;
+            this.txtQuantidade.UseSystemPasswordChar = false;
             // 
-            // textBox6
+            // txtGenero
             // 
-            this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox6.Location = new System.Drawing.Point(302, 302);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(138, 25);
-            this.textBox6.TabIndex = 12;
+            this.txtGenero.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtGenero.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtGenero.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtGenero.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtGenero.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtGenero.BorderRadius = 10;
+            this.txtGenero.BorderThickness = 1;
+            this.txtGenero.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtGenero.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtGenero.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtGenero.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtGenero.Location = new System.Drawing.Point(100, 245);
+            this.txtGenero.Name = "txtGenero";
+            this.txtGenero.Padding = new System.Windows.Forms.Padding(7);
+            this.txtGenero.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtGenero.PlaceholderFont = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtGenero.PlaceholderMarginLeft = 12;
+            this.txtGenero.PlaceholderText = "Digite aqui o gênero";
+            this.txtGenero.Size = new System.Drawing.Size(400, 35);
+            this.txtGenero.TabIndex = 97;
+            this.txtGenero.TextColor = System.Drawing.Color.Black;
+            this.txtGenero.UseSystemPasswordChar = false;
             // 
-            // Btn_Cadastrar
+            // txtNome
             // 
-            this.Btn_Cadastrar.BackColor = System.Drawing.Color.Transparent;
-            this.Btn_Cadastrar.FlatAppearance.BorderSize = 2;
-            this.Btn_Cadastrar.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.Btn_Cadastrar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.Btn_Cadastrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Btn_Cadastrar.ForeColor = System.Drawing.Color.White;
-            this.Btn_Cadastrar.Location = new System.Drawing.Point(290, 394);
-            this.Btn_Cadastrar.Name = "Btn_Cadastrar";
-            this.Btn_Cadastrar.Size = new System.Drawing.Size(120, 80);
-            this.Btn_Cadastrar.TabIndex = 13;
-            this.Btn_Cadastrar.Text = "Cadastrar";
-            this.Btn_Cadastrar.UseVisualStyleBackColor = false;
-            // 
-            // Btn_Cancelar
-            // 
-            this.Btn_Cancelar.BackColor = System.Drawing.Color.Transparent;
-            this.Btn_Cancelar.FlatAppearance.BorderSize = 2;
-            this.Btn_Cancelar.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.Btn_Cancelar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.Btn_Cancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Btn_Cancelar.ForeColor = System.Drawing.Color.White;
-            this.Btn_Cancelar.Location = new System.Drawing.Point(97, 394);
-            this.Btn_Cancelar.Name = "Btn_Cancelar";
-            this.Btn_Cancelar.Size = new System.Drawing.Size(120, 80);
-            this.Btn_Cancelar.TabIndex = 14;
-            this.Btn_Cancelar.Text = "Cancelar";
-            this.Btn_Cancelar.UseVisualStyleBackColor = false;
-            this.Btn_Cancelar.Click += new System.EventHandler(this.Btn_Cancelar_Click);
+            this.txtNome.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtNome.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtNome.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtNome.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtNome.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtNome.BorderRadius = 10;
+            this.txtNome.BorderThickness = 1;
+            this.txtNome.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtNome.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtNome.Location = new System.Drawing.Point(100, 174);
+            this.txtNome.Name = "txtNome";
+            this.txtNome.Padding = new System.Windows.Forms.Padding(7);
+            this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNome.PlaceholderMarginLeft = 12;
+            this.txtNome.PlaceholderText = "Digite aqui o nome";
+            this.txtNome.Size = new System.Drawing.Size(400, 35);
+            this.txtNome.TabIndex = 95;
+            this.txtNome.TextColor = System.Drawing.Color.Black;
+            this.txtNome.UseSystemPasswordChar = false;
             // 
             // CadastroLivroForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.ClientSize = new System.Drawing.Size(500, 500);
-            this.Controls.Add(this.Btn_Cancelar);
-            this.Controls.Add(this.Btn_Cadastrar);
-            this.Controls.Add(this.textBox6);
-            this.Controls.Add(this.textBox5);
-            this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label1);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(602, 703);
+            this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "CadastroLivroForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CadastroLivroForm";
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.Button Btn_Cadastrar;
-        private System.Windows.Forms.Button Btn_Cancelar;
+        public System.Windows.Forms.Label Titulo;
+        public System.Windows.Forms.Label lblNome;
+        private RoundedTextBox txtNome;
+        public System.Windows.Forms.Label label1;
+        private RoundedTextBox txtGenero;
+        public System.Windows.Forms.Label label2;
+        private RoundedTextBox txtQuantidade;
+        public System.Windows.Forms.Label label3;
+        private RoundedTextBox txtAutor;
+        private RoundedMaskedTextBox mtxCodigoBarras;
+        public System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnLimpar;
+        private System.Windows.Forms.Button btnCadastrar;
+        private System.Windows.Forms.Panel panel1;
     }
 }

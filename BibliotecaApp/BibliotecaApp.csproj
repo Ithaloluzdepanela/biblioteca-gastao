@@ -63,6 +63,10 @@
       <HintPath>packages\System.Configuration.ConfigurationManager.8.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Microsoft SQL Server Compact Edition\v4.0\Desktop\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Diagnostics.DiagnosticSource.8.0.1\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
@@ -98,11 +102,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlterarCadLivroForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AlterarCadLivroForm.Designer.cs">
+      <DependentUpon>AlterarCadLivroForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CadastroLivroForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CadastroLivroForm.Designer.cs">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DevoluçãoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DevoluçãoForm.Designer.cs">
+      <DependentUpon>DevoluçãoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Emprestimo.cs" />
     <Compile Include="Models\Livro.cs" />
@@ -180,6 +196,9 @@
     </Compile>
     <EmbeddedResource Include="CadastroLivroForm.resx">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DevoluçãoForm.resx">
+      <DependentUpon>DevoluçãoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EmprestimoForm.resx">
       <DependentUpon>EmprestimoForm.cs</DependentUpon>

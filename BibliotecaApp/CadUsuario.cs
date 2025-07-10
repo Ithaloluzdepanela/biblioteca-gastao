@@ -32,17 +32,6 @@ namespace BibliotecaApp
 
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
         private void CadUsuario_Load(object sender, EventArgs e)
         {
             dtpDataNasc.Value = DateTime.Today;
@@ -129,74 +118,6 @@ namespace BibliotecaApp
             txtConfirmSenha.Enabled = ativo;
             dtpDataNasc.Enabled = ativo;
         }
-
-
-
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void roundedMaskedTextBox2_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-
-
-        private void txtNome_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-        private void dtpDataNasc_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtEmail_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void mtxTelefone_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void mtxCPF_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtTurma_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
-
 
 
         private void cbUsuario_SelectedIndexChanged(object sender, EventArgs e)
@@ -639,170 +560,10 @@ namespace BibliotecaApp
             dtpDataNasc.Value = DateTime.Today;  // Para DateTimePicker, definimos o valor para hoje
         }
 
-        private void txtSenha_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void txtSenha_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-        private void label1_Click_2(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-        private void lblCPF_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void aviso_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click_3(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void TelefoneAst_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void TurmaAst_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void DataNascAst_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void CpfAst_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ConfirmSenhaAst_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SenhaAst_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void EmailAst_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void NomeAst_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblConfirmSenha_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblSenha_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtConfirmSenha_Load_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void roundedPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void dtpDataNasc_ValueChanged_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Panel1_ControlAdded(object sender, ControlEventArgs e)
-        {
-
-        }
-
-
-
-
-
-
-
-
-
         private void chkMostrarSenha_CheckedChanged(object sender, EventArgs e)
         {
             txtSenha.UseSystemPasswordChar = !chkMostrarSenha.Checked;
             txtConfirmSenha.UseSystemPasswordChar = !chkMostrarSenha.Checked;
-        }
-
-        private void progressBarForca_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblReq1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblReq2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblForca_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panelRequisitos_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -828,26 +589,6 @@ namespace BibliotecaApp
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtNome_Load_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtNome_Load_2(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel1_Paint_1(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void btnLimpar_Click(object sender, EventArgs e)
         {
             DialogResult resultado = MessageBox.Show(
@@ -870,14 +611,5 @@ namespace BibliotecaApp
                 txtConfirmSenha.Text = "";
             }
         }
-
-        private void txtConfirmSenha_Load(object sender, EventArgs e)
-        {
-
-        }
-
-      
     }
-
-
 }

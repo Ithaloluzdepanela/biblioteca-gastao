@@ -83,7 +83,7 @@ namespace BibliotecaApp
 
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
-            // Valida preenchimento obrigatório
+            // ✅ Validação de preenchimento obrigatório
             if (string.IsNullOrWhiteSpace(txtNome.Text) ||
                 string.IsNullOrWhiteSpace(txtAutor.Text) ||
                 string.IsNullOrWhiteSpace(txtGenero.Text) ||
@@ -95,7 +95,7 @@ namespace BibliotecaApp
                 return;
             }
 
-            // Valida se quantidade é número inteiro
+            // 🔢 Verifica se a quantidade é um número inteiro
             if (!int.TryParse(txtQuantidade.Text, out int quantidade))
             {
                 MessageBox.Show("Por favor, insira apenas números no campo 'Quantidade'.",
@@ -103,7 +103,7 @@ namespace BibliotecaApp
                 return;
             }
 
-            // Remove máscara e valida código de barras
+            // 📌 Remove máscara e valida o código de barras
             string codigoDeBarras = ObterCodigoDeBarrasFormatado();
 
             if (codigoDeBarras.Length != 13)
@@ -113,7 +113,7 @@ namespace BibliotecaApp
                 return;
             }
 
-            // Conecta ao banco e insere o novo livro
+            // 🗄️ Insere o novo livro na tabela atualizada
             using (SqlCeConnection conexao = Conexao.ObterConexao())
             {
                 try
@@ -122,27 +122,25 @@ namespace BibliotecaApp
 
                     using (SqlCeCommand comando = conexao.CreateCommand())
                     {
-                        comando.CommandText = @"INSERT INTO livro 
-                            (nome, genero, quantidade, codigoBarras, autor, disponibilidade) 
-                            VALUES 
-                            (@nome, @genero, @quantidade, @codigo, @autor, @disponibilidade)";
+                        comando.CommandText = @"INSERT INTO Livros 
+                (Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade)
+                VALUES
+                (@Nome, @Autor, @Genero, @Quantidade, @CodigoBarras, @Disponibilidade)";
 
-                        // Preenche os parâmetros da query
-                        comando.Parameters.AddWithValue("@nome", txtNome.Text);
-                        comando.Parameters.AddWithValue("@genero", txtGenero.Text);
-                        comando.Parameters.AddWithValue("@quantidade", quantidade);
-                        comando.Parameters.AddWithValue("@codigo", codigoDeBarras);
-                        comando.Parameters.AddWithValue("@autor", txtAutor.Text);
-                        comando.Parameters.AddWithValue("@disponibilidade", "1"); // Sempre cadastra como disponível
+                        comando.Parameters.AddWithValue("@Nome", txtNome.Text);
+                        comando.Parameters.AddWithValue("@Autor", txtAutor.Text);
+                        comando.Parameters.AddWithValue("@Genero", txtGenero.Text);
+                        comando.Parameters.AddWithValue("@Quantidade", quantidade);
+                        comando.Parameters.AddWithValue("@CodigoBarras", codigoDeBarras);
+                        comando.Parameters.AddWithValue("@Disponibilidade", 1); // Cadastra como disponível
 
-                        comando.ExecuteNonQuery(); // Executa a inserção
+                        comando.ExecuteNonQuery();
                     }
 
-                    // Exibe confirmação e limpa os campos
                     MessageBox.Show("Livro salvo com sucesso!",
                                     "Cadastro realizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    LimparTabela();
+                    LimparTabela(); // Limpa campos após o cadastro
                 }
                 catch (Exception ex)
                 {
@@ -150,8 +148,8 @@ namespace BibliotecaApp
                                     "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
 
+        }
         #endregion
 
     }

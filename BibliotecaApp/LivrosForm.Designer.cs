@@ -30,7 +30,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LivrosForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Pic_Cadastrar = new System.Windows.Forms.PictureBox();
             this.picEmprestimo = new System.Windows.Forms.PictureBox();
             this.btnDevolução = new System.Windows.Forms.Button();
@@ -44,7 +44,6 @@
             this.lstTabelas = new System.Windows.Forms.ListBox();
             this.btnCarregarTabelas = new System.Windows.Forms.Button();
             this.lblTeste = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.txtNome = new RoundedTextBox();
             this.cbDisponibilidade = new RoundedComboBox();
             this.cbFiltro = new RoundedComboBox();
@@ -102,19 +101,22 @@
             // 
             // Lista
             // 
+            this.Lista.AllowUserToAddRows = false;
+            this.Lista.AllowUserToDeleteRows = false;
             this.Lista.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.Lista.BackgroundColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Lista.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Lista.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.Lista.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Lista.Location = new System.Drawing.Point(49, 105);
             this.Lista.Name = "Lista";
+            this.Lista.ReadOnly = true;
             this.Lista.RowHeadersWidth = 51;
             this.Lista.RowTemplate.Height = 24;
             this.Lista.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -158,8 +160,6 @@
             this.panel1.Controls.Add(this.lvCampos);
             this.panel1.Controls.Add(this.lstTabelas);
             this.panel1.Controls.Add(this.btnCarregarTabelas);
-            this.panel1.Controls.Add(this.lblTeste);
-            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.txtNome);
             this.panel1.Controls.Add(this.picEmprestimo);
             this.panel1.Controls.Add(this.Pic_Cadastrar);
@@ -179,26 +179,25 @@
             // lvCampos
             // 
             this.lvCampos.HideSelection = false;
-            this.lvCampos.Location = new System.Drawing.Point(1060, 158);
+            this.lvCampos.Location = new System.Drawing.Point(1062, 101);
             this.lvCampos.Name = "lvCampos";
             this.lvCampos.Size = new System.Drawing.Size(240, 304);
             this.lvCampos.TabIndex = 20;
             this.lvCampos.UseCompatibleStateImageBehavior = false;
             this.lvCampos.View = System.Windows.Forms.View.Details;
-            this.lvCampos.SelectedIndexChanged += new System.EventHandler(this.lvCampos_SelectedIndexChanged);
             // 
             // lstTabelas
             // 
             this.lstTabelas.FormattingEnabled = true;
             this.lstTabelas.ItemHeight = 20;
-            this.lstTabelas.Location = new System.Drawing.Point(817, 158);
+            this.lstTabelas.Location = new System.Drawing.Point(819, 101);
             this.lstTabelas.Name = "lstTabelas";
             this.lstTabelas.Size = new System.Drawing.Size(242, 304);
             this.lstTabelas.TabIndex = 19;
             // 
             // btnCarregarTabelas
             // 
-            this.btnCarregarTabelas.Location = new System.Drawing.Point(817, 468);
+            this.btnCarregarTabelas.Location = new System.Drawing.Point(854, 434);
             this.btnCarregarTabelas.Name = "btnCarregarTabelas";
             this.btnCarregarTabelas.Size = new System.Drawing.Size(98, 53);
             this.btnCarregarTabelas.TabIndex = 18;
@@ -209,20 +208,10 @@
             // lblTeste
             // 
             this.lblTeste.AutoSize = true;
-            this.lblTeste.Location = new System.Drawing.Point(573, 70);
+            this.lblTeste.Location = new System.Drawing.Point(129, 9);
             this.lblTeste.Name = "lblTeste";
             this.lblTeste.Size = new System.Drawing.Size(0, 20);
             this.lblTeste.TabIndex = 17;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(697, 127);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // txtNome
             // 
@@ -301,6 +290,7 @@
             this.ClientSize = new System.Drawing.Size(1300, 700);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblTeste);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -331,7 +321,6 @@
         private RoundedTextBox txtNome;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label lblTeste;
         private System.Windows.Forms.ListBox lstTabelas;
         private System.Windows.Forms.Button btnCarregarTabelas;

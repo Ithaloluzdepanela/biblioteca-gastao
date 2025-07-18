@@ -66,50 +66,6 @@ namespace BibliotecaApp
 
         #endregion
 
-        #region Ação: Criar Tabela de Livros (Desabilitado)
-
-        private void btnCriarTablea_Click(object sender, EventArgs e)
-        {
-            // Essa região está comentada porque a tabela já deve existir
-            // Caso precise criar novamente, descomente e execute
-
-            /*
-            SqlCeConnection conexao = Conexao.ObterConexao();
-
-            try
-            {
-                conexao.Open();
-
-                SqlCeCommand comando = new SqlCeCommand();
-                comando.Connection = conexao;
-
-                comando.CommandText =
-                @"CREATE TABLE livro (
-                    id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-                    nome NVARCHAR(50) NOT NULL,
-                    autor NVARCHAR(40) NOT NULL,
-                    genero NVARCHAR(20) NOT NULL,
-                    quantidade INT NOT NULL DEFAULT 0,
-                    codigoBarras NVARCHAR(13) NOT NULL UNIQUE,
-                    disponibilidade NCHAR(1) NOT NULL
-                )";
-
-                comando.ExecuteNonQuery();
-                lblTeste.Text = "Tabela criada com sucesso!";
-            }
-            catch (Exception ex)
-            {
-                lblTeste.Text = $"Erro: {ex.Message}";
-            }
-            finally
-            {
-                conexao.Close();
-            }
-            */
-        }
-
-        #endregion
-
         #region Ação: Buscar Livros com Filtro Dinâmico
 
         private void btnProcurar_Click(object sender, EventArgs e)
@@ -130,7 +86,7 @@ namespace BibliotecaApp
                     }
 
                     // Começa com consulta base
-                    string query = "SELECT * FROM livro WHERE 1=1";
+                    string query = "SELECT * FROM livros WHERE 1=1";
 
                     // Aplica filtro de texto se houver
                     if (!string.IsNullOrWhiteSpace(txtNome.Text))
@@ -143,9 +99,9 @@ namespace BibliotecaApp
                     {
                         string status = cbDisponibilidade.SelectedItem.ToString();
                         if (status == "Disponíveis")
-                            query += " AND disponibilidade = 'S'";
+                            query += " AND disponibilidade = '1'";
                         else if (status == "Indisponíveis")
-                            query += " AND disponibilidade = 'N'";
+                            query += " AND disponibilidade = '0'";
                     }
 
                     // Ordena por nome
@@ -205,14 +161,14 @@ namespace BibliotecaApp
             {
                 string valor = e.Value.ToString();
 
-                if (valor == "N")
+                if (valor == "0")
                 {
                     // Destaca a linha toda se indisponível
                     Lista.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGray;
                     Lista.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.DarkRed;
                     Lista.Rows[e.RowIndex].DefaultCellStyle.Font = new Font(Lista.Font, FontStyle.Italic);
                 }
-                else if (valor == "S")
+                else if (valor == "1")
                 {
                     // Estilo para disponível
                     Lista.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
@@ -234,135 +190,114 @@ namespace BibliotecaApp
 
         #endregion
 
-        #region Ação: Modificar tabela Livros (Desabilitado)
-        private void button1_Click(object sender, EventArgs e)
-        {
+        #region Ação: Renomear tabela "livro" para "livros" (executar uma vez se necessário)
 
+        //private void btnRenomearTabela_Click(object sender, EventArgs e)
+        //{
+        //    using (SqlCeConnection conexao = Conexao.ObterConexao())
+        //    {
+        //        try
+        //        {
+        //            conexao.Open();
 
-            // Essa região está comentada porque a tabela já Foi Criada
-            // Caso precise criar novamente, descomente e execute
+        //            string sql = "EXEC sp_rename 'livro', 'livros';";
+        //            SqlCeCommand comando = new SqlCeCommand(sql, conexao);
+        //            comando.ExecuteNonQuery();
 
-
-            SqlCeConnection conexao = Conexao.ObterConexao();
-
-            try
-            {
-                conexao.Open();
-
-                SqlCeCommand comando = new SqlCeCommand();
-                comando.Connection = conexao;
-
-                comando.CommandText = "EXEC sp_rename 'livro', 'livros';";
-
-                comando.ExecuteNonQuery();
-                lblTeste.Text = "Tabela Modificada com sucesso!";
-            }
-            catch (Exception ex)
-            {
-                lblTeste.Text = $"Erro: {ex.Message}";
-            }
-            finally
-            {
-                conexao.Close();
-            }
-
-
-
-        }
-
-
+        //            lblTeste.Text = "Tabela renomeada com sucesso!";
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            lblTeste.Text = $"Erro: {ex.Message}";
+        //        }
+        //    }
+        //}
 
         #endregion
 
+        #region Ação: Carregar tabelas e exibir campos
 
         private void btnCarregarTabelas_Click(object sender, EventArgs e)
         {
-
-            try
+            using (SqlCeConnection conexao = Conexao.ObterConexao())
             {
-                using (SqlCeConnection conexao = Conexao.ObterConexao())
+                try
                 {
                     conexao.Open();
 
-                    // 👉 Listar tabelas
-                    var cmdTabelas = new SqlCeCommand("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES", conexao);
-                    var leitorTabelas = cmdTabelas.ExecuteReader();
-                    lstTabelas.Items.Clear();
+                    // Listar tabelas
+                    SqlCeCommand cmdTabelas = new SqlCeCommand("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES", conexao);
+                    SqlCeDataReader leitorTabelas = cmdTabelas.ExecuteReader();
 
+                    lstTabelas.Items.Clear();
                     while (leitorTabelas.Read())
                     {
                         lstTabelas.Items.Add(leitorTabelas["TABLE_NAME"].ToString());
                     }
-
                     leitorTabelas.Close();
 
-                    // 👉 Se houver ao menos uma tabela, exibe seus campos
+                    // Exibir campos da primeira tabela (se houver)
                     if (lstTabelas.Items.Count > 0)
                     {
                         string tabela = lstTabelas.Items[0].ToString();
-
-                        var cmdCampos = new SqlCeCommand(
-                            "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @nome",
-                            conexao);
-                        cmdCampos.Parameters.AddWithValue("@nome", tabela);
-
-                        var leitorCampos = cmdCampos.ExecuteReader();
-                        lvCampos.Items.Clear();
-
-                        while (leitorCampos.Read())
-                        {
-                            ListViewItem item = new ListViewItem(leitorCampos["COLUMN_NAME"].ToString());
-                            item.SubItems.Add(leitorCampos["DATA_TYPE"].ToString());
-                            lvCampos.Items.Add(item);
-                        }
-
-                        leitorCampos.Close();
-                        lstTabelas.SelectedIndex = 0; // marca visualmente
+                        ExibirCamposTabela(tabela);
+                        lstTabelas.SelectedIndex = 0;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao inspecionar banco: " + ex.Message);
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao inspecionar banco: " + ex.Message);
+                }
             }
         }
 
+        #endregion
 
+        #region Ação: Exibir campos ao selecionar tabela
 
-        private void lvCampos_SelectedIndexChanged(object sender, EventArgs e)
+        private void lstTabelas_SelectedIndexChanged(object sender, EventArgs e)
         {
-        //    if (lstTabelas.SelectedItem == null) return;
-
-        //    string tabela = lstTabelas.SelectedItem.ToString();
-
-        //    try
-        //    {
-        //        using (SqlCeConnection conexao = Conexao.ObterConexao())
-        //        {
-        //            conexao.Open();
-
-        //            string query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @nome";
-        //            SqlCeCommand comando = new SqlCeCommand(query, conexao);
-        //            comando.Parameters.AddWithValue("@nome", tabela);
-
-        //            SqlCeDataReader leitor = comando.ExecuteReader();
-        //            lvCampos.Items.Clear();
-
-        //            while (leitor.Read())
-        //            {
-        //                ListViewItem item = new ListViewItem(leitor["COLUMN_NAME"].ToString());
-        //                item.SubItems.Add(leitor["DATA_TYPE"].ToString());
-        //                lvCampos.Items.Add(item);
-        //            }
-
-        //            leitor.Close();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Erro ao listar campos: " + ex.Message);
-        //    }
+            if (lstTabelas.SelectedItem != null)
+            {
+                string tabelaSelecionada = lstTabelas.SelectedItem.ToString();
+                ExibirCamposTabela(tabelaSelecionada);
+            }
         }
+
+        private void ExibirCamposTabela(string nomeTabela)
+        {
+            using (SqlCeConnection conexao = Conexao.ObterConexao())
+            {
+                try
+                {
+                    conexao.Open();
+
+                    string query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @nome";
+                    SqlCeCommand comando = new SqlCeCommand(query, conexao);
+                    comando.Parameters.AddWithValue("@nome", nomeTabela);
+
+                    SqlCeDataReader leitor = comando.ExecuteReader();
+                    lvCampos.Items.Clear();
+
+                    while (leitor.Read())
+                    {
+                        ListViewItem item = new ListViewItem(leitor["COLUMN_NAME"].ToString());
+                        item.SubItems.Add(leitor["DATA_TYPE"].ToString());
+                        lvCampos.Items.Add(item);
+                    }
+
+                    leitor.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao listar campos: " + ex.Message);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Ação: Configurar visual do ListView no carregamento do Formulário
 
         private void LivrosForm_Load(object sender, EventArgs e)
         {
@@ -370,6 +305,55 @@ namespace BibliotecaApp
             lvCampos.Columns.Clear();
             lvCampos.Columns.Add("Coluna", 150);
             lvCampos.Columns.Add("Tipo de Dado", 100);
+        }
+
+
+        #endregion
+
+        #region Ação: Criar Tabela de Livros (Desabilitado)
+
+        private void btnCriarTablea_Click(object sender, EventArgs e)
+        {
+            //Essa região está comentada porque a tabela já Foi criada
+            // Caso precise criar novamente, descomente e execute
+
+            //        SqlCeConnection conexao = Conexao.ObterConexao();
+
+            //        try
+            //        {
+            //            conexao.Open();
+
+            //            SqlCeCommand comando = new SqlCeCommand();
+            //            comando.Connection = conexao;
+
+            //            comando.CommandText =
+            //@"CREATE TABLE Livros (
+            //    Id INT IDENTITY(1,1) PRIMARY KEY,
+            //    Nome NVARCHAR(80) NOT NULL,
+            //    Autor NVARCHAR(80) NOT NULL,
+            //    Genero NVARCHAR(30) NOT NULL,
+            //    Quantidade INT NOT NULL DEFAULT 0,
+            //    CodigoBarras NVARCHAR(13) NOT NULL UNIQUE,
+            //    Disponibilidade BIT NOT NULL DEFAULT 1
+            //);";
+
+
+
+            //            comando.ExecuteNonQuery();
+            //            lblTeste.Text = "Tabela criada com sucesso!";
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            lblTeste.Text = $"Erro: {ex.Message}";
+            //        }
+            //        finally
+            //        {
+            //            conexao.Close();
+            //        }
+
+            //    }
+
+            #endregion
 
         }
     }

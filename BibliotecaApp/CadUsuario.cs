@@ -1,68 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
-
+using System.Windows.Forms;
 
 namespace BibliotecaApp
 {
-
-
     public partial class CadUsuario : Form
     {
-
+        #region Construtores
+        /// <summary>
+        /// Construtor principal com lista de usuários
+        /// </summary>
         public CadUsuario(List<Usuarios> usuarios)
         {
-
             InitializeComponent();
-
-
         }
 
+        /// <summary>
+        /// Construtor vazio para design-time
+        /// </summary>
         public CadUsuario()
         {
             InitializeComponent();
-
-
         }
+        #endregion
 
+        #region Eventos do Formulário
         private void CadUsuario_Load(object sender, EventArgs e)
         {
+            // Configuração inicial do formulário
             dtpDataNasc.Value = DateTime.Today;
             HabilitarCampos(false);
             this.KeyPreview = true;
             this.KeyDown += Form_KeyDown;
             chkMostrarSenha.ForeColor = Color.LightGray;
-
-            //asteristicos combo null
-
-            NomeAst.ForeColor = Color.Transparent;
-            TurmaAst.ForeColor = Color.Transparent;
-            TelefoneAst.ForeColor = Color.Transparent;
-            DataNascAst.ForeColor = Color.Transparent;
-            SenhaAst.ForeColor = Color.Transparent;
-            ConfirmSenhaAst.ForeColor = Color.Transparent;
-            EmailAst.ForeColor = Color.Transparent;
-
-
-
+            SetAsteriscoVisibility(false);
         }
 
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
+            // Navegação entre campos com Enter
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
                 this.SelectNextControl(this.ActiveControl, true, true, true, true);
             }
         }
+        #endregion
 
+        #region Métodos Públicos
+        /// <summary>
+        /// Limpa todos os campos do formulário
+        /// </summary>
+        public void LimparCampos()
+        {
+            txtNome.Text = "";
+            txtEmail.Text = "";
+            txtTurma.Text = "";
+            mtxTelefone.Text = "";
+            mtxCPF.Text = "";
+            dtpDataNasc.Value = DateTime.Today;
+            txtSenha.Text = "";
+            txtConfirmSenha.Text = "";
+        }
+
+        /// <summary>
+        /// Valida se um CPF é válido
+        /// </summary>
         public bool ValidarCPF(string cpf)
         {
             cpf = new string(cpf.Where(char.IsDigit).ToArray());
@@ -70,6 +76,7 @@ namespace BibliotecaApp
             if (cpf.Length != 11 || cpf.Distinct().Count() == 1)
                 return false;
 
+            // Cálculo dos dígitos verificadores
             int[] multiplicador1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
             int[] multiplicador2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
 
@@ -97,16 +104,109 @@ namespace BibliotecaApp
             return cpf.EndsWith(digito);
         }
 
+        /// <summary>
+        /// Valida se um telefone tem formato válido (com DDD)
+        /// </summary>
         public bool ValidarTelefone(string telefone)
         {
             string apenasNumeros = new string(telefone.Where(char.IsDigit).ToArray());
             return apenasNumeros.Length >= 11 && apenasNumeros.Length <= 12;
         }
 
+        /// <summary>
+        /// Valida formato de e-mail
+        /// </summary>
+        public bool ValidarEmail(string email)
+        {
+            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            return Regex.IsMatch(email, pattern);
+        }
+        #endregion
 
+        #region Eventos de Controles
+        //------------------------------------------------------------
+        // EVENTO: Mudança no tipo de usuário selecionado
+        //------------------------------------------------------------
+        private void cbUsuario_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string funcaoSelecionada = cbUsuario.SelectedItem?.ToString();
 
+            if (string.IsNullOrWhiteSpace(funcaoSelecionada))
+            {
+                ConfigurarCamposGenericos();
+                return;
+            }
 
+            // Seleção de configuração específica para cada tipo de usuário
+            switch (funcaoSelecionada)
+            {
+                case "Bibliotecário(a)":
+                    ConfigurarParaBibliotecario();
+                    break;
 
+                case "Professor(a)":
+                    ConfigurarParaProfessor();
+                    break;
+
+                case "Outros":
+                    ConfigurarParaOutros();
+                    break;
+
+                default: // Aluno(a) ou padrão
+                    ConfigurarParaAluno();
+                    break;
+            }
+        }
+
+        //------------------------------------------------------------
+        // EVENTO: Clique no botão Cadastrar
+        //------------------------------------------------------------
+        private void btnCadastrar_Click(object sender, EventArgs e)
+        {
+            // 1. Validação dos campos obrigatórios
+            if (!ValidarCamposObrigatorios())
+                return;
+
+            // 2. Validações específicas
+            if (!ValidarDadosUsuario())
+                return;
+
+            // 3. Cadastro do usuário
+            CadastrarNovoUsuario();
+        }
+
+        //------------------------------------------------------------
+        // EVENTO: Mostrar/Ocultar senha
+        //------------------------------------------------------------
+        private void chkMostrarSenha_CheckedChanged(object sender, EventArgs e)
+        {
+            txtSenha.UseSystemPasswordChar = !chkMostrarSenha.Checked;
+            txtConfirmSenha.UseSystemPasswordChar = !chkMostrarSenha.Checked;
+        }
+
+        //------------------------------------------------------------
+        // EVENTO: Limpar formulário
+        //------------------------------------------------------------
+        private void btnLimpar_Click(object sender, EventArgs e)
+        {
+            var confirmar = MessageBox.Show(
+                "Tem certeza de que deseja limpar tudo?",
+                "Confirmação",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (confirmar == DialogResult.Yes)
+            {
+                LimparCampos();
+            }
+        }
+        #endregion
+
+        #region Métodos Privados
+        /// <summary>
+        /// Habilita/desabilita todos os campos do formulário
+        /// </summary>
         private void HabilitarCampos(bool ativo)
         {
             txtNome.Enabled = ativo;
@@ -119,330 +219,231 @@ namespace BibliotecaApp
             dtpDataNasc.Enabled = ativo;
         }
 
-
-        private void cbUsuario_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Remove máscaras de campos formatados
+        /// </summary>
+        private string RemoverMascara(string texto)
         {
-            // chama o combobox
-            string funcaoSelecionada = cbUsuario.SelectedItem?.ToString();
-
-
-            if (string.IsNullOrWhiteSpace(funcaoSelecionada))
-            {
-
-                HabilitarCampos(true);
-
-                lblNome.ForeColor = Color.FromArgb(20, 41, 60);
-                lblSenha.ForeColor = Color.FromArgb(20, 41, 60);
-                lblConfirmSenha.ForeColor = Color.FromArgb(20, 41, 60);
-                lblCPF.ForeColor = Color.FromArgb(20, 41, 60);
-                lblDataNasc.ForeColor = Color.FromArgb(20, 41, 60);
-                lblTelefone.ForeColor = Color.FromArgb(20, 41, 60);
-                lblEmail.ForeColor = Color.FromArgb(20, 41, 60);
-                lblTurma.ForeColor = Color.FromArgb(20, 41, 60);
-                mtxCPF.ForeColor = Color.WhiteSmoke;
-
-                NomeAst.ForeColor = Color.Transparent;
-                EmailAst.ForeColor = Color.Transparent;
-
-                TurmaAst.ForeColor = Color.Red;
-
-                chkMostrarSenha.ForeColor = Color.LightGray;
-
-                return;
-            }
-
-
-            if (funcaoSelecionada == "Bibliotecário(a)")
-            {
-
-               
-                txtTurma.Enabled = false;
-                txtNome.Enabled = true;
-                txtSenha.Enabled = true;
-                txtConfirmSenha.Enabled = true;
-                mtxCPF.Enabled = true;
-                mtxTelefone.Enabled = true;
-                dtpDataNasc.Enabled = true;
-                txtEmail.Enabled = true;
-
-
-                lblNome.ForeColor = Color.FromArgb(20, 41, 60);
-                lblSenha.ForeColor = Color.FromArgb(20, 41, 60);
-                lblConfirmSenha.ForeColor = Color.FromArgb(20, 41, 60);
-                lblCPF.ForeColor = Color.FromArgb(20, 41, 60);
-                lblDataNasc.ForeColor = Color.FromArgb(20, 41, 60);
-                lblTelefone.ForeColor = Color.FromArgb(20, 41, 60);
-                lblEmail.ForeColor = Color.FromArgb(20, 41, 60);
-                lblTurma.ForeColor = Color.LightGray;
-                txtEmail.BackColor = Color.WhiteSmoke;
-                txtEmail.BorderColor = Color.LightGray;
-                txtTurma.BackColor = Color.White;
-               
-                txtTurma.BorderColor = Color.WhiteSmoke;
-                txtSenha.BorderColor = Color.LightGray;
-                txtConfirmSenha.BorderColor = Color.LightGray;
-                txtSenha.BackColor = Color.WhiteSmoke;
-                txtConfirmSenha.BackColor = Color.WhiteSmoke;
-                txtNome.BackColor = Color.WhiteSmoke;
-                txtNome.BorderColor = Color.FromArgb(204, 204, 204);
-
-                dtpDataNasc.BackColor = Color.WhiteSmoke;
-
-                mtxCPF.BackColor = Color.WhiteSmoke;
-                mtxCPF.BorderColor = Color.FromArgb(204, 204, 204);
-                mtxTelefone.BackColor = Color.WhiteSmoke;
-                mtxTelefone.BorderColor = Color.FromArgb(204, 204, 204);
-
-
-
-
-
-                chkMostrarSenha.Enabled = true;
-
-
-                TurmaAst.ForeColor = Color.Transparent;
-                SenhaAst.ForeColor = Color.Red;
-                NomeAst.ForeColor = Color.Red;
-                ConfirmSenhaAst.ForeColor = Color.Red;
-                TelefoneAst.ForeColor = Color.Red;
-                DataNascAst.ForeColor = Color.Red;
-                EmailAst.ForeColor = Color.Red;
-
-                txtSenha.Text = "";
-                txtConfirmSenha.Text = "";
-
-                txtTurma.Text = "";
-               
-
-                txtSenha.PlaceholderText = $"Digite aqui uma senha...";
-                txtConfirmSenha.PlaceholderText = $"Confirme a senha...";
-                txtEmail.PlaceholderText = "Digite aqui o email...";
-                txtEmail.PlaceholderColor = Color.Gray;
-                txtTurma.PlaceholderText = $"";
-                txtTurma.PlaceholderColor = Color.WhiteSmoke;
-
-                chkMostrarSenha.ForeColor = Color.FromArgb(20, 41, 60);
-            }
-            else if (funcaoSelecionada == "Professor(a)")
-            {
-                txtEmail.Enabled = true;
-                txtTurma.Enabled = false;
-                txtNome.Enabled = true;
-                txtSenha.Enabled = false;
-                txtConfirmSenha.Enabled = false;
-                mtxCPF.Enabled = true;
-                mtxTelefone.Enabled = true;
-                dtpDataNasc.Enabled = true;
-
-
-                lblNome.ForeColor = Color.FromArgb(20, 41, 60);
-                lblSenha.ForeColor = Color.LightGray;
-                lblConfirmSenha.ForeColor = Color.LightGray;
-                lblCPF.ForeColor = Color.FromArgb(20, 41, 60);
-                lblDataNasc.ForeColor = Color.FromArgb(20, 41, 60);
-                lblTelefone.ForeColor = Color.FromArgb(20, 41, 60);
-                lblEmail.ForeColor = Color.FromArgb(20, 41, 60);
-                lblTurma.ForeColor = Color.LightGray;
-
-                chkMostrarSenha.Enabled = false;
-
-
-                TurmaAst.ForeColor = Color.Transparent;
-                SenhaAst.ForeColor = Color.Transparent;
-                ConfirmSenhaAst.ForeColor = Color.Transparent;
-                NomeAst.ForeColor = Color.Red;
-                TelefoneAst.ForeColor = Color.Red;
-                EmailAst.ForeColor = Color.Transparent;
-                DataNascAst.ForeColor = Color.Red;
-
-                txtSenha.BorderColor = Color.WhiteSmoke;
-                txtConfirmSenha.BorderColor = Color.WhiteSmoke;
-                txtSenha.BackColor = Color.White;
-                txtConfirmSenha.BackColor = Color.White;
-                txtEmail.BackColor = Color.WhiteSmoke;
-                txtEmail.BorderColor = Color.LightGray;
-                txtTurma.BorderColor = Color.WhiteSmoke;
-                txtTurma.BackColor = Color.White;
-                txtNome.BackColor = Color.WhiteSmoke;
-                txtNome.BorderColor = Color.FromArgb(204, 204, 204);
-
-                mtxCPF.BackColor = Color.WhiteSmoke;
-                mtxCPF.BorderColor = Color.FromArgb(204, 204, 204);
-                mtxTelefone.BackColor = Color.WhiteSmoke;
-                mtxTelefone.BorderColor = Color.FromArgb(204, 204, 204);
-
-
-                dtpDataNasc.BackColor = Color.WhiteSmoke;
-
-
-                txtTurma.Text = "";
-                txtSenha.Text = "";
-                txtConfirmSenha.Text = "";
-                chkMostrarSenha.Checked = false;
-
-                txtTurma.PlaceholderText = $"";
-                txtSenha.PlaceholderText = $"";
-                txtConfirmSenha.PlaceholderText = $"";
-                txtEmail.PlaceholderText = "Digite aqui o email...";
-                txtEmail.PlaceholderColor = Color.Gray;
-
-
-                chkMostrarSenha.ForeColor = Color.LightGray;
-
-
-            }
-            else if (funcaoSelecionada == "Outros")
-            {
-                txtEmail.Enabled = false;
-                txtTurma.Enabled = false;
-                txtNome.Enabled = true;
-                txtSenha.Enabled = false;
-                txtConfirmSenha.Enabled = false;
-                mtxCPF.Enabled = true;
-                mtxTelefone.Enabled = true;
-                dtpDataNasc.Enabled = true;
-
-                lblNome.ForeColor = Color.FromArgb(20, 41, 60);
-                lblSenha.ForeColor = Color.LightGray;
-                lblConfirmSenha.ForeColor = Color.LightGray;
-                lblCPF.ForeColor = Color.FromArgb(20, 41, 60);
-                lblDataNasc.ForeColor = Color.FromArgb(20, 41, 60);
-                lblTelefone.ForeColor = Color.FromArgb(20, 41, 60);
-                lblEmail.ForeColor = Color.LightGray;
-                lblTurma.ForeColor = Color.LightGray;
-
-                chkMostrarSenha.Enabled = false;
-                chkMostrarSenha.Checked = false;
-
-
-                TurmaAst.ForeColor = Color.Transparent;
-                SenhaAst.ForeColor = Color.Transparent;
-                ConfirmSenhaAst.ForeColor = Color.Transparent;
-                NomeAst.ForeColor = Color.Red;
-                TelefoneAst.ForeColor = Color.Red;
-                DataNascAst.ForeColor = Color.Red;
-                EmailAst.ForeColor = Color.Transparent;
-
-                txtNome.BackColor = Color.WhiteSmoke;
-                txtNome.BorderColor = Color.FromArgb(204, 204, 204);
-                mtxCPF.BackColor = Color.WhiteSmoke;
-                mtxCPF.BorderColor = Color.FromArgb(204, 204, 204);
-                mtxTelefone.BackColor = Color.WhiteSmoke;
-                mtxTelefone.BorderColor = Color.FromArgb(204, 204, 204);
-                dtpDataNasc.BackColor = Color.WhiteSmoke;
-
-
-                txtSenha.BorderColor = Color.WhiteSmoke;
-                txtConfirmSenha.BorderColor = Color.WhiteSmoke;
-                txtSenha.BackColor = Color.White;
-                txtConfirmSenha.BackColor = Color.White;
-                txtTurma.BackColor = Color.White;
-                txtEmail.BackColor = Color.White;
-                txtTurma.BorderColor = Color.WhiteSmoke;
-                txtEmail.BorderColor = Color.WhiteSmoke;
-
-                txtEmail.Text = "";
-                txtTurma.Text = "";
-                txtSenha.Text = "";
-                txtConfirmSenha.Text = "";
-
-                txtEmail.PlaceholderText = $"";
-                txtTurma.PlaceholderText = $"";
-                txtSenha.PlaceholderText = $"";
-                txtConfirmSenha.PlaceholderText = $"";
-
-                chkMostrarSenha.ForeColor = Color.LightGray;
-            }
-            else
-            {
-
-                txtEmail.Enabled = true;
-                txtTurma.Enabled = true;
-                txtNome.Enabled = true;
-                txtSenha.Enabled = false;
-                txtConfirmSenha.Enabled = false;
-                mtxCPF.Enabled = true;
-                mtxTelefone.Enabled = true;
-                dtpDataNasc.Enabled = true;
-
-                txtSenha.PlaceholderText = $"";
-                txtConfirmSenha.PlaceholderText = $"";
-
-
-                chkMostrarSenha.ForeColor = Color.LightGray;
-
-                dtpDataNasc.BackColor = Color.WhiteSmoke;
-
-
-                lblNome.ForeColor = Color.FromArgb(20, 41, 60);
-                lblSenha.ForeColor = Color.LightGray;
-                lblConfirmSenha.ForeColor = Color.LightGray;
-                lblCPF.ForeColor = Color.FromArgb(20, 41, 60);
-                lblDataNasc.ForeColor = Color.FromArgb(20, 41, 60);
-                lblTelefone.ForeColor = Color.FromArgb(20, 41, 60);
-                lblEmail.ForeColor = Color.FromArgb(20, 41, 60);
-                lblTurma.ForeColor = Color.FromArgb(20, 41, 60);
-                txtSenha.BackColor = Color.White;
-                txtConfirmSenha.BackColor = Color.White;
-                txtEmail.BackColor = Color.WhiteSmoke;
-
-
-
-
-                chkMostrarSenha.Checked = false;
-                chkMostrarSenha.Enabled = false;
-
-
-                TurmaAst.ForeColor = Color.Red;
-                SenhaAst.ForeColor = Color.Transparent;
-                ConfirmSenhaAst.ForeColor = Color.Transparent;
-                NomeAst.ForeColor = Color.Red;
-                TelefoneAst.ForeColor = Color.Red;
-                DataNascAst.ForeColor = Color.Red;
-                EmailAst.ForeColor = Color.Transparent;
-
-                txtEmail.BorderColor = Color.LightGray;
-                txtTurma.BorderColor = Color.LightGray;
-                txtTurma.BackColor = Color.WhiteSmoke;
-                txtSenha.BackColor = Color.White;
-                txtConfirmSenha.BackColor = Color.White;
-                txtSenha.BorderColor = Color.WhiteSmoke;
-                txtConfirmSenha.BorderColor = Color.WhiteSmoke;
-                txtNome.BackColor = Color.WhiteSmoke;
-                txtNome.BorderColor = Color.FromArgb(204, 204, 204);
-                mtxCPF.BackColor = Color.WhiteSmoke;
-                mtxCPF.BorderColor = Color.FromArgb(204, 204, 204);
-                mtxTelefone.BackColor = Color.WhiteSmoke;
-                mtxTelefone.BorderColor = Color.FromArgb(204, 204, 204);
-
-
-                txtTurma.PlaceholderText = "Digite aqui a turma...";
-                txtEmail.PlaceholderText = "Digite aqui o email...";
-                txtTurma.PlaceholderColor = Color.Gray;
-                txtEmail.PlaceholderColor = Color.Gray;
-
-
-            }
+            return string.Concat(texto.Where(c => char.IsDigit(c)));
         }
 
+        #endregion
 
-
-
-
-        private void btnCadastrar_Click(object sender, EventArgs e)
+        #region Métodos de Configuração de Interface
+        /// <summary>
+        /// Configuração genérica quando nenhum tipo de usuário está selecionado
+        /// </summary>
+        private void ConfigurarCamposGenericos()
         {
-            // Coleta os dados dos campos do formulário
+            HabilitarCampos(true);
+            SetLabelColors(enabled: true);
+            SetAsteriscoVisibility(false);
+            chkMostrarSenha.ForeColor = Color.LightGray;
+        }
+
+        /// <summary>
+        /// Configuração específica para Bibliotecário
+        /// </summary>
+        private void ConfigurarParaBibliotecario()
+        {
+            HabilitarCampos(true);
+            txtTurma.Enabled = false;
+
+            SetLabelColors(enabled: true);
+            lblTurma.ForeColor = Color.LightGray;
+
+            SetAsteriscoVisibility(true);
+            TurmaAst.ForeColor = Color.Transparent;
+
+            ConfigurarApparence(
+                txtTurmaEnabled: false,
+                txtEmailEnabled: true,
+                txtSenhaEnabled: true
+            );
+
+            // Prepara placeholders
+            txtSenha.PlaceholderText = "Digite aqui uma senha...";
+            txtConfirmSenha.PlaceholderText = "Confirme a senha...";
+            txtEmail.PlaceholderText = "Digite aqui o email...";
+
+            chkMostrarSenha.Enabled = true;
+            chkMostrarSenha.ForeColor = Color.FromArgb(20, 41, 60);
+        }
+
+        /// <summary>
+        /// Configuração específica para Professor
+        /// </summary>
+        private void ConfigurarParaProfessor()
+        {
+            HabilitarCampos(true);
+            txtTurma.Enabled = false;
+            txtSenha.Enabled = false;
+            txtConfirmSenha.Enabled = false;
+
+            SetLabelColors(enabled: true);
+            lblSenha.ForeColor = Color.LightGray;
+            lblConfirmSenha.ForeColor = Color.LightGray;
+            lblTurma.ForeColor = Color.LightGray;
+
+            SetAsteriscoVisibility(true);
+            TurmaAst.ForeColor = Color.Transparent;
+            SenhaAst.ForeColor = Color.Transparent;
+            ConfirmSenhaAst.ForeColor = Color.Transparent;
+            EmailAst.ForeColor = Color.Transparent;
+
+            ConfigurarApparence(
+                txtTurmaEnabled: false,
+                txtEmailEnabled: true,
+                txtSenhaEnabled: false
+            );
+
+            txtEmail.PlaceholderText = "Digite aqui o email...";
+            chkMostrarSenha.ForeColor = Color.LightGray;
+            chkMostrarSenha.Enabled = false;
+        }
+
+        /// <summary>
+        /// Configuração específica para Outros
+        /// </summary>
+        private void ConfigurarParaOutros()
+        {
+            HabilitarCampos(true);
+            txtEmail.Enabled = false;
+            txtTurma.Enabled = false;
+            txtSenha.Enabled = false;
+            txtConfirmSenha.Enabled = false;
+
+            SetLabelColors(enabled: true);
+            lblSenha.ForeColor = Color.LightGray;
+            lblConfirmSenha.ForeColor = Color.LightGray;
+            lblEmail.ForeColor = Color.LightGray;
+            lblTurma.ForeColor = Color.LightGray;
+
+            SetAsteriscoVisibility(true);
+            TurmaAst.ForeColor = Color.Transparent;
+            SenhaAst.ForeColor = Color.Transparent;
+            ConfirmSenhaAst.ForeColor = Color.Transparent;
+            EmailAst.ForeColor = Color.Transparent;
+
+            ConfigurarApparence(
+                txtTurmaEnabled: false,
+                txtEmailEnabled: false,
+                txtSenhaEnabled: false
+            );
+
+            chkMostrarSenha.ForeColor = Color.LightGray;
+            chkMostrarSenha.Enabled = false;
+            chkMostrarSenha.Checked = false;
+        }
+
+        /// <summary>
+        /// Configuração específica para Aluno
+        /// </summary>
+        private void ConfigurarParaAluno()
+        {
+            HabilitarCampos(true);
+            txtSenha.Enabled = false;
+            txtConfirmSenha.Enabled = false;
+
+            SetLabelColors(enabled: true);
+            lblSenha.ForeColor = Color.LightGray;
+            lblConfirmSenha.ForeColor = Color.LightGray;
+
+            SetAsteriscoVisibility(true);
+            SenhaAst.ForeColor = Color.Transparent;
+            ConfirmSenhaAst.ForeColor = Color.Transparent;
+            EmailAst.ForeColor = Color.Transparent;
+
+            ConfigurarApparence(
+                txtTurmaEnabled: true,
+                txtEmailEnabled: true,
+                txtSenhaEnabled: false
+            );
+
+            txtTurma.PlaceholderText = "Digite aqui a turma...";
+            txtEmail.PlaceholderText = "Digite aqui o email...";
+
+            chkMostrarSenha.ForeColor = Color.LightGray;
+            chkMostrarSenha.Enabled = false;
+        }
+
+        /// <summary>
+        /// Configuração visual dos controles
+        /// </summary>
+        private void ConfigurarApparence(bool txtTurmaEnabled, bool txtEmailEnabled, bool txtSenhaEnabled)
+        {
+            // Configuração básica dos campos
+            txtNome.BackColor = Color.WhiteSmoke;
+            txtNome.BorderColor = Color.FromArgb(204, 204, 204);
+
+            mtxCPF.BackColor = Color.WhiteSmoke;
+            mtxCPF.BorderColor = Color.FromArgb(204, 204, 204);
+
+            mtxTelefone.BackColor = Color.WhiteSmoke;
+            mtxTelefone.BorderColor = Color.FromArgb(204, 204, 204);
+
+            dtpDataNasc.BackColor = Color.WhiteSmoke;
+
+            // Configuração condicional
+            txtEmail.BackColor = txtEmailEnabled ? Color.WhiteSmoke : Color.White;
+            txtEmail.BorderColor = txtEmailEnabled ? Color.LightGray : Color.WhiteSmoke;
+
+            txtTurma.BackColor = txtTurmaEnabled ? Color.WhiteSmoke : Color.White;
+            txtTurma.BorderColor = txtTurmaEnabled ? Color.LightGray : Color.WhiteSmoke;
+
+            txtSenha.BackColor = txtSenhaEnabled ? Color.WhiteSmoke : Color.White;
+            txtSenha.BorderColor = txtSenhaEnabled ? Color.LightGray : Color.WhiteSmoke;
+
+            txtConfirmSenha.BackColor = txtSenhaEnabled ? Color.WhiteSmoke : Color.White;
+            txtConfirmSenha.BorderColor = txtSenhaEnabled ? Color.LightGray : Color.WhiteSmoke;
+        }
+
+        /// <summary>
+        /// Define cores das labels
+        /// </summary>
+        private void SetLabelColors(bool enabled)
+        {
+            Color color = enabled ? Color.FromArgb(20, 41, 60) : Color.LightGray;
+
+            lblNome.ForeColor = color;
+            lblSenha.ForeColor = color;
+            lblConfirmSenha.ForeColor = color;
+            lblCPF.ForeColor = color;
+            lblDataNasc.ForeColor = color;
+            lblTelefone.ForeColor = color;
+            lblEmail.ForeColor = color;
+            lblTurma.ForeColor = color;
+        }
+
+        /// <summary>
+        /// Mostra/esconde asteriscos de campos obrigatórios
+        /// </summary>
+        private void SetAsteriscoVisibility(bool visible)
+        {
+            Color color = visible ? Color.Red : Color.Transparent;
+            NomeAst.ForeColor = color;
+            EmailAst.ForeColor = color;
+            TurmaAst.ForeColor = color;
+            TelefoneAst.ForeColor = color;
+            DataNascAst.ForeColor = color;
+            SenhaAst.ForeColor = color;
+            ConfirmSenhaAst.ForeColor = color;
+        }
+        #endregion
+
+        #region Métodos de Validação
+        /// <summary>
+        /// Valida todos os campos obrigatórios
+        /// </summary>
+        private bool ValidarCamposObrigatorios()
+        {
             string nome = txtNome.Text.Trim();
             string tipoUsuario = cbUsuario.SelectedItem?.ToString() ?? string.Empty;
-            string email = string.IsNullOrWhiteSpace(txtEmail.Text) ? "" : txtEmail.Text.Trim();
-            string cpf = string.IsNullOrWhiteSpace(mtxCPF.Text) ? "" : RemoverMascara(mtxCPF.Text);
-            DateTime nascimento = dtpDataNasc.Value;
-            string turma = txtTurma.Text.Trim();
             string telefone = RemoverMascara(mtxTelefone.Text);
+            string turma = txtTurma.Text.Trim();
             string senha = txtSenha.Text.Trim();
             string confirmar = txtConfirmSenha.Text.Trim();
 
-            // Verificação de campos obrigatórios somente se estiverem habilitados
             if (string.IsNullOrWhiteSpace(nome) ||
                 string.IsNullOrWhiteSpace(tipoUsuario) ||
                 string.IsNullOrWhiteSpace(telefone) ||
@@ -451,75 +452,80 @@ namespace BibliotecaApp
                 (txtConfirmSenha.Enabled && string.IsNullOrWhiteSpace(confirmar)))
             {
                 MessageBox.Show("Preencha todos os campos obrigatórios.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
-            // Verificação de turma para Aluno
             if (tipoUsuario == "Aluno(a)" && string.IsNullOrWhiteSpace(turma))
             {
                 MessageBox.Show("A turma é obrigatória para alunos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
-            // Verificação de senhas coincidentes
-            if (senha != confirmar)
-            {
-                MessageBox.Show("As senhas não coincidem.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            return true;
+        }
 
-            // Verificação do tipo de usuário selecionado
-            if (cbUsuario.SelectedIndex == -1)
-            {
-                MessageBox.Show("Selecione um tipo de usuário.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+        /// <summary>
+        /// Valida os dados específicos do usuário
+        /// </summary>
+        private bool ValidarDadosUsuario()
+        {
+            string cpf = RemoverMascara(mtxCPF.Text);
+            string telefone = RemoverMascara(mtxTelefone.Text);
+            string email = txtEmail.Text.Trim();
+            string senha = txtSenha.Text.Trim();
+            string confirmar = txtConfirmSenha.Text.Trim();
 
-            // Validação do CPF, caso tenha sido preenchido
             if (!string.IsNullOrWhiteSpace(cpf) && !ValidarCPF(cpf))
             {
                 MessageBox.Show("CPF inválido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
-            // Validação do telefone
             if (!ValidarTelefone(telefone))
             {
-                MessageBox.Show("Telefone inválido. Insira o DDD e o número corretamente. Confira se falta um '9' no começo.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                MessageBox.Show("Telefone inválido. Insira o DDD e o número corretamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
 
-            // Validação do email, caso tenha sido preenchido
             if (!string.IsNullOrWhiteSpace(email) && !ValidarEmail(email))
             {
-                MessageBox.Show("O e-mail informado não é válido. Verifique o formato.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                MessageBox.Show("E-mail inválido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
 
-            // Validação da senha (mínimo de 6 caracteres)
+            if (senha != confirmar)
+            {
+                MessageBox.Show("As senhas não coincidem.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
             if (!string.IsNullOrWhiteSpace(senha) && senha.Length < 4)
             {
                 MessageBox.Show("A senha deve ter pelo menos 4 caracteres.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                return false;
             }
 
-            // Limpar campos
-            LimparCampos();
+            return true;
+        }
 
+        /// <summary>
+        /// Efetua o cadastro do novo usuário
+        /// </summary>
+        private void CadastrarNovoUsuario()
+        {
             int novoId = Usuarios.ListaUsuarios.Count + 1;
 
             Usuarios usuario = new Usuarios
             {
                 Id = novoId,
-                Nome = nome,
-                TipoUsuario = tipoUsuario,
-                CPF = cpf,
-                DataNascimento = nascimento,
-                Telefone = telefone,
-                Email = email,
-                Turma = turma,
-                Senha = senha,
-                ConfirmarSenha = confirmar
+                Nome = txtNome.Text.Trim(),
+                TipoUsuario = cbUsuario.SelectedItem.ToString(),
+                CPF = RemoverMascara(mtxCPF.Text),
+                DataNascimento = dtpDataNasc.Value,
+                Telefone = RemoverMascara(mtxTelefone.Text),
+                Email = txtEmail.Text.Trim(),
+                Turma = txtTurma.Text.Trim(),
+                Senha = txtSenha.Text.Trim()
             };
 
             Usuarios.ListaUsuarios.Add(usuario);
@@ -528,88 +534,6 @@ namespace BibliotecaApp
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
-
-
-
-        public bool ValidarEmail(string email)
-        {
-            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-            return Regex.IsMatch(email, pattern);
-        }
-
-        // Função para remover a máscara de CPF e telefone
-        private string RemoverMascara(string texto)
-        {
-            return string.Concat(texto.Where(c => char.IsDigit(c)));
-        }
-
-
-
-        private void LimparCampos()
-        {
-
-            // Limpar todos os campos
-            txtNome.Text = ""; // Para RoundedTextBox, usamos Text = ""
-            txtEmail.Text = ""; // Para RoundedTextBox, usamos Text = ""
-            mtxCPF.Text = "";   // Para RoundedMaskedTextBox, usamos Text = ""
-            txtTurma.Text = ""; // Para RoundedTextBox, usamos Text = ""
-            mtxTelefone.Text = ""; // Para RoundedMaskedTextBox, usamos Text = ""
-            txtSenha.Text = ""; // Para RoundedTextBox, usamos Text = ""
-            txtConfirmSenha.Text = "";
-
-            dtpDataNasc.Value = DateTime.Today;  // Para DateTimePicker, definimos o valor para hoje
-        }
-
-        private void chkMostrarSenha_CheckedChanged(object sender, EventArgs e)
-        {
-            txtSenha.UseSystemPasswordChar = !chkMostrarSenha.Checked;
-            txtConfirmSenha.UseSystemPasswordChar = !chkMostrarSenha.Checked;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            DialogResult resultado = MessageBox.Show(
-        "Tem certeza de que deseja limpar tudo?",
-        "Confirmação",
-        MessageBoxButtons.YesNo,
-        MessageBoxIcon.Question
-    );
-
-            if (resultado == DialogResult.Yes)
-            {
-
-                txtNome.Text = "";
-                txtEmail.Text = "";
-                txtTurma.Text = "";
-                mtxTelefone.Text = "";
-                mtxCPF.Text = "";
-                dtpDataNasc.Text = "";
-                txtSenha.Text = "";
-                txtConfirmSenha.Text = "";
-            }
-        }
-
-        private void btnLimpar_Click(object sender, EventArgs e)
-        {
-            DialogResult resultado = MessageBox.Show(
-       "Tem certeza de que deseja limpar tudo?",
-       "Confirmação",
-       MessageBoxButtons.YesNo,
-       MessageBoxIcon.Question
-   );
-
-            if (resultado == DialogResult.Yes)
-            {
-
-                txtNome.Text = "";
-                txtEmail.Text = "";
-                txtTurma.Text = "";
-                mtxTelefone.Text = "";
-                mtxCPF.Text = "";
-                dtpDataNasc.Text = "";
-                txtSenha.Text = "";
-                txtConfirmSenha.Text = "";
-            }
-        }
+        #endregion
     }
 }

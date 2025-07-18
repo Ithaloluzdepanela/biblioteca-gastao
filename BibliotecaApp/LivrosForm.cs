@@ -15,7 +15,7 @@ namespace BibliotecaApp
 {
     public partial class LivrosForm : Form
     {
-        #region Inicialização
+        #region Inicialização do Formulário
 
         public LivrosForm()
         {
@@ -24,9 +24,9 @@ namespace BibliotecaApp
 
         #endregion
 
-        #region Conexão com o Banco
+        #region Classe de Conexão com o Banco de Dados
 
-        // Classe auxiliar para centralizar a conexão com o banco
+        // Centraliza as configurações de conexão com o banco
         public static class Conexao
         {
             public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
@@ -40,9 +40,9 @@ namespace BibliotecaApp
 
         #endregion
 
-        #region Normalização de Texto
+        #region Função de Normalização de Texto
 
-        // Remove acentos e transforma o texto em minúsculo para busca inteligente
+        // Remove acentos e converte para minúsculas para facilitar buscas
         private string NormalizarTexto(string texto)
         {
             string semAcento = new string(
@@ -55,7 +55,7 @@ namespace BibliotecaApp
 
         #endregion
 
-        #region Ação: Abrir formulário de cadastro
+        #region Ação: Abrir Formulário de Cadastro
 
         private void Pic_Cadastrar_Click(object sender, EventArgs e)
         {
@@ -66,7 +66,7 @@ namespace BibliotecaApp
 
         #endregion
 
-        #region Ação: Criar tabela de livros (desabilitado)
+        #region Ação: Criar Tabela de Livros (Desabilitado)
 
         private void btnCriarTablea_Click(object sender, EventArgs e)
         {
@@ -110,7 +110,7 @@ namespace BibliotecaApp
 
         #endregion
 
-        #region Ação: Buscar livros com filtro dinâmico
+        #region Ação: Buscar Livros com Filtro Dinâmico
 
         private void btnProcurar_Click(object sender, EventArgs e)
         {
@@ -143,9 +143,9 @@ namespace BibliotecaApp
                     {
                         string status = cbDisponibilidade.SelectedItem.ToString();
                         if (status == "Disponíveis")
-                            query += " AND disponibilidade = 'Disponivel'";
+                            query += " AND disponibilidade = 'S'";
                         else if (status == "Indisponíveis")
-                            query += " AND disponibilidade = 'Indisponivel'";
+                            query += " AND disponibilidade = 'N'";
                     }
 
                     // Ordena por nome
@@ -162,10 +162,18 @@ namespace BibliotecaApp
                         DataTable tabela = new DataTable();
                         adaptador.Fill(tabela);
 
+                        //Gerar Itens da coluna
                         Lista.AutoGenerateColumns = true;
                         Lista.DataSource = tabela;
 
                         lblTotal.Text = $"Total de livros encontrados: {tabela.Rows.Count}";
+
+                        //Ocultar a coluna Disponibilidade
+                        if (Lista.Columns.Contains("disponibilidade"))
+                        {
+                            Lista.Columns["disponibilidade"].Visible = false;
+                        }
+
                     }
                 }
                 catch (Exception ex)
@@ -176,20 +184,20 @@ namespace BibliotecaApp
             }
         }
 
-
-
         #endregion
 
-        #region Ação: Abrir formulário de Devolução
+        #region Ação: Abrir Formulário de Devolução
+
         private void btnDevolução_Click(object sender, EventArgs e)
         {
-
             DevoluçãoForm poup = new DevoluçãoForm();
             Location = poup.Location;
             poup.ShowDialog();
         }
+
         #endregion
 
+        #region Estilização da Tabela de Livros
 
         private void Lista_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -197,29 +205,172 @@ namespace BibliotecaApp
             {
                 string valor = e.Value.ToString();
 
-                if (valor == "Indisponivel")
+                if (valor == "N")
                 {
                     // Destaca a linha toda se indisponível
                     Lista.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGray;
                     Lista.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.DarkRed;
                     Lista.Rows[e.RowIndex].DefaultCellStyle.Font = new Font(Lista.Font, FontStyle.Italic);
                 }
-                else if (valor == "Disponivel")
+                else if (valor == "S")
                 {
-                    // (Opcional) estilo para disponível
+                    // Estilo para disponível
                     Lista.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
                     Lista.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Black;
                 }
             }
-
         }
+
+        #endregion
+
+        #region Ação: Abrir Formulário de Empréstimo
 
         private void picEmprestimo_Click(object sender, EventArgs e)
         {
             EmprestimoForm popup = new EmprestimoForm();
             Location = popup.Location;
             popup.ShowDialog();
-        
+        }
+
+        #endregion
+
+        #region Ação: Modificar tabela Livros (Desabilitado)
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+
+            // Essa região está comentada porque a tabela já Foi Criada
+            // Caso precise criar novamente, descomente e execute
+
+
+            SqlCeConnection conexao = Conexao.ObterConexao();
+
+            try
+            {
+                conexao.Open();
+
+                SqlCeCommand comando = new SqlCeCommand();
+                comando.Connection = conexao;
+
+                comando.CommandText = "EXEC sp_rename 'livro', 'livros';";
+
+                comando.ExecuteNonQuery();
+                lblTeste.Text = "Tabela Modificada com sucesso!";
+            }
+            catch (Exception ex)
+            {
+                lblTeste.Text = $"Erro: {ex.Message}";
+            }
+            finally
+            {
+                conexao.Close();
+            }
+
+
+
+        }
+
+
+
+        #endregion
+
+
+        private void btnCarregarTabelas_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                using (SqlCeConnection conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+
+                    // 👉 Listar tabelas
+                    var cmdTabelas = new SqlCeCommand("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES", conexao);
+                    var leitorTabelas = cmdTabelas.ExecuteReader();
+                    lstTabelas.Items.Clear();
+
+                    while (leitorTabelas.Read())
+                    {
+                        lstTabelas.Items.Add(leitorTabelas["TABLE_NAME"].ToString());
+                    }
+
+                    leitorTabelas.Close();
+
+                    // 👉 Se houver ao menos uma tabela, exibe seus campos
+                    if (lstTabelas.Items.Count > 0)
+                    {
+                        string tabela = lstTabelas.Items[0].ToString();
+
+                        var cmdCampos = new SqlCeCommand(
+                            "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @nome",
+                            conexao);
+                        cmdCampos.Parameters.AddWithValue("@nome", tabela);
+
+                        var leitorCampos = cmdCampos.ExecuteReader();
+                        lvCampos.Items.Clear();
+
+                        while (leitorCampos.Read())
+                        {
+                            ListViewItem item = new ListViewItem(leitorCampos["COLUMN_NAME"].ToString());
+                            item.SubItems.Add(leitorCampos["DATA_TYPE"].ToString());
+                            lvCampos.Items.Add(item);
+                        }
+
+                        leitorCampos.Close();
+                        lstTabelas.SelectedIndex = 0; // marca visualmente
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao inspecionar banco: " + ex.Message);
+            }
+        }
+
+
+
+        private void lvCampos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        //    if (lstTabelas.SelectedItem == null) return;
+
+        //    string tabela = lstTabelas.SelectedItem.ToString();
+
+        //    try
+        //    {
+        //        using (SqlCeConnection conexao = Conexao.ObterConexao())
+        //        {
+        //            conexao.Open();
+
+        //            string query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @nome";
+        //            SqlCeCommand comando = new SqlCeCommand(query, conexao);
+        //            comando.Parameters.AddWithValue("@nome", tabela);
+
+        //            SqlCeDataReader leitor = comando.ExecuteReader();
+        //            lvCampos.Items.Clear();
+
+        //            while (leitor.Read())
+        //            {
+        //                ListViewItem item = new ListViewItem(leitor["COLUMN_NAME"].ToString());
+        //                item.SubItems.Add(leitor["DATA_TYPE"].ToString());
+        //                lvCampos.Items.Add(item);
+        //            }
+
+        //            leitor.Close();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Erro ao listar campos: " + ex.Message);
+        //    }
+        }
+
+        private void LivrosForm_Load(object sender, EventArgs e)
+        {
+            lvCampos.View = View.Details;
+            lvCampos.Columns.Clear();
+            lvCampos.Columns.Add("Coluna", 150);
+            lvCampos.Columns.Add("Tipo de Dado", 100);
+
         }
     }
 }

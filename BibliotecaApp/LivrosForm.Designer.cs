@@ -36,13 +36,18 @@
             this.btnDevolução = new System.Windows.Forms.Button();
             this.btnProcurar = new System.Windows.Forms.Button();
             this.Lista = new System.Windows.Forms.DataGridView();
-            this.cbFiltro = new RoundedComboBox();
             this.btnAlterar = new System.Windows.Forms.Button();
             this.lblTotal = new System.Windows.Forms.Label();
-            this.cbDisponibilidade = new RoundedComboBox();
-            this.txtNome = new RoundedTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lvCampos = new System.Windows.Forms.ListView();
+            this.lstTabelas = new System.Windows.Forms.ListBox();
+            this.btnCarregarTabelas = new System.Windows.Forms.Button();
+            this.lblTeste = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.txtNome = new RoundedTextBox();
+            this.cbDisponibilidade = new RoundedComboBox();
+            this.cbFiltro = new RoundedComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Lista)).BeginInit();
@@ -54,7 +59,7 @@
             this.Pic_Cadastrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
             this.Pic_Cadastrar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Pic_Cadastrar.Image = ((System.Drawing.Image)(resources.GetObject("Pic_Cadastrar.Image")));
-            this.Pic_Cadastrar.Location = new System.Drawing.Point(723, 443);
+            this.Pic_Cadastrar.Location = new System.Drawing.Point(713, 365);
             this.Pic_Cadastrar.Name = "Pic_Cadastrar";
             this.Pic_Cadastrar.Size = new System.Drawing.Size(40, 40);
             this.Pic_Cadastrar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -67,7 +72,7 @@
             this.picEmprestimo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
             this.picEmprestimo.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_cardápio_30;
             this.picEmprestimo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.picEmprestimo.Location = new System.Drawing.Point(723, 500);
+            this.picEmprestimo.Location = new System.Drawing.Point(713, 422);
             this.picEmprestimo.Name = "picEmprestimo";
             this.picEmprestimo.Size = new System.Drawing.Size(40, 40);
             this.picEmprestimo.TabIndex = 15;
@@ -76,7 +81,7 @@
             // 
             // btnDevolução
             // 
-            this.btnDevolução.Location = new System.Drawing.Point(707, 381);
+            this.btnDevolução.Location = new System.Drawing.Point(697, 303);
             this.btnDevolução.Name = "btnDevolução";
             this.btnDevolução.Size = new System.Drawing.Size(73, 56);
             this.btnDevolução.TabIndex = 12;
@@ -117,32 +122,9 @@
             this.Lista.TabIndex = 3;
             this.Lista.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Lista_CellFormatting);
             // 
-            // cbFiltro
-            // 
-            this.cbFiltro.BorderColor = System.Drawing.Color.Black;
-            this.cbFiltro.BorderRadius = 8;
-            this.cbFiltro.BorderThickness = 2;
-            this.cbFiltro.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cbFiltro.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFiltro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbFiltro.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbFiltro.FormattingEnabled = true;
-            this.cbFiltro.Items.AddRange(new object[] {
-            "Nome",
-            "Autor",
-            "Gênero"});
-            this.cbFiltro.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbFiltro.Location = new System.Drawing.Point(103, 65);
-            this.cbFiltro.Name = "cbFiltro";
-            this.cbFiltro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbFiltro.PlaceholderMargin = 10;
-            this.cbFiltro.PlaceholderText = "Selecionar Filtro";
-            this.cbFiltro.Size = new System.Drawing.Size(190, 31);
-            this.cbFiltro.TabIndex = 9;
-            // 
             // btnAlterar
             // 
-            this.btnAlterar.Location = new System.Drawing.Point(707, 304);
+            this.btnAlterar.Location = new System.Drawing.Point(697, 226);
             this.btnAlterar.Name = "btnAlterar";
             this.btnAlterar.Size = new System.Drawing.Size(73, 56);
             this.btnAlterar.TabIndex = 14;
@@ -158,28 +140,89 @@
             this.lblTotal.Size = new System.Drawing.Size(0, 23);
             this.lblTotal.TabIndex = 11;
             // 
-            // cbDisponibilidade
+            // label1
             // 
-            this.cbDisponibilidade.BorderColor = System.Drawing.Color.Black;
-            this.cbDisponibilidade.BorderRadius = 8;
-            this.cbDisponibilidade.BorderThickness = 2;
-            this.cbDisponibilidade.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cbDisponibilidade.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDisponibilidade.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbDisponibilidade.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbDisponibilidade.FormattingEnabled = true;
-            this.cbDisponibilidade.Items.AddRange(new object[] {
-            "Todos",
-            "Disponíveis",
-            "Indisponíveis"});
-            this.cbDisponibilidade.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbDisponibilidade.Location = new System.Drawing.Point(314, 65);
-            this.cbDisponibilidade.Name = "cbDisponibilidade";
-            this.cbDisponibilidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbDisponibilidade.PlaceholderMargin = 10;
-            this.cbDisponibilidade.PlaceholderText = "Selecionar Filtro";
-            this.cbDisponibilidade.Size = new System.Drawing.Size(190, 31);
-            this.cbDisponibilidade.TabIndex = 13;
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.SystemColors.Control;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(108, 45);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Livros";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lvCampos);
+            this.panel1.Controls.Add(this.lstTabelas);
+            this.panel1.Controls.Add(this.btnCarregarTabelas);
+            this.panel1.Controls.Add(this.lblTeste);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.txtNome);
+            this.panel1.Controls.Add(this.picEmprestimo);
+            this.panel1.Controls.Add(this.Pic_Cadastrar);
+            this.panel1.Controls.Add(this.btnAlterar);
+            this.panel1.Controls.Add(this.Lista);
+            this.panel1.Controls.Add(this.cbDisponibilidade);
+            this.panel1.Controls.Add(this.btnProcurar);
+            this.panel1.Controls.Add(this.btnDevolução);
+            this.panel1.Controls.Add(this.cbFiltro);
+            this.panel1.Controls.Add(this.lblTotal);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 45);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1300, 655);
+            this.panel1.TabIndex = 16;
+            // 
+            // lvCampos
+            // 
+            this.lvCampos.HideSelection = false;
+            this.lvCampos.Location = new System.Drawing.Point(1060, 158);
+            this.lvCampos.Name = "lvCampos";
+            this.lvCampos.Size = new System.Drawing.Size(240, 304);
+            this.lvCampos.TabIndex = 20;
+            this.lvCampos.UseCompatibleStateImageBehavior = false;
+            this.lvCampos.View = System.Windows.Forms.View.Details;
+            this.lvCampos.SelectedIndexChanged += new System.EventHandler(this.lvCampos_SelectedIndexChanged);
+            // 
+            // lstTabelas
+            // 
+            this.lstTabelas.FormattingEnabled = true;
+            this.lstTabelas.ItemHeight = 20;
+            this.lstTabelas.Location = new System.Drawing.Point(817, 158);
+            this.lstTabelas.Name = "lstTabelas";
+            this.lstTabelas.Size = new System.Drawing.Size(242, 304);
+            this.lstTabelas.TabIndex = 19;
+            // 
+            // btnCarregarTabelas
+            // 
+            this.btnCarregarTabelas.Location = new System.Drawing.Point(817, 468);
+            this.btnCarregarTabelas.Name = "btnCarregarTabelas";
+            this.btnCarregarTabelas.Size = new System.Drawing.Size(98, 53);
+            this.btnCarregarTabelas.TabIndex = 18;
+            this.btnCarregarTabelas.Text = "Verificar Tabelas";
+            this.btnCarregarTabelas.UseVisualStyleBackColor = true;
+            this.btnCarregarTabelas.Click += new System.EventHandler(this.btnCarregarTabelas_Click);
+            // 
+            // lblTeste
+            // 
+            this.lblTeste.AutoSize = true;
+            this.lblTeste.Location = new System.Drawing.Point(573, 70);
+            this.lblTeste.Name = "lblTeste";
+            this.lblTeste.Size = new System.Drawing.Size(0, 20);
+            this.lblTeste.TabIndex = 17;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(697, 127);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // txtNome
             // 
@@ -205,42 +248,57 @@
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
             // 
-            // label1
+            // cbDisponibilidade
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.SystemColors.Control;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 45);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Livros";
+            this.cbDisponibilidade.BorderColor = System.Drawing.Color.Black;
+            this.cbDisponibilidade.BorderRadius = 8;
+            this.cbDisponibilidade.BorderThickness = 2;
+            this.cbDisponibilidade.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cbDisponibilidade.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDisponibilidade.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbDisponibilidade.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.cbDisponibilidade.FormattingEnabled = true;
+            this.cbDisponibilidade.Items.AddRange(new object[] {
+            "Todos",
+            "Disponíveis",
+            "Indisponíveis"});
+            this.cbDisponibilidade.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
+            this.cbDisponibilidade.Location = new System.Drawing.Point(314, 65);
+            this.cbDisponibilidade.Name = "cbDisponibilidade";
+            this.cbDisponibilidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbDisponibilidade.PlaceholderMargin = 10;
+            this.cbDisponibilidade.PlaceholderText = "Selecionar Filtro";
+            this.cbDisponibilidade.Size = new System.Drawing.Size(190, 31);
+            this.cbDisponibilidade.TabIndex = 13;
             // 
-            // panel1
+            // cbFiltro
             // 
-            this.panel1.Controls.Add(this.txtNome);
-            this.panel1.Controls.Add(this.picEmprestimo);
-            this.panel1.Controls.Add(this.Pic_Cadastrar);
-            this.panel1.Controls.Add(this.btnAlterar);
-            this.panel1.Controls.Add(this.Lista);
-            this.panel1.Controls.Add(this.cbDisponibilidade);
-            this.panel1.Controls.Add(this.btnProcurar);
-            this.panel1.Controls.Add(this.btnDevolução);
-            this.panel1.Controls.Add(this.cbFiltro);
-            this.panel1.Controls.Add(this.lblTotal);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 45);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(800, 555);
-            this.panel1.TabIndex = 16;
+            this.cbFiltro.BorderColor = System.Drawing.Color.Black;
+            this.cbFiltro.BorderRadius = 8;
+            this.cbFiltro.BorderThickness = 2;
+            this.cbFiltro.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cbFiltro.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbFiltro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbFiltro.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.cbFiltro.FormattingEnabled = true;
+            this.cbFiltro.Items.AddRange(new object[] {
+            "Nome",
+            "Autor",
+            "Gênero"});
+            this.cbFiltro.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
+            this.cbFiltro.Location = new System.Drawing.Point(103, 65);
+            this.cbFiltro.Name = "cbFiltro";
+            this.cbFiltro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbFiltro.PlaceholderMargin = 10;
+            this.cbFiltro.PlaceholderText = "Selecionar Filtro";
+            this.cbFiltro.Size = new System.Drawing.Size(190, 31);
+            this.cbFiltro.TabIndex = 9;
             // 
             // LivrosForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 600);
+            this.ClientSize = new System.Drawing.Size(1300, 700);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -248,6 +306,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "LivrosForm";
             this.Text = " ";
+            this.Load += new System.EventHandler(this.LivrosForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Lista)).EndInit();
@@ -272,5 +331,10 @@
         private RoundedTextBox txtNome;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label lblTeste;
+        private System.Windows.Forms.ListBox lstTabelas;
+        private System.Windows.Forms.Button btnCarregarTabelas;
+        private System.Windows.Forms.ListView lvCampos;
     }
 }

@@ -115,7 +115,7 @@
             this.EmailAst.ForeColor = System.Drawing.Color.Red;
             this.EmailAst.Location = new System.Drawing.Point(123, 290);
             this.EmailAst.Name = "EmailAst";
-            this.EmailAst.Size = new System.Drawing.Size(13, 17);
+            this.EmailAst.Size = new System.Drawing.Size(17, 23);
             this.EmailAst.TabIndex = 91;
             this.EmailAst.Text = "*";
             // 
@@ -154,7 +154,7 @@
             this.dtpDataNasc.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpDataNasc.Location = new System.Drawing.Point(72, 633);
             this.dtpDataNasc.Name = "dtpDataNasc";
-            this.dtpDataNasc.Size = new System.Drawing.Size(329, 33);
+            this.dtpDataNasc.Size = new System.Drawing.Size(329, 39);
             this.dtpDataNasc.TabIndex = 88;
             // 
             // lblUsuario
@@ -166,7 +166,7 @@
             this.lblUsuario.ForeColor = System.Drawing.Color.Red;
             this.lblUsuario.Location = new System.Drawing.Point(181, 130);
             this.lblUsuario.Name = "lblUsuario";
-            this.lblUsuario.Size = new System.Drawing.Size(13, 17);
+            this.lblUsuario.Size = new System.Drawing.Size(17, 23);
             this.lblUsuario.TabIndex = 84;
             this.lblUsuario.Text = "*";
             // 
@@ -205,7 +205,7 @@
             this.SenhaAst.ForeColor = System.Drawing.Color.Red;
             this.SenhaAst.Location = new System.Drawing.Point(128, 676);
             this.SenhaAst.Name = "SenhaAst";
-            this.SenhaAst.Size = new System.Drawing.Size(13, 17);
+            this.SenhaAst.Size = new System.Drawing.Size(17, 23);
             this.SenhaAst.TabIndex = 78;
             this.SenhaAst.Text = "*";
             // 
@@ -217,7 +217,7 @@
             this.lblDataNasc.ForeColor = System.Drawing.Color.LightGray;
             this.lblDataNasc.Location = new System.Drawing.Point(70, 605);
             this.lblDataNasc.Name = "lblDataNasc";
-            this.lblDataNasc.Size = new System.Drawing.Size(192, 25);
+            this.lblDataNasc.Size = new System.Drawing.Size(242, 32);
             this.lblDataNasc.TabIndex = 72;
             this.lblDataNasc.Text = "Data de Nascimento:";
             // 
@@ -230,7 +230,7 @@
             this.ConfirmSenhaAst.ForeColor = System.Drawing.Color.Red;
             this.ConfirmSenhaAst.Location = new System.Drawing.Point(218, 778);
             this.ConfirmSenhaAst.Name = "ConfirmSenhaAst";
-            this.ConfirmSenhaAst.Size = new System.Drawing.Size(13, 17);
+            this.ConfirmSenhaAst.Size = new System.Drawing.Size(17, 23);
             this.ConfirmSenhaAst.TabIndex = 79;
             this.ConfirmSenhaAst.Text = "*";
             // 
@@ -242,7 +242,7 @@
             this.aviso.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(54)))), ((int)(((byte)(77)))));
             this.aviso.Location = new System.Drawing.Point(280, 84);
             this.aviso.Name = "aviso";
-            this.aviso.Size = new System.Drawing.Size(220, 25);
+            this.aviso.Size = new System.Drawing.Size(280, 32);
             this.aviso.TabIndex = 85;
             this.aviso.Text = "CAMPOS OBRIGATÓRIOS";
             // 
@@ -255,7 +255,7 @@
             this.chkMostrarSenha.ForeColor = System.Drawing.Color.LightGray;
             this.chkMostrarSenha.Location = new System.Drawing.Point(75, 758);
             this.chkMostrarSenha.Name = "chkMostrarSenha";
-            this.chkMostrarSenha.Size = new System.Drawing.Size(101, 19);
+            this.chkMostrarSenha.Size = new System.Drawing.Size(129, 24);
             this.chkMostrarSenha.TabIndex = 87;
             this.chkMostrarSenha.Text = "Mostrar senha";
             this.chkMostrarSenha.UseVisualStyleBackColor = true;
@@ -269,7 +269,7 @@
             this.lblTurma.ForeColor = System.Drawing.Color.LightGray;
             this.lblTurma.Location = new System.Drawing.Point(70, 367);
             this.lblTurma.Name = "lblTurma";
-            this.lblTurma.Size = new System.Drawing.Size(71, 25);
+            this.lblTurma.Size = new System.Drawing.Size(88, 32);
             this.lblTurma.TabIndex = 73;
             this.lblTurma.Text = "Turma:";
             // 
@@ -281,7 +281,7 @@
             this.lblCPF.ForeColor = System.Drawing.Color.LightGray;
             this.lblCPF.Location = new System.Drawing.Point(67, 523);
             this.lblCPF.Name = "lblCPF";
-            this.lblCPF.Size = new System.Drawing.Size(50, 25);
+            this.lblCPF.Size = new System.Drawing.Size(61, 32);
             this.lblCPF.TabIndex = 70;
             this.lblCPF.Text = "CPF:";
             // 
@@ -294,7 +294,7 @@
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.label2.Location = new System.Drawing.Point(67, 130);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(122, 25);
+            this.label2.Size = new System.Drawing.Size(154, 32);
             this.label2.TabIndex = 83;
             this.label2.Text = "Tipo usuário:";
             // 
@@ -333,7 +333,7 @@
             this.label3.ForeColor = System.Drawing.Color.Red;
             this.label3.Location = new System.Drawing.Point(257, 76);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 40);
+            this.label3.Size = new System.Drawing.Size(37, 50);
             this.label3.TabIndex = 86;
             this.label3.Text = "*";
             // 
@@ -346,7 +346,7 @@
             this.NomeAst.ForeColor = System.Drawing.Color.Red;
             this.NomeAst.Location = new System.Drawing.Point(218, 211);
             this.NomeAst.Name = "NomeAst";
-            this.NomeAst.Size = new System.Drawing.Size(13, 17);
+            this.NomeAst.Size = new System.Drawing.Size(17, 23);
             this.NomeAst.TabIndex = 77;
             this.NomeAst.Text = "*";
             // 
@@ -358,7 +358,7 @@
             this.lblTelefone.ForeColor = System.Drawing.Color.LightGray;
             this.lblTelefone.Location = new System.Drawing.Point(70, 446);
             this.lblTelefone.Name = "lblTelefone";
-            this.lblTelefone.Size = new System.Drawing.Size(89, 25);
+            this.lblTelefone.Size = new System.Drawing.Size(112, 32);
             this.lblTelefone.TabIndex = 74;
             this.lblTelefone.Text = "Telefone:";
             // 
@@ -370,7 +370,7 @@
             this.lblConfirmSenha.ForeColor = System.Drawing.Color.LightGray;
             this.lblConfirmSenha.Location = new System.Drawing.Point(67, 779);
             this.lblConfirmSenha.Name = "lblConfirmSenha";
-            this.lblConfirmSenha.Size = new System.Drawing.Size(159, 25);
+            this.lblConfirmSenha.Size = new System.Drawing.Size(200, 32);
             this.lblConfirmSenha.TabIndex = 76;
             this.lblConfirmSenha.Text = "Confirmar senha:";
             // 
@@ -382,7 +382,7 @@
             this.lblEmail.ForeColor = System.Drawing.Color.LightGray;
             this.lblEmail.Location = new System.Drawing.Point(67, 289);
             this.lblEmail.Name = "lblEmail";
-            this.lblEmail.Size = new System.Drawing.Size(64, 25);
+            this.lblEmail.Size = new System.Drawing.Size(78, 32);
             this.lblEmail.TabIndex = 65;
             this.lblEmail.Text = "Email:";
             // 
@@ -462,7 +462,7 @@
             this.cbUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbUsuario.PlaceholderMargin = 10;
             this.cbUsuario.PlaceholderText = "Selecione o tipo de usuario...";
-            this.cbUsuario.Size = new System.Drawing.Size(329, 34);
+            this.cbUsuario.Size = new System.Drawing.Size(329, 40);
             this.cbUsuario.TabIndex = 61;
             this.cbUsuario.SelectedIndexChanged += new System.EventHandler(this.cbUsuario_SelectedIndexChanged);
             // 
@@ -522,7 +522,7 @@
             this.TelefoneAst.ForeColor = System.Drawing.Color.Red;
             this.TelefoneAst.Location = new System.Drawing.Point(156, 446);
             this.TelefoneAst.Name = "TelefoneAst";
-            this.TelefoneAst.Size = new System.Drawing.Size(13, 17);
+            this.TelefoneAst.Size = new System.Drawing.Size(17, 23);
             this.TelefoneAst.TabIndex = 82;
             this.TelefoneAst.Text = "*";
             // 
@@ -534,7 +534,7 @@
             this.lblSenha.ForeColor = System.Drawing.Color.LightGray;
             this.lblSenha.Location = new System.Drawing.Point(67, 677);
             this.lblSenha.Name = "lblSenha";
-            this.lblSenha.Size = new System.Drawing.Size(69, 25);
+            this.lblSenha.Size = new System.Drawing.Size(87, 32);
             this.lblSenha.TabIndex = 75;
             this.lblSenha.Text = "Senha:";
             // 
@@ -547,7 +547,7 @@
             this.TurmaAst.ForeColor = System.Drawing.Color.Red;
             this.TurmaAst.Location = new System.Drawing.Point(137, 367);
             this.TurmaAst.Name = "TurmaAst";
-            this.TurmaAst.Size = new System.Drawing.Size(13, 17);
+            this.TurmaAst.Size = new System.Drawing.Size(17, 23);
             this.TurmaAst.TabIndex = 81;
             this.TurmaAst.Text = "*";
             // 
@@ -559,7 +559,7 @@
             this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.Titulo.Location = new System.Drawing.Point(211, 18);
             this.Titulo.Name = "Titulo";
-            this.Titulo.Size = new System.Drawing.Size(365, 40);
+            this.Titulo.Size = new System.Drawing.Size(470, 50);
             this.Titulo.TabIndex = 60;
             this.Titulo.Text = "CADASTRO DE USUARIOS";
             // 
@@ -572,7 +572,7 @@
             this.lblNome.ForeColor = System.Drawing.Color.LightGray;
             this.lblNome.Location = new System.Drawing.Point(67, 211);
             this.lblNome.Name = "lblNome";
-            this.lblNome.Size = new System.Drawing.Size(159, 25);
+            this.lblNome.Size = new System.Drawing.Size(199, 32);
             this.lblNome.TabIndex = 62;
             this.lblNome.Text = "Nome Completo:";
             // 
@@ -606,13 +606,13 @@
             this.DataNascAst.ForeColor = System.Drawing.Color.Red;
             this.DataNascAst.Location = new System.Drawing.Point(259, 604);
             this.DataNascAst.Name = "DataNascAst";
-            this.DataNascAst.Size = new System.Drawing.Size(13, 17);
+            this.DataNascAst.Size = new System.Drawing.Size(17, 23);
             this.DataNascAst.TabIndex = 80;
             this.DataNascAst.Text = "*";
             // 
             // CadUsuario
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(775, 1001);
             this.Controls.Add(this.panel1);
@@ -621,7 +621,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CadUsuario";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "InicioForm";
             this.Load += new System.EventHandler(this.CadUsuario_Load);
             this.panel1.ResumeLayout(false);

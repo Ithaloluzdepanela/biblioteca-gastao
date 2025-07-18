@@ -16,7 +16,7 @@ namespace BibliotecaApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LivrosForm());
+            //Application.Run(new LivrosForm());
             //Repetição para quando clicar no logout reiniciar a aplicação
             while (true)
             {

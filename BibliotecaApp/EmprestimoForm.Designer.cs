@@ -29,14 +29,12 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cbBibliotecaria = new RoundedComboBox();
+            this.dtpDataDevolucao = new System.Windows.Forms.DateTimePicker();
+            this.dtpDataEmprestimo = new System.Windows.Forms.DateTimePicker();
             this.lstLivros = new System.Windows.Forms.ListBox();
-            this.txtBarcode = new RoundedTextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.chkDevolucaoPersonalizada = new System.Windows.Forms.CheckBox();
             this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
-            this.txtLivro = new RoundedTextBox();
-            this.txtNomeUsuario = new RoundedTextBox();
             this.btnEmprestar = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -44,8 +42,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.dtpDataEmprestimo = new System.Windows.Forms.DateTimePicker();
-            this.dtpDataDevolucao = new System.Windows.Forms.DateTimePicker();
+            this.cbBibliotecaria = new RoundedComboBox();
+            this.txtBarcode = new RoundedTextBox();
+            this.txtLivro = new RoundedTextBox();
+            this.txtNomeUsuario = new RoundedTextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,25 +76,28 @@
             this.panel1.Size = new System.Drawing.Size(602, 703);
             this.panel1.TabIndex = 0;
             // 
-            // cbBibliotecaria
+            // dtpDataDevolucao
             // 
-            this.cbBibliotecaria.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.cbBibliotecaria.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.cbBibliotecaria.BorderRadius = 8;
-            this.cbBibliotecaria.BorderThickness = 1;
-            this.cbBibliotecaria.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.cbBibliotecaria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbBibliotecaria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbBibliotecaria.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbBibliotecaria.FormattingEnabled = true;
-            this.cbBibliotecaria.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbBibliotecaria.Location = new System.Drawing.Point(103, 368);
-            this.cbBibliotecaria.Name = "cbBibliotecaria";
-            this.cbBibliotecaria.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Italic);
-            this.cbBibliotecaria.PlaceholderMargin = 10;
-            this.cbBibliotecaria.PlaceholderText = "Selecione...";
-            this.cbBibliotecaria.Size = new System.Drawing.Size(350, 31);
-            this.cbBibliotecaria.TabIndex = 103;
+            this.dtpDataDevolucao.Enabled = false;
+            this.dtpDataDevolucao.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.dtpDataDevolucao.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDataDevolucao.Location = new System.Drawing.Point(103, 537);
+            this.dtpDataDevolucao.Margin = new System.Windows.Forms.Padding(4);
+            this.dtpDataDevolucao.Name = "dtpDataDevolucao";
+            this.dtpDataDevolucao.Size = new System.Drawing.Size(350, 34);
+            this.dtpDataDevolucao.TabIndex = 105;
+            this.dtpDataDevolucao.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
+            // 
+            // dtpDataEmprestimo
+            // 
+            this.dtpDataEmprestimo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpDataEmprestimo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDataEmprestimo.Location = new System.Drawing.Point(103, 451);
+            this.dtpDataEmprestimo.Margin = new System.Windows.Forms.Padding(4);
+            this.dtpDataEmprestimo.Name = "dtpDataEmprestimo";
+            this.dtpDataEmprestimo.Size = new System.Drawing.Size(350, 34);
+            this.dtpDataEmprestimo.TabIndex = 104;
+            this.dtpDataEmprestimo.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
             // 
             // lstLivros
             // 
@@ -107,34 +110,6 @@
             this.lstLivros.Size = new System.Drawing.Size(265, 104);
             this.lstLivros.TabIndex = 102;
             this.lstLivros.Visible = false;
-            // 
-            // txtBarcode
-            // 
-            this.txtBarcode.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtBarcode.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtBarcode.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtBarcode.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtBarcode.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtBarcode.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtBarcode.BorderRadius = 10;
-            this.txtBarcode.BorderThickness = 1;
-            this.txtBarcode.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtBarcode.Enabled = false;
-            this.txtBarcode.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBarcode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtBarcode.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtBarcode.Location = new System.Drawing.Point(103, 279);
-            this.txtBarcode.Margin = new System.Windows.Forms.Padding(4);
-            this.txtBarcode.Name = "txtBarcode";
-            this.txtBarcode.Padding = new System.Windows.Forms.Padding(8, 10, 8, 10);
-            this.txtBarcode.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtBarcode.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBarcode.PlaceholderMarginLeft = 12;
-            this.txtBarcode.PlaceholderText = "Escaneie para buscar informacoes...";
-            this.txtBarcode.Size = new System.Drawing.Size(350, 37);
-            this.txtBarcode.TabIndex = 101;
-            this.txtBarcode.TextColor = System.Drawing.Color.Black;
-            this.txtBarcode.UseSystemPasswordChar = false;
             // 
             // label7
             // 
@@ -174,60 +149,6 @@
             this.lstSugestoesUsuario.Size = new System.Drawing.Size(266, 106);
             this.lstSugestoesUsuario.TabIndex = 98;
             this.lstSugestoesUsuario.Visible = false;
-            // 
-            // txtLivro
-            // 
-            this.txtLivro.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtLivro.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtLivro.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtLivro.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtLivro.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtLivro.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtLivro.BorderRadius = 10;
-            this.txtLivro.BorderThickness = 1;
-            this.txtLivro.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtLivro.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLivro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtLivro.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtLivro.Location = new System.Drawing.Point(103, 190);
-            this.txtLivro.Margin = new System.Windows.Forms.Padding(4);
-            this.txtLivro.Name = "txtLivro";
-            this.txtLivro.Padding = new System.Windows.Forms.Padding(8, 10, 8, 10);
-            this.txtLivro.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtLivro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLivro.PlaceholderMarginLeft = 12;
-            this.txtLivro.PlaceholderText = "Digite aqui o livro...";
-            this.txtLivro.Size = new System.Drawing.Size(350, 37);
-            this.txtLivro.TabIndex = 95;
-            this.txtLivro.TextColor = System.Drawing.Color.Black;
-            this.txtLivro.UseSystemPasswordChar = false;
-            // 
-            // txtNomeUsuario
-            // 
-            this.txtNomeUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtNomeUsuario.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtNomeUsuario.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtNomeUsuario.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtNomeUsuario.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtNomeUsuario.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtNomeUsuario.BorderRadius = 10;
-            this.txtNomeUsuario.BorderThickness = 1;
-            this.txtNomeUsuario.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtNomeUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNomeUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtNomeUsuario.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNomeUsuario.Location = new System.Drawing.Point(103, 101);
-            this.txtNomeUsuario.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNomeUsuario.Name = "txtNomeUsuario";
-            this.txtNomeUsuario.Padding = new System.Windows.Forms.Padding(8, 10, 8, 10);
-            this.txtNomeUsuario.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNomeUsuario.PlaceholderMarginLeft = 12;
-            this.txtNomeUsuario.PlaceholderText = "Digite aqui o usuário...";
-            this.txtNomeUsuario.Size = new System.Drawing.Size(350, 37);
-            this.txtNomeUsuario.TabIndex = 94;
-            this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
-            this.txtNomeUsuario.UseSystemPasswordChar = false;
             // 
             // btnEmprestar
             // 
@@ -300,9 +221,9 @@
             this.label2.Location = new System.Drawing.Point(103, 60);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(91, 30);
+            this.label2.Size = new System.Drawing.Size(77, 30);
             this.label2.TabIndex = 17;
-            this.label2.Text = "Usuário:";
+            this.label2.Text = "Nome:";
             // 
             // label1
             // 
@@ -316,28 +237,107 @@
             this.label1.TabIndex = 16;
             this.label1.Text = "Empréstimo de Livro";
             // 
-            // dtpDataEmprestimo
+            // cbBibliotecaria
             // 
-            this.dtpDataEmprestimo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpDataEmprestimo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDataEmprestimo.Location = new System.Drawing.Point(103, 451);
-            this.dtpDataEmprestimo.Margin = new System.Windows.Forms.Padding(4);
-            this.dtpDataEmprestimo.Name = "dtpDataEmprestimo";
-            this.dtpDataEmprestimo.Size = new System.Drawing.Size(350, 34);
-            this.dtpDataEmprestimo.TabIndex = 104;
-            this.dtpDataEmprestimo.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
+            this.cbBibliotecaria.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cbBibliotecaria.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.cbBibliotecaria.BorderRadius = 8;
+            this.cbBibliotecaria.BorderThickness = 1;
+            this.cbBibliotecaria.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cbBibliotecaria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBibliotecaria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbBibliotecaria.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.cbBibliotecaria.FormattingEnabled = true;
+            this.cbBibliotecaria.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
+            this.cbBibliotecaria.Location = new System.Drawing.Point(103, 368);
+            this.cbBibliotecaria.Name = "cbBibliotecaria";
+            this.cbBibliotecaria.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Italic);
+            this.cbBibliotecaria.PlaceholderMargin = 10;
+            this.cbBibliotecaria.PlaceholderText = "Selecione...";
+            this.cbBibliotecaria.Size = new System.Drawing.Size(350, 31);
+            this.cbBibliotecaria.TabIndex = 103;
             // 
-            // dtpDataDevolucao
+            // txtBarcode
             // 
-            this.dtpDataDevolucao.Enabled = false;
-            this.dtpDataDevolucao.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.dtpDataDevolucao.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDataDevolucao.Location = new System.Drawing.Point(103, 537);
-            this.dtpDataDevolucao.Margin = new System.Windows.Forms.Padding(4);
-            this.dtpDataDevolucao.Name = "dtpDataDevolucao";
-            this.dtpDataDevolucao.Size = new System.Drawing.Size(350, 34);
-            this.dtpDataDevolucao.TabIndex = 105;
-            this.dtpDataDevolucao.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
+            this.txtBarcode.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtBarcode.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtBarcode.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtBarcode.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtBarcode.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtBarcode.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtBarcode.BorderRadius = 10;
+            this.txtBarcode.BorderThickness = 1;
+            this.txtBarcode.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtBarcode.Enabled = false;
+            this.txtBarcode.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBarcode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtBarcode.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtBarcode.Location = new System.Drawing.Point(103, 279);
+            this.txtBarcode.Margin = new System.Windows.Forms.Padding(4);
+            this.txtBarcode.Name = "txtBarcode";
+            this.txtBarcode.Padding = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.txtBarcode.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtBarcode.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBarcode.PlaceholderMarginLeft = 12;
+            this.txtBarcode.PlaceholderText = "Escaneie para buscar informacoes...";
+            this.txtBarcode.Size = new System.Drawing.Size(350, 37);
+            this.txtBarcode.TabIndex = 101;
+            this.txtBarcode.TextColor = System.Drawing.Color.Black;
+            this.txtBarcode.UseSystemPasswordChar = false;
+            // 
+            // txtLivro
+            // 
+            this.txtLivro.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtLivro.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtLivro.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtLivro.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtLivro.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtLivro.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtLivro.BorderRadius = 10;
+            this.txtLivro.BorderThickness = 1;
+            this.txtLivro.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtLivro.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLivro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtLivro.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtLivro.Location = new System.Drawing.Point(103, 190);
+            this.txtLivro.Margin = new System.Windows.Forms.Padding(4);
+            this.txtLivro.Name = "txtLivro";
+            this.txtLivro.Padding = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.txtLivro.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtLivro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLivro.PlaceholderMarginLeft = 12;
+            this.txtLivro.PlaceholderText = "Digite aqui o livro...";
+            this.txtLivro.Size = new System.Drawing.Size(350, 37);
+            this.txtLivro.TabIndex = 95;
+            this.txtLivro.TextColor = System.Drawing.Color.Black;
+            this.txtLivro.UseSystemPasswordChar = false;
+            // 
+            // txtNomeUsuario
+            // 
+            this.txtNomeUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtNomeUsuario.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtNomeUsuario.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtNomeUsuario.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtNomeUsuario.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtNomeUsuario.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtNomeUsuario.BorderRadius = 10;
+            this.txtNomeUsuario.BorderThickness = 1;
+            this.txtNomeUsuario.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtNomeUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNomeUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtNomeUsuario.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtNomeUsuario.Location = new System.Drawing.Point(103, 101);
+            this.txtNomeUsuario.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNomeUsuario.Name = "txtNomeUsuario";
+            this.txtNomeUsuario.Padding = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.txtNomeUsuario.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNomeUsuario.PlaceholderMarginLeft = 12;
+            this.txtNomeUsuario.PlaceholderText = "Digite aqui o Nome ...";
+            this.txtNomeUsuario.Size = new System.Drawing.Size(350, 37);
+            this.txtNomeUsuario.TabIndex = 94;
+            this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
+            this.txtNomeUsuario.UseSystemPasswordChar = false;
             // 
             // EmprestimoForm
             // 

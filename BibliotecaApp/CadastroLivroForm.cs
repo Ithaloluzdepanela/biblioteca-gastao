@@ -133,7 +133,7 @@ namespace BibliotecaApp
                         comando.Parameters.AddWithValue("@quantidade", quantidade);
                         comando.Parameters.AddWithValue("@codigo", codigoDeBarras);
                         comando.Parameters.AddWithValue("@autor", txtAutor.Text);
-                        comando.Parameters.AddWithValue("@disponibilidade", "Disponivel"); // Sempre cadastra como disponível
+                        comando.Parameters.AddWithValue("@disponibilidade", "1"); // Sempre cadastra como disponível
 
                         comando.ExecuteNonQuery(); // Executa a inserção
                     }

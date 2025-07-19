@@ -178,16 +178,6 @@
             this.panel1.Size = new System.Drawing.Size(1300, 655);
             this.panel1.TabIndex = 16;
             // 
-            // btnCriarEmprestimo
-            // 
-            this.btnCriarEmprestimo.Location = new System.Drawing.Point(697, 12);
-            this.btnCriarEmprestimo.Name = "btnCriarEmprestimo";
-            this.btnCriarEmprestimo.Size = new System.Drawing.Size(116, 87);
-            this.btnCriarEmprestimo.TabIndex = 21;
-            this.btnCriarEmprestimo.Text = "Criar tabela emprestimo";
-            this.btnCriarEmprestimo.UseVisualStyleBackColor = true;
-            this.btnCriarEmprestimo.Click += new System.EventHandler(this.btnCriarEmprestimo_Click);
-            // 
             // lvCampos
             // 
             this.lvCampos.HideSelection = false;

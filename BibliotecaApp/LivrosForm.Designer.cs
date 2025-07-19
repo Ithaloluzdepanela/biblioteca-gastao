@@ -30,7 +30,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LivrosForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Pic_Cadastrar = new System.Windows.Forms.PictureBox();
             this.picEmprestimo = new System.Windows.Forms.PictureBox();
             this.btnDevolução = new System.Windows.Forms.Button();
@@ -40,13 +40,14 @@
             this.lblTotal = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnCriarEmprestimo = new System.Windows.Forms.Button();
             this.lvCampos = new System.Windows.Forms.ListView();
             this.lstTabelas = new System.Windows.Forms.ListBox();
             this.btnCarregarTabelas = new System.Windows.Forms.Button();
-            this.lblTeste = new System.Windows.Forms.Label();
             this.txtNome = new RoundedTextBox();
             this.cbDisponibilidade = new RoundedComboBox();
             this.cbFiltro = new RoundedComboBox();
+            this.lblTeste = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Lista)).BeginInit();
@@ -105,14 +106,14 @@
             this.Lista.AllowUserToDeleteRows = false;
             this.Lista.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.Lista.BackgroundColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Lista.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Lista.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.Lista.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Lista.Location = new System.Drawing.Point(49, 105);
             this.Lista.Name = "Lista";
@@ -157,6 +158,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnCriarEmprestimo);
             this.panel1.Controls.Add(this.lvCampos);
             this.panel1.Controls.Add(this.lstTabelas);
             this.panel1.Controls.Add(this.btnCarregarTabelas);
@@ -175,6 +177,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1300, 655);
             this.panel1.TabIndex = 16;
+            // 
+            // btnCriarEmprestimo
+            // 
+            this.btnCriarEmprestimo.Location = new System.Drawing.Point(697, 12);
+            this.btnCriarEmprestimo.Name = "btnCriarEmprestimo";
+            this.btnCriarEmprestimo.Size = new System.Drawing.Size(116, 87);
+            this.btnCriarEmprestimo.TabIndex = 21;
+            this.btnCriarEmprestimo.Text = "Criar tabela emprestimo";
+            this.btnCriarEmprestimo.UseVisualStyleBackColor = true;
+            this.btnCriarEmprestimo.Click += new System.EventHandler(this.btnCriarEmprestimo_Click);
             // 
             // lvCampos
             // 
@@ -204,14 +216,6 @@
             this.btnCarregarTabelas.Text = "Verificar Tabelas";
             this.btnCarregarTabelas.UseVisualStyleBackColor = true;
             this.btnCarregarTabelas.Click += new System.EventHandler(this.btnCarregarTabelas_Click);
-            // 
-            // lblTeste
-            // 
-            this.lblTeste.AutoSize = true;
-            this.lblTeste.Location = new System.Drawing.Point(129, 9);
-            this.lblTeste.Name = "lblTeste";
-            this.lblTeste.Size = new System.Drawing.Size(0, 20);
-            this.lblTeste.TabIndex = 17;
             // 
             // txtNome
             // 
@@ -283,6 +287,14 @@
             this.cbFiltro.Size = new System.Drawing.Size(190, 31);
             this.cbFiltro.TabIndex = 9;
             // 
+            // lblTeste
+            // 
+            this.lblTeste.AutoSize = true;
+            this.lblTeste.Location = new System.Drawing.Point(129, 9);
+            this.lblTeste.Name = "lblTeste";
+            this.lblTeste.Size = new System.Drawing.Size(0, 20);
+            this.lblTeste.TabIndex = 17;
+            // 
             // LivrosForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -325,5 +337,6 @@
         private System.Windows.Forms.ListBox lstTabelas;
         private System.Windows.Forms.Button btnCarregarTabelas;
         private System.Windows.Forms.ListView lvCampos;
+        private System.Windows.Forms.Button btnCriarEmprestimo;
     }
 }

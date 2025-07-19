@@ -190,31 +190,6 @@ namespace BibliotecaApp
 
         #endregion
 
-        #region Ação: Renomear tabela "livro" para "livros" (executar uma vez se necessário)
-
-        //private void btnRenomearTabela_Click(object sender, EventArgs e)
-        //{
-        //    using (SqlCeConnection conexao = Conexao.ObterConexao())
-        //    {
-        //        try
-        //        {
-        //            conexao.Open();
-
-        //            string sql = "EXEC sp_rename 'livro', 'livros';";
-        //            SqlCeCommand comando = new SqlCeCommand(sql, conexao);
-        //            comando.ExecuteNonQuery();
-
-        //            lblTeste.Text = "Tabela renomeada com sucesso!";
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            lblTeste.Text = $"Erro: {ex.Message}";
-        //        }
-        //    }
-        //}
-
-        #endregion
-
         #region Ação: Carregar tabelas e exibir campos
 
         private void btnCarregarTabelas_Click(object sender, EventArgs e)
@@ -310,6 +285,7 @@ namespace BibliotecaApp
 
         #endregion
 
+        //Desabilitados:
         #region Ação: Criar Tabela de Livros (Desabilitado)
 
         private void btnCriarTablea_Click(object sender, EventArgs e)
@@ -353,8 +329,71 @@ namespace BibliotecaApp
 
             //    }
 
-            #endregion
 
         }
+        #endregion
+
+        #region Ação: Criar Tabela Emprestimo (Desabilitado)
+        //private void btnCriarEmprestimo_Click(object sender, EventArgs e)
+        //{
+        //        using (SqlCeConnection conexao = Conexao.ObterConexao())
+        //        {
+        //            try
+        //            {
+        //                conexao.Open();
+
+        //                string sql = @"
+        //CREATE TABLE Emprestimo (
+        //    Id INT IDENTITY(1,1) PRIMARY KEY,
+        //    Alocador INT NOT NULL,
+        //    Livro INT NOT NULL,
+        //    Responsavel INT NOT NULL,
+        //    DataEmprestimo DATETIME NOT NULL,
+        //    DataDevolucao DATETIME NOT NULL,
+        //    DataProrrogacao DATETIME NULL,
+        //    DataRealDevolucao DATETIME NULL,
+        //    Status NVARCHAR(15) NOT NULL
+        //);";
+
+
+        //                SqlCeCommand comando = new SqlCeCommand(sql, conexao);
+        //                comando.ExecuteNonQuery();
+
+        //                MessageBox.Show("Tabela 'Emprestimo' criada com sucesso!");
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show("Erro ao criar tabela: " + ex.Message);
+        //            }
+        //        }
+        //}
+        #endregion
+
+        #region Ação: Renomear tabela "livro" para "livros" (DESABILITADO)
+
+        //private void btnRenomearTabela_Click(object sender, EventArgs e)
+        //{
+        //    using (SqlCeConnection conexao = Conexao.ObterConexao())
+        //    {
+        //        try
+        //        {
+        //            conexao.Open();
+
+        //            string sql = "EXEC sp_rename 'livro', 'livros';";
+        //            SqlCeCommand comando = new SqlCeCommand(sql, conexao);
+        //            comando.ExecuteNonQuery();
+
+        //            lblTeste.Text = "Tabela renomeada com sucesso!";
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            lblTeste.Text = $"Erro: {ex.Message}";
+        //        }
+        //    }
+        //}
+
+        #endregion
     }
+
+
 }

@@ -98,14 +98,14 @@
             // 
             this.txtEmail.Location = new System.Drawing.Point(141, 287);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(210, 27);
+            this.txtEmail.Size = new System.Drawing.Size(210, 23);
             this.txtEmail.TabIndex = 3;
             // 
             // txtSenha
             // 
             this.txtSenha.Location = new System.Drawing.Point(141, 388);
             this.txtSenha.Name = "txtSenha";
-            this.txtSenha.Size = new System.Drawing.Size(210, 27);
+            this.txtSenha.Size = new System.Drawing.Size(210, 23);
             this.txtSenha.TabIndex = 4;
             this.txtSenha.UseSystemPasswordChar = true;
             // 
@@ -116,7 +116,7 @@
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label1.Location = new System.Drawing.Point(146, 262);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 23);
+            this.label1.Size = new System.Drawing.Size(43, 19);
             this.label1.TabIndex = 5;
             this.label1.Text = "Email";
             // 
@@ -127,7 +127,7 @@
             this.label2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label2.Location = new System.Drawing.Point(146, 362);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 23);
+            this.label2.Size = new System.Drawing.Size(47, 19);
             this.label2.TabIndex = 6;
             this.label2.Text = "Senha";
             // 
@@ -137,7 +137,7 @@
             this.cbMostrarSenha.ForeColor = System.Drawing.Color.White;
             this.cbMostrarSenha.Location = new System.Drawing.Point(146, 421);
             this.cbMostrarSenha.Name = "cbMostrarSenha";
-            this.cbMostrarSenha.Size = new System.Drawing.Size(126, 24);
+            this.cbMostrarSenha.Size = new System.Drawing.Size(102, 19);
             this.cbMostrarSenha.TabIndex = 8;
             this.cbMostrarSenha.Text = "Mostrar Senha";
             this.cbMostrarSenha.UseVisualStyleBackColor = true;
@@ -145,7 +145,7 @@
             // 
             // LoginForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.ClientSize = new System.Drawing.Size(482, 600);

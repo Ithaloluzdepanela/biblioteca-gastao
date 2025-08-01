@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Data.SqlServerCe;
 
 namespace BibliotecaApp
 {
@@ -12,6 +13,7 @@ namespace BibliotecaApp
         public LoginForm()
         {
             InitializeComponent();
+
 
         }
 
@@ -35,6 +37,21 @@ namespace BibliotecaApp
 
 
         #endregion
+        #region Classe Conexao
+
+        // Classe estática para conectar ao banco .sdf
+        public static class Conexao
+        {
+            public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
+            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
+
+            public static SqlCeConnection ObterConexao()
+            {
+                return new SqlCeConnection(Conectar);
+            }
+        }
+
+        #endregion
 
         #region Login
 
@@ -50,32 +67,62 @@ namespace BibliotecaApp
 
         private void BtnEntrar_Click(object sender, EventArgs e)
         {
-            string usuario = txtEmail.Text.Trim();
+
+            string email = txtEmail.Text.Trim();
             string senha = txtSenha.Text;
 
-            // Validação de campos vazios
-            if (string.IsNullOrEmpty(usuario) || string.IsNullOrEmpty(senha))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
             {
                 MessageBox.Show("Por favor, preencha todos os campos.", "Campos obrigatórios", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                if (string.IsNullOrEmpty(usuario)) txtEmail.Focus();
+                if (string.IsNullOrEmpty(email)) txtEmail.Focus();
                 else txtSenha.Focus();
                 return;
             }
 
-            // Autenticação simulada
-            if (usuario == "admin" && senha == "123")
+            try
             {
-                cancelar = true;
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                using (SqlCeConnection conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+
+                    string query = @"SELECT * FROM usuarios 
+                             WHERE email = @email AND senha = @senha AND tipousuario = 'Bibliotecário(a)'";
+
+                    using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
+                    {
+                        comando.Parameters.AddWithValue("@email", email);
+                        comando.Parameters.AddWithValue("@senha", senha);
+
+                        using (SqlCeDataReader reader = comando.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // Login válido
+                                cancelar = true;
+                                this.DialogResult = DialogResult.OK;
+                                this.Close();
+                            }
+                            
+                            else
+                            {
+                                MessageBox.Show("Acesso negado. Verifique seu e-mail, senha.", "Erro de Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                txtEmail.Clear();
+                                txtSenha.Clear();
+                                txtEmail.Focus();
+                            }
+                        }
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Acesso negado", "Erro de Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtEmail.Clear();
-                txtSenha.Clear();
-                txtEmail.Focus();
+                MessageBox.Show("Erro na autenticação: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

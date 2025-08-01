@@ -293,5 +293,10 @@ namespace BibliotecaApp
             cbBibliotecaria.DropDownStyle = ComboBoxStyle.DropDownList;
             cbBibliotecaria.ItemHeight = 35; // define a altura dos itens
         }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

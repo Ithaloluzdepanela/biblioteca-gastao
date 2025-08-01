@@ -52,7 +52,7 @@
             this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.Titulo.Location = new System.Drawing.Point(91, 9);
             this.Titulo.Name = "Titulo";
-            this.Titulo.Size = new System.Drawing.Size(414, 50);
+            this.Titulo.Size = new System.Drawing.Size(322, 40);
             this.Titulo.TabIndex = 93;
             this.Titulo.Text = "CADASTRO DE LIVROS";
             // 
@@ -64,7 +64,7 @@
             this.lblNome.ForeColor = System.Drawing.Color.LightGray;
             this.lblNome.Location = new System.Drawing.Point(221, 141);
             this.lblNome.Name = "lblNome";
-            this.lblNome.Size = new System.Drawing.Size(159, 30);
+            this.lblNome.Size = new System.Drawing.Size(126, 23);
             this.lblNome.TabIndex = 94;
             this.lblNome.Text = "Nome Do Livro";
             // 
@@ -76,7 +76,7 @@
             this.label1.ForeColor = System.Drawing.Color.LightGray;
             this.label1.Location = new System.Drawing.Point(259, 212);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 30);
+            this.label1.Size = new System.Drawing.Size(66, 23);
             this.label1.TabIndex = 96;
             this.label1.Text = "Gênero";
             // 
@@ -88,7 +88,7 @@
             this.label2.ForeColor = System.Drawing.Color.LightGray;
             this.label2.Location = new System.Drawing.Point(238, 283);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(125, 30);
+            this.label2.Size = new System.Drawing.Size(100, 23);
             this.label2.TabIndex = 98;
             this.label2.Text = "Quantidade";
             // 
@@ -100,7 +100,7 @@
             this.label3.ForeColor = System.Drawing.Color.LightGray;
             this.label3.Location = new System.Drawing.Point(266, 354);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(68, 30);
+            this.label3.Size = new System.Drawing.Size(53, 23);
             this.label3.TabIndex = 100;
             this.label3.Text = "Autor";
             // 
@@ -112,7 +112,7 @@
             this.label4.ForeColor = System.Drawing.Color.LightGray;
             this.label4.Location = new System.Drawing.Point(211, 427);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(179, 30);
+            this.label4.Size = new System.Drawing.Size(141, 23);
             this.label4.TabIndex = 103;
             this.label4.Text = "Codigo de Barras";
             // 
@@ -163,6 +163,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(602, 703);
             this.panel1.TabIndex = 93;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // mtxCodigoBarras
             // 
@@ -286,7 +287,7 @@
             // 
             // CadastroLivroForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(602, 703);

@@ -42,7 +42,7 @@
             this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(121, 45);
+            this.label1.Size = new System.Drawing.Size(99, 37);
             this.label1.TabIndex = 0;
             this.label1.Text = "INICIO";
             // 
@@ -59,15 +59,16 @@
             // lblResultado
             // 
             this.lblResultado.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
-            this.lblResultado.Location = new System.Drawing.Point(179, 9);
+            this.lblResultado.Location = new System.Drawing.Point(105, 9);
             this.lblResultado.Name = "lblResultado";
             this.lblResultado.Size = new System.Drawing.Size(591, 194);
             this.lblResultado.TabIndex = 2;
             this.lblResultado.Text = "Resultado";
+            this.lblResultado.Click += new System.EventHandler(this.lblResultado_Click);
             // 
             // InicioForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 600);
             this.Controls.Add(this.lblResultado);

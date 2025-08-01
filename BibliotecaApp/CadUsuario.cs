@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -50,6 +51,22 @@ namespace BibliotecaApp
         }
         #endregion
 
+        #region Classe Conexao
+
+        // Classe estática para conectar ao banco .sdf
+        public static class Conexao
+        {
+            public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
+            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
+
+            public static SqlCeConnection ObterConexao()
+            {
+                return new SqlCeConnection(Conectar);
+            }
+        }
+
+        #endregion
+
         #region Métodos Públicos
         /// <summary>
         /// Limpa todos os campos do formulário
@@ -64,6 +81,7 @@ namespace BibliotecaApp
             dtpDataNasc.Value = DateTime.Today;
             txtSenha.Text = "";
             txtConfirmSenha.Text = "";
+            txtNome.Focus();                                                                                                                                                                        
         }
 
         /// <summary>
@@ -513,27 +531,70 @@ namespace BibliotecaApp
         /// </summary>
         private void CadastrarNovoUsuario()
         {
-            int novoId = Usuarios.ListaUsuarios.Count + 1;
 
-            Usuarios usuario = new Usuarios
+            using (SqlCeConnection conexao = Conexao.ObterConexao())
             {
-                Id = novoId,
-                Nome = txtNome.Text.Trim(),
-                TipoUsuario = cbUsuario.SelectedItem.ToString(),
-                CPF = RemoverMascara(mtxCPF.Text),
-                DataNascimento = dtpDataNasc.Value,
-                Telefone = RemoverMascara(mtxTelefone.Text),
-                Email = txtEmail.Text.Trim(),
-                Turma = txtTurma.Text.Trim(),
-                Senha = txtSenha.Text.Trim()
-            };
+                try
+                {
+                    conexao.Open();
 
-            Usuarios.ListaUsuarios.Add(usuario);
+                    using (SqlCeCommand comando = conexao.CreateCommand())
+                    {
+                        // Define o comando SQL com parâmetros para evitar SQL Injection
+                        comando.CommandText = @"INSERT INTO usuarios
+        (Nome, Email, Senha, CPF, DataNascimento, Turma, Telefone, TipoUsuario) 
+        VALUES 
+        (@Nome, @Email, @Senha, @CPF, @DataNascimento, @Turma, @Telefone, @TipoUsuario)";
+
+                        // Adiciona os valores dos campos do formulário nos parâmetros do comando
+                        comando.Parameters.AddWithValue("@Nome", txtNome.Text);           // Nome do usuário
+                        comando.Parameters.AddWithValue("@Email", txtEmail.Text);         // E-mail
+                        comando.Parameters.AddWithValue("@Senha", txtSenha.Text);         // Senha (atenção: deve ser criptografada no futuro)
+                        comando.Parameters.AddWithValue("@CPF", mtxCPF.Text);             // CPF
+                        comando.Parameters.AddWithValue("@DataNascimento", dtpDataNasc.Text); // Data de nascimento (string, ideal seria DateTime)
+                        comando.Parameters.AddWithValue("@Turma", txtTurma.Text);       // Turma selecionada no combo
+                        comando.Parameters.AddWithValue("@Telefone", mtxTelefone.Text);   // Telefone
+                        comando.Parameters.AddWithValue("@TipoUsuario", cbUsuario.Text);  // Tipo de usuário selecionado no combo
+
+                        // Executa o comando no banco (insere o registro)
+                        comando.ExecuteNonQuery();
+
+                       
+
+                        // Chama um método (que você deve ter criado) para limpar os campos da tela
+                        LimparCampos();
+
+                        // Libera os recursos usados pelo comando
+                        comando.Dispose();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Se der erro, exibe a mensagem
+                    MessageBox.Show("Erro ao salvar: " + ex.Message);
+                }
+                finally
+                {
+                    // Fecha a conexão com o banco, mesmo que ocorra erro
+                    conexao.Close();
+                }
+            }
+
+
+
+            
+
+            
             MessageBox.Show("Cadastro concluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
         #endregion
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

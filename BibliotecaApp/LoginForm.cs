@@ -12,7 +12,7 @@ namespace BibliotecaApp
         public LoginForm()
         {
             InitializeComponent();
-            cbMostrarSenha.Text = "Mostrar senha"; // texto inicial do checkbox
+
         }
 
         #region Eventos de Saída
@@ -32,11 +32,23 @@ namespace BibliotecaApp
             picExit.BackColor = Color.Transparent;
         }
 
+
+
         #endregion
 
         #region Login
 
-        private void btnEntrar_Click(object sender, EventArgs e)
+
+
+
+        #endregion
+
+        #region Mostrar/Ocultar Senha
+
+
+        #endregion
+
+        private void BtnEntrar_Click(object sender, EventArgs e)
         {
             string usuario = txtEmail.Text.Trim();
             string senha = txtSenha.Text;
@@ -65,19 +77,5 @@ namespace BibliotecaApp
                 txtEmail.Focus();
             }
         }
-
-        #endregion
-
-        #region Mostrar/Ocultar Senha
-
-        private void cbMostrarSenha_CheckedChanged(object sender, EventArgs e)
-        {
-            bool mostrar = cbMostrarSenha.Checked;
-            txtSenha.UseSystemPasswordChar = !mostrar;
-            cbMostrarSenha.Text = mostrar ? "Ocultar senha" : "Mostrar senha";
-        }
-
-        #endregion
-
     }
 }

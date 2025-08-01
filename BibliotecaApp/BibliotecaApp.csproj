@@ -120,6 +120,9 @@
     <Compile Include="DevoluçãoForm.Designer.cs">
       <DependentUpon>DevoluçãoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ElementosPersonalizados\GradientPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Models\Emprestimo.cs" />
     <Compile Include="Models\Livro.cs" />
     <Compile Include="Component1.cs">
@@ -335,6 +338,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\botão redondo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clouds-upright-2x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clouds-upright-2x1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -40,6 +40,9 @@
             this.lblTotal = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnBancoDados = new System.Windows.Forms.Button();
             this.btnCriarEmprestimo = new System.Windows.Forms.Button();
             this.lvCampos = new System.Windows.Forms.ListView();
             this.lstTabelas = new System.Windows.Forms.ListBox();
@@ -140,7 +143,7 @@
             this.lblTotal.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotal.Location = new System.Drawing.Point(364, 70);
             this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(0, 23);
+            this.lblTotal.Size = new System.Drawing.Size(0, 19);
             this.lblTotal.TabIndex = 11;
             // 
             // label1
@@ -152,12 +155,15 @@
             this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 45);
+            this.label1.Size = new System.Drawing.Size(89, 37);
             this.label1.TabIndex = 0;
             this.label1.Text = "Livros";
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button2);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.btnBancoDados);
             this.panel1.Controls.Add(this.btnCriarEmprestimo);
             this.panel1.Controls.Add(this.lvCampos);
             this.panel1.Controls.Add(this.lstTabelas);
@@ -173,10 +179,44 @@
             this.panel1.Controls.Add(this.cbFiltro);
             this.panel1.Controls.Add(this.lblTotal);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 45);
+            this.panel1.Location = new System.Drawing.Point(0, 37);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1300, 655);
+            this.panel1.Size = new System.Drawing.Size(1300, 663);
             this.panel1.TabIndex = 16;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(1096, 12);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(117, 83);
+            this.button2.TabIndex = 23;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(903, -5);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(170, 100);
+            this.button1.TabIndex = 22;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // btnBancoDados
+            // 
+            this.btnBancoDados.Location = new System.Drawing.Point(723, 29);
+            this.btnBancoDados.Name = "btnBancoDados";
+            this.btnBancoDados.Size = new System.Drawing.Size(115, 60);
+            this.btnBancoDados.TabIndex = 21;
+            this.btnBancoDados.Text = "Criar Banco De Dados";
+            this.btnBancoDados.UseVisualStyleBackColor = true;
+            // 
+            // btnCriarEmprestimo
+            // 
+            this.btnCriarEmprestimo.Location = new System.Drawing.Point(0, 0);
+            this.btnCriarEmprestimo.Name = "btnCriarEmprestimo";
+            this.btnCriarEmprestimo.Size = new System.Drawing.Size(75, 23);
+            this.btnCriarEmprestimo.TabIndex = 0;
             // 
             // lvCampos
             // 
@@ -191,7 +231,7 @@
             // lstTabelas
             // 
             this.lstTabelas.FormattingEnabled = true;
-            this.lstTabelas.ItemHeight = 20;
+            this.lstTabelas.ItemHeight = 15;
             this.lstTabelas.Location = new System.Drawing.Point(819, 101);
             this.lstTabelas.Name = "lstTabelas";
             this.lstTabelas.Size = new System.Drawing.Size(242, 304);
@@ -251,7 +291,7 @@
             this.cbDisponibilidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbDisponibilidade.PlaceholderMargin = 10;
             this.cbDisponibilidade.PlaceholderText = "Selecionar Filtro";
-            this.cbDisponibilidade.Size = new System.Drawing.Size(190, 31);
+            this.cbDisponibilidade.Size = new System.Drawing.Size(190, 26);
             this.cbDisponibilidade.TabIndex = 13;
             // 
             // cbFiltro
@@ -274,7 +314,7 @@
             this.cbFiltro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbFiltro.PlaceholderMargin = 10;
             this.cbFiltro.PlaceholderText = "Selecionar Filtro";
-            this.cbFiltro.Size = new System.Drawing.Size(190, 31);
+            this.cbFiltro.Size = new System.Drawing.Size(190, 26);
             this.cbFiltro.TabIndex = 9;
             // 
             // lblTeste
@@ -282,12 +322,12 @@
             this.lblTeste.AutoSize = true;
             this.lblTeste.Location = new System.Drawing.Point(129, 9);
             this.lblTeste.Name = "lblTeste";
-            this.lblTeste.Size = new System.Drawing.Size(0, 20);
+            this.lblTeste.Size = new System.Drawing.Size(0, 15);
             this.lblTeste.TabIndex = 17;
             // 
             // LivrosForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1300, 700);
             this.Controls.Add(this.panel1);
@@ -328,5 +368,8 @@
         private System.Windows.Forms.Button btnCarregarTabelas;
         private System.Windows.Forms.ListView lvCampos;
         private System.Windows.Forms.Button btnCriarEmprestimo;
+        private System.Windows.Forms.Button btnBancoDados;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }

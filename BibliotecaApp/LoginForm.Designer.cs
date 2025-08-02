@@ -76,7 +76,7 @@
             this.label2.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(57, 48);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(367, 45);
+            this.label2.Size = new System.Drawing.Size(299, 37);
             this.label2.TabIndex = 10;
             this.label2.Text = "Faça login na sua conta.";
             // 
@@ -86,7 +86,7 @@
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(-2, 8);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(40, 17);
+            this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 11;
             this.label3.Text = "Email";
             // 
@@ -98,7 +98,7 @@
             this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEmail.Location = new System.Drawing.Point(3, 35);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(271, 23);
+            this.txtEmail.Size = new System.Drawing.Size(271, 19);
             this.txtEmail.TabIndex = 12;
             // 
             // panel1
@@ -143,7 +143,7 @@
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(-2, 8);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(45, 17);
+            this.label4.Size = new System.Drawing.Size(37, 13);
             this.label4.TabIndex = 11;
             this.label4.Text = "Senha";
             // 
@@ -155,7 +155,7 @@
             this.txtSenha.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSenha.Location = new System.Drawing.Point(3, 35);
             this.txtSenha.Name = "txtSenha";
-            this.txtSenha.Size = new System.Drawing.Size(271, 23);
+            this.txtSenha.Size = new System.Drawing.Size(271, 19);
             this.txtSenha.TabIndex = 12;
             this.txtSenha.UseSystemPasswordChar = true;
             // 
@@ -165,7 +165,7 @@
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(154)))), ((int)(((byte)(245)))));
             this.label5.Location = new System.Drawing.Point(199, 365);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(146, 20);
+            this.label5.Size = new System.Drawing.Size(117, 15);
             this.label5.TabIndex = 16;
             this.label5.Text = "Esqueceu sua senha?";
             // 
@@ -231,9 +231,9 @@
             this.bemVindo.BackColor = System.Drawing.Color.Transparent;
             this.bemVindo.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bemVindo.ForeColor = System.Drawing.Color.White;
-            this.bemVindo.Location = new System.Drawing.Point(140, 61);
+            this.bemVindo.Location = new System.Drawing.Point(157, 67);
             this.bemVindo.Name = "bemVindo";
-            this.bemVindo.Size = new System.Drawing.Size(179, 45);
+            this.bemVindo.Size = new System.Drawing.Size(147, 37);
             this.bemVindo.TabIndex = 1;
             this.bemVindo.Text = "Bem Vindo";
             // 
@@ -247,6 +247,7 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // pictureBox1
             // 
@@ -260,7 +261,7 @@
             // 
             // LoginForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(900, 600);

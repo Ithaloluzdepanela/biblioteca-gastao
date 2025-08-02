@@ -31,10 +31,14 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.dtpDataDevolucao = new System.Windows.Forms.DateTimePicker();
             this.dtpDataEmprestimo = new System.Windows.Forms.DateTimePicker();
+            this.cbBibliotecaria = new RoundedComboBox();
             this.lstLivros = new System.Windows.Forms.ListBox();
+            this.txtBarcode = new RoundedTextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.chkDevolucaoPersonalizada = new System.Windows.Forms.CheckBox();
             this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
+            this.txtLivro = new RoundedTextBox();
+            this.txtNomeUsuario = new RoundedTextBox();
             this.btnEmprestar = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -42,10 +46,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.cbBibliotecaria = new RoundedComboBox();
-            this.txtBarcode = new RoundedTextBox();
-            this.txtLivro = new RoundedTextBox();
-            this.txtNomeUsuario = new RoundedTextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -81,10 +81,10 @@
             this.dtpDataDevolucao.Enabled = false;
             this.dtpDataDevolucao.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.dtpDataDevolucao.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDataDevolucao.Location = new System.Drawing.Point(103, 537);
+            this.dtpDataDevolucao.Location = new System.Drawing.Point(103, 506);
             this.dtpDataDevolucao.Margin = new System.Windows.Forms.Padding(4);
             this.dtpDataDevolucao.Name = "dtpDataDevolucao";
-            this.dtpDataDevolucao.Size = new System.Drawing.Size(350, 34);
+            this.dtpDataDevolucao.Size = new System.Drawing.Size(350, 29);
             this.dtpDataDevolucao.TabIndex = 105;
             this.dtpDataDevolucao.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
             // 
@@ -92,150 +92,12 @@
             // 
             this.dtpDataEmprestimo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpDataEmprestimo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDataEmprestimo.Location = new System.Drawing.Point(103, 451);
+            this.dtpDataEmprestimo.Location = new System.Drawing.Point(103, 437);
             this.dtpDataEmprestimo.Margin = new System.Windows.Forms.Padding(4);
             this.dtpDataEmprestimo.Name = "dtpDataEmprestimo";
-            this.dtpDataEmprestimo.Size = new System.Drawing.Size(350, 34);
+            this.dtpDataEmprestimo.Size = new System.Drawing.Size(350, 29);
             this.dtpDataEmprestimo.TabIndex = 104;
             this.dtpDataEmprestimo.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
-            // 
-            // lstLivros
-            // 
-            this.lstLivros.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstLivros.FormattingEnabled = true;
-            this.lstLivros.ItemHeight = 17;
-            this.lstLivros.Location = new System.Drawing.Point(108, 227);
-            this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
-            this.lstLivros.Name = "lstLivros";
-            this.lstLivros.Size = new System.Drawing.Size(265, 104);
-            this.lstLivros.TabIndex = 102;
-            this.lstLivros.Visible = false;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label7.ForeColor = System.Drawing.Color.LightGray;
-            this.label7.Location = new System.Drawing.Point(103, 238);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(184, 30);
-            this.label7.TabIndex = 100;
-            this.label7.Text = "Codigo de barras:";
-            // 
-            // chkDevolucaoPersonalizada
-            // 
-            this.chkDevolucaoPersonalizada.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.chkDevolucaoPersonalizada.AutoSize = true;
-            this.chkDevolucaoPersonalizada.BackColor = System.Drawing.Color.White;
-            this.chkDevolucaoPersonalizada.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkDevolucaoPersonalizada.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.chkDevolucaoPersonalizada.Location = new System.Drawing.Point(103, 582);
-            this.chkDevolucaoPersonalizada.Margin = new System.Windows.Forms.Padding(4);
-            this.chkDevolucaoPersonalizada.Name = "chkDevolucaoPersonalizada";
-            this.chkDevolucaoPersonalizada.Size = new System.Drawing.Size(165, 24);
-            this.chkDevolucaoPersonalizada.TabIndex = 99;
-            this.chkDevolucaoPersonalizada.Text = "Estender devolução";
-            this.chkDevolucaoPersonalizada.UseVisualStyleBackColor = false;
-            this.chkDevolucaoPersonalizada.CheckedChanged += new System.EventHandler(this.chkDevolucaoPersonalizada_CheckedChanged);
-            // 
-            // lstSugestoesUsuario
-            // 
-            this.lstSugestoesUsuario.FormattingEnabled = true;
-            this.lstSugestoesUsuario.ItemHeight = 17;
-            this.lstSugestoesUsuario.Location = new System.Drawing.Point(108, 137);
-            this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
-            this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
-            this.lstSugestoesUsuario.Size = new System.Drawing.Size(266, 106);
-            this.lstSugestoesUsuario.TabIndex = 98;
-            this.lstSugestoesUsuario.Visible = false;
-            // 
-            // btnEmprestar
-            // 
-            this.btnEmprestar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnEmprestar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.btnEmprestar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnEmprestar.ForeColor = System.Drawing.Color.White;
-            this.btnEmprestar.Location = new System.Drawing.Point(222, 629);
-            this.btnEmprestar.Margin = new System.Windows.Forms.Padding(4);
-            this.btnEmprestar.Name = "btnEmprestar";
-            this.btnEmprestar.Size = new System.Drawing.Size(155, 70);
-            this.btnEmprestar.TabIndex = 91;
-            this.btnEmprestar.Text = "EMPRESTRAR";
-            this.btnEmprestar.UseVisualStyleBackColor = false;
-            this.btnEmprestar.Click += new System.EventHandler(this.btnEmprestar_Click);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label6.ForeColor = System.Drawing.Color.LightGray;
-            this.label6.Location = new System.Drawing.Point(103, 327);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(237, 30);
-            this.label6.TabIndex = 21;
-            this.label6.Text = "Bliotecária responsável:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label5.ForeColor = System.Drawing.Color.LightGray;
-            this.label5.Location = new System.Drawing.Point(103, 496);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(200, 30);
-            this.label5.TabIndex = 20;
-            this.label5.Text = "Devolução Prevista:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label4.ForeColor = System.Drawing.Color.LightGray;
-            this.label4.Location = new System.Drawing.Point(103, 410);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(215, 30);
-            this.label4.TabIndex = 19;
-            this.label4.Text = "Data de Empréstimo:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label3.ForeColor = System.Drawing.Color.LightGray;
-            this.label3.Location = new System.Drawing.Point(103, 149);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 30);
-            this.label3.TabIndex = 18;
-            this.label3.Text = "Livro:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
-            this.label2.ForeColor = System.Drawing.Color.LightGray;
-            this.label2.Location = new System.Drawing.Point(103, 60);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(77, 30);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "Nome:";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold);
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.label1.Location = new System.Drawing.Point(99, 10);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(383, 50);
-            this.label1.TabIndex = 16;
-            this.label1.Text = "Empréstimo de Livro";
             // 
             // cbBibliotecaria
             // 
@@ -254,8 +116,20 @@
             this.cbBibliotecaria.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Italic);
             this.cbBibliotecaria.PlaceholderMargin = 10;
             this.cbBibliotecaria.PlaceholderText = "Selecione...";
-            this.cbBibliotecaria.Size = new System.Drawing.Size(350, 31);
+            this.cbBibliotecaria.Size = new System.Drawing.Size(350, 26);
             this.cbBibliotecaria.TabIndex = 103;
+            // 
+            // lstLivros
+            // 
+            this.lstLivros.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstLivros.FormattingEnabled = true;
+            this.lstLivros.ItemHeight = 12;
+            this.lstLivros.Location = new System.Drawing.Point(108, 227);
+            this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
+            this.lstLivros.Name = "lstLivros";
+            this.lstLivros.Size = new System.Drawing.Size(265, 98);
+            this.lstLivros.TabIndex = 102;
+            this.lstLivros.Visible = false;
             // 
             // txtBarcode
             // 
@@ -284,6 +158,45 @@
             this.txtBarcode.TabIndex = 101;
             this.txtBarcode.TextColor = System.Drawing.Color.Black;
             this.txtBarcode.UseSystemPasswordChar = false;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label7.ForeColor = System.Drawing.Color.LightGray;
+            this.label7.Location = new System.Drawing.Point(103, 238);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(145, 23);
+            this.label7.TabIndex = 100;
+            this.label7.Text = "Codigo de barras:";
+            // 
+            // chkDevolucaoPersonalizada
+            // 
+            this.chkDevolucaoPersonalizada.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.chkDevolucaoPersonalizada.AutoSize = true;
+            this.chkDevolucaoPersonalizada.BackColor = System.Drawing.Color.White;
+            this.chkDevolucaoPersonalizada.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkDevolucaoPersonalizada.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.chkDevolucaoPersonalizada.Location = new System.Drawing.Point(103, 543);
+            this.chkDevolucaoPersonalizada.Margin = new System.Windows.Forms.Padding(4);
+            this.chkDevolucaoPersonalizada.Name = "chkDevolucaoPersonalizada";
+            this.chkDevolucaoPersonalizada.Size = new System.Drawing.Size(129, 19);
+            this.chkDevolucaoPersonalizada.TabIndex = 99;
+            this.chkDevolucaoPersonalizada.Text = "Estender devolução";
+            this.chkDevolucaoPersonalizada.UseVisualStyleBackColor = false;
+            this.chkDevolucaoPersonalizada.CheckedChanged += new System.EventHandler(this.chkDevolucaoPersonalizada_CheckedChanged);
+            // 
+            // lstSugestoesUsuario
+            // 
+            this.lstSugestoesUsuario.FormattingEnabled = true;
+            this.lstSugestoesUsuario.ItemHeight = 12;
+            this.lstSugestoesUsuario.Location = new System.Drawing.Point(108, 137);
+            this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
+            this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(266, 100);
+            this.lstSugestoesUsuario.TabIndex = 98;
+            this.lstSugestoesUsuario.Visible = false;
             // 
             // txtLivro
             // 
@@ -339,9 +252,97 @@
             this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
             this.txtNomeUsuario.UseSystemPasswordChar = false;
             // 
+            // btnEmprestar
+            // 
+            this.btnEmprestar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnEmprestar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.btnEmprestar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnEmprestar.ForeColor = System.Drawing.Color.White;
+            this.btnEmprestar.Location = new System.Drawing.Point(298, 588);
+            this.btnEmprestar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnEmprestar.Name = "btnEmprestar";
+            this.btnEmprestar.Size = new System.Drawing.Size(155, 70);
+            this.btnEmprestar.TabIndex = 91;
+            this.btnEmprestar.Text = "EMPRESTRAR";
+            this.btnEmprestar.UseVisualStyleBackColor = false;
+            this.btnEmprestar.Click += new System.EventHandler(this.btnEmprestar_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label6.ForeColor = System.Drawing.Color.LightGray;
+            this.label6.Location = new System.Drawing.Point(104, 342);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(188, 23);
+            this.label6.TabIndex = 21;
+            this.label6.Text = "Bliotecária responsável:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label5.ForeColor = System.Drawing.Color.LightGray;
+            this.label5.Location = new System.Drawing.Point(103, 479);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(160, 23);
+            this.label5.TabIndex = 20;
+            this.label5.Text = "Devolução Prevista:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label4.ForeColor = System.Drawing.Color.LightGray;
+            this.label4.Location = new System.Drawing.Point(103, 410);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(170, 23);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Data de Empréstimo:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label3.ForeColor = System.Drawing.Color.LightGray;
+            this.label3.Location = new System.Drawing.Point(103, 149);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 23);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "Livro:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label2.ForeColor = System.Drawing.Color.LightGray;
+            this.label2.Location = new System.Drawing.Point(104, 74);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(61, 23);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Nome:";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.label1.Location = new System.Drawing.Point(96, 20);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(301, 40);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "Empréstimo de Livro";
+            // 
             // EmprestimoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(602, 703);

@@ -42,7 +42,7 @@
             this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(161, 45);
+            this.label1.Size = new System.Drawing.Size(132, 37);
             this.label1.TabIndex = 1;
             this.label1.Text = "USUARIO";
             // 
@@ -59,7 +59,7 @@
             // 
             // UsuarioForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 600);
             this.Controls.Add(this.pictureBox1);

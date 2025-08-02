@@ -43,7 +43,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.btnBancoDados = new System.Windows.Forms.Button();
-            this.btnCriarEmprestimo = new System.Windows.Forms.Button();
+            this.btnCriarTablea = new System.Windows.Forms.Button();
             this.lvCampos = new System.Windows.Forms.ListView();
             this.lstTabelas = new System.Windows.Forms.ListBox();
             this.btnCarregarTabelas = new System.Windows.Forms.Button();
@@ -164,7 +164,7 @@
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.btnBancoDados);
-            this.panel1.Controls.Add(this.btnCriarEmprestimo);
+            this.panel1.Controls.Add(this.btnCriarTablea);
             this.panel1.Controls.Add(this.lvCampos);
             this.panel1.Controls.Add(this.lstTabelas);
             this.panel1.Controls.Add(this.btnCarregarTabelas);
@@ -183,6 +183,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1300, 663);
             this.panel1.TabIndex = 16;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // button2
             // 
@@ -210,13 +211,15 @@
             this.btnBancoDados.TabIndex = 21;
             this.btnBancoDados.Text = "Criar Banco De Dados";
             this.btnBancoDados.UseVisualStyleBackColor = true;
+            this.btnBancoDados.Click += new System.EventHandler(this.btnBancoDados_Click);
             // 
-            // btnCriarEmprestimo
+            // btnCriarTablea
             // 
-            this.btnCriarEmprestimo.Location = new System.Drawing.Point(0, 0);
-            this.btnCriarEmprestimo.Name = "btnCriarEmprestimo";
-            this.btnCriarEmprestimo.Size = new System.Drawing.Size(75, 23);
-            this.btnCriarEmprestimo.TabIndex = 0;
+            this.btnCriarTablea.Location = new System.Drawing.Point(0, 0);
+            this.btnCriarTablea.Name = "btnCriarTablea";
+            this.btnCriarTablea.Size = new System.Drawing.Size(75, 23);
+            this.btnCriarTablea.TabIndex = 0;
+            this.btnCriarTablea.Click += new System.EventHandler(this.btnCriarTablea_Click);
             // 
             // lvCampos
             // 
@@ -367,7 +370,7 @@
         private System.Windows.Forms.ListBox lstTabelas;
         private System.Windows.Forms.Button btnCarregarTabelas;
         private System.Windows.Forms.ListView lvCampos;
-        private System.Windows.Forms.Button btnCriarEmprestimo;
+        private System.Windows.Forms.Button btnCriarTablea;
         private System.Windows.Forms.Button btnBancoDados;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;

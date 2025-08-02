@@ -13,21 +13,8 @@ namespace BibliotecaApp
         public LoginForm()
         {
             InitializeComponent();
-            this.KeyPreview = true;
-            this.KeyDown += Form_KeyDown;
 
 
-        }
-        
-
-        private void Form_KeyDown(object sender, KeyEventArgs e)
-        {
-            // Navegação entre campos com Enter
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                this.SelectNextControl(this.ActiveControl, true, true, true, true);
-            }
         }
 
         #region Eventos de Saída
@@ -67,22 +54,22 @@ namespace BibliotecaApp
         #endregion
 
         #region Login
+
+
+
+
+        #endregion
+
+        #region Mostrar/Ocultar Senha
+
+
+        #endregion
+
         private void BtnEntrar_Click(object sender, EventArgs e)
         {
 
             string email = txtEmail.Text.Trim();
             string senha = txtSenha.Text;
-
-            // login como administrador (provisório)
-            if (email == "admin@admin.com" && senha == "1234")
-            {
-                // Login como administrador
-                cancelar = true;
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-                return;
-
-            }
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
             {
@@ -115,12 +102,10 @@ namespace BibliotecaApp
                                 this.DialogResult = DialogResult.OK;
                                 this.Close();
                             }
-
-
-
+                            
                             else
                             {
-                                MessageBox.Show("Acesso negado. Verifique seu e-mail e senha.", "Erro de Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show("Acesso negado. Verifique seu e-mail, senha.", "Erro de Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 txtEmail.Clear();
                                 txtSenha.Clear();
                                 txtEmail.Focus();
@@ -135,27 +120,7 @@ namespace BibliotecaApp
             }
         }
 
-
-        #endregion
-
-        #region Mostrar/Ocultar Senha
-
-
-        #endregion
-
-
-
         private void pictureBox2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel5_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void gradientPanel1_Paint(object sender, PaintEventArgs e)
         {
 
         }

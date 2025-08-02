@@ -149,9 +149,6 @@
     <Compile Include="CadUsuario.Designer.cs">
       <DependentUpon>CadUsuario.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AlterarCadLivroForm.resx">
-      <DependentUpon>AlterarCadLivroForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="CadastroLivroForm.resx">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -299,9 +296,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\clouds-upright-2x1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

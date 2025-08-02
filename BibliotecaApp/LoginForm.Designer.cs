@@ -195,7 +195,6 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(400, 600);
             this.panel5.TabIndex = 3;
-            this.panel5.Paint += new System.Windows.Forms.PaintEventHandler(this.panel5_Paint);
             // 
             // gradientPanel1
             // 
@@ -210,7 +209,6 @@
             this.gradientPanel1.Name = "gradientPanel1";
             this.gradientPanel1.Size = new System.Drawing.Size(500, 600);
             this.gradientPanel1.TabIndex = 9;
-            this.gradientPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.gradientPanel1_Paint);
             // 
             // label1
             // 
@@ -231,7 +229,7 @@
             this.bemVindo.BackColor = System.Drawing.Color.Transparent;
             this.bemVindo.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bemVindo.ForeColor = System.Drawing.Color.White;
-            this.bemVindo.Location = new System.Drawing.Point(158, 67);
+            this.bemVindo.Location = new System.Drawing.Point(157, 67);
             this.bemVindo.Name = "bemVindo";
             this.bemVindo.Size = new System.Drawing.Size(147, 37);
             this.bemVindo.TabIndex = 1;

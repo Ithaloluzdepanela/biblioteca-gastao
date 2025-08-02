@@ -285,7 +285,7 @@ namespace BibliotecaApp
 
         #endregion
 
-   
+        //Desabilitados:
         #region Ação: Criar Tabela de Livros (Desabilitado)
 
         private void btnCriarTablea_Click(object sender, EventArgs e)
@@ -293,82 +293,79 @@ namespace BibliotecaApp
             //    Essa região está comentada porque a tabela já Foi criada
             //     Caso precise criar novamente, descomente e execute
 
-            //        SqlCeConnection conexao = Conexao.ObterConexao();
+    //        SqlCeConnection conexao = Conexao.ObterConexao();
 
-            //        try
-            //        {
-            //            conexao.Open();
+    //        try
+    //        {
+    //            conexao.Open();
 
-            //            SqlCeCommand comando = new SqlCeCommand();
-            //            comando.Connection = conexao;
+    //            SqlCeCommand comando = new SqlCeCommand();
+    //            comando.Connection = conexao;
 
-            //            comando.CommandText =
-            //@"CREATE TABLE Livros (
-            //            Id INT IDENTITY(1,1) PRIMARY KEY,
-            //            Nome NVARCHAR(80) NOT NULL,
-            //            Autor NVARCHAR(80) NOT NULL,
-            //            Genero NVARCHAR(30) NOT NULL,
-            //            Quantidade INT NOT NULL DEFAULT 0,
-            //            CodigoBarras NVARCHAR(13) NOT NULL UNIQUE,
-            //            Disponibilidade BIT NOT NULL DEFAULT 1
-            //        );";
+    //            comando.CommandText =
+    //@"CREATE TABLE Livros (
+    //            Id INT IDENTITY(1,1) PRIMARY KEY,
+    //            Nome NVARCHAR(80) NOT NULL,
+    //            Autor NVARCHAR(80) NOT NULL,
+    //            Genero NVARCHAR(30) NOT NULL,
+    //            Quantidade INT NOT NULL DEFAULT 0,
+    //            CodigoBarras NVARCHAR(13) NOT NULL UNIQUE,
+    //            Disponibilidade BIT NOT NULL DEFAULT 1
+    //        );";
 
 
 
-            //            comando.ExecuteNonQuery();
-            //            lblTeste.Text = "Tabela criada com sucesso!";
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            lblTeste.Text = $"Erro: {ex.Message}";
-            //        }
-            //        finally
-            //        {
-            //            conexao.Close();
-            //        }
+    //            comando.ExecuteNonQuery();
+    //            lblTeste.Text = "Tabela criada com sucesso!";
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            lblTeste.Text = $"Erro: {ex.Message}";
+    //        }
+    //        finally
+    //        {
+    //            conexao.Close();
+    //        }
         }
 
 
         #endregion
 
-
         #region Ação: Criar Tabela Emprestimo (Desabilitado)
-//private void btnCriarEmprestimo_Click(object sender, EventArgs e)
-//{
-//        using (SqlCeConnection conexao = Conexao.ObterConexao())
-//        {
-//            try
-//            {
-//                conexao.Open();
+        //private void btnCriarEmprestimo_Click(object sender, EventArgs e)
+        //{
+        //        using (SqlCeConnection conexao = Conexao.ObterConexao())
+        //        {
+        //            try
+        //            {
+        //                conexao.Open();
 
-//                string sql = @"
-//CREATE TABLE Emprestimo (
-//    Id INT IDENTITY(1,1) PRIMARY KEY,
-//    Alocador INT NOT NULL,
-//    Livro INT NOT NULL,
-//    Responsavel INT NOT NULL,
-//    DataEmprestimo DATETIME NOT NULL,
-//    DataDevolucao DATETIME NOT NULL,
-//    DataProrrogacao DATETIME NULL,
-//    DataRealDevolucao DATETIME NULL,
-//    Status NVARCHAR(15) NOT NULL
-//);";
-
-
-//                SqlCeCommand comando = new SqlCeCommand(sql, conexao);
-//                comando.ExecuteNonQuery();
-
-//                MessageBox.Show("Tabela 'Emprestimo' criada com sucesso!");
-//            }
-//            catch (Exception ex)
-//            {
-//                MessageBox.Show("Erro ao criar tabela: " + ex.Message);
-//            }
-//        }
-//}
-#endregion
+        //                string sql = @"
+        //CREATE TABLE Emprestimo (
+        //    Id INT IDENTITY(1,1) PRIMARY KEY,
+        //    Alocador INT NOT NULL,
+        //    Livro INT NOT NULL,
+        //    Responsavel INT NOT NULL,
+        //    DataEmprestimo DATETIME NOT NULL,
+        //    DataDevolucao DATETIME NOT NULL,
+        //    DataProrrogacao DATETIME NULL,
+        //    DataRealDevolucao DATETIME NULL,
+        //    Status NVARCHAR(15) NOT NULL
+        //);";
 
 
+        //                SqlCeCommand comando = new SqlCeCommand(sql, conexao);
+        //                comando.ExecuteNonQuery();
+
+        //                MessageBox.Show("Tabela 'Emprestimo' criada com sucesso!");
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show("Erro ao criar tabela: " + ex.Message);
+        //            }
+        //        }
+        //}
+        #endregion
 
         #region Criar Banco de Dados (Desabilitado)
         private void btnBancoDados_Click(object sender, EventArgs e)
@@ -387,7 +384,7 @@ namespace BibliotecaApp
             //        // Exibe mensagem de sucesso
             //        MessageBox.Show("Banco de dados criado com sucesso.");
 
-
+                   
             //    }
             //    catch (Exception ex)
             //    {
@@ -399,16 +396,9 @@ namespace BibliotecaApp
             //    MessageBox.Show("O banco de dados já existe.");
             //}
 
-
         }
         #endregion
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
+      
         }
-
-       
     }
-}
 

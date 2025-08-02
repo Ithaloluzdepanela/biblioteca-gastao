@@ -16,10 +16,5 @@ namespace BibliotecaApp
         {
             InitializeComponent();
         }
-
-        private void AlterarCadLivroForm_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

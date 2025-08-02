@@ -123,6 +123,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="mdiProperties.cs" />
+    <Compile Include="Models\Sessao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -302,6 +303,15 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\material-symbols - tab-search-rounded %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\material-symbols - tab-search-rounded.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\material-symbols - tab-search-rounded 25px.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

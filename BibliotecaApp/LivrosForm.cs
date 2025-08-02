@@ -408,7 +408,15 @@ namespace BibliotecaApp
 
         }
 
-       
+        private void lstTabelas_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lvCampos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

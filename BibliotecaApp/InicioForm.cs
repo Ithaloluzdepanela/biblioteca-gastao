@@ -68,5 +68,10 @@ namespace BibliotecaApp
         {
 
         }
+
+        private void InicioForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

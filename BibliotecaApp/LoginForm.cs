@@ -1,7 +1,8 @@
-﻿using System;
+﻿using BibliotecaApp.Models;
+using System;
+using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Data.SqlServerCe;
 
 namespace BibliotecaApp
 {
@@ -110,7 +111,8 @@ namespace BibliotecaApp
                         {
                             if (reader.Read())
                             {
-                                // Login válido
+                                Sessao.NomeBibliotecariaLogada = reader["nome"].ToString();
+
                                 cancelar = true;
                                 this.DialogResult = DialogResult.OK;
                                 this.Close();
@@ -135,6 +137,17 @@ namespace BibliotecaApp
             }
         }
 
+        private void BtnEntrar_MouseLeave(object sender, EventArgs e)
+        {
+            BtnEntrar.BackColor = Color.FromArgb(9, 74, 158);
+            BtnEntrar.Refresh();
+        }
+
+        private void BtnEntrar_MouseEnter(object sender, EventArgs e)
+        {
+            BtnEntrar.BackColor = Color.FromArgb(33, 145, 245);
+            BtnEntrar.Refresh();
+        }
 
         #endregion
 

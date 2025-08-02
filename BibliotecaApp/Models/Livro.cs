@@ -11,11 +11,7 @@ namespace BibliotecaApp
 {
     public class Livro
     {
-
-        private static int proximoId = 1;
-
-        
-        public int Id { get; private set; }
+        public int Id { get; set; }
         public string Nome { get; set; }
         public string Autor { get; set; }
         public string Genero { get; set; }
@@ -24,9 +20,11 @@ namespace BibliotecaApp
         public string CodigoDeBarras { get; set; }
 
         
+        public Livro() { }
+
+       
         public Livro(string nome, string autor, string genero, bool disponivel, int quantidade, string codigoDeBarras)
         {
-            Id = proximoId++;
             Nome = nome;
             Autor = autor;
             Genero = genero;
@@ -35,5 +33,4 @@ namespace BibliotecaApp
             CodigoDeBarras = codigoDeBarras;
         }
     }
-
 }

@@ -171,7 +171,7 @@
             // 
             // BtnEntrar
             // 
-            this.BtnEntrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(154)))), ((int)(((byte)(245)))));
+            this.BtnEntrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(74)))), ((int)(((byte)(158)))));
             this.BtnEntrar.Font = new System.Drawing.Font("Segoe UI", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnEntrar.ForeColor = System.Drawing.Color.White;
             this.BtnEntrar.Location = new System.Drawing.Point(95, 450);
@@ -181,6 +181,8 @@
             this.BtnEntrar.Text = "Entrar";
             this.BtnEntrar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.BtnEntrar.Click += new System.EventHandler(this.BtnEntrar_Click);
+            this.BtnEntrar.MouseEnter += new System.EventHandler(this.BtnEntrar_MouseEnter);
+            this.BtnEntrar.MouseLeave += new System.EventHandler(this.BtnEntrar_MouseLeave);
             // 
             // panel5
             // 

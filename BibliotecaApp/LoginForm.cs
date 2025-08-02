@@ -36,18 +36,7 @@ namespace BibliotecaApp
 
         #endregion
 
-        #region Login
-
-
-
-
-        #endregion
-
-        #region Mostrar/Ocultar Senha
-
-
-        #endregion
-
+        #region Botao Login
         private void BtnEntrar_Click(object sender, EventArgs e)
         {
             string usuario = txtEmail.Text.Trim();
@@ -77,5 +66,19 @@ namespace BibliotecaApp
                 txtEmail.Focus();
             }
         }
+
+        private void BtnEntrar_MouseLeave(object sender, EventArgs e)
+        {
+            BtnEntrar.BackColor = Color.FromArgb(9, 74, 158);
+            BtnEntrar.Refresh();
+        }
+
+        private void BtnEntrar_MouseEnter(object sender, EventArgs e)
+        {
+            BtnEntrar.BackColor = Color.FromArgb(33, 145, 245);
+            BtnEntrar.Refresh();
+        }
+
+        #endregion 
     }
 }

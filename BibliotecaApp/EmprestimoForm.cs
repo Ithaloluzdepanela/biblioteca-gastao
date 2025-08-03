@@ -148,7 +148,7 @@ namespace BibliotecaApp
                     string sqlVerificaEmprestimo = @"
                 SELECT COUNT(*) 
                 FROM Emprestimo 
-                WHERE Alocador = @usuarioId AND Status = 'Emprestado'";
+                WHERE Alocador = @usuarioId AND Status = 'Ativo'";
 
                     using (var cmdVerifica = new SqlCeCommand(sqlVerificaEmprestimo, conexao))
                     {
@@ -181,7 +181,7 @@ namespace BibliotecaApp
                     // Inserção do novo empréstimo
                     string sqlInserir = @"
                 INSERT INTO Emprestimo (Alocador, Livro, Responsavel, DataEmprestimo, DataDevolucao, DataProrrogacao, DataRealDevolucao, Status)
-                VALUES (@alocador, @livro, @responsavel, @dataEmprestimo, @dataDevolucao, NULL, NULL, 'Emprestado')";
+                VALUES (@alocador, @livro, @responsavel, @dataEmprestimo, @dataDevolucao, NULL, NULL, 'Ativo')";
 
                     using (var cmdInsert = new SqlCeCommand(sqlInserir, conexao))
                     {

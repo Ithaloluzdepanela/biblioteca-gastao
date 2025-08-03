@@ -2,6 +2,7 @@
 using System;
 using System.Data.SqlServerCe;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BibliotecaApp
@@ -68,9 +69,8 @@ namespace BibliotecaApp
         #endregion
 
         #region Login
-        private void BtnEntrar_Click(object sender, EventArgs e)
+        private async void BtnEntrar_Click(object sender, EventArgs e)
         {
-
             string email = txtEmail.Text.Trim();
             string senha = txtSenha.Text;
 
@@ -79,15 +79,16 @@ namespace BibliotecaApp
             {
                 // Login como administrador
                 cancelar = true;
+                await AtualizarStatusEmprestimosAsync();
                 this.DialogResult = DialogResult.OK;
                 this.Close();
                 return;
-
             }
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
             {
-                MessageBox.Show("Por favor, preencha todos os campos.", "Campos obrigatórios", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Por favor, preencha todos os campos.", "Campos obrigatórios",
+                              MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 if (string.IsNullOrEmpty(email)) txtEmail.Focus();
                 else txtSenha.Focus();
                 return;
@@ -100,7 +101,7 @@ namespace BibliotecaApp
                     conexao.Open();
 
                     string query = @"SELECT * FROM usuarios 
-                             WHERE email = @email AND senha = @senha AND tipousuario = 'Bibliotecário(a)'";
+                         WHERE email = @email AND senha = @senha AND tipousuario = 'Bibliotecário(a)'";
 
                     using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
                     {
@@ -113,16 +114,17 @@ namespace BibliotecaApp
                             {
                                 Sessao.NomeBibliotecariaLogada = reader["nome"].ToString();
 
+                                // Atualizar empréstimos antes de fechar
+                                await AtualizarStatusEmprestimosAsync();
+
                                 cancelar = true;
                                 this.DialogResult = DialogResult.OK;
                                 this.Close();
                             }
-
-
-
                             else
                             {
-                                MessageBox.Show("Acesso negado. Verifique seu e-mail e senha.", "Erro de Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show("Acesso negado. Verifique seu e-mail e senha.", "Erro de Login",
+                                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 txtEmail.Clear();
                                 txtSenha.Clear();
                                 txtEmail.Focus();
@@ -133,7 +135,8 @@ namespace BibliotecaApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro na autenticação: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro na autenticação: " + ex.Message, "Erro",
+                              MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -156,21 +159,99 @@ namespace BibliotecaApp
 
         #endregion
 
-
-
-        private void pictureBox2_Click(object sender, EventArgs e)
+        #region update empréstimos
+        private async Task AtualizarStatusEmprestimosAsync()
         {
+            using (var progressForm = new frmProgresso())
+            {
+                progressForm.Show();
 
+                await Task.Run(() =>
+                {
+                    AtualizarEmprestimos(progressForm);
+                });
+            }
         }
 
-        private void panel5_Paint(object sender, PaintEventArgs e)
+        private void AtualizarEmprestimos(frmProgresso progressForm)
         {
+            try
+            {
+                using (var connection = Conexao.ObterConexao())
+                {
+                    connection.Open();
 
+                    // Contar empréstimos ativos
+                    string countQuery = "SELECT COUNT(*) FROM Emprestimo WHERE Status <> 'Devolvido'";
+                    var countCommand = new SqlCeCommand(countQuery, connection);
+                    int totalEmprestimos = (int)countCommand.ExecuteScalar();
+
+                    if (totalEmprestimos == 0)
+                    {
+                        progressForm.AtualizarProgresso(100, "Nenhum empréstimo para atualizar");
+                        return;
+                    }
+
+                    // Obter empréstimos ativos
+                    string selectQuery = @"SELECT Id, DataDevolucao, DataProrrogacao, DataRealDevolucao 
+                                 FROM Emprestimo
+                                 WHERE Status <> 'Devolvido'";
+                    var selectCommand = new SqlCeCommand(selectQuery, connection);
+                    var reader = selectCommand.ExecuteReader();
+
+                    int processados = 0;
+
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(0);
+                        DateTime dataDevolucao = reader.GetDateTime(1);
+                        DateTime? dataProrrogacao = reader.IsDBNull(2) ? null : (DateTime?)reader.GetDateTime(2);
+                        DateTime? dataRealDevolucao = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3);
+
+                        string novoStatus = CalcularStatus(dataDevolucao, dataProrrogacao, dataRealDevolucao);
+
+                        // Atualizar o status
+                        string updateQuery = "UPDATE Emprestimo SET Status = @Status WHERE Id = @Id";
+                        var updateCommand = new SqlCeCommand(updateQuery, connection);
+                        updateCommand.Parameters.AddWithValue("@Status", novoStatus);
+                        updateCommand.Parameters.AddWithValue("@Id", id);
+                        updateCommand.ExecuteNonQuery();
+
+                        processados++;
+                        int progresso = (int)((double)processados / totalEmprestimos * 100);
+
+                        progressForm.AtualizarProgresso(progresso, $"Atualizando empréstimo {processados} de {totalEmprestimos}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao atualizar empréstimos: {ex.Message}", "Erro",
+                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void gradientPanel1_Paint(object sender, PaintEventArgs e)
+        private string CalcularStatus(DateTime dataDevolucao, DateTime? dataProrrogacao, DateTime? dataRealDevolucao)
         {
+            DateTime dataReferencia = dataProrrogacao ?? dataDevolucao;
 
+            if (dataRealDevolucao.HasValue)
+            {
+                return "Devolvido";
+            }
+            else if (DateTime.Now > dataReferencia)
+            {
+                return "Atrasado";
+            }
+            else
+            {
+                return "Ativo";
+            }
         }
+
+
+        #endregion
+
+
     }
 }

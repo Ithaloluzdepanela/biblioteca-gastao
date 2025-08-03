@@ -197,7 +197,7 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(400, 600);
             this.panel5.TabIndex = 3;
-            this.panel5.Paint += new System.Windows.Forms.PaintEventHandler(this.panel5_Paint);
+            
             // 
             // gradientPanel1
             // 
@@ -212,7 +212,7 @@
             this.gradientPanel1.Name = "gradientPanel1";
             this.gradientPanel1.Size = new System.Drawing.Size(500, 600);
             this.gradientPanel1.TabIndex = 9;
-            this.gradientPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.gradientPanel1_Paint);
+           
             // 
             // label1
             // 
@@ -249,7 +249,7 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
+            
             // 
             // pictureBox1
             // 

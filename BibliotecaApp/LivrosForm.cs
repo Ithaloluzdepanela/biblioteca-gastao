@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlServerCe;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -407,6 +408,8 @@ namespace BibliotecaApp
         {
 
         }
+
+        
 
         private void lstTabelas_SelectedIndexChanged_1(object sender, EventArgs e)
         {

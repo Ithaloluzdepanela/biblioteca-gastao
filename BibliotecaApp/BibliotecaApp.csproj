@@ -322,5 +322,11 @@
   <ItemGroup>
     <None Include="Resources\material-symbols - tab-search-rounded 25px.png" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="BibliotecaDB\bibliotecaDB.sdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

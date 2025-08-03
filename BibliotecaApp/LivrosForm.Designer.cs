@@ -29,10 +29,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LivrosForm));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.Pic_Cadastrar = new System.Windows.Forms.PictureBox();
-            this.picEmprestimo = new System.Windows.Forms.PictureBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LivrosForm));
             this.btnDevolução = new System.Windows.Forms.Button();
             this.btnProcurar = new System.Windows.Forms.Button();
             this.Lista = new System.Windows.Forms.DataGridView();
@@ -48,39 +46,16 @@
             this.lstTabelas = new System.Windows.Forms.ListBox();
             this.btnCarregarTabelas = new System.Windows.Forms.Button();
             this.txtNome = new RoundedTextBox();
+            this.picEmprestimo = new System.Windows.Forms.PictureBox();
+            this.Pic_Cadastrar = new System.Windows.Forms.PictureBox();
             this.cbDisponibilidade = new RoundedComboBox();
             this.cbFiltro = new RoundedComboBox();
             this.lblTeste = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Lista)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).BeginInit();
             this.SuspendLayout();
-            // 
-            // Pic_Cadastrar
-            // 
-            this.Pic_Cadastrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
-            this.Pic_Cadastrar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Pic_Cadastrar.Image = ((System.Drawing.Image)(resources.GetObject("Pic_Cadastrar.Image")));
-            this.Pic_Cadastrar.Location = new System.Drawing.Point(713, 365);
-            this.Pic_Cadastrar.Name = "Pic_Cadastrar";
-            this.Pic_Cadastrar.Size = new System.Drawing.Size(40, 40);
-            this.Pic_Cadastrar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.Pic_Cadastrar.TabIndex = 2;
-            this.Pic_Cadastrar.TabStop = false;
-            this.Pic_Cadastrar.Click += new System.EventHandler(this.Pic_Cadastrar_Click);
-            // 
-            // picEmprestimo
-            // 
-            this.picEmprestimo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
-            this.picEmprestimo.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_cardápio_30;
-            this.picEmprestimo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.picEmprestimo.Location = new System.Drawing.Point(713, 422);
-            this.picEmprestimo.Name = "picEmprestimo";
-            this.picEmprestimo.Size = new System.Drawing.Size(40, 40);
-            this.picEmprestimo.TabIndex = 15;
-            this.picEmprestimo.TabStop = false;
-            this.picEmprestimo.Click += new System.EventHandler(this.picEmprestimo_Click);
             // 
             // btnDevolução
             // 
@@ -219,7 +194,6 @@
             this.btnCriarTablea.Name = "btnCriarTablea";
             this.btnCriarTablea.Size = new System.Drawing.Size(75, 23);
             this.btnCriarTablea.TabIndex = 0;
-            this.btnCriarTablea.Click += new System.EventHandler(this.btnCriarTablea_Click);
             // 
             // lvCampos
             // 
@@ -275,6 +249,31 @@
             this.txtNome.TabIndex = 8;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
+            // 
+            // picEmprestimo
+            // 
+            this.picEmprestimo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
+            this.picEmprestimo.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_cardápio_30;
+            this.picEmprestimo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.picEmprestimo.Location = new System.Drawing.Point(713, 422);
+            this.picEmprestimo.Name = "picEmprestimo";
+            this.picEmprestimo.Size = new System.Drawing.Size(40, 40);
+            this.picEmprestimo.TabIndex = 15;
+            this.picEmprestimo.TabStop = false;
+            this.picEmprestimo.Click += new System.EventHandler(this.picEmprestimo_Click);
+            // 
+            // Pic_Cadastrar
+            // 
+            this.Pic_Cadastrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
+            this.Pic_Cadastrar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Pic_Cadastrar.Image = ((System.Drawing.Image)(resources.GetObject("Pic_Cadastrar.Image")));
+            this.Pic_Cadastrar.Location = new System.Drawing.Point(713, 365);
+            this.Pic_Cadastrar.Name = "Pic_Cadastrar";
+            this.Pic_Cadastrar.Size = new System.Drawing.Size(40, 40);
+            this.Pic_Cadastrar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.Pic_Cadastrar.TabIndex = 2;
+            this.Pic_Cadastrar.TabStop = false;
+            this.Pic_Cadastrar.Click += new System.EventHandler(this.Pic_Cadastrar_Click);
             // 
             // cbDisponibilidade
             // 
@@ -344,11 +343,11 @@
             this.Name = "LivrosForm";
             this.Text = " ";
             this.Load += new System.EventHandler(this.LivrosForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Lista)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

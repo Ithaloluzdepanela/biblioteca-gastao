@@ -88,5 +88,10 @@ namespace BibliotecaApp
             // Foca na barra de progresso para melhor visualização
             progressBar1.Focus();
         }
+
+        private void lblStatus_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

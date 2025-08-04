@@ -435,7 +435,7 @@ namespace BibliotecaApp
 
         private void btnCriarTablea_Click_1(object sender, EventArgs e)
         {
-            
+            LimparDadosBanco(); 
         }
 
         //private void btnCriarTablea_Click_1(object sender, EventArgs e)
@@ -498,12 +498,42 @@ namespace BibliotecaApp
         //   }
 
 
+        //: private void LimparDadosBanco()
+        //: {
+        //:     try
+        //:     {
+        //:         using (SqlCeConnection conexao = Conexao.ObterConexao())
+        //:         {
+        //:             conexao.Open();
+        //: 
+        //:             // Lista das tabelas que quer limpar (adicione todas que desejar)
+        //:             string[] tabelas = { "Reservas", "Emprestimo", "usuarios", "Livros" };
+        //: 
+        //:             foreach (var tabela in tabelas)
+        //:             {
+        //:                 string sqlDelete = $"DELETE FROM {tabela}";
+        //:                 using (SqlCeCommand comando = new SqlCeCommand(sqlDelete, conexao))
+        //:                 {
+        //:                     comando.ExecuteNonQuery();
+        //:                 }
+        //:             }
+        //: 
+        //:             MessageBox.Show("Dados do banco limpos com sucesso!", "Sucesso",
+        //:                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //:         }
+        //:     }
+        //:     catch (Exception ex)
+        //:     {
+        //:         MessageBox.Show($"Erro ao limpar dados do banco:\n{ex.Message}", "Erro",
+        //:             MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //:     }
+        //: }
 
 
 
     }
 
-   
-    }
+
+}
 
 

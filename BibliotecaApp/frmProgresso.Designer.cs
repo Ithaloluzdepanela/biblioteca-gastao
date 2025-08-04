@@ -49,6 +49,7 @@
             this.lblStatus.Size = new System.Drawing.Size(170, 20);
             this.lblStatus.TabIndex = 1;
             this.lblStatus.Text = "Atualizando o sistema...";
+            this.lblStatus.Click += new System.EventHandler(this.lblStatus_Click);
             // 
             // frmProgresso
             // 

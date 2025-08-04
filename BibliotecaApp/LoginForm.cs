@@ -1,6 +1,7 @@
 ﻿using BibliotecaApp.Models;
 using BibliotecaApp.Utils;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -153,20 +154,79 @@ namespace BibliotecaApp
         #endregion
 
         #region update empréstimos
-        private async Task AtualizarStatusEmprestimosAsync()
-        {
-            using (var progressForm = new frmProgresso())
+            private async Task AtualizarStatusEmprestimosAsync()
             {
-                progressForm.Show();
-
-                await Task.Run(() =>
+                using (var progressForm = new frmProgresso())
                 {
-                    AtualizarEmprestimos(progressForm);
-                });
-            }
-        }
+                    progressForm.Show();
 
-        private void AtualizarEmprestimos(frmProgresso progressForm)
+                    await Task.Run(() =>
+                    {
+                        AtualizarEmprestimos(progressForm);
+                        AtualizarReservas(progressForm);
+                    });
+                }
+            }
+
+            private void AtualizarEmprestimos(frmProgresso progressForm)
+            {
+                try
+                {
+                    using (var connection = Conexao.ObterConexao())
+                    {
+                        connection.Open();
+
+                        // Contar empréstimos ativos
+                        string countQuery = "SELECT COUNT(*) FROM Emprestimo WHERE Status <> 'Devolvido'";
+                        var countCommand = new SqlCeCommand(countQuery, connection);
+                        int totalEmprestimos = (int)countCommand.ExecuteScalar();
+
+                        if (totalEmprestimos == 0)
+                        {
+                            progressForm.AtualizarProgresso(100, "Nenhum empréstimo para atualizar");
+                            return;
+                        }
+
+                        // Obter empréstimos ativos
+                        string selectQuery = @"SELECT Id, DataDevolucao, DataProrrogacao, DataRealDevolucao 
+                                     FROM Emprestimo
+                                     WHERE Status <> 'Devolvido'";
+                        var selectCommand = new SqlCeCommand(selectQuery, connection);
+                        var reader = selectCommand.ExecuteReader();
+
+                        int processados = 0;
+
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            DateTime dataDevolucao = reader.GetDateTime(1);
+                            DateTime? dataProrrogacao = reader.IsDBNull(2) ? null : (DateTime?)reader.GetDateTime(2);
+                            DateTime? dataRealDevolucao = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3);
+
+                            string novoStatus = CalcularStatus(dataDevolucao, dataProrrogacao, dataRealDevolucao);
+
+                            // Atualizar o status
+                            string updateQuery = "UPDATE Emprestimo SET Status = @Status WHERE Id = @Id";
+                            var updateCommand = new SqlCeCommand(updateQuery, connection);
+                            updateCommand.Parameters.AddWithValue("@Status", novoStatus);
+                            updateCommand.Parameters.AddWithValue("@Id", id);
+                            updateCommand.ExecuteNonQuery();
+
+                            processados++;
+                            int progresso = (int)((double)processados / totalEmprestimos * 100);
+
+                            progressForm.AtualizarProgresso(progresso, $"Atualizando empréstimo {processados} de {totalEmprestimos}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Erro ao atualizar empréstimos: {ex.Message}", "Erro",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+        private void AtualizarReservas(frmProgresso progressForm)
         {
             try
             {
@@ -174,73 +234,69 @@ namespace BibliotecaApp
                 {
                     connection.Open();
 
-                    // Contar empréstimos ativos
-                    string countQuery = "SELECT COUNT(*) FROM Emprestimo WHERE Status <> 'Devolvido'";
-                    var countCommand = new SqlCeCommand(countQuery, connection);
-                    int totalEmprestimos = (int)countCommand.ExecuteScalar();
+                    // Buscar reservas com status 'Disponível' (usuário foi avisado e tem prazo para retirar)
+                    string selectQuery = @"
+                SELECT Id, DataLimiteRetirada
+                FROM Reservas
+                WHERE Status = 'Disponível'";
 
-                    if (totalEmprestimos == 0)
+                    using (var selectCommand = new SqlCeCommand(selectQuery, connection))
+                    using (var reader = selectCommand.ExecuteReader())
                     {
-                        progressForm.AtualizarProgresso(100, "Nenhum empréstimo para atualizar");
-                        return;
-                    }
+                        var reservasParaExpirar = new List<(int Id, DateTime? DataLimiteRetirada)>();
 
-                    // Obter empréstimos ativos
-                    string selectQuery = @"SELECT Id, DataDevolucao, DataProrrogacao, DataRealDevolucao 
-                                 FROM Emprestimo
-                                 WHERE Status <> 'Devolvido'";
-                    var selectCommand = new SqlCeCommand(selectQuery, connection);
-                    var reader = selectCommand.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32(0);
+                            DateTime? dataLimite = reader.IsDBNull(1) ? (DateTime?)null : reader.GetDateTime(1);
+                            reservasParaExpirar.Add((id, dataLimite));
+                        }
 
-                    int processados = 0;
+                        int total = reservasParaExpirar.Count;
+                        int processadas = 0;
 
-                    while (reader.Read())
-                    {
-                        int id = reader.GetInt32(0);
-                        DateTime dataDevolucao = reader.GetDateTime(1);
-                        DateTime? dataProrrogacao = reader.IsDBNull(2) ? null : (DateTime?)reader.GetDateTime(2);
-                        DateTime? dataRealDevolucao = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3);
+                        foreach (var reserva in reservasParaExpirar)
+                        {
+                            // Se já passou da DataLimiteRetirada, expira a reserva
+                            if (reserva.DataLimiteRetirada.HasValue && DateTime.Now > reserva.DataLimiteRetirada.Value)
+                            {
+                                using (var updateCmd = new SqlCeCommand("UPDATE Reservas SET Status = 'Expirada' WHERE Id = @Id", connection))
+                                {
+                                    updateCmd.Parameters.AddWithValue("@Id", reserva.Id);
+                                    updateCmd.ExecuteNonQuery();
+                                }
+                            }
 
-                        string novoStatus = CalcularStatus(dataDevolucao, dataProrrogacao, dataRealDevolucao);
-
-                        // Atualizar o status
-                        string updateQuery = "UPDATE Emprestimo SET Status = @Status WHERE Id = @Id";
-                        var updateCommand = new SqlCeCommand(updateQuery, connection);
-                        updateCommand.Parameters.AddWithValue("@Status", novoStatus);
-                        updateCommand.Parameters.AddWithValue("@Id", id);
-                        updateCommand.ExecuteNonQuery();
-
-                        processados++;
-                        int progresso = (int)((double)processados / totalEmprestimos * 100);
-
-                        progressForm.AtualizarProgresso(progresso, $"Atualizando empréstimo {processados} de {totalEmprestimos}");
+                            processadas++;
+                            int progresso = (int)((double)processadas / total * 100);
+                            progressForm.AtualizarProgresso(progresso, $"Verificando reservas ({processadas}/{total})");
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao atualizar empréstimos: {ex.Message}", "Erro",
-                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao atualizar reservas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private string CalcularStatus(DateTime dataDevolucao, DateTime? dataProrrogacao, DateTime? dataRealDevolucao)
-        {
-            DateTime dataReferencia = dataProrrogacao ?? dataDevolucao;
+            {
+                DateTime dataReferencia = dataProrrogacao ?? dataDevolucao;
 
-            if (dataRealDevolucao.HasValue)
-            {
-                return "Devolvido";
+                if (dataRealDevolucao.HasValue)
+                {
+                    return "Devolvido";
+                }
+                else if (DateTime.Now > dataReferencia)
+                {
+                    return "Atrasado";
+                }
+                else
+                {
+                    return "Ativo";
+                }
             }
-            else if (DateTime.Now > dataReferencia)
-            {
-                return "Atrasado";
-            }
-            else
-            {
-                return "Ativo";
-            }
-        }
 
 
 

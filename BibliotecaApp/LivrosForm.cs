@@ -435,7 +435,7 @@ namespace BibliotecaApp
 
         private void btnCriarTablea_Click_1(object sender, EventArgs e)
         {
-            LimparDadosBanco(); 
+           
         }
 
         //private void btnCriarTablea_Click_1(object sender, EventArgs e)

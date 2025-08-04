@@ -94,7 +94,7 @@ namespace BibliotecaApp
                 {
                     conexao.Open();
 
-                    string query = @"SELECT Nome, SenhaHash, SenhaSalt FROM usuarios 
+                    string query = @"SELECT Nome, Senha_Hash, Senha_Salt FROM usuarios 
     WHERE Email = @email AND TipoUsuario = 'Bibliotecário(a)'";
 
                     using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
@@ -105,8 +105,8 @@ namespace BibliotecaApp
                         {
                             if (reader.Read())
                             {
-                                string hashSalvo = reader["SenhaHash"].ToString();
-                                string saltSalvo = reader["SenhaSalt"].ToString();
+                                string hashSalvo = reader["Senha_Hash"].ToString();
+                                string saltSalvo = reader["Senha_Salt"].ToString();
                                 string nomeUsuario = reader["Nome"].ToString();
 
                                 bool senhaCorreta = CriptografiaSenha.VerificarSenha(senha, hashSalvo, saltSalvo);

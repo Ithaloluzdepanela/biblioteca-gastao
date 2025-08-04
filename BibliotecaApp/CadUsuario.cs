@@ -273,8 +273,11 @@ namespace BibliotecaApp
             SetAsteriscoVisibility(true);
             TurmaAst.ForeColor = Color.Transparent;
 
+            txtTurma.Text = "";
+
             ConfigurarApparence(
                 txtTurmaEnabled: false,
+                
                 txtEmailEnabled: true,
                 txtSenhaEnabled: true
             );
@@ -283,7 +286,7 @@ namespace BibliotecaApp
             txtSenha.PlaceholderText = "Digite aqui uma senha...";
             txtConfirmSenha.PlaceholderText = "Confirme a senha...";
             txtEmail.PlaceholderText = "Digite aqui o email...";
-
+            
             chkMostrarSenha.Enabled = true;
             chkMostrarSenha.ForeColor = Color.FromArgb(20, 41, 60);
         }
@@ -308,6 +311,9 @@ namespace BibliotecaApp
             SenhaAst.ForeColor = Color.Transparent;
             ConfirmSenhaAst.ForeColor = Color.Transparent;
             EmailAst.ForeColor = Color.Transparent;
+            txtTurma.Text = "";
+            txtSenha.Text = "";
+            txtConfirmSenha.Text = "";
 
             ConfigurarApparence(
                 txtTurmaEnabled: false,
@@ -336,6 +342,9 @@ namespace BibliotecaApp
             lblConfirmSenha.ForeColor = Color.LightGray;
             lblEmail.ForeColor = Color.LightGray;
             lblTurma.ForeColor = Color.LightGray;
+            txtTurma.Text = "";
+            txtSenha.Text = "";
+            txtConfirmSenha.Text = "";
 
             SetAsteriscoVisibility(true);
             TurmaAst.ForeColor = Color.Transparent;
@@ -366,6 +375,8 @@ namespace BibliotecaApp
             SetLabelColors(enabled: true);
             lblSenha.ForeColor = Color.LightGray;
             lblConfirmSenha.ForeColor = Color.LightGray;
+            txtSenha.Text = "";
+            txtConfirmSenha.Text = "";
 
             SetAsteriscoVisibility(true);
             SenhaAst.ForeColor = Color.Transparent;
@@ -531,8 +542,15 @@ namespace BibliotecaApp
         /// </summary>
         private void CadastrarNovoUsuario()
         {
-            // Gera hash + salt da senha
-            BibliotecaApp.Utils.CriptografiaSenha.CriarHash(txtSenha.Text, out string hash, out string salt);
+            string tipoUsuario = cbUsuario.Text;
+            string hash = null;
+            string salt = null;
+
+            // Gera hash e salt apenas se for Bibliotecário(a)
+            if (tipoUsuario == "Bibliotecário(a)")
+            {
+                BibliotecaApp.Utils.CriptografiaSenha.CriarHash(txtSenha.Text, out hash, out salt);
+            }
 
             using (SqlCeConnection conexao = Conexao.ObterConexao())
             {
@@ -543,19 +561,19 @@ namespace BibliotecaApp
                     using (SqlCeCommand comando = conexao.CreateCommand())
                     {
                         comando.CommandText = @"INSERT INTO usuarios
-(Nome, Email, SenhaHash, SenhaSalt, CPF, DataNascimento, Turma, Telefone, TipoUsuario) 
+(Nome, Email, Senha_Hash, Senha_Salt, CPF, DataNascimento, Turma, Telefone, TipoUsuario) 
 VALUES 
-(@Nome, @Email, @SenhaHash, @SenhaSalt, @CPF, @DataNascimento, @Turma, @Telefone, @TipoUsuario)";
+(@Nome, @Email, @Senha_Hash, @Senha_Salt, @CPF, @DataNascimento, @Turma, @Telefone, @TipoUsuario)";
 
                         comando.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
                         comando.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
-                        comando.Parameters.AddWithValue("@SenhaHash", hash);
-                        comando.Parameters.AddWithValue("@SenhaSalt", salt);
+                        comando.Parameters.AddWithValue("@Senha_Hash", string.IsNullOrEmpty(hash) ? (object)DBNull.Value : hash);
+                        comando.Parameters.AddWithValue("@Senha_Salt", string.IsNullOrEmpty(salt) ? (object)DBNull.Value : salt);
                         comando.Parameters.AddWithValue("@CPF", mtxCPF.Text);
                         comando.Parameters.AddWithValue("@DataNascimento", dtpDataNasc.Value);
                         comando.Parameters.AddWithValue("@Turma", txtTurma.Text.Trim());
                         comando.Parameters.AddWithValue("@Telefone", mtxTelefone.Text);
-                        comando.Parameters.AddWithValue("@TipoUsuario", cbUsuario.Text);
+                        comando.Parameters.AddWithValue("@TipoUsuario", tipoUsuario);
 
                         comando.ExecuteNonQuery();
                         LimparCampos();

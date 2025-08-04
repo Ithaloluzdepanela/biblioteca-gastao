@@ -435,7 +435,7 @@ namespace BibliotecaApp
 
         private void btnCriarTablea_Click_1(object sender, EventArgs e)
         {
-
+            
         }
 
         //private void btnCriarTablea_Click_1(object sender, EventArgs e)
@@ -500,7 +500,10 @@ namespace BibliotecaApp
 
 
 
+
     }
+
+   
     }
 
 

@@ -531,6 +531,8 @@ namespace BibliotecaApp
         /// </summary>
         private void CadastrarNovoUsuario()
         {
+            // Gera hash + salt da senha
+            BibliotecaApp.Utils.CriptografiaSenha.CriarHash(txtSenha.Text, out string hash, out string salt);
 
             using (SqlCeConnection conexao = Conexao.ObterConexao())
             {
@@ -540,56 +542,42 @@ namespace BibliotecaApp
 
                     using (SqlCeCommand comando = conexao.CreateCommand())
                     {
-                        // Define o comando SQL com parâmetros para evitar SQL Injection
                         comando.CommandText = @"INSERT INTO usuarios
-        (Nome, Email, Senha, CPF, DataNascimento, Turma, Telefone, TipoUsuario) 
-        VALUES 
-        (@Nome, @Email, @Senha, @CPF, @DataNascimento, @Turma, @Telefone, @TipoUsuario)";
+(Nome, Email, SenhaHash, SenhaSalt, CPF, DataNascimento, Turma, Telefone, TipoUsuario) 
+VALUES 
+(@Nome, @Email, @SenhaHash, @SenhaSalt, @CPF, @DataNascimento, @Turma, @Telefone, @TipoUsuario)";
 
-                        // Adiciona os valores dos campos do formulário nos parâmetros do comando
-                        comando.Parameters.AddWithValue("@Nome", txtNome.Text);           // Nome do usuário
-                        comando.Parameters.AddWithValue("@Email", txtEmail.Text);         // E-mail
-                        comando.Parameters.AddWithValue("@Senha", txtSenha.Text);         // Senha (atenção: deve ser criptografada no futuro)
-                        comando.Parameters.AddWithValue("@CPF", mtxCPF.Text);             // CPF
-                        comando.Parameters.AddWithValue("@DataNascimento", dtpDataNasc.Text); // Data de nascimento (string, ideal seria DateTime)
-                        comando.Parameters.AddWithValue("@Turma", txtTurma.Text);       // Turma selecionada no combo
-                        comando.Parameters.AddWithValue("@Telefone", mtxTelefone.Text);   // Telefone
-                        comando.Parameters.AddWithValue("@TipoUsuario", cbUsuario.Text);  // Tipo de usuário selecionado no combo
+                        comando.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
+                        comando.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
+                        comando.Parameters.AddWithValue("@SenhaHash", hash);
+                        comando.Parameters.AddWithValue("@SenhaSalt", salt);
+                        comando.Parameters.AddWithValue("@CPF", mtxCPF.Text);
+                        comando.Parameters.AddWithValue("@DataNascimento", dtpDataNasc.Value);
+                        comando.Parameters.AddWithValue("@Turma", txtTurma.Text.Trim());
+                        comando.Parameters.AddWithValue("@Telefone", mtxTelefone.Text);
+                        comando.Parameters.AddWithValue("@TipoUsuario", cbUsuario.Text);
 
-                        // Executa o comando no banco (insere o registro)
                         comando.ExecuteNonQuery();
-
-                       
-
-                        // Chama um método (que você deve ter criado) para limpar os campos da tela
                         LimparCampos();
-
-                        // Libera os recursos usados pelo comando
-                        comando.Dispose();
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Se der erro, exibe a mensagem
-                    MessageBox.Show("Erro ao salvar: " + ex.Message);
+                    MessageBox.Show("Erro ao salvar: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
                 finally
                 {
-                    // Fecha a conexão com o banco, mesmo que ocorra erro
                     conexao.Close();
                 }
             }
 
-
-
-            
-
-            
             MessageBox.Show("Cadastro concluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+
         #endregion
 
         private void panel1_Paint(object sender, PaintEventArgs e)

@@ -217,6 +217,7 @@
             this.gradientPanel1.Name = "gradientPanel1";
             this.gradientPanel1.Size = new System.Drawing.Size(500, 600);
             this.gradientPanel1.TabIndex = 9;
+            this.gradientPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.gradientPanel1_Paint);
             // 
             // label6
             // 

@@ -1,4 +1,5 @@
 ﻿using BibliotecaApp.Models;
+using BibliotecaApp.Utils;
 using System;
 using System.Data.SqlServerCe;
 using System.Drawing;
@@ -92,34 +93,34 @@ namespace BibliotecaApp
                 {
                     conexao.Open();
 
-                    string query = @"SELECT * FROM usuarios 
-                         WHERE email = @email AND senha = @senha AND tipousuario = 'Bibliotecário(a)'";
+                    string query = @"SELECT Nome, SenhaHash, SenhaSalt FROM usuarios 
+    WHERE Email = @email AND TipoUsuario = 'Bibliotecário(a)'";
 
                     using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
                     {
                         comando.Parameters.AddWithValue("@email", email);
-                        comando.Parameters.AddWithValue("@senha", senha);
 
                         using (SqlCeDataReader reader = comando.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                Sessao.NomeBibliotecariaLogada = reader["nome"].ToString();
+                                string hashSalvo = reader["SenhaHash"].ToString();
+                                string saltSalvo = reader["SenhaSalt"].ToString();
+                                string nomeUsuario = reader["Nome"].ToString();
 
-                                // Atualizar empréstimos antes de fechar
-                                await AtualizarStatusEmprestimosAsync();
+                                bool senhaCorreta = CriptografiaSenha.VerificarSenha(senha, hashSalvo, saltSalvo);
 
-                                cancelar = true;
-                                this.DialogResult = DialogResult.OK;
-                                this.Close();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Acesso negado. Verifique seu e-mail e senha.", "Erro de Login",
-                                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                txtEmail.Clear();
-                                txtSenha.Clear();
-                                txtEmail.Focus();
+                                if (senhaCorreta)
+                                {
+                                    Sessao.NomeBibliotecariaLogada = nomeUsuario;
+
+                                    await AtualizarStatusEmprestimosAsync();
+
+                                    cancelar = true;
+                                    this.DialogResult = DialogResult.OK;
+                                    this.Close();
+                                    return;
+                                }
                             }
                         }
                     }
@@ -264,6 +265,11 @@ namespace BibliotecaApp
                 BtnEntrar.PerformClick(); 
                 
             }
+        }
+
+        private void gradientPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

@@ -163,6 +163,7 @@
     <Compile Include="CadUsuario.Designer.cs">
       <DependentUpon>CadUsuario.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\CriptografiaSenha.cs" />
     <EmbeddedResource Include="AlterarCadLivroForm.resx">
       <DependentUpon>AlterarCadLivroForm.cs</DependentUpon>
     </EmbeddedResource>

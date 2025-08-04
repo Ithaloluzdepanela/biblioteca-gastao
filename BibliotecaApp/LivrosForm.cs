@@ -370,7 +370,7 @@ namespace BibliotecaApp
 
 //                SqlCeCommand comando = new SqlCeCommand(sql, conexao);
 //                comando.ExecuteNonQuery();
-
+//
 //                MessageBox.Show("Tabela 'Emprestimo' criada com sucesso!");
 //            }
 //            catch (Exception ex)
@@ -384,36 +384,7 @@ namespace BibliotecaApp
 
 
         #region Criar Banco de Dados (Desabilitado)
-        private void btnBancoDados_Click(object sender, EventArgs e)
-        {
-            //string caminhoBanco = Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-
-            //// Verifica se o banco de dados já existe
-            //if (!File.Exists(caminhoBanco))
-            //{
-            //    try
-            //    {
-            //        // Cria o banco de dados SDF usando o SqlCeEngine
-            //        SqlCeEngine engine = new SqlCeEngine($"Data Source={caminhoBanco}; Password=123");
-            //        engine.CreateDatabase();
-
-            //        // Exibe mensagem de sucesso
-            //        MessageBox.Show("Banco de dados criado com sucesso.");
-
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show($"Erro ao criar o banco de dados: {ex.Message}");
-            //    }
-            //}
-            //else
-            //{
-            //    MessageBox.Show("O banco de dados já existe.");
-            //}
-
-
-        }
+       
         #endregion
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -435,7 +406,7 @@ namespace BibliotecaApp
 
         private void btnCriarTablea_Click_1(object sender, EventArgs e)
         {
-           
+
         }
 
         //private void btnCriarTablea_Click_1(object sender, EventArgs e)
@@ -498,38 +469,96 @@ namespace BibliotecaApp
         //   }
 
 
-        //: private void LimparDadosBanco()
-        //: {
-        //:     try
-        //:     {
-        //:         using (SqlCeConnection conexao = Conexao.ObterConexao())
-        //:         {
-        //:             conexao.Open();
-        //: 
-        //:             // Lista das tabelas que quer limpar (adicione todas que desejar)
-        //:             string[] tabelas = { "Reservas", "Emprestimo", "usuarios", "Livros" };
-        //: 
-        //:             foreach (var tabela in tabelas)
-        //:             {
-        //:                 string sqlDelete = $"DELETE FROM {tabela}";
-        //:                 using (SqlCeCommand comando = new SqlCeCommand(sqlDelete, conexao))
-        //:                 {
-        //:                     comando.ExecuteNonQuery();
-        //:                 }
-        //:             }
-        //: 
-        //:             MessageBox.Show("Dados do banco limpos com sucesso!", "Sucesso",
-        //:                 MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //:         }
-        //:     }
-        //:     catch (Exception ex)
-        //:     {
-        //:         MessageBox.Show($"Erro ao limpar dados do banco:\n{ex.Message}", "Erro",
-        //:             MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //:     }
-        //: }
+        //private void LimparDadosBanco()
+        //{
+        //    try
+        //    {
+        //        using (SqlCeConnection conexao = Conexao.ObterConexao())
+        //        {
+        //            conexao.Open();
+
+        //            // Lista das tabelas que quer limpar (adicione todas que desejar)
+        //            string[] tabelas = { "Reservas", "Emprestimo", "usuarios", "Livros" };
+
+        //            foreach (var tabela in tabelas)
+        //            {
+        //                string sqlDelete = $"DELETE FROM {tabela}";
+        //                using (SqlCeCommand comando = new SqlCeCommand(sqlDelete, conexao))
+        //                {
+        //                    comando.ExecuteNonQuery();
+        //                }
+        //            }
+
+        //            MessageBox.Show("Dados do banco limpos com sucesso!", "Sucesso",
+        //                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Erro ao limpar dados do banco:\n{ex.Message}", "Erro",
+        //            MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        }
 
 
+        //private void AtualizarEstruturaUsuarios()
+        //{
+        //    using (var conexao = Conexao.ObterConexao())
+        //    {
+        //        try
+        //        {
+        //            conexao.Open();
+
+        //            // Verifica e adiciona senha_hash se não existir
+        //            using (var checkCmd = new SqlCeCommand(
+        //                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'usuarios' AND COLUMN_NAME = 'Senha_hash'", conexao))
+        //            {
+        //                var exists = checkCmd.ExecuteScalar();
+        //                if (exists == null)
+        //                {
+        //                    var cmdHash = new SqlCeCommand("ALTER TABLE usuarios ADD Senha_hash NVARCHAR(64) NULL;", conexao);
+        //                    cmdHash.ExecuteNonQuery();
+        //                }
+        //            }
+
+        //            // Verifica e adiciona senha_salt se não existir
+        //            using (var checkCmd = new SqlCeCommand(
+        //                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'usuarios' AND COLUMN_NAME = 'Senha_salt'", conexao))
+        //            {
+        //                var exists = checkCmd.ExecuteScalar();
+        //                if (exists == null)
+        //                {
+        //                    var cmdSalt = new SqlCeCommand("ALTER TABLE usuarios ADD Senha_salt NVARCHAR(32) NULL;", conexao);
+        //                    cmdSalt.ExecuteNonQuery();
+        //                }
+        //            }
+
+        //            // Verifica e remove a coluna senha se existir
+        //            using (var checkCmd = new SqlCeCommand(
+        //                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'usuarios' AND COLUMN_NAME = 'Senha'", conexao))
+        //            {
+        //                var exists = checkCmd.ExecuteScalar();
+        //                if (exists != null)
+        //                {
+        //                    var dropCmd = new SqlCeCommand("ALTER TABLE usuarios DROP COLUMN Senha;", conexao);
+        //                    dropCmd.ExecuteNonQuery();
+        //                }
+        //            }
+
+        //            MessageBox.Show("Estrutura da tabela 'usuarios' atualizada com sucesso!", "Sucesso",
+        //                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show("Erro ao atualizar tabela 'usuarios': " + ex.Message, "Erro",
+        //                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        }
+        //        finally
+        //        {
+        //            conexao.Close();
+        //        }
+        //    }
+        //}
 
     }
 

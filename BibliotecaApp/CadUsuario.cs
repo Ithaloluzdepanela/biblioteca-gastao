@@ -563,7 +563,7 @@ namespace BibliotecaApp
                         comando.CommandText = @"INSERT INTO usuarios
 (Nome, Email, Senha_Hash, Senha_Salt, CPF, DataNascimento, Turma, Telefone, TipoUsuario) 
 VALUES 
-(@Nome, @Email, @Senha_Hash, @Senha_Salt, @CPF, @DataNascimento, @Turma, @Telefone, @TipoUsuario)";
+(@Nome, @Email, @Senha_hash, @Senha_salt, @CPF, @DataNascimento, @Turma, @Telefone, @TipoUsuario)";
 
                         comando.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
                         comando.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());

@@ -68,17 +68,6 @@ namespace BibliotecaApp
             string email = txtEmail.Text.Trim();
             string senha = txtSenha.Text;
 
-            // login como administrador (provisório)
-            if (email == "admin@admin.com" && senha == "1234")
-            {
-                // Login como administrador
-                cancelar = true;
-                await AtualizarStatusEmprestimosAsync();
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-                return;
-            }
-
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
             {
                 MessageBox.Show("Por favor, preencha todos os campos.", "Campos obrigatórios",
@@ -88,14 +77,25 @@ namespace BibliotecaApp
                 return;
             }
 
+            // Acesso administrador (provisório)
+            if (email == "admin@admin.com" && senha == "1234")
+            {
+                cancelar = true;
+                await AtualizarStatusEmprestimosAsync();
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+                return;
+            }
+
             try
             {
                 using (SqlCeConnection conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
 
-                    string query = @"SELECT Nome, Senha_Hash, Senha_Salt FROM usuarios 
-    WHERE Email = @email AND TipoUsuario = 'Bibliotecário(a)'";
+                    string query = @"SELECT Nome, Senha_hash, Senha_salt 
+                             FROM usuarios 
+                             WHERE Email = @email AND TipoUsuario = 'Bibliotecário(a)'";
 
                     using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
                     {
@@ -105,8 +105,8 @@ namespace BibliotecaApp
                         {
                             if (reader.Read())
                             {
-                                string hashSalvo = reader["Senha_Hash"].ToString();
-                                string saltSalvo = reader["Senha_Salt"].ToString();
+                                string hashSalvo = reader["Senha_hash"].ToString();
+                                string saltSalvo = reader["Senha_salt"].ToString();
                                 string nomeUsuario = reader["Nome"].ToString();
 
                                 bool senhaCorreta = CriptografiaSenha.VerificarSenha(senha, hashSalvo, saltSalvo);
@@ -114,14 +114,29 @@ namespace BibliotecaApp
                                 if (senhaCorreta)
                                 {
                                     Sessao.NomeBibliotecariaLogada = nomeUsuario;
-
                                     await AtualizarStatusEmprestimosAsync();
-
                                     cancelar = true;
                                     this.DialogResult = DialogResult.OK;
                                     this.Close();
                                     return;
                                 }
+                                else
+                                {
+                                    MessageBox.Show("Senha incorreta.", "Erro de Login",
+                                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                    txtSenha.Clear();
+                                    txtSenha.Focus();
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("E-mail não encontrado ou não é um bibliotecário.", "Erro de Login",
+                                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                txtEmail.Clear();
+                                txtSenha.Clear();
+                                txtEmail.Focus();
+                                return;
                             }
                         }
                     }
@@ -133,6 +148,8 @@ namespace BibliotecaApp
                               MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
 
         private void BtnEntrar_MouseLeave(object sender, EventArgs e)
         {

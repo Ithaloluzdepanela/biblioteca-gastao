@@ -15,9 +15,12 @@ namespace BibliotecaApp
         public List<Usuarios> Usuarios { get; set; }
         public List<Livro> Livros { get; set; }
         public List<Emprestimo> Emprestimos { get; set; }
-
+        public bool AbertoPelaReserva { get; set; } = false;
+        private bool _carregandoLivroAutomaticamente = false;
         private List<Livro> _cacheLivros = new List<Livro>();
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
+
+
         #endregion
 
         #region Classe Conexao
@@ -35,22 +38,9 @@ namespace BibliotecaApp
         #endregion
 
         #region Construtores
-        public EmprestimoForm(List<Usuarios> usuarios, List<Livro> livros)
-        {
-            InitializeComponent();
 
-            Usuarios = usuarios;
-            Livros = livros;
-            Emprestimos = new List<Emprestimo>();
 
-            // Configurações de AutoComplete para usuário e livro         
-
-            txtLivro.KeyDown += txtLivro_KeyDown;
-            lstLivros.Click += lstLivros_Click;
-            lstLivros.KeyDown += lstLivros_KeyDown;
-        }
-
-        public EmprestimoForm() // Construtor alternativo para design ou testes
+        public EmprestimoForm()
         {
             InitializeComponent();
 
@@ -62,7 +52,6 @@ namespace BibliotecaApp
             CarregarLivrosDoBanco();
             CarregarBibliotecarias();
 
-            //Autocompleta a bibliotecária logada
             if (!string.IsNullOrWhiteSpace(Sessao.NomeBibliotecariaLogada))
             {
                 int idx = cbBibliotecaria.Items.IndexOf(Sessao.NomeBibliotecariaLogada);
@@ -82,9 +71,12 @@ namespace BibliotecaApp
             lstLivros.Click += lstLivros_Click;
             lstLivros.KeyDown += lstLivros_KeyDown;
         }
+    
         #endregion
 
         #region Eventos do Formulário
+
+
         private void EmprestimoForm_Load(object sender, EventArgs e)
         {
             dtpDataEmprestimo.Value = DateTime.Today;
@@ -92,6 +84,7 @@ namespace BibliotecaApp
 
             this.KeyPreview = true;
             this.KeyDown += Form_KeyDown;
+
         }
 
         private void label2_Click(object sender, EventArgs e) { }
@@ -104,6 +97,8 @@ namespace BibliotecaApp
         private void dtpDataEmprestimo_ValueChanged(object sender, EventArgs e) { }
         private void label4_Click(object sender, EventArgs e) { }
         private void cbBibliotecaria_SelectedIndexChanged(object sender, EventArgs e)
+
+
         {
             cbBibliotecaria.DrawMode = DrawMode.OwnerDrawFixed;
             cbBibliotecaria.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -209,6 +204,7 @@ namespace BibliotecaApp
                     }
 
                     MessageBox.Show("Empréstimo registrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LimparCampos();
                 }
             }
             catch (Exception ex)
@@ -290,7 +286,7 @@ namespace BibliotecaApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro na busca de usuários:\n" + ex.Message, "Erro",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro na busca de usuários:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -490,8 +486,11 @@ namespace BibliotecaApp
             lstLivros.Visible = false;
         }
 
-        private void txtLivro_TextChanged(object sender, EventArgs e)
+        
+            private void txtLivro_TextChanged(object sender, EventArgs e)
         {
+            if (_carregandoLivroAutomaticamente) return;
+
             string texto = txtLivro.Text.Trim().ToLower();
 
             if (string.IsNullOrWhiteSpace(texto))
@@ -508,6 +507,7 @@ namespace BibliotecaApp
 
             lstLivros.Visible = sugestoes.Any();
         }
+        
 
         private void txtLivro_Leave(object sender, EventArgs e)
         {
@@ -561,8 +561,14 @@ namespace BibliotecaApp
 
         #region Métodos de Código de Barras
         private void txtBarcode_Leave(object sender, EventArgs e)
-        {
-            BuscarEPreencherLivroPorCodigo();
+        {// Não verifica se foi aberto pela reserva
+            if (AbertoPelaReserva) return;
+
+            // Só busca se o campo estiver preenchido
+            if (!string.IsNullOrEmpty(txtBarcode.Text))
+            {
+                BuscarEPreencherLivroPorCodigo();
+            }
         }
 
         private void BuscarEPreencherLivroPorCodigo()
@@ -628,7 +634,7 @@ namespace BibliotecaApp
 
                 if (cbBibliotecaria.Items.Count == 0)
                 {
-                    MessageBox.Show("Nenhuma bibliotecária encontrada.","Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Nenhuma bibliotecária encontrada.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
@@ -655,6 +661,27 @@ namespace BibliotecaApp
             if (!chkDevolucaoPersonalizada.Checked)
                 dtpDataDevolucao.Value = DateTime.Today.AddDays(7);
         }
+
+        public void LimparCampos()
+        {
+            txtNomeUsuario.Text = "";
+            txtLivro.Text = "";
+            txtBarcode.Text = "";
+            cbBibliotecaria.Text = "";
+            dtpDataDevolucao.Value = DateTime.Today.AddDays(7);
+            chkDevolucaoPersonalizada.Checked = false;
+
+        }
         #endregion
+
+        private void txtNomeUsuario_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+       
+
+        
     }
 }

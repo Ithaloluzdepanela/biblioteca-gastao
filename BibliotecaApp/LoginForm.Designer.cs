@@ -39,9 +39,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtSenha = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.BtnEntrar = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.BtnEntrar = new System.Windows.Forms.Button();
             this.gradientPanel1 = new BibliotecaApp.ElementosPersonalizados.GradientPanel();
+            this.label6 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.bemVindo = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -100,6 +101,7 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(271, 19);
             this.txtEmail.TabIndex = 12;
+            this.txtEmail.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtEmail_KeyDown);
             // 
             // panel1
             // 
@@ -158,6 +160,7 @@
             this.txtSenha.Size = new System.Drawing.Size(271, 19);
             this.txtSenha.TabIndex = 12;
             this.txtSenha.UseSystemPasswordChar = true;
+            this.txtSenha.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSenha_KeyDown);
             // 
             // label5
             // 
@@ -168,21 +171,6 @@
             this.label5.Size = new System.Drawing.Size(117, 15);
             this.label5.TabIndex = 16;
             this.label5.Text = "Esqueceu sua senha?";
-            // 
-            // BtnEntrar
-            // 
-            this.BtnEntrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(74)))), ((int)(((byte)(158)))));
-            this.BtnEntrar.Font = new System.Drawing.Font("Segoe UI", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnEntrar.ForeColor = System.Drawing.Color.White;
-            this.BtnEntrar.Location = new System.Drawing.Point(95, 450);
-            this.BtnEntrar.Name = "BtnEntrar";
-            this.BtnEntrar.Size = new System.Drawing.Size(220, 50);
-            this.BtnEntrar.TabIndex = 17;
-            this.BtnEntrar.Text = "Entrar";
-            this.BtnEntrar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.BtnEntrar.Click += new System.EventHandler(this.BtnEntrar_Click);
-            this.BtnEntrar.MouseEnter += new System.EventHandler(this.BtnEntrar_MouseEnter);
-            this.BtnEntrar.MouseLeave += new System.EventHandler(this.BtnEntrar_MouseLeave);
             // 
             // panel5
             // 
@@ -197,10 +185,27 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(400, 600);
             this.panel5.TabIndex = 3;
-            
+            // 
+            // BtnEntrar
+            // 
+            this.BtnEntrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(74)))), ((int)(((byte)(158)))));
+            this.BtnEntrar.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BtnEntrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnEntrar.Font = new System.Drawing.Font("Segoe UI", 16.2F);
+            this.BtnEntrar.ForeColor = System.Drawing.Color.White;
+            this.BtnEntrar.Location = new System.Drawing.Point(96, 462);
+            this.BtnEntrar.Name = "BtnEntrar";
+            this.BtnEntrar.Size = new System.Drawing.Size(220, 52);
+            this.BtnEntrar.TabIndex = 18;
+            this.BtnEntrar.Text = "Entrar";
+            this.BtnEntrar.UseVisualStyleBackColor = false;
+            this.BtnEntrar.Click += new System.EventHandler(this.BtnEntrar_Click);
+            this.BtnEntrar.Enter += new System.EventHandler(this.BtnEntrar_MouseEnter);
+            this.BtnEntrar.Leave += new System.EventHandler(this.BtnEntrar_MouseLeave);
             // 
             // gradientPanel1
             // 
+            this.gradientPanel1.Controls.Add(this.label6);
             this.gradientPanel1.Controls.Add(this.label1);
             this.gradientPanel1.Controls.Add(this.bemVindo);
             this.gradientPanel1.Controls.Add(this.pictureBox2);
@@ -212,7 +217,18 @@
             this.gradientPanel1.Name = "gradientPanel1";
             this.gradientPanel1.Size = new System.Drawing.Size(500, 600);
             this.gradientPanel1.TabIndex = 9;
-           
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(145)))), ((int)(((byte)(245)))));
+            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.Color.White;
+            this.label6.Location = new System.Drawing.Point(3, 576);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(91, 17);
+            this.label6.TabIndex = 3;
+            this.label6.Text = "InDev Version";
             // 
             // label1
             // 
@@ -249,7 +265,6 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
-            
             // 
             // pictureBox1
             // 
@@ -310,7 +325,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtSenha;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label BtnEntrar;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button BtnEntrar;
     }
 }

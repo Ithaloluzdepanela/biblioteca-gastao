@@ -15,22 +15,14 @@ namespace BibliotecaApp
         public LoginForm()
         {
             InitializeComponent();
-            this.KeyPreview = true;
-            this.KeyDown += Form_KeyDown;
+            txtEmail.KeyDown += txtEmail_KeyDown;
+            txtSenha.KeyDown += txtSenha_KeyDown;
 
 
         }
+
+
         
-
-        private void Form_KeyDown(object sender, KeyEventArgs e)
-        {
-            // Navegação entre campos com Enter
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                this.SelectNextControl(this.ActiveControl, true, true, true, true);
-            }
-        }
 
         #region Eventos de Saída
 
@@ -250,8 +242,28 @@ namespace BibliotecaApp
         }
 
 
+
         #endregion
 
+        
 
+        private void txtEmail_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                txtSenha.Focus();
+            }
+        }
+
+        private void txtSenha_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                BtnEntrar.PerformClick(); 
+                
+            }
+        }
     }
 }

@@ -1,55 +1,92 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BibliotecaApp
 {
     public partial class frmProgresso : Form
     {
-        private Timer closeTimer;
+        private readonly Timer _closeTimer;
+        private bool _operationComplete;
 
         public frmProgresso()
         {
             InitializeComponent();
 
+            // Configurações iniciais
+            _operationComplete = false;
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+
             // Configura o timer para fechar automaticamente
-            closeTimer = new Timer();
-            closeTimer.Interval = 3000; // 1.5 segundos após concluir
-            closeTimer.Tick += (s, e) => { this.Close(); };
+            _closeTimer = new Timer
+            {
+                Interval = 1500 // 1.5 segundos após concluir
+            };
+            _closeTimer.Tick += CloseTimer_Tick;
+        }
+
+        private void CloseTimer_Tick(object sender, EventArgs e)
+        {
+            _closeTimer.Stop();
+            this.Close();
         }
 
         public void AtualizarProgresso(int valor, string mensagem)
         {
-            if (progressBar1.InvokeRequired)
-            {
-                progressBar1.Invoke(new Action(() =>
-                {
-                    progressBar1.Value = valor;
-                    lblStatus.Text = mensagem;
+            if (this.IsDisposed)
+                return;
 
-                    // Se completou 100%, inicia o timer para fechar
-                    if (valor == 100) closeTimer.Start();
+            // Garante que o valor esteja dentro dos limites
+            valor = Math.Max(0, Math.Min(valor, 100));
+
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    UpdateProgressInternal(valor, mensagem);
                 }));
             }
             else
             {
+                UpdateProgressInternal(valor, mensagem);
+            }
+        }
+
+        private void UpdateProgressInternal(int valor, string mensagem)
+        {
+            try
+            {
+                if (this.IsDisposed)
+                    return;
+
                 progressBar1.Value = valor;
                 lblStatus.Text = mensagem;
 
-                // Se completou 100%, inicia o timer para fechar
-                if (valor == 100) closeTimer.Start();
+                // Se completou 100% e ainda não foi iniciado o timer
+                if (valor >= 100 && !_operationComplete)
+                {
+                    _operationComplete = true;
+                    _closeTimer.Start();
+                }
             }
+            catch (ObjectDisposedException)
+            {
+                // Ignora se o formulário já foi descartado
+            }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            _closeTimer?.Stop();
+            _closeTimer?.Dispose();
         }
 
         private void frmProgresso_Load(object sender, EventArgs e)
         {
-
+            // Foca na barra de progresso para melhor visualização
+            progressBar1.Focus();
         }
     }
 }

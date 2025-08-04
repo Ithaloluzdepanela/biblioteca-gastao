@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace BibliotecaApp
 {
@@ -185,6 +186,17 @@ namespace BibliotecaApp
         private void picEmprestimo_Click(object sender, EventArgs e)
         {
             EmprestimoForm popup = new EmprestimoForm();
+            Location = popup.Location;
+            popup.ShowDialog();
+        }
+
+        #endregion
+
+        #region Ação: Abrir Formulário de Reservas
+
+        private void picReserva_Click(object sender, EventArgs e)
+        {
+            ReservaForm popup = new ReservaForm();
             Location = popup.Location;
             popup.ShowDialog();
         }
@@ -420,6 +432,75 @@ namespace BibliotecaApp
         {
 
         }
+
+        private void btnCriarTablea_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        //private void btnCriarTablea_Click_1(object sender, EventArgs e)
+        //{
+        //try
+        //  {
+        //  using (SqlCeConnection conexao = Conexao.ObterConexao())
+        //   {
+        //         conexao.Open();
+        //
+        //                 // Verifica se a tabela já existe
+        //               bool tabelaExiste = VerificarTabelaExistente(conexao, "Reservas");
+        //
+        //               if (tabelaExiste)
+        //                {
+        //                   DialogResult resposta = MessageBox.Show("A tabela 'Reservas' já existe. Deseja recriá-la? Todos os dados serão perdidos.",
+        //                       "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+        //
+        //                  if (resposta != DialogResult.Yes)
+        //                  {
+        //                      return;
+        //                 }
+        //
+        //                // Remove a tabela existente
+        //                using (SqlCeCommand comando = new SqlCeCommand("DROP TABLE Reservas", conexao))
+        //                {
+        //                    comando.ExecuteNonQuery();
+        //              }
+        //         }
+        //
+        // Cria a nova tabela
+        //             string sql = @"
+        //       CREATE TABLE Reservas (
+        //            Id int IDENTITY(1,1) PRIMARY KEY,
+        //           UsuarioId int NOT NULL,
+        //          LivroId int NOT NULL,
+        //         BibliotecariaId int NOT NULL,
+        //          DataReserva datetime NOT NULL,
+        //         DataDisponibilidade datetime NULL,
+        //        DataLimiteRetirada datetime NULL,
+        //        Status nvarchar(20) NOT NULL, -- 'Pendente', 'Disponível', 'Cancelada', 'Concluída', 'Expirada'
+        //       FOREIGN KEY (UsuarioId) REFERENCES Usuarios(Id),
+        //       FOREIGN KEY (LivroId) REFERENCES Livros(Id),
+        //       FOREIGN KEY (BibliotecariaId) REFERENCES Usuarios(Id)
+        //    )";
+        //
+        //       using (SqlCeCommand comando = new SqlCeCommand(sql, conexao))
+        //     {
+        //         comando.ExecuteNonQuery();
+        //        MessageBox.Show("Tabela 'Reservas' criada com sucesso!", "Sucesso",
+        //            MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //  }
+        // }
+        // }
+        //  catch (Exception ex)
+        //  {
+        //      MessageBox.Show($"Erro ao criar tabela:\n{ex.Message}", "Erro",
+        //         MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //  }
+        //   }
+
+
+
+
     }
-}
+    }
+
 

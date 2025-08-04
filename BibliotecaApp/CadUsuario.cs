@@ -81,7 +81,7 @@ namespace BibliotecaApp
             dtpDataNasc.Value = DateTime.Today;
             txtSenha.Text = "";
             txtConfirmSenha.Text = "";
-            txtNome.Focus();                                                                                                                                                                        
+            txtNome.Focus();
         }
 
         /// <summary>

@@ -129,6 +129,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="mdiProperties.cs" />
+    <Compile Include="Models\Reserva.cs" />
     <Compile Include="Models\Sessao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -142,6 +143,12 @@
     </Compile>
     <Compile Include="RelForm.Designer.cs">
       <DependentUpon>RelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReservaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReservaForm.Designer.cs">
+      <DependentUpon>ReservaForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UsuarioForm.cs">
       <SubType>Form</SubType>
@@ -193,6 +200,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CadUsuario.resx">
       <DependentUpon>CadUsuario.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReservaForm.resx">
+      <DependentUpon>ReservaForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UsuarioForm.resx">
       <DependentUpon>UsuarioForm.cs</DependentUpon>

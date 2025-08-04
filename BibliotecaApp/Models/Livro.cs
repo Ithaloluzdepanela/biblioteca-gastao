@@ -19,7 +19,12 @@ namespace BibliotecaApp
         public int Quantidade { get; set; }
         public string CodigoDeBarras { get; set; }
 
-        
+        public bool PodeSerReservado()
+        {
+            
+            return !Disponibilidade && Quantidade == 0;
+        }
+
         public Livro() { }
 
        

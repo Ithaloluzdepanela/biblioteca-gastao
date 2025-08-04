@@ -38,6 +38,7 @@
             this.lblTotal = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.picReserva = new System.Windows.Forms.PictureBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.btnBancoDados = new System.Windows.Forms.Button();
@@ -53,6 +54,7 @@
             this.lblTeste = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Lista)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picReserva)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).BeginInit();
             this.SuspendLayout();
@@ -136,6 +138,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.picReserva);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.btnBancoDados);
@@ -159,6 +162,18 @@
             this.panel1.Size = new System.Drawing.Size(1300, 663);
             this.panel1.TabIndex = 16;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // picReserva
+            // 
+            this.picReserva.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
+            this.picReserva.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_quadrado_arredondado_20;
+            this.picReserva.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.picReserva.Location = new System.Drawing.Point(713, 500);
+            this.picReserva.Name = "picReserva";
+            this.picReserva.Size = new System.Drawing.Size(40, 40);
+            this.picReserva.TabIndex = 24;
+            this.picReserva.TabStop = false;
+            this.picReserva.Click += new System.EventHandler(this.picReserva_Click);
             // 
             // button2
             // 
@@ -194,6 +209,7 @@
             this.btnCriarTablea.Name = "btnCriarTablea";
             this.btnCriarTablea.Size = new System.Drawing.Size(75, 23);
             this.btnCriarTablea.TabIndex = 0;
+            this.btnCriarTablea.Click += new System.EventHandler(this.btnCriarTablea_Click_1);
             // 
             // lvCampos
             // 
@@ -346,6 +362,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Lista)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picReserva)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).EndInit();
             this.ResumeLayout(false);
@@ -375,5 +392,6 @@
         private System.Windows.Forms.Button btnBancoDados;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.PictureBox picReserva;
     }
 }

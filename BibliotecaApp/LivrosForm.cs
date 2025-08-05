@@ -387,28 +387,7 @@ namespace BibliotecaApp
        
         #endregion
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        
-
-        private void lstTabelas_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lvCampos_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnCriarTablea_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
+ 
         //private void btnCriarTablea_Click_1(object sender, EventArgs e)
         //{
         //try
@@ -498,7 +477,7 @@ namespace BibliotecaApp
         //        MessageBox.Show($"Erro ao limpar dados do banco:\n{ex.Message}", "Erro",
         //            MessageBoxButtons.OK, MessageBoxIcon.Error);
         //    }
-        }
+        //}
 
 
         //private void AtualizarEstruturaUsuarios()
@@ -561,8 +540,6 @@ namespace BibliotecaApp
         //}
 
     }
-
-
 }
 
 

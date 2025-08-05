@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Renato\\source\\repos\\Ithaloluzdepanela\\biblioteca-gastao\\",
+  "WorkspaceRootPath": "C:\\Users\\Luis\\source\\repos\\Ithaloluzdepanela\\biblioteca-gastao\\",
   "Documents": [],
   "DocumentGroupContainers": [
     {
@@ -13,7 +13,15 @@
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
             },
             {
               "$type": "Bookmark",
@@ -26,10 +34,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
               "$type": "Bookmark",
@@ -49,7 +53,7 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
             }
           ]
         },

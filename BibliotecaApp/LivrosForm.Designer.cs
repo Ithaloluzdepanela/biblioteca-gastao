@@ -161,7 +161,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1300, 663);
             this.panel1.TabIndex = 16;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // picReserva
             // 
@@ -208,7 +207,6 @@
             this.btnCriarTablea.Name = "btnCriarTablea";
             this.btnCriarTablea.Size = new System.Drawing.Size(75, 23);
             this.btnCriarTablea.TabIndex = 0;
-            this.btnCriarTablea.Click += new System.EventHandler(this.btnCriarTablea_Click_1);
             // 
             // lvCampos
             // 
@@ -219,7 +217,6 @@
             this.lvCampos.TabIndex = 20;
             this.lvCampos.UseCompatibleStateImageBehavior = false;
             this.lvCampos.View = System.Windows.Forms.View.Details;
-            this.lvCampos.SelectedIndexChanged += new System.EventHandler(this.lvCampos_SelectedIndexChanged);
             // 
             // lstTabelas
             // 
@@ -229,7 +226,6 @@
             this.lstTabelas.Name = "lstTabelas";
             this.lstTabelas.Size = new System.Drawing.Size(242, 304);
             this.lstTabelas.TabIndex = 19;
-            this.lstTabelas.SelectedIndexChanged += new System.EventHandler(this.lstTabelas_SelectedIndexChanged_1);
             // 
             // btnCarregarTabelas
             // 

@@ -53,46 +53,6 @@ namespace BibliotecaApp
         }
         #endregion
 
-        #region Expansão do menu
-        bool menuExpand = false;
-        private void picMenu_Click(object sender, EventArgs e)
-        {
-            menuTransition.Start();
-        }
-
-        private void menuTransition_Tick(object sender, EventArgs e)
-        {
-            if (menuExpand == false)
-            {
-                menu.Width += 10;
-                incioContainer.Width = menu.Width;
-                livroContainer.Width = menu.Width;
-                relContainer.Width = menu.Width;
-                sairContainer.Width = menu.Width;
-                usuarioContainer.Width = menu.Width;
-                if (menu.Width >= 200)
-                {
-                    menuTransition.Stop();
-                    menuExpand = true;
-                }
-            }
-            else
-            {
-                menu.Width -= 10;
-                incioContainer.Width = menu.Width;
-                livroContainer.Width = menu.Width;
-                relContainer.Width = menu.Width;
-                sairContainer.Width = menu.Width;
-                usuarioContainer.Width = menu.Width;
-                if (menu.Width <= 40)
-                {
-                    menuTransition.Stop();
-                    menuExpand = false;
-                }
-            }
-        }
-        #endregion
-
         #region Botões
         //Form Inicio
         public void btnIn()
@@ -124,13 +84,21 @@ namespace BibliotecaApp
         }
         
         //Form Livros
-        private void btnLivro_Click(object sender, EventArgs e)
+        private async void btnLivro_Click(object sender, EventArgs e)
         {
+            btnLivro.Enabled = false; // Desabilita o botão
+
+            livroTransition.Start();
             livros = new LivrosForm();
             livros.FormClosed += Livros_FormClosed;
             livros.MdiParent = this;
             livros.Dock = DockStyle.Fill;
             livros.Show();
+
+            // Se quiser simular uma operação assíncrona, adicione:
+            await Task.Delay(500);
+
+            btnLivro.Enabled = true; // Reabilita o botão
         }
 
         private void Livros_FormClosed(object sender, FormClosedEventArgs e)
@@ -268,6 +236,33 @@ namespace BibliotecaApp
                 janela = false;
             }
         }
+
+        //Transição de expansão do livro
+        bool livroExpand = false;
+        private void livroTransition_Tick(object sender, EventArgs e)
+        {
+
+            if (livroExpand == false)
+            {
+                livroContainer.Height += 10;
+                if (livroContainer.Height >= 300)
+                {
+                    livroTransition.Stop();
+                    livroExpand = true;
+                }
+            }
+            else
+            {
+                livroContainer.Height -= 10;
+                if (livroContainer.Height <= 60)
+                {
+                    livroTransition.Stop();
+                    livroExpand = false;
+                }
+            }
+        }
+
         #endregion
+ 
     }
 }

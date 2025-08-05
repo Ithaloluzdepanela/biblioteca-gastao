@@ -7,7 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Livros
 {
     public partial class EmprestimoForm : Form
     {
@@ -673,15 +673,6 @@ namespace BibliotecaApp
 
         }
         #endregion
-
-        private void txtNomeUsuario_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
-       
-
-        
+   
     }
 }

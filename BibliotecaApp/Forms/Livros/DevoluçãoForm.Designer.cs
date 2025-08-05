@@ -1,4 +1,4 @@
-﻿namespace BibliotecaApp
+﻿namespace BibliotecaApp.Forms.Livros
 {
     partial class DevoluçãoForm
     {

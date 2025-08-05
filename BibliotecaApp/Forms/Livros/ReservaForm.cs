@@ -1,11 +1,13 @@
-﻿using BibliotecaApp.Models;
+﻿using BibliotecaApp.Forms.Livros;
+using BibliotecaApp.Forms.Utils;
+using BibliotecaApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Livros
 {
     public partial class ReservaForm : Form
     {

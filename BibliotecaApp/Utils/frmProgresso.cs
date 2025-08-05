@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Utils
 {
     public partial class frmProgresso : Form
     {

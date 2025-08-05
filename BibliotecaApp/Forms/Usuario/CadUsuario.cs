@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Froms.Usuario
 {
     public partial class CadUsuario : Form
     {

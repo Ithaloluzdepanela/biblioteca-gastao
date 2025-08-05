@@ -54,31 +54,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlterarCadLivroForm.cs">
+    <Compile Include="Forms\Livros\AlterarCadLivroForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AlterarCadLivroForm.Designer.cs">
+    <Compile Include="Forms\Livros\AlterarCadLivroForm.Designer.cs">
       <DependentUpon>AlterarCadLivroForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CadastroLivroForm.cs">
+    <Compile Include="Forms\Livros\CadastroLivroForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CadastroLivroForm.Designer.cs">
+    <Compile Include="Forms\Livros\CadastroLivroForm.Designer.cs">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DevoluçãoForm.cs">
+    <Compile Include="Forms\Livros\DevoluçãoForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DevoluçãoForm.Designer.cs">
+    <Compile Include="Forms\Livros\DevoluçãoForm.Designer.cs">
       <DependentUpon>DevoluçãoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ElementosPersonalizados\GradientPanel.cs">
+    <Compile Include="Elements\GradientPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="frmProgresso.cs">
+    <Compile Include="Utils\frmProgresso.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmProgresso.Designer.cs">
+    <Compile Include="Utils\frmProgresso.Designer.cs">
       <DependentUpon>frmProgresso.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Emprestimo.cs" />
@@ -89,10 +89,10 @@
     <Compile Include="Component1.Designer.cs">
       <DependentUpon>Component1.cs</DependentUpon>
     </Compile>
-    <Compile Include="EmprestimoForm.cs">
+    <Compile Include="Forms\Livros\EmprestimoForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EmprestimoForm.Designer.cs">
+    <Compile Include="Forms\Livros\EmprestimoForm.Designer.cs">
       <DependentUpon>EmprestimoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Elements\RoundedComboBox.cs">
@@ -104,16 +104,16 @@
     <Compile Include="Elements\RoundedTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="InicioForm.cs">
+    <Compile Include="Forms\Inicio\InicioForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InicioForm.Designer.cs">
+    <Compile Include="Forms\Inicio\InicioForm.Designer.cs">
       <DependentUpon>InicioForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LivrosForm.cs">
+    <Compile Include="Forms\Livros\LivrosForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LivrosForm.Designer.cs">
+    <Compile Include="Forms\Livros\LivrosForm.Designer.cs">
       <DependentUpon>LivrosForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Login\LoginForm.cs">
@@ -122,13 +122,13 @@
     <Compile Include="Forms\Login\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainForm.cs">
+    <Compile Include="Forms\Inicio\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Forms\Inicio\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="mdiProperties.cs" />
+    <Compile Include="Utils\mdiProperties.cs" />
     <Compile Include="Models\Reserva.cs" />
     <Compile Include="Models\Sessao.cs" />
     <Compile Include="Program.cs" />
@@ -138,58 +138,58 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RelForm.cs">
+    <Compile Include="Forms\Relatorio\RelForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RelForm.Designer.cs">
+    <Compile Include="Forms\Relatorio\RelForm.Designer.cs">
       <DependentUpon>RelForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReservaForm.cs">
+    <Compile Include="Forms\Livros\ReservaForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReservaForm.Designer.cs">
+    <Compile Include="Forms\Livros\ReservaForm.Designer.cs">
       <DependentUpon>ReservaForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UsuarioForm.cs">
+    <Compile Include="Forms\Usuario\UsuarioForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UsuarioForm.Designer.cs">
+    <Compile Include="Forms\Usuario\UsuarioForm.Designer.cs">
       <DependentUpon>UsuarioForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Usuarios.cs" />
-    <Compile Include="CadUsuario.cs">
+    <Compile Include="Forms\Usuario\CadUsuario.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CadUsuario.Designer.cs">
+    <Compile Include="Forms\Usuario\CadUsuario.Designer.cs">
       <DependentUpon>CadUsuario.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\Conexao.cs" />
     <Compile Include="Utils\CriptografiaSenha.cs" />
-    <EmbeddedResource Include="AlterarCadLivroForm.resx">
+    <EmbeddedResource Include="Forms\Livros\AlterarCadLivroForm.resx">
       <DependentUpon>AlterarCadLivroForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CadastroLivroForm.resx">
+    <EmbeddedResource Include="Forms\Livros\CadastroLivroForm.resx">
       <DependentUpon>CadastroLivroForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DevoluçãoForm.resx">
+    <EmbeddedResource Include="Forms\Livros\DevoluçãoForm.resx">
       <DependentUpon>DevoluçãoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EmprestimoForm.resx">
+    <EmbeddedResource Include="Forms\Livros\EmprestimoForm.resx">
       <DependentUpon>EmprestimoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmProgresso.resx">
+    <EmbeddedResource Include="Utils\frmProgresso.resx">
       <DependentUpon>frmProgresso.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InicioForm.resx">
+    <EmbeddedResource Include="Forms\Inicio\InicioForm.resx">
       <DependentUpon>InicioForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LivrosForm.resx">
+    <EmbeddedResource Include="Forms\Livros\LivrosForm.resx">
       <DependentUpon>LivrosForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Login\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Forms\Inicio\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -197,16 +197,16 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="RelForm.resx">
+    <EmbeddedResource Include="Forms\Relatorio\RelForm.resx">
       <DependentUpon>RelForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CadUsuario.resx">
+    <EmbeddedResource Include="Forms\Usuario\CadUsuario.resx">
       <DependentUpon>CadUsuario.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ReservaForm.resx">
+    <EmbeddedResource Include="Forms\Livros\ReservaForm.resx">
       <DependentUpon>ReservaForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UsuarioForm.resx">
+    <EmbeddedResource Include="Forms\Usuario\UsuarioForm.resx">
       <DependentUpon>UsuarioForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -334,11 +334,7 @@
   <ItemGroup>
     <None Include="Resources\material-symbols - tab-search-rounded 25px.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms\Livro\" />
-    <Folder Include="Forms\Relatorio\" />
-    <Folder Include="Forms\Usuario\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="BibliotecaDB\bibliotecaDB.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

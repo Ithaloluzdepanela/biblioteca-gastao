@@ -1,4 +1,4 @@
-﻿namespace BibliotecaApp
+﻿namespace BibliotecaApp.Forms.Utils
 {
     partial class frmProgresso
     {

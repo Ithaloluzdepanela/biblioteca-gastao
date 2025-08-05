@@ -1,4 +1,4 @@
-﻿namespace BibliotecaApp
+﻿namespace BibliotecaApp.Froms.Usuario
 {
     partial class CadUsuario
     {

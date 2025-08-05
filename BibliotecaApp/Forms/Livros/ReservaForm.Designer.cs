@@ -1,4 +1,4 @@
-﻿namespace BibliotecaApp
+﻿namespace BibliotecaApp.Forms.Livros
 {
     partial class ReservaForm
     {
@@ -228,7 +228,7 @@
             this.lstSugestoesLivros.Click += new System.EventHandler(this.lstSugestoesLivros_Click);
             this.lstSugestoesLivros.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesLivros_SelectedIndexChanged);
             lstSugestoesLivros.Click += lstSugestoesLivros_Click;
-            
+
             // 
             // label5
             // 

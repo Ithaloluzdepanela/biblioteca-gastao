@@ -1,4 +1,5 @@
 ﻿using BibliotecaApp;
+using BibliotecaApp.Froms.Usuario;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,8 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Usuario
 {
+
+
     public partial class UsuarioForm : Form
     {
         public UsuarioForm()
@@ -22,9 +25,8 @@ namespace BibliotecaApp
         {
             CadUsuario popup = new CadUsuario();
             popup.ShowDialog();
-            
+
         }
 
- 
     }
 }

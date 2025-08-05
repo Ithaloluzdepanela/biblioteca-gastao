@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Livros
 {
     public partial class LivrosForm : Form
     {
@@ -203,102 +203,8 @@ namespace BibliotecaApp
 
         #endregion
 
-        #region Ação: Carregar tabelas e exibir campos
-
-        private void btnCarregarTabelas_Click(object sender, EventArgs e)
-        {
-            using (SqlCeConnection conexao = Conexao.ObterConexao())
-            {
-                try
-                {
-                    conexao.Open();
-
-                    // Listar tabelas
-                    SqlCeCommand cmdTabelas = new SqlCeCommand("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES", conexao);
-                    SqlCeDataReader leitorTabelas = cmdTabelas.ExecuteReader();
-
-                    lstTabelas.Items.Clear();
-                    while (leitorTabelas.Read())
-                    {
-                        lstTabelas.Items.Add(leitorTabelas["TABLE_NAME"].ToString());
-                    }
-                    leitorTabelas.Close();
-
-                    // Exibir campos da primeira tabela (se houver)
-                    if (lstTabelas.Items.Count > 0)
-                    {
-                        string tabela = lstTabelas.Items[0].ToString();
-                        ExibirCamposTabela(tabela);
-                        lstTabelas.SelectedIndex = 0;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao inspecionar banco: " + ex.Message);
-                }
-            }
-        }
-
-        #endregion
-
-        #region Ação: Exibir campos ao selecionar tabela
-
-        private void lstTabelas_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lstTabelas.SelectedItem != null)
-            {
-                string tabelaSelecionada = lstTabelas.SelectedItem.ToString();
-                ExibirCamposTabela(tabelaSelecionada);
-            }
-        }
-
-        private void ExibirCamposTabela(string nomeTabela)
-        {
-            using (SqlCeConnection conexao = Conexao.ObterConexao())
-            {
-                try
-                {
-                    conexao.Open();
-
-                    string query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @nome";
-                    SqlCeCommand comando = new SqlCeCommand(query, conexao);
-                    comando.Parameters.AddWithValue("@nome", nomeTabela);
-
-                    SqlCeDataReader leitor = comando.ExecuteReader();
-                    lvCampos.Items.Clear();
-
-                    while (leitor.Read())
-                    {
-                        ListViewItem item = new ListViewItem(leitor["COLUMN_NAME"].ToString());
-                        item.SubItems.Add(leitor["DATA_TYPE"].ToString());
-                        lvCampos.Items.Add(item);
-                    }
-
-                    leitor.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao listar campos: " + ex.Message);
-                }
-            }
-        }
-
-        #endregion
-
-        #region Ação: Configurar visual do ListView no carregamento do Formulário
-
-        private void LivrosForm_Load(object sender, EventArgs e)
-        {
-            lvCampos.View = View.Details;
-            lvCampos.Columns.Clear();
-            lvCampos.Columns.Add("Coluna", 150);
-            lvCampos.Columns.Add("Tipo de Dado", 100);
-        }
 
 
-        #endregion
-
-   
         #region Ação: Criar Tabela de Livros (Desabilitado)
 
         private void btnCriarTablea_Click(object sender, EventArgs e)
@@ -344,7 +250,6 @@ namespace BibliotecaApp
 
         #endregion
 
-
         #region Ação: Criar Tabela Emprestimo (Desabilitado)
 //private void btnCriarEmprestimo_Click(object sender, EventArgs e)
 //{
@@ -381,13 +286,10 @@ namespace BibliotecaApp
 //}
 #endregion
 
-
-
         #region Criar Banco de Dados (Desabilitado)
        
         #endregion
 
- 
         //private void btnCriarTablea_Click_1(object sender, EventArgs e)
         //{
         //try

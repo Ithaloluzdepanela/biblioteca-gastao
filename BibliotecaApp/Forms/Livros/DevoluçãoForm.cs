@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Livros
 {
     public partial class DevoluçãoForm : Form
     {

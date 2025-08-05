@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Inicio
 {
     public partial class InicioForm : Form
     {

@@ -1,4 +1,8 @@
-﻿using BibliotecaApp.Properties;
+﻿using BibliotecaApp.Forms.Livros;
+using BibliotecaApp.Forms.Login;
+using BibliotecaApp.Forms.Relatorio;
+using BibliotecaApp.Forms.Usuario;
+using BibliotecaApp.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Inicio
 {
     public partial class MainForm : Form
     {

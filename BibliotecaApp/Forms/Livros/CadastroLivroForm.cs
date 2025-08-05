@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Livros
 {
     public partial class CadastroLivroForm : Form
     {
@@ -152,9 +152,5 @@ namespace BibliotecaApp
         }
         #endregion
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }

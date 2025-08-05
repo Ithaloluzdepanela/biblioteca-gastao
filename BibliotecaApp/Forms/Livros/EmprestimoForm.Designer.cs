@@ -1,4 +1,4 @@
-﻿namespace BibliotecaApp
+﻿namespace BibliotecaApp.Forms.Livros
 {
     partial class EmprestimoForm
     {
@@ -296,7 +296,6 @@
             this.txtNomeUsuario.TabIndex = 94;
             this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
             this.txtNomeUsuario.UseSystemPasswordChar = false;
-            this.txtNomeUsuario.Load += new System.EventHandler(this.txtNomeUsuario_Load);
             this.txtNomeUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtNomeUsuario_KeyDown);
             // 
             // btnEmprestar

@@ -8,8 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Relatorio
 {
+
     public partial class RelForm : Form
     {
         public RelForm()
@@ -17,6 +18,5 @@ namespace BibliotecaApp
             InitializeComponent();
         }
 
-       
     }
 }

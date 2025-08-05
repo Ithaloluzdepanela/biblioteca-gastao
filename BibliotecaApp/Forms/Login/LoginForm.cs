@@ -1,4 +1,4 @@
-﻿
+﻿using BibliotecaApp.Forms.Utils;
 using BibliotecaApp.Models;
 using BibliotecaApp.Utils;
 using System;
@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BibliotecaApp
+namespace BibliotecaApp.Forms.Login
 {
    
     public partial class LoginForm : Form

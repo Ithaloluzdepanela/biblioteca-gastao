@@ -86,20 +86,27 @@ namespace BibliotecaApp.Forms.Inicio
         {
             usuario = null;
         }
-        
+
         //Form Livros
         private async void btnLivro_Click(object sender, EventArgs e)
         {
             btnLivro.Enabled = false; // Desabilita o botão
 
-            livroTransition.Start();
-            livros = new LivrosForm();
-            livros.FormClosed += Livros_FormClosed;
-            livros.MdiParent = this;
-            livros.Dock = DockStyle.Fill;
-            livros.Show();
+            if (livros == null)
+            {
+                livros = new LivrosForm();
+                livros.FormClosed += Livros_FormClosed;
+                livros.MdiParent = this;
+                livros.Dock = DockStyle.Fill;
+                livros.Show();
+            }
+            else
+            {
+                livros.BringToFront(); // Opcional: traz o form para frente se já estiver aberto
+            }
 
-            // Se quiser simular uma operação assíncrona, adicione:
+            livroTransition.Start();
+
             await Task.Delay(500);
 
             btnLivro.Enabled = true; // Reabilita o botão

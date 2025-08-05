@@ -277,7 +277,7 @@ namespace BibliotecaApp.Froms.Usuario
 
             ConfigurarApparence(
                 txtTurmaEnabled: false,
-                
+
                 txtEmailEnabled: true,
                 txtSenhaEnabled: true
             );
@@ -286,7 +286,7 @@ namespace BibliotecaApp.Froms.Usuario
             txtSenha.PlaceholderText = "Digite aqui uma senha...";
             txtConfirmSenha.PlaceholderText = "Confirme a senha...";
             txtEmail.PlaceholderText = "Digite aqui o email...";
-            
+
             chkMostrarSenha.Enabled = true;
             chkMostrarSenha.ForeColor = Color.FromArgb(20, 41, 60);
         }
@@ -567,8 +567,8 @@ VALUES
 
                         comando.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
                         comando.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
-                        comando.Parameters.AddWithValue("@Senha_Hash", string.IsNullOrEmpty(hash) ? (object)DBNull.Value : hash);
-                        comando.Parameters.AddWithValue("@Senha_Salt", string.IsNullOrEmpty(salt) ? (object)DBNull.Value : salt);
+                        comando.Parameters.AddWithValue("@Senha_hash", string.IsNullOrEmpty(hash) ? (object)DBNull.Value : hash);
+                        comando.Parameters.AddWithValue("@Senha_salt", string.IsNullOrEmpty(salt) ? (object)DBNull.Value : salt);
                         comando.Parameters.AddWithValue("@CPF", mtxCPF.Text);
                         comando.Parameters.AddWithValue("@DataNascimento", dtpDataNasc.Value);
                         comando.Parameters.AddWithValue("@Turma", txtTurma.Text.Trim());

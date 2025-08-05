@@ -1,4 +1,5 @@
 ﻿using BibliotecaApp.Models;
+using BibliotecaApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -71,7 +72,7 @@ namespace BibliotecaApp.Forms.Livros
             lstLivros.Click += lstLivros_Click;
             lstLivros.KeyDown += lstLivros_KeyDown;
         }
-    
+
         #endregion
 
         #region Eventos do Formulário
@@ -122,7 +123,33 @@ namespace BibliotecaApp.Forms.Livros
             }
 
             // Buscando o usuário, livro e bibliotecário selecionados
-            var usuario = Usuarios.FirstOrDefault(u => u.Nome.Equals(nomeUsuario, StringComparison.OrdinalIgnoreCase));
+            Usuarios usuario = null;
+
+            using (var conexao = Conexao.ObterConexao())
+            {
+                conexao.Open();
+
+                string sqlUsuario = "SELECT TOP 1 * FROM usuarios WHERE Nome = @nome";
+
+                using (var cmd = new SqlCeCommand(sqlUsuario, conexao))
+                {
+                    cmd.Parameters.AddWithValue("@nome", nomeUsuario);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            usuario = new Usuarios
+                            {
+                                Id = (int)reader["Id"],
+                                Nome = reader["Nome"].ToString(),
+                                TipoUsuario = reader["TipoUsuario"].ToString(),
+                                Email = reader["Email"].ToString()?.Trim()
+                            };
+                        }
+                    }
+                }
+            }
             var livro = Livros.FirstOrDefault(l => l.Nome.Equals(nomeLivro, StringComparison.OrdinalIgnoreCase));
             var responsavel = Usuarios.FirstOrDefault(u => u.Nome.Equals(nomeBibliotecaria, StringComparison.OrdinalIgnoreCase));
 
@@ -205,6 +232,39 @@ namespace BibliotecaApp.Forms.Livros
 
                     MessageBox.Show("Empréstimo registrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimparCampos();
+
+                    string assunto = "✅ Empréstimo Confirmado - Biblioteca Monteiro Lobato";
+
+                    string corpo = $@"
+<html>
+<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+        <h2 style='color: #2c3e50;'>Olá, {usuario.Nome} 👋</h2>
+
+        <p>Seu empréstimo foi registrado com sucesso! Aqui estão os detalhes:</p>
+
+        <p><strong>📖 Livro:</strong> {livro.Nome}</p>
+        <p><strong>📅 Data do Empréstimo:</strong> {DateTime.Now:dd/MM/yyyy}</p>
+        <p><strong>📆 Data de Devolução:</strong> {dtpDataDevolucao.Value:dd/MM/yyyy}</p>
+
+        <p style='margin-top: 20px;'>Por favor, devolva o livro no prazo para evitar bloqueios no sistema e restrições na secretaria.</p>
+
+        <hr />
+
+        <p style='font-size: 14px; color: #888;'>Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.</p>
+    </div>
+</body>
+</html>";
+
+                    string email = usuario.Email?.Trim();
+
+                    if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+                    {
+                        MessageBox.Show("E-mail inválido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    EmailService.Enviar(email, assunto, corpo);
                 }
             }
             catch (Exception ex)
@@ -212,6 +272,10 @@ namespace BibliotecaApp.Forms.Livros
                 MessageBox.Show("Erro ao registrar empréstimo:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
+
         #endregion
 
         #region Métodos de Usuário
@@ -486,8 +550,8 @@ namespace BibliotecaApp.Forms.Livros
             lstLivros.Visible = false;
         }
 
-        
-            private void txtLivro_TextChanged(object sender, EventArgs e)
+
+        private void txtLivro_TextChanged(object sender, EventArgs e)
         {
             if (_carregandoLivroAutomaticamente) return;
 
@@ -507,7 +571,7 @@ namespace BibliotecaApp.Forms.Livros
 
             lstLivros.Visible = sugestoes.Any();
         }
-        
+
 
         private void txtLivro_Leave(object sender, EventArgs e)
         {
@@ -673,6 +737,15 @@ namespace BibliotecaApp.Forms.Livros
 
         }
         #endregion
-   
+
+        private void txtNomeUsuario_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+
+
     }
 }

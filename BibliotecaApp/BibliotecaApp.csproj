@@ -75,6 +75,7 @@
     <Compile Include="Elements\GradientPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Utils\EmailService.cs" />
     <Compile Include="Utils\frmProgresso.cs">
       <SubType>Form</SubType>
     </Compile>

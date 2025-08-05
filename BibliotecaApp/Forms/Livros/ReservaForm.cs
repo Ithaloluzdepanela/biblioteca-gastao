@@ -1,6 +1,7 @@
 ﻿using BibliotecaApp.Forms.Livros;
 using BibliotecaApp.Forms.Utils;
 using BibliotecaApp.Models;
+using BibliotecaApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
@@ -162,54 +163,15 @@ namespace BibliotecaApp.Forms.Livros
             var bibliotecaria = ObterBibliotecariaSelecionada();
 
             if (!ValidarSelecoes(usuario, livro, bibliotecaria)) return;
-            if (!ValidarDisponibilidade(livro)) return;
-            if (VerificarReservaAtiva(usuario.Id, livro.Id)) return;
 
-            // Verificação final para garantir que o livro ainda está indisponível
-            if (!LivroAindaIndisponivel(livro.Id))
-            {
-                MessageBox.Show("O status do livro foi alterado recentemente e agora está disponível.\n" +
-                               "Por favor, verifique a disponibilidade antes de continuar.",
-                              "Status Alterado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            // A validade para reservar está aqui: só se não houver exemplar disponível
+            if (!ValidarDisponibilidade(livro)) return;
+
+            if (VerificarReservaAtiva(usuario.Id, livro.Id)) return;
 
             RegistrarReserva(usuario, livro, bibliotecaria);
         }
 
-        private bool LivroAindaIndisponivel(int livroId)
-        {
-            try
-            {
-                using (var conexao = EmprestimoForm.Conexao.ObterConexao())
-                {
-                    conexao.Open();
-                    string sql = @"SELECT Disponibilidade, Quantidade 
-                          FROM Livros 
-                          WHERE Id = @id";
-
-                    using (var cmd = new SqlCeCommand(sql, conexao))
-                    {
-                        cmd.Parameters.AddWithValue("@id", livroId);
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                bool disponivel = reader.GetBoolean(0);
-                                int quantidade = reader.GetInt32(1);
-                                return !disponivel && quantidade == 0;
-                            }
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                // Se houver erro, assume que não está mais indisponível
-                return false;
-            }
-            return false;
-        }
 
         private bool ValidarCampos()
         {
@@ -263,12 +225,13 @@ namespace BibliotecaApp.Forms.Livros
 
                     // 1. Verifica quantidade total do livro
                     string sql = @"SELECT Quantidade FROM Livros WHERE Id = @id";
-                    int quantidadeTotal;
+                    int quantidadeTotal = 0;
 
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@id", livro.Id);
-                        quantidadeTotal = (int)cmd.ExecuteScalar();
+                        object result = cmd.ExecuteScalar();
+                        quantidadeTotal = (result != null && result != DBNull.Value) ? Convert.ToInt32(result) : 0;
                     }
 
                     // 2. Conta empréstimos ativos (Ativo + Atrasado)
@@ -349,6 +312,9 @@ namespace BibliotecaApp.Forms.Livros
                     MessageBox.Show("Reserva registrada com sucesso!",
                                   "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimparCampos();
+
+
+                    EnviarEmailReservaConfirmada(usuario.Nome, usuario.Email, livro.Nome, DateTime.Now);
                 }
             }
             catch (Exception ex)
@@ -550,10 +516,10 @@ namespace BibliotecaApp.Forms.Livros
 
                                     if (resposta == DialogResult.Yes)
                                     {
-                                       
+
                                         var form = new EmprestimoForm
                                         {
-                                            
+
                                             StartPosition = FormStartPosition.CenterScreen
 
                                         };
@@ -577,7 +543,7 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-        
+
 
         private void txtBarcode_Leave(object sender, EventArgs e)
         {
@@ -777,7 +743,41 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
+
+
+        public static void EnviarEmailReservaConfirmada(string nomeUsuario, string emailUsuario, string nomeLivro, DateTime dataReserva)
+        {
+            string assunto = "📚 Reserva Confirmada - Biblioteca Monteiro Lobato";
+
+            string corpo = $@"
+<html>
+<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+        <h2 style='color: #2c3e50;'>Olá, {nomeUsuario} 👋</h2>
+
+        <p><strong>📅 Data da Reserva:</strong> {dataReserva:dd/MM/yyyy}</p>
+        <p><strong>⏳ Aguarde:</strong> Assim que o livro estiver disponível, você será avisado.</p>
+
+        <p style='margin-top: 20px;'>Você terá um prazo limitado para retirar o livro após ele ficar disponível. Fique atento aos e-mails da biblioteca!</p>
+
+        <hr />
+
+        <p style='font-size: 14px; color: #888;'>Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.
+        <p>Sua reserva foi registrada com sucesso! Aqui estão os detalhes:</p>
+
+        <p><strong>📖 Livro:</strong> {nomeLivro}</p></p>
+    </div>
+</body>
+</html>";
+
+            EmailService.Enviar(emailUsuario, assunto, corpo);
+        }
         private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e) { }
         private void lstSugestoesLivros_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        private void ReservaForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

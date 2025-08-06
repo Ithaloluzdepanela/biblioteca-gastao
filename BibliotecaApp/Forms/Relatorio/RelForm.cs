@@ -43,9 +43,30 @@ namespace BibliotecaApp.Forms.Relatorio
 
         }
 
-        private void btnFiltrar_Click(object sender, EventArgs e)
+
+        private void RelForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string pastaRelatorios = @"\BibliotecaApp\txt.relatorios";
+            string arquivo = "txt.relatorios";
+            if (!File.Exists(pastaRelatorios + arquivo))
+            {
+                File.Create(pastaRelatorios + arquivo).Close();
+            }
+            File.WriteAllText(pastaRelatorios + arquivo, "Teste de escrita em arquivo", Encoding.Default);
+        }
+
+        private void tabPageEmprestimos_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnFiltrar_Click(object sender, EventArgs e)
+        {
             using (SqlCeConnection conexao = Conexao.ObterConexao())
             {
                 try
@@ -58,10 +79,14 @@ namespace BibliotecaApp.Forms.Relatorio
                     {
                         query = @"SELECT * FROM Emprestimo WHERE LivroID LIKE '" + txtIdLivro.Text + "'";
                     }
+                    if (txtIdUsuario.Text != "")
+                    {
+                        query = @"SELECT * FROM Emprestimo WHERE UsuarioID LIKE '" + txtIdUsuario.Text + "'";
+                    }
                     DataTable dados = new DataTable();
                     SqlCeDataAdapter adaptador = new SqlCeDataAdapter(query, conexao);
 
-                    conexao.Open();
+                    lblResultado.Text = "Funcionou";
 
                     adaptador.Fill(dados);
 
@@ -85,20 +110,14 @@ namespace BibliotecaApp.Forms.Relatorio
             }
         }
 
-        private void RelForm_Load(object sender, EventArgs e)
+        private void lblNome_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void txtTurma_TextChanged(object sender, EventArgs e)
         {
-            string pastaRelatorios = @"\BibliotecaApp\txt.relatorios";
-            string arquivo = "txt.relatorios";
-            if (!File.Exists(pastaRelatorios + arquivo))
-            {
-                File.Create(pastaRelatorios + arquivo).Close();
-            }
-            File.WriteAllText(pastaRelatorios + arquivo, "Teste de escrita em arquivo", Encoding.Default);
+
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using BibliotecaApp.Forms.Utils;
+﻿using BibliotecaApp.Forms.Livros;
+using BibliotecaApp.Forms.Utils;
 using BibliotecaApp.Models;
+using BibliotecaApp.Services;
 using BibliotecaApp.Utils;
 using System;
 using System.Collections.Generic;
@@ -262,31 +264,94 @@ namespace BibliotecaApp.Forms.Login
 
                     // 1) Pendente → Disponível, quando DataDisponibilidade chegou
                     string sqlDisponibilizar = @"
-                        UPDATE Reservas
-                        SET Status = 'Disponível'
-                        WHERE Status = 'Pendente'
-                        AND DataDisponibilidade <= GETDATE()";
+                UPDATE Reservas
+                SET Status = 'Disponível'
+                WHERE Status = 'Pendente'
+                AND DataDisponibilidade <= GETDATE()";
                     new SqlCeCommand(sqlDisponibilizar, connection).ExecuteNonQuery();
                     progressForm.AtualizarProgresso(33, "Tornando reservas disponíveis...");
 
+                    // NOVO: Buscar reservas que acabaram de ficar disponíveis
+                    string sqlReservasDisponiveis = @"
+                SELECT r.Id, r.UsuarioId, r.LivroId, r.DataDisponibilidade, r.DataLimiteRetirada, 
+                       u.Nome, u.Email, l.Nome, l.Autor
+                FROM Reservas r
+                INNER JOIN Usuarios u ON r.UsuarioId = u.Id
+                INNER JOIN Livros l ON r.LivroId = l.Id
+                WHERE r.Status = 'Disponível'
+                AND r.DataDisponibilidade = CONVERT(date, GETDATE())";
+
+                    int emailsEnviados = 0;
+                    int emailsFalharam = 0;
+
+                    using (var cmd = new SqlCeCommand(sqlReservasDisponiveis, connection))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                string nomeUsuario = reader.GetString(5);
+                                string emailUsuario = reader.IsDBNull(6) ? null : reader.GetString(6);
+                                string nomeLivro = reader.GetString(7);
+                                string autorLivro = reader.GetString(8);
+                                DateTime dataDisponibilidade = reader.GetDateTime(3);
+                                DateTime dataLimiteRetirada = reader.GetDateTime(4);
+
+                                new SqlCeCommand(sqlDisponibilizar, connection).ExecuteNonQuery();
+                                progressForm.AtualizarProgresso(33, "Atualizando Reservas Disponiveis para retirada...");
+
+                                if (!string.IsNullOrWhiteSpace(emailUsuario) &&
+                                    BibliotecaApp.Forms.Livros.ReservaForm.ValidarEmailStatic(emailUsuario))
+                                {
+                                    
+                                    var usuario = new Usuarios { Nome = nomeUsuario, Email = emailUsuario };
+                                    var livro = new Livro { Nome = nomeLivro, Autor = autorLivro };
+
+                                    
+                                    BibliotecaApp.Forms.Livros.ReservaForm.EnviarEmailDisponibilidadeStatic(
+                                        usuario, livro, dataDisponibilidade, dataLimiteRetirada);
+
+                                    emailsEnviados++;
+                                    System.Diagnostics.Debug.WriteLine($"Email enviado para: {emailUsuario}");
+                                }
+                                else
+                                {
+                                    System.Diagnostics.Debug.WriteLine($"Email inválido para usuário: {nomeUsuario}");
+                                }
+                            }
+                            catch (Exception emailEx)
+                            {
+                                emailsFalharam++;
+                                System.Diagnostics.Debug.WriteLine($"Erro ao processar email: {emailEx.Message}");
+                            }
+                        }
+                    }
+
+                    // Log dos resultados
+                    if (emailsEnviados > 0 || emailsFalharam > 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Processamento de emails - Enviados: {emailsEnviados}, Falhas: {emailsFalharam}");
+                    }
+
                     // 2) Disponível → Expirada, quem passou do limite
                     string sqlExpirar = @"
-                        UPDATE Reservas
-                        SET Status = 'Expirada'
-                        WHERE Status = 'Disponível'
-                        AND DataLimiteRetirada < GETDATE()";
+                UPDATE Reservas
+                SET Status = 'Expirada'
+                WHERE Status = 'Disponível'
+                AND DataLimiteRetirada < GETDATE()";
                     new SqlCeCommand(sqlExpirar, connection).ExecuteNonQuery();
                     progressForm.AtualizarProgresso(66, "Expirando reservas atrasadas...");
 
                     // 3) Liberar livros cujas reservas expiraram
                     string sqlLiberar = @"
-                        UPDATE Livros
-                        SET Disponibilidade = 1
-                        WHERE Id IN (
-                            SELECT LivroId 
-                            FROM Reservas
-                            WHERE Status = 'Expirada'
-                        )";
+                UPDATE Livros
+                SET Disponibilidade = 1
+                WHERE Id IN (
+                    SELECT LivroId 
+                    FROM Reservas
+                    WHERE Status = 'Expirada'
+                )";
                     new SqlCeCommand(sqlLiberar, connection).ExecuteNonQuery();
                     progressForm.AtualizarProgresso(100, "Liberando exemplares expirados...");
                 }

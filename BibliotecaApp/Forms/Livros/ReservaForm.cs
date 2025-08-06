@@ -357,7 +357,7 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-        // MÉTODO CORRIGIDO para envio de email
+        
         private void EnviarEmailConfirmacao(Usuarios usuario, Livro livro, DateTime dataReserva, DateTime dataDisponibilidade)
         {
             try
@@ -409,6 +409,70 @@ namespace BibliotecaApp.Forms.Livros
             {
                 MessageBox.Show($"Erro ao enviar email de confirmação: {ex.Message}",
                               "Erro no Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+
+        public static bool ValidarEmailStatic(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+            try
+            {
+                string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+                return System.Text.RegularExpressions.Regex.IsMatch(email, pattern);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static void EnviarEmailDisponibilidadeStatic(Usuarios usuario, Livro livro, DateTime dataDisponibilidade, DateTime dataLimiteRetirada)
+        {
+            try
+            {
+                string assunto = "📚 Seu livro está disponível para retirada - Biblioteca Monteiro Lobato";
+                string corpo = $@"
+        <html>
+        <body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+            <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+                <h2 style='color: #2c3e50;'>Olá, {usuario.Nome} 👋</h2>
+                <p>O livro que você reservou está disponível para retirada!</p>
+                <div style='background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;'>
+                    <p><strong>📖 Livro:</strong> {livro.Nome}</p>
+                    <p><strong>✍️ Autor:</strong> {livro.Autor}</p>
+                    <p><strong>📅 Disponível a partir de:</strong> {dataDisponibilidade:dd/MM/yyyy}</p>
+                    <p><strong>⏰ Prazo para retirada:</strong> até {dataLimiteRetirada:dd/MM/yyyy}</p>
+                </div>
+                <p style='color: #d35400; font-weight: bold;'>
+                    Atenção: Você tem <u>7 dias</u> para retirar o livro a partir da data de disponibilidade.<br>
+                    Após esse prazo, a reserva será expirada automaticamente.
+                </p>
+                <p>Compareça à biblioteca até a data limite para garantir seu exemplar.</p>
+                <hr style='margin: 30px 0; border: none; border-top: 1px solid #eee;' />
+                <p style='font-size: 14px; color: #888;'>
+                    Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.<br>
+                    Por favor, não responda este e-mail.
+                </p>
+            </div>
+        </body>
+        </html>";
+                // Validar email antes de enviar
+                if (!string.IsNullOrWhiteSpace(usuario.Email) && ValidarEmailStatic(usuario.Email))
+                {
+                    BibliotecaApp.Services.EmailService.Enviar(usuario.Email, assunto, corpo);
+                    System.Diagnostics.Debug.WriteLine($"Email de disponibilidade enviado para: {usuario.Email}");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Email inválido para usuário {usuario.Nome}: {usuario.Email}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erro ao enviar email de disponibilidade: {ex.Message}");
+                // Não mostrar MessageBox aqui pois pode ser chamado de thread de background
             }
         }
         #endregion

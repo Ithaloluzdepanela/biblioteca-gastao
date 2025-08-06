@@ -57,6 +57,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elements\AnimatedToggle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Elements\AnimatedToggle.Designer.cs">
+      <DependentUpon>AnimatedToggle.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Livros\AlterarCadLivroForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -169,6 +175,9 @@
     </Compile>
     <Compile Include="Utils\Conexao.cs" />
     <Compile Include="Utils\CriptografiaSenha.cs" />
+    <EmbeddedResource Include="Elements\AnimatedToggle.resx">
+      <DependentUpon>AnimatedToggle.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Livros\AlterarCadLivroForm.resx">
       <DependentUpon>AlterarCadLivroForm.cs</DependentUpon>
     </EmbeddedResource>

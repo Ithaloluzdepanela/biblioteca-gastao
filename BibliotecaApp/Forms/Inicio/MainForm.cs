@@ -4,6 +4,7 @@ using BibliotecaApp.Forms.Relatorio;
 using BibliotecaApp.Forms.Usuario;
 using BibliotecaApp.Properties;
 using System;
+using ToggleSwitch;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -33,7 +34,7 @@ namespace BibliotecaApp.Forms.Inicio
 
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-            
+
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HTCAPTION = 0x2;
 
@@ -49,11 +50,17 @@ namespace BibliotecaApp.Forms.Inicio
             this.SetBevel(false);
             Controls.OfType<MdiClient>().FirstOrDefault().BackColor = Color.FromArgb(232, 234, 237);
         }
-        
+
         //Variável criada para inicialização do Form de inicio no MDI
         private void btnInicio_Click(object sender, EventArgs e)
         {
+
             btnIn();
+
+            btnInicio.Enabled = false;
+            btnLivro.Enabled = true;
+            btnRel.Enabled = true;
+            btnUsuario.Enabled = true;
         }
         #endregion
 
@@ -61,20 +68,28 @@ namespace BibliotecaApp.Forms.Inicio
         //Form Inicio
         public void btnIn()
         {
-                inicio = new InicioForm();
-                inicio.FormClosed += Inicio_FormClosed;
-                inicio.MdiParent = this;
-                inicio.Dock = DockStyle.Fill;
-                inicio.Show();
-         }
+            inicio = new InicioForm();
+            inicio.FormClosed += Inicio_FormClosed;
+            inicio.MdiParent = this;
+            inicio.Dock = DockStyle.Fill;
+
+            btnInicio.Enabled = false;
+
+            inicio.Show();
+        }
         private void Inicio_FormClosed(object sender, FormClosedEventArgs e)
         {
             inicio = null;
         }
-        
+
         //Form usuário
         private void btnUsuario_Click(object sender, EventArgs e)
         {
+            btnUsuario.Enabled = false;
+            btnLivro.Enabled = true;
+            btnRel.Enabled = true;
+            btnInicio.Enabled = true;
+
             usuario = new UsuarioForm();
             usuario.FormClosed += Usuario_FormClosed;
             usuario.MdiParent = this;
@@ -91,9 +106,16 @@ namespace BibliotecaApp.Forms.Inicio
         private async void btnLivro_Click(object sender, EventArgs e)
         {
             btnLivro.Enabled = false; // Desabilita o botão
+            btnUsuario.Enabled = true;
+            btnRel.Enabled = true;
+            btnInicio.Enabled = true;
 
             if (livros == null)
             {
+                btnUsuario.Enabled = true;
+                btnRel.Enabled = true;
+                btnInicio.Enabled = true;
+
                 livros = new LivrosForm();
                 livros.FormClosed += Livros_FormClosed;
                 livros.MdiParent = this;
@@ -120,6 +142,11 @@ namespace BibliotecaApp.Forms.Inicio
         //Form rel
         private void btnRel_Click(object sender, EventArgs e)
         {
+            btnRel.Enabled = false;
+            btnLivro.Enabled = true;
+            btnInicio.Enabled = true;
+            btnUsuario.Enabled = true;
+
             rel = new RelForm();
             rel.FormClosed += Relatorios_FormClosed;
             rel.MdiParent = this;
@@ -137,15 +164,15 @@ namespace BibliotecaApp.Forms.Inicio
         {
             const string msg = "Tem certeza de que quer finalizar a sessão?";
             const string box = "Confirmação de logout";
-            var confirma = MessageBox.Show(msg, box,MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if(confirma == DialogResult.Yes)
+            var confirma = MessageBox.Show(msg, box, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirma == DialogResult.Yes)
             {
                 this.Close();
-            } 
+            }
         }
 
         #endregion
-        
+
         #region Interações/Funcionalidades do Form
 
         #region Control box
@@ -212,7 +239,8 @@ namespace BibliotecaApp.Forms.Inicio
         //Load para fechar o Login
         private void MainForm_Load(object sender, EventArgs e)
         {
-            
+
+
             if (LoginForm.cancelar == false)
             {
                 Application.Exit();
@@ -274,6 +302,5 @@ namespace BibliotecaApp.Forms.Inicio
         }
 
         #endregion
- 
     }
 }

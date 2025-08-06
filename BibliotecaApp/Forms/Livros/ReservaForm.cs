@@ -154,6 +154,7 @@ namespace BibliotecaApp.Forms.Livros
             var bibliotecaria = ObterBibliotecariaSelecionada();
 
             if (!ValidarSelecoes(usuario, livro, bibliotecaria)) return;
+<<<<<<< HEAD
 
             // A validade para reservar está aqui: só se não houver exemplar disponível
             if (!ValidarDisponibilidade(livro)) return;
@@ -164,6 +165,17 @@ namespace BibliotecaApp.Forms.Livros
             DateTime dataReserva = dtpDataReserva.Value;
             RegistrarReserva(usuario, livro, bibliotecaria, dataReserva);
         }
+=======
+
+            // A validade para reservar está aqui: só se não houver exemplar disponível
+            if (!ValidarDisponibilidade(livro)) return;
+
+            if (VerificarReservaAtiva(usuario.Id, livro.Id)) return;
+
+            RegistrarReserva(usuario, livro, bibliotecaria);
+        }
+
+>>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
 
         private bool ValidarCampos()
         {
@@ -248,6 +260,10 @@ namespace BibliotecaApp.Forms.Livros
                     // 1. Verifica quantidade total do livro
                     string sql = @"SELECT Quantidade FROM Livros WHERE Id = @id";
                     int quantidadeTotal = 0;
+<<<<<<< HEAD
+=======
+
+>>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@id", livro.Id);
@@ -337,6 +353,7 @@ namespace BibliotecaApp.Forms.Livros
                     MessageBox.Show("Reserva registrada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimparCampos();
 
+<<<<<<< HEAD
                     // CORREÇÃO: Enviar email apenas se o usuário tiver email válido
                     if (!string.IsNullOrWhiteSpace(usuario.Email) && ValidarEmail(usuario.Email))
                     {
@@ -348,6 +365,10 @@ namespace BibliotecaApp.Forms.Livros
                                       "Email do usuário inválido ou não cadastrado.",
                                       "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
+=======
+
+                    EnviarEmailReservaConfirmada(usuario.Nome, usuario.Email, livro.Nome, DateTime.Now);
+>>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
                 }
             }
             catch (Exception ex)
@@ -596,8 +617,15 @@ namespace BibliotecaApp.Forms.Livros
 
                                     if (resposta == DialogResult.Yes)
                                     {
+<<<<<<< HEAD
                                         var form = new EmprestimoForm
                                         {
+=======
+
+                                        var form = new EmprestimoForm
+                                        {
+
+>>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
                                             StartPosition = FormStartPosition.CenterScreen
                                         };
                                         form.ShowDialog();
@@ -619,6 +647,11 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
         private void txtBarcode_Leave(object sender, EventArgs e)
         {
             string codigo = txtBarcode.Text.Trim();
@@ -835,11 +868,50 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
+<<<<<<< HEAD
         
       
 
         private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e) { }
         private void lstSugestoesLivros_SelectedIndexChanged(object sender, EventArgs e) { }
         private void ReservaForm_Load(object sender, EventArgs e) { }
+=======
+
+
+        public static void EnviarEmailReservaConfirmada(string nomeUsuario, string emailUsuario, string nomeLivro, DateTime dataReserva)
+        {
+            string assunto = "📚 Reserva Confirmada - Biblioteca Monteiro Lobato";
+
+            string corpo = $@"
+<html>
+<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+        <h2 style='color: #2c3e50;'>Olá, {nomeUsuario} 👋</h2>
+
+        <p><strong>📅 Data da Reserva:</strong> {dataReserva:dd/MM/yyyy}</p>
+        <p><strong>⏳ Aguarde:</strong> Assim que o livro estiver disponível, você será avisado.</p>
+
+        <p style='margin-top: 20px;'>Você terá um prazo limitado para retirar o livro após ele ficar disponível. Fique atento aos e-mails da biblioteca!</p>
+
+        <hr />
+
+        <p style='font-size: 14px; color: #888;'>Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.
+        <p>Sua reserva foi registrada com sucesso! Aqui estão os detalhes:</p>
+
+        <p><strong>📖 Livro:</strong> {nomeLivro}</p></p>
+    </div>
+</body>
+</html>";
+
+            EmailService.Enviar(emailUsuario, assunto, corpo);
+        }
+        private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void lstSugestoesLivros_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        private void ReservaForm_Load(object sender, EventArgs e)
+        {
+
+        }
+>>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
     }
 }

@@ -276,7 +276,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "LivrosForm";
-            this.Text = " ";
             ((System.ComponentModel.ISupportInitialize)(this.Lista)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

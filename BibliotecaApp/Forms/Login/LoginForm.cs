@@ -12,23 +12,21 @@ namespace BibliotecaApp.Forms.Login
 {
     public partial class LoginForm : Form
     {
+        #region Propriedades
         // Variável para controle externo de login
         public static bool cancelar = false;
+        #endregion
 
+        #region Construtor
         public LoginForm()
         {
             InitializeComponent();
             txtEmail.KeyDown += txtEmail_KeyDown;
             txtSenha.KeyDown += txtSenha_KeyDown;
-
-
         }
-
-
-
+        #endregion
 
         #region Eventos de Saída
-
         private void picExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -43,12 +41,9 @@ namespace BibliotecaApp.Forms.Login
         {
             picExit.BackColor = Color.Transparent;
         }
-
-
-
         #endregion
-        #region Classe Conexao
 
+        #region Classe Conexao
         // Classe estática para conectar ao banco .sdf
         public static class Conexao
         {
@@ -60,10 +55,9 @@ namespace BibliotecaApp.Forms.Login
                 return new SqlCeConnection(Conectar);
             }
         }
-
         #endregion
 
-        #region Login
+        #region Métodos de Login
         private async void BtnEntrar_Click(object sender, EventArgs e)
         {
             string email = txtEmail.Text.Trim();
@@ -96,7 +90,7 @@ namespace BibliotecaApp.Forms.Login
                     conexao.Open();
 
                     string query = @"SELECT Nome, Senha_hash, Senha_salt FROM usuarios 
-    WHERE Email = @email AND TipoUsuario = 'Bibliotecário(a)'";
+                    WHERE Email = @email AND TipoUsuario = 'Bibliotecário(a)'";
 
                     using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
                     {
@@ -146,15 +140,9 @@ namespace BibliotecaApp.Forms.Login
             BtnEntrar.BackColor = Color.FromArgb(33, 145, 245);
             BtnEntrar.Refresh();
         }
-
         #endregion
 
-        #region Mostrar/Ocultar Senha
-
-
-        #endregion
-
-        #region update Empréstimos
+        #region Métodos de Atualização
         private async Task AtualizarStatusEmprestimosAsync()
         {
             using (var progressForm = new frmProgresso())
@@ -188,32 +176,20 @@ namespace BibliotecaApp.Forms.Login
                     }
 
                     string selectQuery = @"
-<<<<<<< HEAD
-SELECT 
-    e.Id,
-    e.DataDevolucao,
-    e.DataProrrogacao,
-    e.DataRealDevolucao,
-    e.NotificadoLembrete,
-    e.NotificadoAtraso,
-    u.Email,
-    u.Nome,
-    l.Nome
-FROM Emprestimo e
-INNER JOIN Usuarios u ON e.Alocador = u.Id
-INNER JOIN Livros l ON e.Livro = l.Id
-WHERE e.Status <> 'Devolvido'
-";
-=======
-                SELECT e.Id, e.DataDevolucao, e.DataProrrogacao, e.DataRealDevolucao,
-                       e.EmailLembreteEnviado, e.EmailAtrasoEnviado,
-                       u.Email, u.Nome,
-                       l.Titulo
-                FROM Emprestimo e
-                INNER JOIN Usuarios u ON e.UsuarioId = u.Id
-                INNER JOIN Livros l ON e.LivroId = l.Id
-                WHERE e.Status <> 'Devolvido'";
->>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
+                    SELECT 
+                        e.Id,
+                        e.DataDevolucao,
+                        e.DataProrrogacao,
+                        e.DataRealDevolucao,
+                        e.NotificadoLembrete,
+                        e.NotificadoAtraso,
+                        u.Email,
+                        u.Nome,
+                        l.Nome
+                    FROM Emprestimo e
+                    INNER JOIN Usuarios u ON e.Alocador = u.Id
+                    INNER JOIN Livros l ON e.Livro = l.Id
+                    WHERE e.Status <> 'Devolvido'";
 
                     var selectCommand = new SqlCeCommand(selectQuery, connection);
                     var reader = selectCommand.ExecuteReader();
@@ -227,13 +203,8 @@ WHERE e.Status <> 'Devolvido'
                         DateTime? dataProrrogacao = reader.IsDBNull(2) ? null : (DateTime?)reader.GetDateTime(2);
                         DateTime? dataRealDevolucao = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3);
 
-<<<<<<< HEAD
                         bool notificadoLembrete = !reader.IsDBNull(4) && reader.GetBoolean(4);
                         bool notificadoAtraso = !reader.IsDBNull(5) && reader.GetBoolean(5);
-=======
-                        bool emailLembreteEnviado = !reader.IsDBNull(4) && reader.GetBoolean(4);
-                        bool emailAtrasoEnviado = !reader.IsDBNull(5) && reader.GetBoolean(5);
->>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
 
                         string emailUsuario = reader.GetString(6);
                         string nomeUsuario = reader.GetString(7);
@@ -241,10 +212,6 @@ WHERE e.Status <> 'Devolvido'
 
                         string novoStatus = CalcularStatus(dataDevolucao, dataProrrogacao, dataRealDevolucao);
 
-<<<<<<< HEAD
-=======
-                        // Atualiza o status no banco
->>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
                         string updateStatusQuery = "UPDATE Emprestimo SET Status = @Status WHERE Id = @Id";
                         var updateStatusCommand = new SqlCeCommand(updateStatusQuery, connection);
                         updateStatusCommand.Parameters.AddWithValue("@Status", novoStatus);
@@ -254,40 +221,20 @@ WHERE e.Status <> 'Devolvido'
                         DateTime dataReferencia = dataProrrogacao ?? dataDevolucao;
                         TimeSpan diferenca = dataReferencia.Date - DateTime.Now.Date;
 
-<<<<<<< HEAD
                         if (diferenca.Days == 3 && !notificadoLembrete)
                         {
                             EnviarEmailLembrete(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
 
                             var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET NotificadoLembrete = 1 WHERE Id = @Id", connection);
-=======
-                        // Enviar email lembrete se faltarem 3 dias e ainda não enviou
-                        if (diferenca.Days == 3 && !emailLembreteEnviado)
-                        {
-                            EnviarEmailLembrete(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
-
-                            // Atualiza flag no banco
-                            var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET EmailLembreteEnviado = 1 WHERE Id = @Id", connection);
->>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
                             updateFlagCmd.Parameters.AddWithValue("@Id", id);
                             updateFlagCmd.ExecuteNonQuery();
                         }
 
-<<<<<<< HEAD
                         if (diferenca.Days < 0 && !notificadoAtraso)
                         {
                             EnviarEmailAtraso(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
 
                             var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET NotificadoAtraso = 1 WHERE Id = @Id", connection);
-=======
-                        // Enviar email atraso se passou da data e não enviou ainda
-                        if (diferenca.Days < 0 && !emailAtrasoEnviado)
-                        {
-                            EnviarEmailAtraso(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
-
-                            // Atualiza flag no banco
-                            var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET EmailAtrasoEnviado = 1 WHERE Id = @Id", connection);
->>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
                             updateFlagCmd.Parameters.AddWithValue("@Id", id);
                             updateFlagCmd.ExecuteNonQuery();
                         }
@@ -305,65 +252,6 @@ WHERE e.Status <> 'Devolvido'
             }
         }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
-        private void EnviarEmailLembrete(string email, string nome, string tituloLivro, DateTime dataDevolucao)
-        {
-            string assunto = "📚 Lembrete: Devolução de livro se aproxima!";
-
-            string corpo = $@"
-    <html>
-    <body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
-        <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
-            <h2 style='color: #2c3e50;'>Olá, {nome} 👋</h2>
-            <p>Este é um lembrete de que o livro <strong>\{tituloLivro}\</strong> precisa ser devolvido em breve.</p>
-                    <p style = 'font-size: 16px;'><strong>📅 Data limite de devolução:</ strong > {dataDevolucao: dd / MM / yyyy}</ p >
-        
-                    < p > Por favor, devolva o livro no prazo para evitar bloqueios no sistema e problemas com a secretaria.</ p >
-        
-                    < hr />
-        
-                    < p style = 'font-size: 14px; color: #888;' > Este é um e - mail automático enviado pela Biblioteca Monteiro Lobato.</ p >
-        
-                </ div >
-        
-            </ body >
-        
-            </ html > ";
-
-            BibliotecaApp.Services.EmailService.Enviar(email, assunto, corpo);
-        }
-
-        private void EnviarEmailAtraso(string email, string nome, string tituloLivro, DateTime dataDevolucao)
-        {
-            string assunto = "⚠️ Atraso na devolução de livro";
-
-            string corpo = $@"
-    <html>
-    <body style='font-family: Arial, sans-serif; color: #333; background-color: #fffbe6; padding: 20px;'>
-        <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #e1a500; border-radius: 8px; padding: 20px;'>
-            <h2 style='color: #d35400;'>Atenção, {nome} ⚠️</h2>
-            <p>O prazo para devolução do livro <strong>\{tituloLivro}\</strong> venceu em <strong>{dataDevolucao:dd/MM/yyyy}</strong>.</p>
-                    < p > Devido a isso, você < strong > não poderá retirar documentos na secretaria </ strong > até regularizar a situação.</ p >
-        
-                    < p > Pedimos que devolva o material o quanto antes ou entre em contato com a biblioteca.</ p >
-        
-                    < hr />
-        
-                    < p style = 'font-size: 14px; color: #888;' > Este é um e - mail automático enviado pela Biblioteca Monteiro Lobato.</ p >
-        
-                </ div >
-        
-            </ body >
-        
-            </ html > ";
-
-            BibliotecaApp.Services.EmailService.Enviar(email, assunto, corpo);
-        }
-
-
         private void AtualizarReservas(frmProgresso progressForm)
         {
             try
@@ -372,88 +260,44 @@ WHERE e.Status <> 'Devolvido'
                 {
                     connection.Open();
 
-<<<<<<< HEAD
                     // 1) Pendente → Disponível, quando DataDisponibilidade chegou
                     string sqlDisponibilizar = @"
-                UPDATE Reservas
-                   SET Status = 'Disponível'
-                 WHERE Status = 'Pendente'
-                   AND DataDisponibilidade <= GETDATE()";
+                        UPDATE Reservas
+                        SET Status = 'Disponível'
+                        WHERE Status = 'Pendente'
+                        AND DataDisponibilidade <= GETDATE()";
                     new SqlCeCommand(sqlDisponibilizar, connection).ExecuteNonQuery();
                     progressForm.AtualizarProgresso(33, "Tornando reservas disponíveis...");
 
                     // 2) Disponível → Expirada, quem passou do limite
                     string sqlExpirar = @"
-                UPDATE Reservas
-                   SET Status = 'Expirada'
-                 WHERE Status = 'Disponível'
-                   AND DataLimiteRetirada < GETDATE()";
+                        UPDATE Reservas
+                        SET Status = 'Expirada'
+                        WHERE Status = 'Disponível'
+                        AND DataLimiteRetirada < GETDATE()";
                     new SqlCeCommand(sqlExpirar, connection).ExecuteNonQuery();
                     progressForm.AtualizarProgresso(66, "Expirando reservas atrasadas...");
-=======
-                    // Buscar reservas com status 'Disponível' (usuário foi avisado e tem prazo para retirar)
-                    string selectQuery = @"
-                SELECT Id, DataLimiteRetirada
-                FROM Reservas
-                WHERE Status = 'Disponível'";
-
-                    using (var selectCommand = new SqlCeCommand(selectQuery, connection))
-                    using (var reader = selectCommand.ExecuteReader())
-                    {
-                        var reservasParaExpirar = new List<(int Id, DateTime? DataLimiteRetirada)>();
->>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
 
                     // 3) Liberar livros cujas reservas expiraram
                     string sqlLiberar = @"
-                UPDATE Livros
-                   SET Disponibilidade = 1
-                 WHERE Id IN (
-                     SELECT LivroId 
-                       FROM Reservas
-                      WHERE Status = 'Expirada'
-
-                 )";
+                        UPDATE Livros
+                        SET Disponibilidade = 1
+                        WHERE Id IN (
+                            SELECT LivroId 
+                            FROM Reservas
+                            WHERE Status = 'Expirada'
+                        )";
                     new SqlCeCommand(sqlLiberar, connection).ExecuteNonQuery();
                     progressForm.AtualizarProgresso(100, "Liberando exemplares expirados...");
-
-<<<<<<< HEAD
-              
-=======
-                        foreach (var reserva in reservasParaExpirar)
-                        {
-                            // Se já passou da DataLimiteRetirada, expira a reserva
-                            if (reserva.DataLimiteRetirada.HasValue && DateTime.Now > reserva.DataLimiteRetirada.Value)
-                            {
-                                using (var updateCmd = new SqlCeCommand("UPDATE Reservas SET Status = 'Expirada' WHERE Id = @Id", connection))
-                                {
-                                    updateCmd.Parameters.AddWithValue("@Id", reserva.Id);
-                                    updateCmd.ExecuteNonQuery();
-                                }
-                            }
-
-                            processadas++;
-                            int progresso = (int)((double)processadas / total * 100);
-                            progressForm.AtualizarProgresso(progresso, $"Verificando reservas ({processadas}/{total})");
-                        }
-                    }
->>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
                 }
             }
             catch (Exception ex)
             {
-<<<<<<< HEAD
                 MessageBox.Show($"Erro ao atualizar reservas: {ex.Message}", "Erro",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-
-=======
-                MessageBox.Show($"Erro ao atualizar reservas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
->>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
         private string CalcularStatus(DateTime dataDevolucao, DateTime? dataProrrogacao, DateTime? dataRealDevolucao)
         {
             DateTime dataReferencia = dataProrrogacao ?? dataDevolucao;
@@ -471,13 +315,53 @@ WHERE e.Status <> 'Devolvido'
                 return "Ativo";
             }
         }
-
-
-
         #endregion
 
+        #region Métodos de Email
+        private void EnviarEmailLembrete(string email, string nome, string tituloLivro, DateTime dataDevolucao)
+        {
+            string assunto = "📚 Lembrete: Devolução de livro se aproxima!";
 
+            string corpo = $@"
+                <html>
+                <body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+                    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+                        <h2 style='color: #2c3e50;'>Olá, {nome} 👋</h2>
+                        <p>Este é um lembrete de que o livro <strong>{tituloLivro}</strong> precisa ser devolvido em breve.</p>
+                        <p style='font-size: 16px;'><strong>📅 Data limite de devolução:</strong> {dataDevolucao:dd/MM/yyyy}</p>
+                        <p>Por favor, devolva o livro no prazo para evitar bloqueios no sistema e problemas com a secretaria.</p>
+                        <hr />
+                        <p style='font-size: 14px; color: #888;'>Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.</p>
+                    </div>
+                </body>
+                </html>";
 
+            BibliotecaApp.Services.EmailService.Enviar(email, assunto, corpo);
+        }
+
+        private void EnviarEmailAtraso(string email, string nome, string tituloLivro, DateTime dataDevolucao)
+        {
+            string assunto = "⚠️ Atraso na devolução de livro";
+
+            string corpo = $@"
+                <html>
+                <body style='font-family: Arial, sans-serif; color: #333; background-color: #fffbe6; padding: 20px;'>
+                    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #e1a500; border-radius: 8px; padding: 20px;'>
+                        <h2 style='color: #d35400;'>Atenção, {nome} ⚠️</h2>
+                        <p>O prazo para devolução do livro <strong>{tituloLivro}</strong> venceu em <strong>{dataDevolucao:dd/MM/yyyy}</strong>.</p>
+                        <p>Devido a isso, você <strong>não poderá retirar documentos na secretaria</strong> até regularizar a situação.</p>
+                        <p>Pedimos que devolva o material o quanto antes ou entre em contato com a biblioteca.</p>
+                        <hr />
+                        <p style='font-size: 14px; color: #888;'>Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.</p>
+                    </div>
+                </body>
+                </html>";
+
+            BibliotecaApp.Services.EmailService.Enviar(email, assunto, corpo);
+        }
+        #endregion
+
+        #region Eventos de Teclado
         private void txtEmail_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -493,21 +377,20 @@ WHERE e.Status <> 'Devolvido'
             {
                 e.SuppressKeyPress = true;
                 BtnEntrar.PerformClick();
-
             }
         }
+        #endregion
 
+        #region Eventos de Interface
         private void gradientPanel1_Paint(object sender, PaintEventArgs e)
         {
-
+            // Implementação do paint do gradientPanel
         }
-<<<<<<< HEAD
 
         private void gradientPanel1_Paint_1(object sender, PaintEventArgs e)
         {
-
+            // Implementação alternativa do paint do gradientPanel
         }
-=======
->>>>>>> d5f34a194ab93793f004a2af1083d2d7dbda4f87
+        #endregion
     }
 }

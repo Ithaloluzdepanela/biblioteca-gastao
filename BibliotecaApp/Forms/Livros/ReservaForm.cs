@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace BibliotecaApp.Forms.Livros
@@ -17,7 +18,6 @@ namespace BibliotecaApp.Forms.Livros
         public List<Livro> Livros { get; set; }
         private List<Livro> _cacheLivros = new List<Livro>();
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
-
         // Controle para evitar duplicação de verificações
         private int _livroAtualSendoVerificado = -1;
         #endregion
@@ -28,18 +28,6 @@ namespace BibliotecaApp.Forms.Livros
             InitializeComponent();
             CarregarDadosIniciais();
             ConfigurarControles();
-        }
-
-        private void CarregarDadosIniciais()
-        {
-            Usuarios = new List<Usuarios>();
-            Livros = new List<Livro>();
-
-            CarregarUsuariosDoBanco();
-            CarregarLivrosIndisponiveisDoBanco();
-            CarregarBibliotecarias();
-
-            dtpDataReserva.Value = DateTime.Today;
         }
 
         private void ConfigurarControles()
@@ -56,22 +44,26 @@ namespace BibliotecaApp.Forms.Livros
         {
             try
             {
+                Usuarios.Clear();
+                _cacheUsuarios.Clear();
                 using (var conexao = EmprestimoForm.Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = "SELECT Id, Nome, TipoUsuario FROM usuarios";
-
+                    string sql = "SELECT Id, Nome, TipoUsuario, Email FROM usuarios";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            Usuarios.Add(new Usuarios
+                            var usuario = new Usuarios
                             {
                                 Id = reader.GetInt32(0),
                                 Nome = reader.GetString(1),
-                                TipoUsuario = reader.GetString(2)
-                            });
+                                TipoUsuario = reader.GetString(2),
+                                Email = reader.IsDBNull(3) ? null : reader.GetString(3),
+                            };
+                            Usuarios.Add(usuario);
+                            _cacheUsuarios.Add(usuario);
                         }
                     }
                 }
@@ -87,13 +79,14 @@ namespace BibliotecaApp.Forms.Livros
         {
             try
             {
+                Livros.Clear();
+                _cacheLivros.Clear();
                 using (var conexao = EmprestimoForm.Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = @"SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade 
-                          FROM Livros 
-                          WHERE Disponibilidade = 0 AND Quantidade = 0";
-
+                    string sql = @"SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade
+                            FROM Livros
+                            WHERE Disponibilidade = 0 AND Quantidade = 0";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -106,9 +99,9 @@ namespace BibliotecaApp.Forms.Livros
                                 reader.GetBoolean(6),
                                 reader.GetInt32(4),
                                 reader.GetString(5));
-
                             typeof(Livro).GetProperty("Id").SetValue(livro, reader.GetInt32(0));
                             Livros.Add(livro);
+                            _cacheLivros.Add(livro);
                         }
                     }
                 }
@@ -129,7 +122,6 @@ namespace BibliotecaApp.Forms.Livros
                 {
                     conexao.Open();
                     string sql = "SELECT Nome FROM usuarios WHERE TipoUsuario = 'Bibliotecário(a)'";
-
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -139,7 +131,6 @@ namespace BibliotecaApp.Forms.Livros
                         }
                     }
                 }
-
                 if (!string.IsNullOrWhiteSpace(Sessao.NomeBibliotecariaLogada))
                 {
                     cbBibliotecaria.SelectedIndex = cbBibliotecaria.Items.IndexOf(Sessao.NomeBibliotecariaLogada);
@@ -153,7 +144,7 @@ namespace BibliotecaApp.Forms.Livros
         }
         #endregion
 
-        #region Métodos de Reserva (Atualizados)
+        #region Métodos de Reserva (Corrigidos)
         private void btnReservar_Click(object sender, EventArgs e)
         {
             if (!ValidarCampos()) return;
@@ -169,9 +160,10 @@ namespace BibliotecaApp.Forms.Livros
 
             if (VerificarReservaAtiva(usuario.Id, livro.Id)) return;
 
-            RegistrarReserva(usuario, livro, bibliotecaria);
+            // Corrigido: usar dtpDataReserva.Value em vez de dataReserva
+            DateTime dataReserva = dtpDataReserva.Value;
+            RegistrarReserva(usuario, livro, bibliotecaria, dataReserva);
         }
-
 
         private bool ValidarCampos()
         {
@@ -198,6 +190,19 @@ namespace BibliotecaApp.Forms.Livros
                 l.Nome.Equals(txtLivro.Text, StringComparison.OrdinalIgnoreCase));
         }
 
+        private void CarregarDadosIniciais()
+        {
+            Usuarios = new List<Usuarios>();
+            Livros = new List<Livro>();
+            CarregarUsuariosDoBanco();
+            CarregarLivrosIndisponiveisDoBanco();
+            CarregarBibliotecarias();
+
+            _cacheUsuarios = new List<Usuarios>(Usuarios);
+            _cacheLivros = new List<Livro>(Livros);
+            dtpDataReserva.Value = DateTime.Today;
+        }
+
         private Usuarios ObterBibliotecariaSelecionada()
         {
             return Usuarios.FirstOrDefault(u =>
@@ -215,6 +220,24 @@ namespace BibliotecaApp.Forms.Livros
             return true;
         }
 
+        // Método para validar email
+        private bool ValidarEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                // Regex simples para validação de email
+                string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+                return Regex.IsMatch(email, pattern);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private bool ValidarDisponibilidade(Livro livro)
         {
             try
@@ -222,11 +245,9 @@ namespace BibliotecaApp.Forms.Livros
                 using (var conexao = EmprestimoForm.Conexao.ObterConexao())
                 {
                     conexao.Open();
-
                     // 1. Verifica quantidade total do livro
                     string sql = @"SELECT Quantidade FROM Livros WHERE Id = @id";
                     int quantidadeTotal = 0;
-
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@id", livro.Id);
@@ -235,10 +256,9 @@ namespace BibliotecaApp.Forms.Livros
                     }
 
                     // 2. Conta empréstimos ativos (Ativo + Atrasado)
-                    sql = @"SELECT COUNT(*) FROM Emprestimo 
-                   WHERE Livro = @livroId AND Status IN ('Ativo', 'Atrasado')";
+                    sql = @"SELECT COUNT(*) FROM Emprestimo
+                    WHERE Livro = @livroId AND Status IN ('Ativo', 'Atrasado')";
                     int emprestimosAtivos;
-
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@livroId", livro.Id);
@@ -246,10 +266,9 @@ namespace BibliotecaApp.Forms.Livros
                     }
 
                     // 3. Conta reservas pendentes (Pendente + Disponível)
-                    sql = @"SELECT COUNT(*) FROM Reservas 
-                   WHERE LivroId = @livroId AND Status IN ('Pendente', 'Disponível')";
+                    sql = @"SELECT COUNT(*) FROM Reservas
+                    WHERE LivroId = @livroId AND Status IN ('Pendente', 'Disponível')";
                     int reservasAtivas;
-
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@livroId", livro.Id);
@@ -259,21 +278,21 @@ namespace BibliotecaApp.Forms.Livros
                     // Cálculo final
                     int disponivelParaReserva = quantidadeTotal - emprestimosAtivos - reservasAtivas;
 
-                    if (disponivelParaReserva > 0)
+                    if (emprestimosAtivos == 0)
                     {
-                        MessageBox.Show($"Existem {disponivelParaReserva} exemplar(es) disponível(eis) para empréstimo imediato.\n\n" +
-                                      "Por favor, utilize o formulário de empréstimo diretamente.",
-                                      "Exemplares Disponíveis", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Não há exemplares emprestados no momento.\n" +
+                        "Use o formulário de empréstimo para retirar o livro agora.",
+                        "Sem Empréstimos Ativos", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return false;
                     }
 
-                    if (reservasAtivas >= quantidadeTotal)
+                    if (reservasAtivas >= emprestimosAtivos)
                     {
-                        MessageBox.Show($"Todos os {quantidadeTotal} exemplares já estão:\n" +
-                                      $"- Emprestados: {emprestimosAtivos}\n" +
-                                      $"- Com reserva ativa: {reservasAtivas}\n\n" +
-                                      "Aguarde até que algum exemplar seja devolvido.",
-                                      "Reservas Esgotadas", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show($"Todos os {emprestimosAtivos} exemplares já estão:\n" +
+                                        $"- Emprestados: {emprestimosAtivos}\n" +
+                                        $"- Com reserva ativa: {reservasAtivas}\n\n" +
+                                        "Aguarde até que algum exemplar seja devolvido.",
+                                        "Reservas Esgotadas", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return false;
                     }
 
@@ -288,39 +307,107 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-        private void RegistrarReserva(Usuarios usuario, Livro livro, Usuarios bibliotecaria)
+        private void RegistrarReserva(Usuarios usuario, Livro livro, Usuarios bibliotecaria, DateTime dataReserva)
         {
             try
             {
                 using (var conexao = EmprestimoForm.Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = @"INSERT INTO Reservas 
-                                 (UsuarioId, LivroId, BibliotecariaId, DataReserva, Status) 
-                                 VALUES (@usuarioId, @livroId, @bibliotecariaId, @dataReserva, 'Pendente')";
+                    var dataDisponibilidade = ObterDataProximaDisponibilidade(livro.Id);
+                    var dataLimiteRetirada = dataDisponibilidade.AddDays(7);
+
+                    string sql = @"
+                INSERT INTO Reservas 
+                    (UsuarioId, LivroId, BibliotecariaId, DataReserva, DataDisponibilidade, DataLimiteRetirada, Status)
+                VALUES
+                    (@usuarioId, @livroId, @bibliotecariaId, @DataReserva, @DataDisponibilidade, @DataLimiteRetirada, 'Pendente')";
 
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@usuarioId", usuario.Id);
                         cmd.Parameters.AddWithValue("@livroId", livro.Id);
                         cmd.Parameters.AddWithValue("@bibliotecariaId", bibliotecaria.Id);
-                        cmd.Parameters.AddWithValue("@dataReserva", DateTime.Today);
-
+                        cmd.Parameters.AddWithValue("@DataReserva", dataReserva);
+                        cmd.Parameters.AddWithValue("@DataDisponibilidade", dataDisponibilidade);
+                        cmd.Parameters.AddWithValue("@DataLimiteRetirada", dataLimiteRetirada);
                         cmd.ExecuteNonQuery();
                     }
 
-                    MessageBox.Show("Reserva registrada com sucesso!",
-                                  "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Reserva registrada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimparCampos();
 
-
-                    EnviarEmailReservaConfirmada(usuario.Nome, usuario.Email, livro.Nome, DateTime.Now);
+                    // CORREÇÃO: Enviar email apenas se o usuário tiver email válido
+                    if (!string.IsNullOrWhiteSpace(usuario.Email) && ValidarEmail(usuario.Email))
+                    {
+                        EnviarEmailConfirmacao(usuario, livro, dataReserva, dataDisponibilidade);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Reserva registrada, mas não foi possível enviar email de confirmação.\n" +
+                                      "Email do usuário inválido ou não cadastrado.",
+                                      "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao registrar reserva:\n" + ex.Message,
-                              "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao registrar reserva:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // MÉTODO CORRIGIDO para envio de email
+        private void EnviarEmailConfirmacao(Usuarios usuario, Livro livro, DateTime dataReserva, DateTime dataDisponibilidade)
+        {
+            try
+            {
+                string assunto = "📚 Reserva Confirmada - Biblioteca Monteiro Lobato";
+
+                // CORREÇÃO: Usar livro.Nome em vez de {livro} e organizar melhor o HTML
+                string corpo = $@"
+                <html>
+                <body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+                    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+                        <h2 style='color: #2c3e50;'>Olá, {usuario.Nome} 👋</h2>
+                        
+                        <p>Sua reserva foi registrada com sucesso! Aqui estão os detalhes:</p>
+                        
+                        <div style='background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;'>
+                            <p><strong>📖 Livro:</strong> {livro.Nome}</p>
+                            <p><strong>✍️ Autor:</strong> {livro.Autor}</p>
+                            <p><strong>📅 Data da Reserva:</strong> {dataReserva:dd/MM/yyyy}</p>
+                            <p><strong>📅 Previsão de Disponibilidade:</strong> {dataDisponibilidade:dd/MM/yyyy}</p>
+                        </div>
+                        
+                        <p><strong>⏳ Aguarde:</strong> Assim que o livro estiver disponível, você será avisado por aqui.</p>
+                        
+                        <p style='margin-top: 20px;'>Você terá um prazo de 7 dias para retirar o livro após ele ficar disponível. Fique atento aos e-mails da biblioteca!</p>
+                        
+                        <hr style='margin: 30px 0; border: none; border-top: 1px solid #eee;' />
+                        
+                        <p style='font-size: 14px; color: #888;'>
+                            Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.<br>
+                            Por favor, não responda este e-mail.
+                        </p>
+                    </div>
+                </body>
+                </html>";
+
+                // CORREÇÃO: Validar email antes de enviar
+                string email = usuario.Email?.Trim();
+                if (ValidarEmail(email))
+                {
+                    EmailService.Enviar(email, assunto, corpo);
+                }
+                else
+                {
+                    throw new Exception("Email inválido: " + email);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao enviar email de confirmação: {ex.Message}",
+                              "Erro no Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         #endregion
@@ -333,32 +420,31 @@ namespace BibliotecaApp.Forms.Livros
                 using (var conexao = EmprestimoForm.Conexao.ObterConexao())
                 {
                     conexao.Open();
-
                     // 1. Atualizar reservas quando o livro ficar disponível
                     progressForm.AtualizarProgresso(progressoAtual++, "Verificando reservas...");
-                    string updateDisponivel = @"UPDATE Reservas 
-                                             SET Status = 'Disponível', 
-                                                 DataDisponibilidade = GETDATE(),
+                    string updateDisponivel = @"UPDATE Reservas
+                                              SET Status = 'Disponível',
+                                                  DataDisponibilidade = GETDATE(),
                                                  DataLimiteRetirada = DATEADD(day, 3, GETDATE())
-                                             WHERE Status = 'Pendente' 
-                                             AND LivroId IN (SELECT Id FROM Livros WHERE Disponibilidade = 1)";
+                                             WHERE Status = 'Pendente'
+                                              AND LivroId IN (SELECT Id FROM Livros WHERE Disponibilidade = 1)";
                     new SqlCeCommand(updateDisponivel, conexao).ExecuteNonQuery();
 
                     // 2. Expirar reservas não retiradas em 3 dias
                     progressForm.AtualizarProgresso(progressoAtual++, "Verificando prazos...");
-                    string updateExpiradas = @"UPDATE Reservas 
-                                             SET Status = 'Expirada'
-                                             WHERE Status = 'Disponível' 
-                                             AND DataLimiteRetirada < GETDATE()";
+                    string updateExpiradas = @"UPDATE Reservas
+                                              SET Status = 'Expirada'
+                                             WHERE Status = 'Disponível'
+                                              AND DataLimiteRetirada < GETDATE()";
                     new SqlCeCommand(updateExpiradas, conexao).ExecuteNonQuery();
 
                     // 3. Liberar livros de reservas expiradas
                     progressForm.AtualizarProgresso(progressoAtual++, "Liberando livros...");
-                    string liberarLivros = @"UPDATE Livros 
-                                           SET Disponibilidade = 1
+                    string liberarLivros = @"UPDATE Livros
+                                            SET Disponibilidade = 1
                                            WHERE Id IN (
-                                               SELECT LivroId FROM Reservas 
-                                               WHERE Status = 'Expirada'
+                                               SELECT LivroId FROM Reservas
+                                                WHERE Status = 'Expirada'
                                            )";
                     new SqlCeCommand(liberarLivros, conexao).ExecuteNonQuery();
                 }
@@ -382,18 +468,16 @@ namespace BibliotecaApp.Forms.Livros
                 using (var conexao = EmprestimoForm.Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = @"SELECT COUNT(*) 
-                          FROM Reservas 
-                          WHERE UsuarioId = @usuarioId 
-                          AND LivroId = @livroId 
-                          AND Status IN ('Pendente', 'Disponível')";
-
+                    string sql = @"SELECT COUNT(*)
+                           FROM Reservas
+                           WHERE UsuarioId = @usuarioId
+                           AND LivroId = @livroId
+                           AND Status IN ('Pendente', 'Disponível')";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@usuarioId", usuarioId);
                         cmd.Parameters.AddWithValue("@livroId", livroId);
                         int count = (int)cmd.ExecuteScalar();
-
                         if (count > 0)
                         {
                             MessageBox.Show($"O usuario selecionado já tem uma reserva ativa para este livro.\n" +
@@ -436,7 +520,6 @@ namespace BibliotecaApp.Forms.Livros
         {
             string texto = txtNomeUsuario.Text.Trim().ToLower();
             lstSugestoesUsuario.Visible = !string.IsNullOrWhiteSpace(texto);
-
             if (lstSugestoesUsuario.Visible)
             {
                 lstSugestoesUsuario.Items.Clear();
@@ -451,7 +534,6 @@ namespace BibliotecaApp.Forms.Livros
         {
             string texto = txtLivro.Text.Trim().ToLower();
             lstSugestoesLivros.Visible = !string.IsNullOrWhiteSpace(texto);
-
             if (lstSugestoesLivros.Visible)
             {
                 lstSugestoesLivros.Items.Clear();
@@ -479,7 +561,6 @@ namespace BibliotecaApp.Forms.Livros
                 txtLivro.Text = livroSelecionado.Nome;
                 txtBarcode.Text = livroSelecionado.CodigoDeBarras;
                 lstSugestoesLivros.Visible = false;
-
                 VerificarDisponibilidadeLivro(livroSelecionado.Id);
             }
         }
@@ -495,7 +576,6 @@ namespace BibliotecaApp.Forms.Livros
                 {
                     conexao.Open();
                     string sql = @"SELECT Disponibilidade, Quantidade FROM Livros WHERE Id = @id";
-
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@id", livroId);
@@ -516,14 +596,10 @@ namespace BibliotecaApp.Forms.Livros
 
                                     if (resposta == DialogResult.Yes)
                                     {
-
                                         var form = new EmprestimoForm
                                         {
-
                                             StartPosition = FormStartPosition.CenterScreen
-
                                         };
-
                                         form.ShowDialog();
                                     }
                                 }
@@ -543,8 +619,6 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-
-
         private void txtBarcode_Leave(object sender, EventArgs e)
         {
             string codigo = txtBarcode.Text.Trim();
@@ -556,7 +630,6 @@ namespace BibliotecaApp.Forms.Livros
                 {
                     conexao.Open();
                     string sql = @"SELECT Id, Nome FROM Livros WHERE CodigoBarras = @codigo";
-
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@codigo", codigo);
@@ -591,14 +664,12 @@ namespace BibliotecaApp.Forms.Livros
                 using (var conexao = EmprestimoForm.Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = @"SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade 
-                         FROM Livros 
-                         WHERE Nome LIKE @nome";
-
+                    string sql = @"SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade
+                          FROM Livros
+                          WHERE Nome LIKE @nome";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@nome", "%" + filtro + "%");
-
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -619,7 +690,6 @@ namespace BibliotecaApp.Forms.Livros
                         }
                     }
                 }
-
                 lstSugestoesLivros.Visible = lstSugestoesLivros.Items.Count > 0;
             }
             catch (Exception ex)
@@ -630,10 +700,37 @@ namespace BibliotecaApp.Forms.Livros
         }
         #endregion
 
+        private DateTime ObterDataProximaDisponibilidade(int livroId)
+        {
+            using (var conexao = EmprestimoForm.Conexao.ObterConexao())
+            {
+                conexao.Open();
+                string sql = @"
+            SELECT MIN(
+                CASE 
+                    WHEN DataProrrogacao IS NOT NULL THEN DataProrrogacao
+                    ELSE DataDevolucao
+                END
+            )
+            FROM Emprestimo
+            WHERE Livro = @livroId 
+              AND Status IN ('Ativo', 'Atrasado')";
+
+                using (var cmd = new SqlCeCommand(sql, conexao))
+                {
+                    cmd.Parameters.AddWithValue("@livroId", livroId);
+                    var resultado = cmd.ExecuteScalar();
+                    if (resultado != DBNull.Value)
+                        return (DateTime)resultado;
+                }
+            }
+            // fallback: se não tiver nenhum empréstimo, retorna data de hoje
+            return DateTime.Today;
+        }
+
         private void btnBuscarUsuario_Click(object sender, EventArgs e)
         {
             string filtro = txtNomeUsuario.Text.Trim();
-
             // Se o campo estiver vazio, limpa a lista de sugestões
             if (string.IsNullOrEmpty(filtro))
             {
@@ -650,17 +747,14 @@ namespace BibliotecaApp.Forms.Livros
                 using (var conexao = EmprestimoForm.Conexao.ObterConexao())
                 {
                     conexao.Open();
-
                     // Busca usuários pelo nome (case insensitive)
-                    string sql = @"SELECT Id, Nome, TipoUsuario 
-                          FROM usuarios 
-                          WHERE Nome LIKE @nome
+                    string sql = @"SELECT Id, Nome, TipoUsuario, Email
+                           FROM usuarios
+                           WHERE Nome LIKE @nome
                           ORDER BY Nome";
-
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@nome", "%" + filtro + "%");
-
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -669,9 +763,9 @@ namespace BibliotecaApp.Forms.Livros
                                 {
                                     Id = reader.GetInt32(0),
                                     Nome = reader.GetString(1),
-                                    TipoUsuario = reader.GetString(2)
+                                    TipoUsuario = reader.GetString(2),
+                                    Email = reader.IsDBNull(3) ? null : reader.GetString(3)
                                 };
-
                                 _cacheUsuarios.Add(usuario);
                                 lstSugestoesUsuario.Items.Add(usuario.Nome);
                             }
@@ -709,13 +803,11 @@ namespace BibliotecaApp.Forms.Livros
                         lstSugestoesUsuario.SelectedIndex++;
                     e.Handled = true;
                     break;
-
                 case Keys.Up:
                     if (lstSugestoesUsuario.SelectedIndex > 0)
                         lstSugestoesUsuario.SelectedIndex--;
                     e.Handled = true;
                     break;
-
                 case Keys.Enter:
                     if (lstSugestoesUsuario.SelectedIndex >= 0)
                         SelecionarUsuarioDaLista();
@@ -743,41 +835,11 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
+        
+      
 
-
-        public static void EnviarEmailReservaConfirmada(string nomeUsuario, string emailUsuario, string nomeLivro, DateTime dataReserva)
-        {
-            string assunto = "📚 Reserva Confirmada - Biblioteca Monteiro Lobato";
-
-            string corpo = $@"
-<html>
-<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
-    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
-        <h2 style='color: #2c3e50;'>Olá, {nomeUsuario} 👋</h2>
-
-        <p><strong>📅 Data da Reserva:</strong> {dataReserva:dd/MM/yyyy}</p>
-        <p><strong>⏳ Aguarde:</strong> Assim que o livro estiver disponível, você será avisado.</p>
-
-        <p style='margin-top: 20px;'>Você terá um prazo limitado para retirar o livro após ele ficar disponível. Fique atento aos e-mails da biblioteca!</p>
-
-        <hr />
-
-        <p style='font-size: 14px; color: #888;'>Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.
-        <p>Sua reserva foi registrada com sucesso! Aqui estão os detalhes:</p>
-
-        <p><strong>📖 Livro:</strong> {nomeLivro}</p></p>
-    </div>
-</body>
-</html>";
-
-            EmailService.Enviar(emailUsuario, assunto, corpo);
-        }
         private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e) { }
         private void lstSugestoesLivros_SelectedIndexChanged(object sender, EventArgs e) { }
-
-        private void ReservaForm_Load(object sender, EventArgs e)
-        {
-
-        }
+        private void ReservaForm_Load(object sender, EventArgs e) { }
     }
 }

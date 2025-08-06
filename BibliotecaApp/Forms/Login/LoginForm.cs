@@ -188,14 +188,21 @@ namespace BibliotecaApp.Forms.Login
                     }
 
                     string selectQuery = @"
-                SELECT e.Id, e.DataDevolucao, e.DataProrrogacao, e.DataRealDevolucao,
-                       e.EmailLembreteEnviado, e.EmailAtrasoEnviado,
-                       u.Email, u.Nome,
-                       l.Titulo
-                FROM Emprestimo e
-                INNER JOIN Usuarios u ON e.UsuarioId = u.Id
-                INNER JOIN Livros l ON e.LivroId = l.Id
-                WHERE e.Status <> 'Devolvido'";
+SELECT 
+    e.Id,
+    e.DataDevolucao,
+    e.DataProrrogacao,
+    e.DataRealDevolucao,
+    e.NotificadoLembrete,
+    e.NotificadoAtraso,
+    u.Email,
+    u.Nome,
+    l.Nome
+FROM Emprestimo e
+INNER JOIN Usuarios u ON e.Alocador = u.Id
+INNER JOIN Livros l ON e.Livro = l.Id
+WHERE e.Status <> 'Devolvido'
+";
 
                     var selectCommand = new SqlCeCommand(selectQuery, connection);
                     var reader = selectCommand.ExecuteReader();
@@ -209,8 +216,8 @@ namespace BibliotecaApp.Forms.Login
                         DateTime? dataProrrogacao = reader.IsDBNull(2) ? null : (DateTime?)reader.GetDateTime(2);
                         DateTime? dataRealDevolucao = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3);
 
-                        bool emailLembreteEnviado = !reader.IsDBNull(4) && reader.GetBoolean(4);
-                        bool emailAtrasoEnviado = !reader.IsDBNull(5) && reader.GetBoolean(5);
+                        bool notificadoLembrete = !reader.IsDBNull(4) && reader.GetBoolean(4);
+                        bool notificadoAtraso = !reader.IsDBNull(5) && reader.GetBoolean(5);
 
                         string emailUsuario = reader.GetString(6);
                         string nomeUsuario = reader.GetString(7);
@@ -218,7 +225,6 @@ namespace BibliotecaApp.Forms.Login
 
                         string novoStatus = CalcularStatus(dataDevolucao, dataProrrogacao, dataRealDevolucao);
 
-                        // Atualiza o status no banco
                         string updateStatusQuery = "UPDATE Emprestimo SET Status = @Status WHERE Id = @Id";
                         var updateStatusCommand = new SqlCeCommand(updateStatusQuery, connection);
                         updateStatusCommand.Parameters.AddWithValue("@Status", novoStatus);
@@ -228,24 +234,20 @@ namespace BibliotecaApp.Forms.Login
                         DateTime dataReferencia = dataProrrogacao ?? dataDevolucao;
                         TimeSpan diferenca = dataReferencia.Date - DateTime.Now.Date;
 
-                        // Enviar email lembrete se faltarem 3 dias e ainda não enviou
-                        if (diferenca.Days == 3 && !emailLembreteEnviado)
+                        if (diferenca.Days == 3 && !notificadoLembrete)
                         {
                             EnviarEmailLembrete(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
 
-                            // Atualiza flag no banco
-                            var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET EmailLembreteEnviado = 1 WHERE Id = @Id", connection);
+                            var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET NotificadoLembrete = 1 WHERE Id = @Id", connection);
                             updateFlagCmd.Parameters.AddWithValue("@Id", id);
                             updateFlagCmd.ExecuteNonQuery();
                         }
 
-                        // Enviar email atraso se passou da data e não enviou ainda
-                        if (diferenca.Days < 0 && !emailAtrasoEnviado)
+                        if (diferenca.Days < 0 && !notificadoAtraso)
                         {
                             EnviarEmailAtraso(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
 
-                            // Atualiza flag no banco
-                            var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET EmailAtrasoEnviado = 1 WHERE Id = @Id", connection);
+                            var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET NotificadoAtraso = 1 WHERE Id = @Id", connection);
                             updateFlagCmd.Parameters.AddWithValue("@Id", id);
                             updateFlagCmd.ExecuteNonQuery();
                         }
@@ -262,6 +264,7 @@ namespace BibliotecaApp.Forms.Login
                               MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void EnviarEmailLembrete(string email, string nome, string tituloLivro, DateTime dataDevolucao)
         {
@@ -326,51 +329,47 @@ namespace BibliotecaApp.Forms.Login
                 {
                     connection.Open();
 
-                    // Buscar reservas com status 'Disponível' (usuário foi avisado e tem prazo para retirar)
-                    string selectQuery = @"
-                SELECT Id, DataLimiteRetirada
-                FROM Reservas
-                WHERE Status = 'Disponível'";
+                    // 1) Pendente → Disponível, quando DataDisponibilidade chegou
+                    string sqlDisponibilizar = @"
+                UPDATE Reservas
+                   SET Status = 'Disponível'
+                 WHERE Status = 'Pendente'
+                   AND DataDisponibilidade <= GETDATE()";
+                    new SqlCeCommand(sqlDisponibilizar, connection).ExecuteNonQuery();
+                    progressForm.AtualizarProgresso(33, "Tornando reservas disponíveis...");
 
-                    using (var selectCommand = new SqlCeCommand(selectQuery, connection))
-                    using (var reader = selectCommand.ExecuteReader())
-                    {
-                        var reservasParaExpirar = new List<(int Id, DateTime? DataLimiteRetirada)>();
+                    // 2) Disponível → Expirada, quem passou do limite
+                    string sqlExpirar = @"
+                UPDATE Reservas
+                   SET Status = 'Expirada'
+                 WHERE Status = 'Disponível'
+                   AND DataLimiteRetirada < GETDATE()";
+                    new SqlCeCommand(sqlExpirar, connection).ExecuteNonQuery();
+                    progressForm.AtualizarProgresso(66, "Expirando reservas atrasadas...");
 
-                        while (reader.Read())
-                        {
-                            int id = reader.GetInt32(0);
-                            DateTime? dataLimite = reader.IsDBNull(1) ? (DateTime?)null : reader.GetDateTime(1);
-                            reservasParaExpirar.Add((id, dataLimite));
-                        }
+                    // 3) Liberar livros cujas reservas expiraram
+                    string sqlLiberar = @"
+                UPDATE Livros
+                   SET Disponibilidade = 1
+                 WHERE Id IN (
+                     SELECT LivroId 
+                       FROM Reservas
+                      WHERE Status = 'Expirada'
 
-                        int total = reservasParaExpirar.Count;
-                        int processadas = 0;
+                 )";
+                    new SqlCeCommand(sqlLiberar, connection).ExecuteNonQuery();
+                    progressForm.AtualizarProgresso(100, "Liberando exemplares expirados...");
 
-                        foreach (var reserva in reservasParaExpirar)
-                        {
-                            // Se já passou da DataLimiteRetirada, expira a reserva
-                            if (reserva.DataLimiteRetirada.HasValue && DateTime.Now > reserva.DataLimiteRetirada.Value)
-                            {
-                                using (var updateCmd = new SqlCeCommand("UPDATE Reservas SET Status = 'Expirada' WHERE Id = @Id", connection))
-                                {
-                                    updateCmd.Parameters.AddWithValue("@Id", reserva.Id);
-                                    updateCmd.ExecuteNonQuery();
-                                }
-                            }
-
-                            processadas++;
-                            int progresso = (int)((double)processadas / total * 100);
-                            progressForm.AtualizarProgresso(progresso, $"Verificando reservas ({processadas}/{total})");
-                        }
-                    }
+              
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao atualizar reservas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao atualizar reservas: {ex.Message}", "Erro",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private string CalcularStatus(DateTime dataDevolucao, DateTime? dataProrrogacao, DateTime? dataRealDevolucao)
         {
@@ -416,6 +415,11 @@ namespace BibliotecaApp.Forms.Login
         }
 
         private void gradientPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void gradientPanel1_Paint_1(object sender, PaintEventArgs e)
         {
 
         }

@@ -247,47 +247,52 @@ namespace BibliotecaApp.Forms.Livros
             //        }
         }
 
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
 
         #endregion
 
         #region Ação: Criar Tabela Emprestimo (Desabilitado)
-//private void btnCriarEmprestimo_Click(object sender, EventArgs e)
-//{
-//        using (SqlCeConnection conexao = Conexao.ObterConexao())
-//        {
-//            try
-//            {
-//                conexao.Open();
+        //private void btnCriarEmprestimo_Click(object sender, EventArgs e)
+        //{
+        //        using (SqlCeConnection conexao = Conexao.ObterConexao())
+        //        {
+        //            try
+        //            {
+        //                conexao.Open();
 
-//                string sql = @"
-//CREATE TABLE Emprestimo (
-//    Id INT IDENTITY(1,1) PRIMARY KEY,
-//    Alocador INT NOT NULL,
-//    Livro INT NOT NULL,
-//    Responsavel INT NOT NULL,
-//    DataEmprestimo DATETIME NOT NULL,
-//    DataDevolucao DATETIME NOT NULL,
-//    DataProrrogacao DATETIME NULL,
-//    DataRealDevolucao DATETIME NULL,
-//    Status NVARCHAR(15) NOT NULL
-//);";
+        //                string sql = @"
+        //CREATE TABLE Emprestimo (
+        //    Id INT IDENTITY(1,1) PRIMARY KEY,
+        //    Alocador INT NOT NULL,
+        //    Livro INT NOT NULL,
+        //    Responsavel INT NOT NULL,
+        //    DataEmprestimo DATETIME NOT NULL,
+        //    DataDevolucao DATETIME NOT NULL,
+        //    DataProrrogacao DATETIME NULL,
+        //    DataRealDevolucao DATETIME NULL,
+        //    Status NVARCHAR(15) NOT NULL
+        //);";
 
 
-//                SqlCeCommand comando = new SqlCeCommand(sql, conexao);
-//                comando.ExecuteNonQuery();
-//
-//                MessageBox.Show("Tabela 'Emprestimo' criada com sucesso!");
-//            }
-//            catch (Exception ex)
-//            {
-//                MessageBox.Show("Erro ao criar tabela: " + ex.Message);
-//            }
-//        }
-//}
-#endregion
+        //                SqlCeCommand comando = new SqlCeCommand(sql, conexao);
+        //                comando.ExecuteNonQuery();
+        //
+        //                MessageBox.Show("Tabela 'Emprestimo' criada com sucesso!");
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show("Erro ao criar tabela: " + ex.Message);
+        //            }
+        //        }
+        //}
+        #endregion
 
         #region Criar Banco de Dados (Desabilitado)
-       
+
         #endregion
 
         //private void btnCriarTablea_Click_1(object sender, EventArgs e)
@@ -350,36 +355,41 @@ namespace BibliotecaApp.Forms.Livros
         //   }
 
 
-        //private void LimparDadosBanco()
-        //{
-        //    try
-        //    {
-        //        using (SqlCeConnection conexao = Conexao.ObterConexao())
-        //        {
-        //            conexao.Open();
+        private void LimparDadosBanco()
+        {
+            try
+            {
+                using (SqlCeConnection conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
 
-        //            // Lista das tabelas que quer limpar (adicione todas que desejar)
-        //            string[] tabelas = { "Reservas", "Emprestimo", "usuarios", "Livros" };
+                    // Lista das tabelas que quer limpar (adicione todas que desejar)
+                    string[] tabelas = { "Reservas", "Emprestimo", "usuarios", "Livros" };
 
-        //            foreach (var tabela in tabelas)
-        //            {
-        //                string sqlDelete = $"DELETE FROM {tabela}";
-        //                using (SqlCeCommand comando = new SqlCeCommand(sqlDelete, conexao))
-        //                {
-        //                    comando.ExecuteNonQuery();
-        //                }
-        //            }
+                    foreach (var tabela in tabelas)
+                    {
+                        string sqlDelete = $"DELETE FROM {tabela}";
+                        using (SqlCeCommand comando = new SqlCeCommand(sqlDelete, conexao))
+                        {
+                            comando.ExecuteNonQuery();
+                        }
+                    }
 
-        //            MessageBox.Show("Dados do banco limpos com sucesso!", "Sucesso",
-        //                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Erro ao limpar dados do banco:\n{ex.Message}", "Erro",
-        //            MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
+                    MessageBox.Show("Dados do banco limpos com sucesso!", "Sucesso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao limpar dados do banco:\n{ex.Message}", "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            LimparDadosBanco();
+        }
 
 
         //private void AtualizarEstruturaUsuarios()

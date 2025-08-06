@@ -70,9 +70,9 @@
             this.panelControl.BackColor = System.Drawing.Color.White;
             this.panelControl.Controls.Add(this.ControlPanel);
             this.panelControl.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelControl.Location = new System.Drawing.Point(0, 0);
+            this.panelControl.Location = new System.Drawing.Point(205, 0);
             this.panelControl.Name = "panelControl";
-            this.panelControl.Size = new System.Drawing.Size(1024, 30);
+            this.panelControl.Size = new System.Drawing.Size(819, 30);
             this.panelControl.TabIndex = 0;
             this.panelControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelControl_MouseDown);
             this.panelControl.MouseEnter += new System.EventHandler(this.panelControl_MouseEnter);
@@ -85,7 +85,7 @@
             this.ControlPanel.Controls.Add(this.picMin);
             this.ControlPanel.Dock = System.Windows.Forms.DockStyle.Right;
             this.ControlPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.ControlPanel.Location = new System.Drawing.Point(916, 0);
+            this.ControlPanel.Location = new System.Drawing.Point(711, 0);
             this.ControlPanel.Name = "ControlPanel";
             this.ControlPanel.Size = new System.Drawing.Size(108, 30);
             this.ControlPanel.TabIndex = 4;
@@ -256,9 +256,9 @@
             this.menu.Controls.Add(this.relContainer);
             this.menu.Controls.Add(this.sairContainer);
             this.menu.Dock = System.Windows.Forms.DockStyle.Left;
-            this.menu.Location = new System.Drawing.Point(0, 30);
+            this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
-            this.menu.Size = new System.Drawing.Size(205, 738);
+            this.menu.Size = new System.Drawing.Size(205, 577);
             this.menu.TabIndex = 1;
             // 
             // livroContainer
@@ -371,9 +371,9 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1024, 768);
-            this.Controls.Add(this.menu);
+            this.ClientSize = new System.Drawing.Size(1024, 577);
             this.Controls.Add(this.panelControl);
+            this.Controls.Add(this.menu);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.IsMdiContainer = true;

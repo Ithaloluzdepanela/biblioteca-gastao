@@ -20,49 +20,49 @@ namespace BibliotecaApp.Forms.Inicio
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            #region Table usuarios
-            string basedados = Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-            string conect = $@"Datasource = {basedados}; Password = '123'";
+        //private void button1_Click(object sender, EventArgs e)
+        //{
+        //    #region Table usuarios
+        //    string basedados = Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
+        //    string conect = $@"Datasource = {basedados}; Password = '123'";
 
-            SqlCeConnection conexao = new SqlCeConnection(conect);
+        //    SqlCeConnection conexao = new SqlCeConnection(conect);
 
 
-            try
-            {
-                conexao.Open();
+        //    try
+        //    {
+        //        conexao.Open();
 
-                SqlCeCommand comando = new SqlCeCommand();
-                comando.Connection = conexao;
+        //        SqlCeCommand comando = new SqlCeCommand();
+        //        comando.Connection = conexao;
 
-                comando.CommandText = 
-                @"CREATE TABLE usuarios(
-                 id INT IDENTITY(1,1) PRIMARY KEY,
-                 nome NVARCHAR(40) NOT NULL,
-                 email NVARCHAR(30),
-                 senha NVARCHAR(30) NOT NULL,
-                 cpf NVARCHAR(14),
-                 datanascimento DATETIME,
-                 turma NVARCHAR(30),
-                 telefone NVARCHAR(20),
-                 tipousuario NVARCHAR(20))";
-                comando.ExecuteNonQuery();
+        //        comando.CommandText = 
+        //        @"CREATE TABLE usuarios(
+        //         id INT IDENTITY(1,1) PRIMARY KEY,
+        //         nome NVARCHAR(40) NOT NULL,
+        //         email NVARCHAR(30),
+        //         senha NVARCHAR(30) NOT NULL,
+        //         cpf NVARCHAR(14),
+        //         datanascimento DATETIME,
+        //         turma NVARCHAR(30),
+        //         telefone NVARCHAR(20),
+        //         tipousuario NVARCHAR(20))";
+        //        comando.ExecuteNonQuery();
 
-                lblResultado.Text = "Tabela criada";
-                comando.Dispose();
-            }
-            catch (Exception ex)
-            {
-                lblResultado.Text = ex.Message;
-            }
-            finally
-            {
-                conexao.Close();
+        //        lblResultado.Text = "Tabela criada";
+        //        comando.Dispose();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        lblResultado.Text = ex.Message;
+        //    }
+        //    finally
+        //    {
+        //        conexao.Close();
 
-            }
-            #endregion
-        }
+        //    }
+        //    #endregion
+        //}
 
         private void lblResultado_Click(object sender, EventArgs e)
         {

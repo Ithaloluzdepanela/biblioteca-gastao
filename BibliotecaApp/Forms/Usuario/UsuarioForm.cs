@@ -19,14 +19,40 @@ namespace BibliotecaApp.Forms.Usuario
         public UsuarioForm()
         {
             InitializeComponent();
+           
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            CadUsuario popup = new CadUsuario();
-            popup.ShowDialog();
+           AbrirCadastroUsuario();
 
         }
 
+        private void AbrirCadastroUsuario()
+        {
+            // Remove controles anteriores, se necessário
+            panelConteudo.Controls.Clear();
+
+            CadUsuario cadastro = new CadUsuario();
+            cadastro.TopLevel = false; // Permite adicionar como controle
+            cadastro.FormBorderStyle = FormBorderStyle.None;
+            cadastro.Dock = DockStyle.None; // Para centralizar manualmente
+
+            // Centraliza manualmente
+            cadastro.StartPosition = FormStartPosition.Manual;
+            cadastro.Location = new Point(
+                (panelConteudo.Width - cadastro.Width) / 2,
+                (panelConteudo.Height - cadastro.Height) / 2
+            );
+
+            panelConteudo.Controls.Add(cadastro);
+            cadastro.Show();
+            cadastro.BringToFront();
+        }
+
+        private void panelConteudo_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

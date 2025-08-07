@@ -159,13 +159,14 @@
             this.lstLivros.FormattingEnabled = true;
             this.lstLivros.HorizontalScrollbar = true;
             this.lstLivros.ItemHeight = 25;
-            this.lstLivros.Location = new System.Drawing.Point(63, 218);
+            this.lstLivros.Location = new System.Drawing.Point(63, 219);
             this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
             this.lstLivros.Name = "lstLivros";
-            this.lstLivros.Size = new System.Drawing.Size(229, 102);
+            this.lstLivros.Size = new System.Drawing.Size(423, 77);
             this.lstLivros.TabIndex = 102;
             this.lstLivros.Visible = false;
             this.lstLivros.Click += new System.EventHandler(this.lstLivros_Click);
+            this.lstLivros.SelectedIndexChanged += new System.EventHandler(this.lstLivros_SelectedIndexChanged);
             this.lstLivros.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLivros_KeyDown);
             // 
             // txtBarcode
@@ -234,7 +235,7 @@
             this.lstSugestoesUsuario.Location = new System.Drawing.Point(63, 137);
             this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
             this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
-            this.lstSugestoesUsuario.Size = new System.Drawing.Size(229, 104);
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(423, 79);
             this.lstSugestoesUsuario.TabIndex = 98;
             this.lstSugestoesUsuario.Visible = false;
             this.lstSugestoesUsuario.Click += new System.EventHandler(this.lstSugestoesUsuario_Click);
@@ -397,6 +398,8 @@
             this.Font = new System.Drawing.Font("Segoe UI", 7.8F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "EmprestimoForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

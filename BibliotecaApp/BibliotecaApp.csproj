@@ -90,6 +90,12 @@
     <Compile Include="Forms\Relatorio\RelForm.Designer.cs">
       <DependentUpon>RelForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Usuario\EditarUsuarioForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Usuario\EditarUsuarioForm.Designer.cs">
+      <DependentUpon>EditarUsuarioForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils\EmailService.cs" />
     <Compile Include="Utils\frmProgresso.cs">
       <SubType>Form</SubType>
@@ -192,6 +198,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Relatorio\RelForm.resx">
       <DependentUpon>RelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Usuario\EditarUsuarioForm.resx">
+      <DependentUpon>EditarUsuarioForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utils\frmProgresso.resx">
       <DependentUpon>frmProgresso.cs</DependentUpon>

@@ -26,6 +26,16 @@ namespace BibliotecaApp.Forms.Inicio
             InitializeComponent();
             mdiProp();
             btnIn();
+            this.FormBorderStyle = FormBorderStyle.None;
+
+            this.FormBorderStyle = FormBorderStyle.None;
+
+            // Pega a área da tela disponível (sem taskbar)
+            var workingArea = Screen.PrimaryScreen.WorkingArea;
+
+            // Ajusta o tamanho e posição do formulário para ocupar só a área útil
+            this.Location = workingArea.Location;
+            this.Size = workingArea.Size;
         }
         #region Componentes de inicialização
         //Funções da API para movimentar a aba

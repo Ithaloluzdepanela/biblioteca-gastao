@@ -281,6 +281,7 @@ namespace BibliotecaApp.Forms.Livros
         #region Métodos de Usuário
         private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
         {
+           
             string texto = txtNomeUsuario.Text.Trim().ToLower();
 
             if (string.IsNullOrWhiteSpace(texto))
@@ -743,9 +744,9 @@ namespace BibliotecaApp.Forms.Livros
 
         }
 
+        private void lstLivros_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
-
-
-
+        }
     }
 }

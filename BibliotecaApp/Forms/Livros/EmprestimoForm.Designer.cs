@@ -157,11 +157,11 @@
             this.lstLivros.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.lstLivros.FormattingEnabled = true;
-            this.lstLivros.HorizontalScrollbar = true;
             this.lstLivros.ItemHeight = 25;
             this.lstLivros.Location = new System.Drawing.Point(63, 219);
             this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
             this.lstLivros.Name = "lstLivros";
+            this.lstLivros.ScrollAlwaysVisible = true;
             this.lstLivros.Size = new System.Drawing.Size(423, 77);
             this.lstLivros.TabIndex = 102;
             this.lstLivros.Visible = false;
@@ -230,11 +230,11 @@
             // 
             this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.lstSugestoesUsuario.FormattingEnabled = true;
-            this.lstSugestoesUsuario.HorizontalScrollbar = true;
             this.lstSugestoesUsuario.ItemHeight = 25;
             this.lstSugestoesUsuario.Location = new System.Drawing.Point(63, 137);
             this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
             this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
+            this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
             this.lstSugestoesUsuario.Size = new System.Drawing.Size(423, 79);
             this.lstSugestoesUsuario.TabIndex = 98;
             this.lstSugestoesUsuario.Visible = false;
@@ -381,7 +381,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.label1.Location = new System.Drawing.Point(147, 20);
+            this.label1.Location = new System.Drawing.Point(147, 9);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(301, 40);

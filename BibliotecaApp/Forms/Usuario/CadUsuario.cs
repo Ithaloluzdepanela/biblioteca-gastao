@@ -516,8 +516,8 @@ namespace BibliotecaApp.Froms.Usuario
                 string.IsNullOrWhiteSpace(tipoUsuario) ||
                 string.IsNullOrWhiteSpace(telefone) ||
                 (txtTurma.Enabled && string.IsNullOrWhiteSpace(turma)) ||
-                (txtSenha.Enabled && string.IsNullOrWhiteSpace(senha)) ||
-                (txtConfirmSenha.Enabled && string.IsNullOrWhiteSpace(confirmar)))
+                (txtSenha.Visible && string.IsNullOrWhiteSpace(senha)) ||
+                (txtConfirmSenha.Visible && string.IsNullOrWhiteSpace(confirmar)))
             {
                 MessageBox.Show("Preencha todos os campos obrigatórios.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;

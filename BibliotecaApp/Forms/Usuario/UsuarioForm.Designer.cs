@@ -30,15 +30,17 @@
         {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelConteudo = new System.Windows.Forms.Panel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelConteudo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
             this.pictureBox1.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_adicionar_usuário_masculino_30;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox1.Location = new System.Drawing.Point(337, 251);
+            this.pictureBox1.Location = new System.Drawing.Point(164, 90);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(134, 73);
             this.pictureBox1.TabIndex = 2;
@@ -48,6 +50,7 @@
             // panelConteudo
             // 
             this.panelConteudo.BackColor = System.Drawing.Color.White;
+            this.panelConteudo.Controls.Add(this.pictureBox2);
             this.panelConteudo.Controls.Add(this.pictureBox1);
             this.panelConteudo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelConteudo.Location = new System.Drawing.Point(0, 0);
@@ -55,6 +58,17 @@
             this.panelConteudo.Size = new System.Drawing.Size(800, 600);
             this.panelConteudo.TabIndex = 3;
             this.panelConteudo.Paint += new System.Windows.Forms.PaintEventHandler(this.panelConteudo_Paint);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_adicionar_usuário_masculino_30;
+            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox2.Location = new System.Drawing.Point(164, 214);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(134, 73);
+            this.pictureBox2.TabIndex = 3;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // UsuarioForm
             // 
@@ -69,6 +83,7 @@
             this.Text = "InicioForm";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelConteudo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -76,5 +91,6 @@
         #endregion
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panelConteudo;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }

@@ -49,10 +49,38 @@ namespace BibliotecaApp.Forms.Usuario
             cadastro.Show();
             cadastro.BringToFront();
         }
+        private void AbrirEditarUsuario()
+        {
+            // Remove controles anteriores
+            panelConteudo.Controls.Clear();
+
+            EditarUsuarioForm editarUsuario = new EditarUsuarioForm();
+            editarUsuario.TopLevel = false;
+            editarUsuario.FormBorderStyle = FormBorderStyle.None;
+            editarUsuario.Dock = DockStyle.None;
+            editarUsuario.StartPosition = FormStartPosition.Manual;
+
+            // Adiciona ao painel e mostra primeiro (pra ele calcular tamanho)
+            panelConteudo.Controls.Add(editarUsuario);
+            editarUsuario.Show();
+
+            // Agora que já foi mostrado, dá pra centralizar corretamente
+            editarUsuario.Location = new Point(
+                (panelConteudo.Width - editarUsuario.Width) / 2,
+                (panelConteudo.Height - editarUsuario.Height) / 2
+            );
+
+            editarUsuario.BringToFront();
+        }
 
         private void panelConteudo_Paint(object sender, PaintEventArgs e)
         {
+            
+        }
 
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            AbrirEditarUsuario();
         }
     }
 }

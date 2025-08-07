@@ -719,7 +719,12 @@ namespace BibliotecaApp.Forms.Livros
         private void btnBuscarLivro_Click(object sender, EventArgs e)
         {
             string filtro = txtLivro.Text.Trim();
-            if (string.IsNullOrEmpty(filtro)) return;
+            if (string.IsNullOrEmpty(filtro))
+            {
+                lstSugestoesLivros.Items.Clear();
+                lstSugestoesLivros.Visible = false;
+                return;
+            }
 
             _cacheLivros.Clear();
             lstSugestoesLivros.Items.Clear();
@@ -730,11 +735,14 @@ namespace BibliotecaApp.Forms.Livros
                 {
                     conexao.Open();
                     string sql = @"SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade
-                          FROM Livros
-                          WHERE Nome LIKE @nome";
+                           FROM Livros
+                           WHERE Nome LIKE @nome
+                           ORDER BY Nome";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        cmd.Parameters.AddWithValue("@nome", "%" + filtro + "%");
+                        // Aqui o filtro só pega nomes que começam com o texto
+                        cmd.Parameters.AddWithValue("@nome", filtro + "%");
+
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -750,11 +758,14 @@ namespace BibliotecaApp.Forms.Livros
                                     Disponibilidade = reader.GetBoolean(6)
                                 };
                                 _cacheLivros.Add(livro);
-                                lstSugestoesLivros.Items.Add(livro.Nome);
+
+                                // Mostrando Nome e Gênero no ListBox
+                                lstSugestoesLivros.Items.Add($"{livro.Nome} - {livro.Autor}");
                             }
                         }
                     }
                 }
+
                 lstSugestoesLivros.Visible = lstSugestoesLivros.Items.Count > 0;
             }
             catch (Exception ex)
@@ -763,6 +774,7 @@ namespace BibliotecaApp.Forms.Livros
                               "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         #endregion
 
         #region Métodos Privados
@@ -797,6 +809,7 @@ namespace BibliotecaApp.Forms.Livros
         private void btnBuscarUsuario_Click(object sender, EventArgs e)
         {
             string filtro = txtNomeUsuario.Text.Trim();
+
             // Se o campo estiver vazio, limpa a lista de sugestões
             if (string.IsNullOrEmpty(filtro))
             {
@@ -813,14 +826,17 @@ namespace BibliotecaApp.Forms.Livros
                 using (var conexao = EmprestimoForm.Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    // Busca usuários pelo nome (case insensitive)
-                    string sql = @"SELECT Id, Nome, TipoUsuario, Email
+
+                    // Busca usuários cujo nome começa com o filtro (case insensitive)
+                    string sql = @"SELECT Id, Nome, TipoUsuario, Email, Turma
                            FROM usuarios
                            WHERE Nome LIKE @nome
-                          ORDER BY Nome";
+                           ORDER BY Nome";
+
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        cmd.Parameters.AddWithValue("@nome", "%" + filtro + "%");
+                        cmd.Parameters.AddWithValue("@nome", filtro + "%");
+
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -830,10 +846,14 @@ namespace BibliotecaApp.Forms.Livros
                                     Id = reader.GetInt32(0),
                                     Nome = reader.GetString(1),
                                     TipoUsuario = reader.GetString(2),
-                                    Email = reader.IsDBNull(3) ? null : reader.GetString(3)
+                                    Email = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                    Turma = reader.IsDBNull(4) ? "" : reader.GetString(4)
                                 };
+
                                 _cacheUsuarios.Add(usuario);
-                                lstSugestoesUsuario.Items.Add(usuario.Nome);
+
+                                // Adiciona nome e turma juntos no ListBox
+                                lstSugestoesUsuario.Items.Add($"{usuario.Nome} - {usuario.Turma}");
                             }
                         }
                     }
@@ -857,6 +877,7 @@ namespace BibliotecaApp.Forms.Livros
                               "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void txtNomeUsuario_KeyDown(object sender, KeyEventArgs e)
         {

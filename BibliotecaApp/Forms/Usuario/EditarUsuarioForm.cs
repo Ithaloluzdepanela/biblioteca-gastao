@@ -18,7 +18,7 @@ namespace BibliotecaApp.Forms.Usuario
         public EditarUsuarioForm()
         {
             InitializeComponent();
-
+            txtNome.Focus();
         }
 
         #region Classe Conexao
@@ -101,10 +101,10 @@ namespace BibliotecaApp.Forms.Usuario
         private void SelecionarUsuario(int index)
         {
             _usuarioSelecionado = _cacheUsuarios[index];
-            AplicarConfiguracaoEdicaoUsuario();
+            
             txtNomeUsuario.Text = _usuarioSelecionado.Nome;
             lstSugestoesUsuario.Visible = false;
-           
+            AplicarConfiguracaoEdicaoUsuario();
 
             txtNome.Text = _usuarioSelecionado.Nome;
             txtEmail.Text = _usuarioSelecionado.Email;
@@ -199,10 +199,10 @@ namespace BibliotecaApp.Forms.Usuario
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = "SELECT * FROM usuarios WHERE Nome LIKE @nome";
+                    string sql = "SELECT * FROM usuarios WHERE Nome LIKE @nome ORDER BY Nome";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        cmd.Parameters.AddWithValue("@nome", "%" + nomeBusca + "%");
+                        cmd.Parameters.AddWithValue("@nome", nomeBusca + "%");
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -221,10 +221,11 @@ namespace BibliotecaApp.Forms.Usuario
                                 };
 
                                 _cacheUsuarios.Add(usuario);
-                                lstSugestoesUsuario.Items.Add(usuario.Nome);
+                                lstSugestoesUsuario.Items.Add(usuario); // Lembre do ToString() que mostra Nome - Turma
                             }
                         }
                     }
+
                 }
 
                 if (lstSugestoesUsuario.Items.Count > 0)
@@ -265,7 +266,12 @@ namespace BibliotecaApp.Forms.Usuario
             txtNome.Visible = true;
             txtEmail.Visible = true;
             txtTurma.Visible = true;
-            txtTurma.Visible = true;
+            lblTurma.Visible = true;
+            lblEmail.Visible = true;
+            lblNome.Visible = true;
+            lblCPF.Visible = true;
+            lblDataNasc.Visible = true;
+            lblTelefone.Visible = true;
             mtxCPF.Visible = true;
             mtxTelefone.Visible = true;
             dtpDataNasc.Visible = true;
@@ -318,21 +324,16 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void AplicarConfiguracaoEdicaoUsuario()
         {
-            switch (_usuarioSelecionado.TipoUsuario.ToLower())
-            {
-                case "Bibliotecário(a)":
-                    ConfigurarEdicaoParaBibliotecario();
-                    break;
-                case "Professor(a)":
-                    ConfigurarEdicaoParaProfessor();
-                    break;
-                case "Outros":
-                    ConfigurarEdicaoParaOutros();
-                    break;
-                default:
-                    ConfigurarEdicaoParaAluno();
-                    break;
-            }
+            string tipo = _usuarioSelecionado.TipoUsuario;
+
+            if (tipo.Equals("Bibliotecário(a)", StringComparison.OrdinalIgnoreCase))
+                ConfigurarEdicaoParaBibliotecario();
+            else if (tipo.Equals("Professor(a)", StringComparison.OrdinalIgnoreCase))
+                ConfigurarEdicaoParaProfessor();
+            else if (tipo.Equals("Outros", StringComparison.OrdinalIgnoreCase))
+                ConfigurarEdicaoParaOutros();
+            else
+                ConfigurarEdicaoParaAluno();
         }
 
         private bool CpfJaExiste(string cpf, int usuarioIdAtual)

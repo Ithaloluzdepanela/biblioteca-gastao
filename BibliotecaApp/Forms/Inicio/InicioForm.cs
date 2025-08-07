@@ -64,12 +64,35 @@ namespace BibliotecaApp.Forms.Inicio
         //    #endregion
         //}
 
+
+
+        private void timerRelogio_Tick(object sender, EventArgs e)
+        {
+            AtualizarRelogio();
+        }
+
+        private void AtualizarRelogio()
+        {
+            lblRelogio.Text = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(
+       DateTime.Now.ToString("dddd, dd 'de' MMMM 'de' yyyy - HH:mm:ss")
+        );  
+        }
+
+
         private void lblResultado_Click(object sender, EventArgs e)
         {
 
         }
 
         private void InicioForm_Load(object sender, EventArgs e)
+        {
+            timerRelogio.Interval = 1000; // 1 segundo
+            timerRelogio.Tick += timerRelogio_Tick;
+            timerRelogio.Start();
+            AtualizarRelogio();
+        }
+
+        private void lblRelogio_Click(object sender, EventArgs e)
         {
 
         }

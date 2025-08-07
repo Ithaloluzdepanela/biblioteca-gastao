@@ -48,4 +48,9 @@ public class Usuarios
             && !string.IsNullOrWhiteSpace(Senha)
             && !string.IsNullOrWhiteSpace(ConfirmarSenha);
     }
+
+    public override string ToString()
+    {
+        return $"{Nome} - {Turma}";
+    }
 }

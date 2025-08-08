@@ -307,53 +307,74 @@ namespace BibliotecaApp.Forms.Livros
 
         private void btnBuscarUsuario_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtNomeUsuario.Text))
-            {
-                lstSugestoesUsuario.Visible = false;
-            }
-
-            string filtro = txtNomeUsuario.Text.Trim();
-            if (string.IsNullOrEmpty(filtro))
-                return;
-
-            _cacheUsuarios.Clear();
             lstSugestoesUsuario.Items.Clear();
+            lstSugestoesUsuario.Visible = false;
+            _cacheUsuarios.Clear();
+
+            string nomeBusca = txtNomeUsuario.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(nomeBusca))
+            {
+                MessageBox.Show("Digite um nome para buscar.");
+                return;
+            }
 
             try
             {
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = "SELECT Id, Nome, TipoUsuario FROM Usuarios WHERE Nome LIKE @nome";
+
+                    // Busca nomes que começam com o texto digitado e ordena por nome
+                    string sql = "SELECT * FROM usuarios WHERE Nome LIKE @nome ORDER BY Nome";
+
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        cmd.Parameters.AddWithValue("@nome", "%" + filtro + "%");
+                        cmd.Parameters.AddWithValue("@nome", nomeBusca + "%");
+
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                var u = new Usuarios
+                                var usuario = new Usuarios
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Nome = reader.GetString(1),
-                                    TipoUsuario = reader.GetString(2)
+                                    Id = (int)reader["Id"],
+                                    Nome = reader["Nome"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    CPF = reader["CPF"].ToString(),
+                                    DataNascimento = reader["DataNascimento"] != DBNull.Value ? Convert.ToDateTime(reader["DataNascimento"]) : DateTime.MinValue,
+                                    Telefone = reader["Telefone"].ToString(),
+                                    Turma = reader["Turma"].ToString(),
+                                    TipoUsuario = reader["TipoUsuario"].ToString()
                                 };
-                                _cacheUsuarios.Add(u);
-                                lstSugestoesUsuario.Items.Add(u.Nome);
+
+                                _cacheUsuarios.Add(usuario);
+
+                                // Adiciona ao ListBox com Nome e Turma juntos
+                                lstSugestoesUsuario.Items.Add($"{usuario.Nome} - {usuario.Turma}");
                             }
                         }
                     }
                 }
 
-                lstSugestoesUsuario.Visible = _cacheUsuarios.Any();
-                if (lstSugestoesUsuario.Visible)
-                    lstSugestoesUsuario.BringToFront();
+                if (lstSugestoesUsuario.Items.Count > 0)
+                {
+                    lstSugestoesUsuario.Visible = true;
+                    lstSugestoesUsuario.Enabled = true;
+                }
+                else
+                {
+                    MessageBox.Show("Nenhum usuário encontrado com esse nome.");
+                    lstSugestoesUsuario.Visible = false;
+                    lstSugestoesUsuario.Enabled = false;
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro na busca de usuários:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro na busca: " + ex.Message);
             }
         }
+
 
         private void txtNomeUsuario_KeyDown(object sender, KeyEventArgs e)
         {
@@ -487,10 +508,14 @@ namespace BibliotecaApp.Forms.Livros
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = "SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade FROM Livros WHERE Nome LIKE @nome";
+                    string sql = @"SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade 
+                           FROM Livros 
+                           WHERE Nome LIKE @nome
+                           ORDER BY Nome";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        cmd.Parameters.AddWithValue("@nome", "%" + filtro + "%");
+                        // Busca só nomes que começam com o filtro
+                        cmd.Parameters.AddWithValue("@nome", filtro + "%");
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -508,7 +533,9 @@ namespace BibliotecaApp.Forms.Livros
                                 };
 
                                 _cacheLivros.Add(livro);
-                                lstLivros.Items.Add(livro.Nome);
+
+                                // Adiciona nome e gênero na lista
+                                lstLivros.Items.Add($"{livro.Nome} - {livro.Autor}");
                             }
                         }
                     }

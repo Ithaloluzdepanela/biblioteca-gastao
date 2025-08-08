@@ -93,7 +93,7 @@
             this.lblTipoUsuario.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.lblTipoUsuario.AutoSize = true;
             this.lblTipoUsuario.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTipoUsuario.Location = new System.Drawing.Point(553, 173);
+            this.lblTipoUsuario.Location = new System.Drawing.Point(606, 173);
             this.lblTipoUsuario.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTipoUsuario.Name = "lblTipoUsuario";
             this.lblTipoUsuario.Size = new System.Drawing.Size(38, 13);
@@ -105,14 +105,14 @@
             // lstSugestoesUsuario
             // 
             this.lstSugestoesUsuario.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.lstSugestoesUsuario.FormattingEnabled = true;
             this.lstSugestoesUsuario.ItemHeight = 25;
             this.lstSugestoesUsuario.Location = new System.Drawing.Point(78, 198);
             this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
             this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
-            this.lstSugestoesUsuario.Size = new System.Drawing.Size(403, 104);
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(452, 129);
             this.lstSugestoesUsuario.TabIndex = 130;
             this.lstSugestoesUsuario.Visible = false;
             this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
@@ -138,7 +138,7 @@
             this.btnCancelar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnCancelar.ForeColor = System.Drawing.Color.White;
             this.btnCancelar.Location = new System.Drawing.Point(313, 824);
-            this.btnCancelar.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(5);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(149, 57);
             this.btnCancelar.TabIndex = 128;
@@ -153,7 +153,7 @@
             this.btnExcluir.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnExcluir.ForeColor = System.Drawing.Color.White;
             this.btnExcluir.Location = new System.Drawing.Point(547, 824);
-            this.btnExcluir.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnExcluir.Margin = new System.Windows.Forms.Padding(5);
             this.btnExcluir.Name = "btnExcluir";
             this.btnExcluir.Size = new System.Drawing.Size(149, 57);
             this.btnExcluir.TabIndex = 127;
@@ -168,7 +168,7 @@
             this.btnSalvar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSalvar.ForeColor = System.Drawing.Color.White;
             this.btnSalvar.Location = new System.Drawing.Point(79, 824);
-            this.btnSalvar.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnSalvar.Margin = new System.Windows.Forms.Padding(5);
             this.btnSalvar.Name = "btnSalvar";
             this.btnSalvar.Size = new System.Drawing.Size(149, 57);
             this.btnSalvar.TabIndex = 126;
@@ -182,7 +182,7 @@
             this.btnBuscarUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.btnBuscarUsuario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBuscarUsuario.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
-            this.btnBuscarUsuario.Location = new System.Drawing.Point(493, 161);
+            this.btnBuscarUsuario.Location = new System.Drawing.Point(546, 161);
             this.btnBuscarUsuario.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnBuscarUsuario.Name = "btnBuscarUsuario";
             this.btnBuscarUsuario.Size = new System.Drawing.Size(37, 37);
@@ -309,14 +309,14 @@
             this.txtNomeUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtNomeUsuario.HoverBackColor = System.Drawing.Color.LightGray;
             this.txtNomeUsuario.Location = new System.Drawing.Point(79, 158);
-            this.txtNomeUsuario.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.txtNomeUsuario.Margin = new System.Windows.Forms.Padding(5);
             this.txtNomeUsuario.Name = "txtNomeUsuario";
             this.txtNomeUsuario.Padding = new System.Windows.Forms.Padding(9, 12, 9, 12);
             this.txtNomeUsuario.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNomeUsuario.PlaceholderMarginLeft = 12;
             this.txtNomeUsuario.PlaceholderText = "Busque aqui o Nome do Usuário ...";
-            this.txtNomeUsuario.Size = new System.Drawing.Size(405, 40);
+            this.txtNomeUsuario.Size = new System.Drawing.Size(451, 40);
             this.txtNomeUsuario.TabIndex = 108;
             this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
             this.txtNomeUsuario.UseSystemPasswordChar = false;
@@ -338,7 +338,7 @@
             this.txtNome.Location = new System.Drawing.Point(79, 281);
             this.txtNome.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtNome.Name = "txtNome";
-            this.txtNome.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.txtNome.Padding = new System.Windows.Forms.Padding(8);
             this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNome.PlaceholderMarginLeft = 12;
@@ -365,7 +365,7 @@
             this.txtEmail.Location = new System.Drawing.Point(79, 364);
             this.txtEmail.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.txtEmail.Padding = new System.Windows.Forms.Padding(8);
             this.txtEmail.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtEmail.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEmail.PlaceholderMarginLeft = 12;
@@ -392,7 +392,7 @@
             this.txtTurma.Location = new System.Drawing.Point(79, 446);
             this.txtTurma.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.txtTurma.Name = "txtTurma";
-            this.txtTurma.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.txtTurma.Padding = new System.Windows.Forms.Padding(8);
             this.txtTurma.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtTurma.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTurma.PlaceholderMarginLeft = 12;

@@ -184,6 +184,7 @@
             this.txtNome.TabIndex = 8;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
+            this.txtNome.Load += new System.EventHandler(this.txtNome_Load);
             // 
             // picEmprestimo
             // 

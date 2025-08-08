@@ -38,87 +38,55 @@ namespace BibliotecaApp.Forms.Relatorio
             InitializeComponent();
         }
 
-        private void btnEmprestimos_Click(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void RelForm_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string pastaRelatorios = @"\BibliotecaApp\txt.relatorios";
-            string arquivo = "txt.relatorios";
-            if (!File.Exists(pastaRelatorios + arquivo))
-            {
-                File.Create(pastaRelatorios + arquivo).Close();
-            }
-            File.WriteAllText(pastaRelatorios + arquivo, "Teste de escrita em arquivo", Encoding.Default);
-        }
-
-        private void tabPageEmprestimos_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnFiltrar_Click(object sender, EventArgs e)
-        {
-            using (SqlCeConnection conexao = Conexao.ObterConexao())
-            {
-                try
-                {
-                    conexao.Open();
+            //using (SqlCeConnection conexao = Conexao.ObterConexao())
+            //{
+            //    try
+            //    {
+            //        conexao.Open();
 
 
-                    string query = @"SELECT * FROM Emprestimo";
-                    if (txtIdLivro.Text != "")
-                    {
-                        query = @"SELECT * FROM Emprestimo WHERE LivroID LIKE '" + txtIdLivro.Text + "'";
-                    }
-                    if (txtIdUsuario.Text != "")
-                    {
-                        query = @"SELECT * FROM Emprestimo WHERE UsuarioID LIKE '" + txtIdUsuario.Text + "'";
-                    }
-                    DataTable dados = new DataTable();
-                    SqlCeDataAdapter adaptador = new SqlCeDataAdapter(query, conexao);
+            //        string query = @"SELECT * FROM Emprestimo";
+            //        if (txtIdLivro.Text != "")
+            //        {
+            //            query = @"SELECT * FROM Emprestimo WHERE LivroID LIKE '" + txtIdLivro.Text + "'";
+            //        }
+            //        if (txtIdUsuario.Text != "")
+            //        {
+            //            query = @"SELECT * FROM Emprestimo WHERE UsuarioID LIKE '" + txtIdUsuario.Text + "'";
+            //        }
+            //        DataTable dados = new DataTable();
+            //        SqlCeDataAdapter adaptador = new SqlCeDataAdapter(query, conexao);
 
-                    lblResultado.Text = "Funcionou";
+            //        lblResultado.Text = "Funcionou";
 
-                    adaptador.Fill(dados);
+            //        adaptador.Fill(dados);
 
-                    foreach (DataRow linha in dados.Rows)
-                    {
-                        lista.Rows.Add(linha.ItemArray);
-                    }
-                }
+            //        foreach (DataRow linha in dados.Rows)
+            //        {
+            //            lista.Rows.Add(linha.ItemArray);
+            //        }
+            //    }
 
-                catch (Exception ex)
-                {
-                    lista.Rows.Clear();
-                    lblResultado.Text = $"Erro: {ex.Message}";
-                }
-                finally
-                {
-                    conexao.Close();
-                }
-                txtIdLivro.Text = "";
-                txtIdUsuario.Text = "";
-            }
-        }
+            //    catch (Exception ex)
+            //    {
+            //        lista.Rows.Clear();
+            //        lblResultado.Text = $"Erro: {ex.Message}";
+            //    }
+            //    finally
+            //    {
+            //        conexao.Close();
+            //    }
+            //    txtIdLivro.Text = "";
+            //    txtIdUsuario.Text = "";
+            //}
+        
 
-        private void lblNome_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtTurma_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
     }
 }

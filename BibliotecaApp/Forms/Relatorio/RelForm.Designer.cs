@@ -38,6 +38,8 @@
             this.txtIdLivro = new System.Windows.Forms.TextBox();
             this.materialTabControl1 = new MaterialSkin.Controls.MaterialTabControl();
             this.tabPageEmprestimos = new System.Windows.Forms.TabPage();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.txtStatus = new System.Windows.Forms.TextBox();
             this.lista = new System.Windows.Forms.DataGridView();
             this.IdEmpréstimo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IdLivro = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -83,6 +85,11 @@
             this.txtNomeL = new System.Windows.Forms.TextBox();
             this.lblNomeL = new System.Windows.Forms.Label();
             this.tabPageReservas = new System.Windows.Forms.TabPage();
+            this.txtStatusReserva = new System.Windows.Forms.TextBox();
+            this.lblStatusReserva = new System.Windows.Forms.Label();
+            this.txtDataDisponibilidade = new System.Windows.Forms.MaskedTextBox();
+            this.lblDataDisponibilidade = new System.Windows.Forms.Label();
+            this.txtDataReserva = new System.Windows.Forms.MaskedTextBox();
             this.lista4 = new System.Windows.Forms.DataGridView();
             this.IdReserva = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UsuarioId = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -92,21 +99,14 @@
             this.DataDisponibilidade = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DataLimiteRetirada = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StatusReserva = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lblStatus = new System.Windows.Forms.Label();
-            this.txtStatus = new System.Windows.Forms.TextBox();
             this.lblDataReserva = new System.Windows.Forms.Label();
+            this.Filtrar4 = new System.Windows.Forms.Button();
             this.txtIdLivroReservado = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.lblIdLivroReservado = new System.Windows.Forms.Label();
+            this.lblIdReserva = new System.Windows.Forms.Label();
             this.txtIdUsuarioReservista = new System.Windows.Forms.TextBox();
             this.lblIdUsuarioReservista = new System.Windows.Forms.Label();
-            this.Filtrar4 = new System.Windows.Forms.Button();
-            this.lblIdReserva = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.txtDataReserva = new System.Windows.Forms.MaskedTextBox();
-            this.txtDataDisponibilidade = new System.Windows.Forms.MaskedTextBox();
-            this.lblDataDisponibilidade = new System.Windows.Forms.Label();
-            this.txtStatusReserva = new System.Windows.Forms.TextBox();
-            this.lblStatusReserva = new System.Windows.Forms.Label();
             this.materialTabControl1.SuspendLayout();
             this.tabPageEmprestimos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.lista)).BeginInit();
@@ -223,6 +223,22 @@
             this.tabPageEmprestimos.Text = "Empréstimos";
             this.tabPageEmprestimos.UseVisualStyleBackColor = true;
             this.tabPageEmprestimos.Click += new System.EventHandler(this.tabPageEmprestimos_Click);
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(959, 269);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(49, 20);
+            this.lblStatus.TabIndex = 27;
+            this.lblStatus.Text = "Status";
+            // 
+            // txtStatus
+            // 
+            this.txtStatus.Location = new System.Drawing.Point(963, 304);
+            this.txtStatus.Name = "txtStatus";
+            this.txtStatus.Size = new System.Drawing.Size(194, 27);
+            this.txtStatus.TabIndex = 26;
             // 
             // lista
             // 
@@ -620,6 +636,47 @@
             this.tabPageReservas.Text = "Reservas";
             this.tabPageReservas.UseVisualStyleBackColor = true;
             // 
+            // txtStatusReserva
+            // 
+            this.txtStatusReserva.Location = new System.Drawing.Point(963, 363);
+            this.txtStatusReserva.Name = "txtStatusReserva";
+            this.txtStatusReserva.Size = new System.Drawing.Size(194, 27);
+            this.txtStatusReserva.TabIndex = 45;
+            // 
+            // lblStatusReserva
+            // 
+            this.lblStatusReserva.AutoSize = true;
+            this.lblStatusReserva.Location = new System.Drawing.Point(959, 331);
+            this.lblStatusReserva.Name = "lblStatusReserva";
+            this.lblStatusReserva.Size = new System.Drawing.Size(49, 20);
+            this.lblStatusReserva.TabIndex = 46;
+            this.lblStatusReserva.Text = "Status";
+            // 
+            // txtDataDisponibilidade
+            // 
+            this.txtDataDisponibilidade.Location = new System.Drawing.Point(963, 514);
+            this.txtDataDisponibilidade.Mask = "99/99/9999";
+            this.txtDataDisponibilidade.Name = "txtDataDisponibilidade";
+            this.txtDataDisponibilidade.Size = new System.Drawing.Size(75, 27);
+            this.txtDataDisponibilidade.TabIndex = 44;
+            // 
+            // lblDataDisponibilidade
+            // 
+            this.lblDataDisponibilidade.AutoSize = true;
+            this.lblDataDisponibilidade.Location = new System.Drawing.Point(956, 482);
+            this.lblDataDisponibilidade.Name = "lblDataDisponibilidade";
+            this.lblDataDisponibilidade.Size = new System.Drawing.Size(172, 20);
+            this.lblDataDisponibilidade.TabIndex = 43;
+            this.lblDataDisponibilidade.Text = "Data da Disponibilidade";
+            // 
+            // txtDataReserva
+            // 
+            this.txtDataReserva.Location = new System.Drawing.Point(963, 436);
+            this.txtDataReserva.Mask = "99/99/9999";
+            this.txtDataReserva.Name = "txtDataReserva";
+            this.txtDataReserva.Size = new System.Drawing.Size(75, 27);
+            this.txtDataReserva.TabIndex = 42;
+            // 
             // lista4
             // 
             this.lista4.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -689,22 +746,6 @@
             this.StatusReserva.MinimumWidth = 6;
             this.StatusReserva.Name = "StatusReserva";
             // 
-            // lblStatus
-            // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(959, 269);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(49, 20);
-            this.lblStatus.TabIndex = 27;
-            this.lblStatus.Text = "Status";
-            // 
-            // txtStatus
-            // 
-            this.txtStatus.Location = new System.Drawing.Point(963, 304);
-            this.txtStatus.Name = "txtStatus";
-            this.txtStatus.Size = new System.Drawing.Size(194, 27);
-            this.txtStatus.TabIndex = 26;
-            // 
             // lblDataReserva
             // 
             this.lblDataReserva.AutoSize = true;
@@ -714,12 +755,28 @@
             this.lblDataReserva.TabIndex = 41;
             this.lblDataReserva.Text = "Data da Reserva";
             // 
+            // Filtrar4
+            // 
+            this.Filtrar4.Location = new System.Drawing.Point(956, 3);
+            this.Filtrar4.Name = "Filtrar4";
+            this.Filtrar4.Size = new System.Drawing.Size(213, 59);
+            this.Filtrar4.TabIndex = 33;
+            this.Filtrar4.Text = "Filtrar";
+            this.Filtrar4.UseVisualStyleBackColor = true;
+            // 
             // txtIdLivroReservado
             // 
             this.txtIdLivroReservado.Location = new System.Drawing.Point(963, 287);
             this.txtIdLivroReservado.Name = "txtIdLivroReservado";
             this.txtIdLivroReservado.Size = new System.Drawing.Size(194, 27);
             this.txtIdLivroReservado.TabIndex = 38;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(963, 134);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(194, 27);
+            this.textBox4.TabIndex = 36;
             // 
             // lblIdLivroReservado
             // 
@@ -729,6 +786,15 @@
             this.lblIdLivroReservado.Size = new System.Drawing.Size(54, 20);
             this.lblIdLivroReservado.TabIndex = 39;
             this.lblIdLivroReservado.Text = "IdLivro";
+            // 
+            // lblIdReserva
+            // 
+            this.lblIdReserva.AutoSize = true;
+            this.lblIdReserva.Location = new System.Drawing.Point(959, 99);
+            this.lblIdReserva.Name = "lblIdReserva";
+            this.lblIdReserva.Size = new System.Drawing.Size(73, 20);
+            this.lblIdReserva.TabIndex = 37;
+            this.lblIdReserva.Text = "IdReserva";
             // 
             // txtIdUsuarioReservista
             // 
@@ -745,72 +811,6 @@
             this.lblIdUsuarioReservista.Size = new System.Drawing.Size(72, 20);
             this.lblIdUsuarioReservista.TabIndex = 35;
             this.lblIdUsuarioReservista.Text = "IdUsuario";
-            // 
-            // Filtrar4
-            // 
-            this.Filtrar4.Location = new System.Drawing.Point(956, 3);
-            this.Filtrar4.Name = "Filtrar4";
-            this.Filtrar4.Size = new System.Drawing.Size(213, 59);
-            this.Filtrar4.TabIndex = 33;
-            this.Filtrar4.Text = "Filtrar";
-            this.Filtrar4.UseVisualStyleBackColor = true;
-            // 
-            // lblIdReserva
-            // 
-            this.lblIdReserva.AutoSize = true;
-            this.lblIdReserva.Location = new System.Drawing.Point(959, 99);
-            this.lblIdReserva.Name = "lblIdReserva";
-            this.lblIdReserva.Size = new System.Drawing.Size(73, 20);
-            this.lblIdReserva.TabIndex = 37;
-            this.lblIdReserva.Text = "IdReserva";
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(963, 134);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(194, 27);
-            this.textBox4.TabIndex = 36;
-            // 
-            // txtDataReserva
-            // 
-            this.txtDataReserva.Location = new System.Drawing.Point(963, 436);
-            this.txtDataReserva.Mask = "99/99/9999";
-            this.txtDataReserva.Name = "txtDataReserva";
-            this.txtDataReserva.Size = new System.Drawing.Size(75, 27);
-            this.txtDataReserva.TabIndex = 42;
-            // 
-            // txtDataDisponibilidade
-            // 
-            this.txtDataDisponibilidade.Location = new System.Drawing.Point(963, 514);
-            this.txtDataDisponibilidade.Mask = "99/99/9999";
-            this.txtDataDisponibilidade.Name = "txtDataDisponibilidade";
-            this.txtDataDisponibilidade.Size = new System.Drawing.Size(75, 27);
-            this.txtDataDisponibilidade.TabIndex = 44;
-            // 
-            // lblDataDisponibilidade
-            // 
-            this.lblDataDisponibilidade.AutoSize = true;
-            this.lblDataDisponibilidade.Location = new System.Drawing.Point(956, 482);
-            this.lblDataDisponibilidade.Name = "lblDataDisponibilidade";
-            this.lblDataDisponibilidade.Size = new System.Drawing.Size(172, 20);
-            this.lblDataDisponibilidade.TabIndex = 43;
-            this.lblDataDisponibilidade.Text = "Data da Disponibilidade";
-            // 
-            // txtStatusReserva
-            // 
-            this.txtStatusReserva.Location = new System.Drawing.Point(963, 363);
-            this.txtStatusReserva.Name = "txtStatusReserva";
-            this.txtStatusReserva.Size = new System.Drawing.Size(194, 27);
-            this.txtStatusReserva.TabIndex = 45;
-            // 
-            // lblStatusReserva
-            // 
-            this.lblStatusReserva.AutoSize = true;
-            this.lblStatusReserva.Location = new System.Drawing.Point(959, 331);
-            this.lblStatusReserva.Name = "lblStatusReserva";
-            this.lblStatusReserva.Size = new System.Drawing.Size(49, 20);
-            this.lblStatusReserva.TabIndex = 46;
-            this.lblStatusReserva.Text = "Status";
             // 
             // RelForm
             // 

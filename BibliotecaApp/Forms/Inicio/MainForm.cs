@@ -76,13 +76,16 @@ namespace BibliotecaApp.Forms.Inicio
             btnIn();
 
             btnInicio.Enabled = false;
-            btnLivro.Enabled = true;
+            btnLivros.Enabled = true;
             btnRel.Enabled = true;
-            btnUsuario.Enabled = true;
+            btnEmprestimo.Enabled = true;
             btnDev.Enabled = true;
             btnLivroCad.Enabled = true;
             btnEmprestimoRap.Enabled = true;
             btnEmprestimo.Enabled = true;
+            btnUser.Enabled = true;
+            btnUserCad.Enabled = true;
+            btnUserEdit.Enabled = true;
         }
         #endregion
 
@@ -126,7 +129,7 @@ namespace BibliotecaApp.Forms.Inicio
             btnUser.Enabled = false;
             btnRel.Enabled = true;
             btnEmprestimo.Enabled = true;
-            btnLivro.Enabled = true;
+            btnLivros.Enabled = true;
             btnInicio.Enabled = true;
             btnDev.Enabled = true;
             btnLivroCad.Enabled = true;
@@ -148,7 +151,7 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserCad.Enabled = false;
             btnRel.Enabled = true;
             btnEmprestimo.Enabled = true;
-            btnLivro.Enabled = true;
+            btnLivros.Enabled = true;
             btnInicio.Enabled = true;
             btnDev.Enabled = true;
             btnLivroCad.Enabled = true;
@@ -175,7 +178,7 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserEdit.Enabled = false;
             btnRel.Enabled = true;
             btnEmprestimo.Enabled = true;
-            btnLivro.Enabled = true;
+            btnLivros.Enabled = true;
             btnInicio.Enabled = true;
             btnDev.Enabled = true;
             btnLivroCad.Enabled = true;
@@ -221,7 +224,7 @@ namespace BibliotecaApp.Forms.Inicio
         //Botão Livro(Bilbioteca)
         private void btnLivros_Click(object sender, EventArgs e)
         {
-            btnLivro.Enabled = false;
+            btnLivros.Enabled = false;
             btnRel.Enabled = true;
             btnEmprestimo.Enabled = true;
             btnInicio.Enabled = true;
@@ -249,8 +252,7 @@ namespace BibliotecaApp.Forms.Inicio
         {
             btnEmprestimo.Enabled = false;
             btnRel.Enabled = true;
-            btnEmprestimo.Enabled = true;
-            btnLivro.Enabled = true;
+            btnLivros.Enabled = true;
             btnInicio.Enabled = true;
             btnDev.Enabled = true;
             btnLivroCad.Enabled = true;
@@ -277,7 +279,7 @@ namespace BibliotecaApp.Forms.Inicio
             btnEmprestimoRap.Enabled = false;
             btnRel.Enabled = true;
             btnEmprestimo.Enabled = true;
-            btnLivro.Enabled = true;
+            btnLivros.Enabled = true;
             btnInicio.Enabled = true;
             btnDev.Enabled = true;
             btnLivroCad.Enabled = true;
@@ -304,7 +306,7 @@ namespace BibliotecaApp.Forms.Inicio
             btnLivroCad.Enabled = false;
             btnRel.Enabled = true;
             btnEmprestimo.Enabled = true;
-            btnLivro.Enabled = true;
+            btnLivros.Enabled = true;
             btnInicio.Enabled = true;
             btnDev.Enabled = true;
             btnEmprestimoRap.Enabled = true;
@@ -332,7 +334,7 @@ namespace BibliotecaApp.Forms.Inicio
             btnDev.Enabled = false;
             btnRel.Enabled = true;
             btnEmprestimo.Enabled = true;
-            btnLivro.Enabled = true;
+            btnLivros.Enabled = true;
             btnInicio.Enabled = true;
             btnLivroCad.Enabled = true;
             btnEmprestimoRap.Enabled = true;
@@ -361,7 +363,7 @@ namespace BibliotecaApp.Forms.Inicio
         {
             btnRel.Enabled = false;
             btnEmprestimo.Enabled = true;
-            btnLivro.Enabled = true;
+            btnLivros.Enabled = true;
             btnInicio.Enabled = true;
             btnDev.Enabled = true;
             btnLivroCad.Enabled = true;

@@ -113,6 +113,26 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Brasão_da_Gastão59x65 {
+            get {
+                object obj = ResourceManager.GetObject("Brasão da Gastão59x65", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Brasão_da_Gastão75x82 {
+            get {
+                object obj = ResourceManager.GetObject("Brasão da Gastão75x82", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap clouds_upright_2x {
             get {
                 object obj = ResourceManager.GetObject("clouds-upright-2x", resourceCulture);
@@ -126,6 +146,16 @@ namespace BibliotecaApp.Properties {
         internal static System.Drawing.Bitmap clouds_upright_2x1 {
             get {
                 object obj = ResourceManager.GetObject("clouds-upright-2x1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_adicionar_usuário_masculino_25 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-adicionar-usuário-masculino-25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -233,6 +263,16 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_livro_25 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-livro-25", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_livros_20 {
             get {
                 object obj = ResourceManager.GetObject("icons8-livros-20", resourceCulture);
@@ -323,6 +363,16 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_registration_25 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-registration-25", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_relatório_20 {
             get {
                 object obj = ResourceManager.GetObject("icons8-relatório-20", resourceCulture);
@@ -376,6 +426,16 @@ namespace BibliotecaApp.Properties {
         internal static System.Drawing.Bitmap icons8_sair_30 {
             get {
                 object obj = ResourceManager.GetObject("icons8-sair-30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_usuário_masculino_25 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-usuário-masculino-25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

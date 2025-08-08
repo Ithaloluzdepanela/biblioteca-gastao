@@ -84,6 +84,12 @@
     <Compile Include="Elements\GradientPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\Livros\EmprestimoRapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Livros\EmprestimoRapForm.Designer.cs">
+      <DependentUpon>EmprestimoRapForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Relatorio\RelForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -195,6 +201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Livros\EmprestimoForm.resx">
       <DependentUpon>EmprestimoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Livros\EmprestimoRapForm.resx">
+      <DependentUpon>EmprestimoRapForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Relatorio\RelForm.resx">
       <DependentUpon>RelForm.cs</DependentUpon>
@@ -361,6 +370,12 @@
     <Content Include="BibliotecaDB\bibliotecaDB.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\icons8-usuário-masculino-25.png" />
+    <None Include="Resources\icons8-registration-25.png" />
+    <None Include="Resources\icons8-adicionar-usuário-masculino-25.png" />
+    <None Include="Resources\Brasão da Gastão59x65.png" />
+    <None Include="Resources\Brasão da Gastão75x82.png" />
+    <None Include="Resources\icons8-livro-25.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

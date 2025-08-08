@@ -55,7 +55,7 @@
             this.lblRelogio.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblRelogio.Location = new System.Drawing.Point(628, 9);
             this.lblRelogio.Name = "lblRelogio";
-            this.lblRelogio.Size = new System.Drawing.Size(100, 30);
+            this.lblRelogio.Size = new System.Drawing.Size(130, 37);
             this.lblRelogio.TabIndex = 1;
             this.lblRelogio.Text = "Relogio...";
             this.lblRelogio.Click += new System.EventHandler(this.lblRelogio_Click);

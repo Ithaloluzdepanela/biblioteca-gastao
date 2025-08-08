@@ -113,7 +113,7 @@
             this.lblTotal.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotal.Location = new System.Drawing.Point(364, 70);
             this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(0, 19);
+            this.lblTotal.Size = new System.Drawing.Size(0, 23);
             this.lblTotal.TabIndex = 11;
             // 
             // label1
@@ -125,7 +125,7 @@
             this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 37);
+            this.label1.Size = new System.Drawing.Size(108, 45);
             this.label1.TabIndex = 0;
             this.label1.Text = "Livros";
             // 
@@ -143,9 +143,9 @@
             this.panel1.Controls.Add(this.cbFiltro);
             this.panel1.Controls.Add(this.lblTotal);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 37);
+            this.panel1.Location = new System.Drawing.Point(0, 45);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(819, 663);
+            this.panel1.Size = new System.Drawing.Size(819, 655);
             this.panel1.TabIndex = 16;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
@@ -184,6 +184,7 @@
             this.txtNome.TabIndex = 8;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
+            this.txtNome.Load += new System.EventHandler(this.txtNome_Load);
             // 
             // picEmprestimo
             // 
@@ -230,7 +231,7 @@
             this.cbDisponibilidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbDisponibilidade.PlaceholderMargin = 10;
             this.cbDisponibilidade.PlaceholderText = "Selecionar Filtro";
-            this.cbDisponibilidade.Size = new System.Drawing.Size(190, 26);
+            this.cbDisponibilidade.Size = new System.Drawing.Size(190, 31);
             this.cbDisponibilidade.TabIndex = 13;
             // 
             // cbFiltro
@@ -253,7 +254,7 @@
             this.cbFiltro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbFiltro.PlaceholderMargin = 10;
             this.cbFiltro.PlaceholderText = "Selecionar Filtro";
-            this.cbFiltro.Size = new System.Drawing.Size(190, 26);
+            this.cbFiltro.Size = new System.Drawing.Size(190, 31);
             this.cbFiltro.TabIndex = 9;
             // 
             // lblTeste
@@ -261,12 +262,12 @@
             this.lblTeste.AutoSize = true;
             this.lblTeste.Location = new System.Drawing.Point(129, 9);
             this.lblTeste.Name = "lblTeste";
-            this.lblTeste.Size = new System.Drawing.Size(0, 15);
+            this.lblTeste.Size = new System.Drawing.Size(0, 20);
             this.lblTeste.TabIndex = 17;
             // 
             // LivrosForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(819, 700);
             this.Controls.Add(this.panel1);

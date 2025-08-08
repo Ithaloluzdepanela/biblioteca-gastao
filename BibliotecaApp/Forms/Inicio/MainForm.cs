@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using BibliotecaApp.Froms.Usuario;
 
 namespace BibliotecaApp.Forms.Inicio
 {
@@ -26,16 +27,17 @@ namespace BibliotecaApp.Forms.Inicio
             InitializeComponent();
             mdiProp();
             btnIn();
-            this.FormBorderStyle = FormBorderStyle.None;
+            
+            //this.FormBorderStyle = FormBorderStyle.None;
 
-            this.FormBorderStyle = FormBorderStyle.None;
+            //this.FormBorderStyle = FormBorderStyle.None;
 
-            // Pega a área da tela disponível (sem taskbar)
-            var workingArea = Screen.PrimaryScreen.WorkingArea;
+            //// Pega a área da tela disponível (sem taskbar)
+            //var workingArea = Screen.PrimaryScreen.WorkingArea;
 
-            // Ajusta o tamanho e posição do formulário para ocupar só a área útil
-            this.Location = workingArea.Location;
-            this.Size = workingArea.Size;
+            //// Ajusta o tamanho e posição do formulário para ocupar só a área útil
+            //this.Location = workingArea.Location;
+            //this.Size = workingArea.Size;
         }
         #region Componentes de inicialização
         //Funções da API para movimentar a aba
@@ -53,6 +55,12 @@ namespace BibliotecaApp.Forms.Inicio
         UsuarioForm usuario;
         LivrosForm livros;
         RelForm rel;
+        EmprestimoForm emprestimo;
+        EmprestimoRapForm emprestimoRap;
+        CadastroLivroForm cadastroLivro;
+        DevoluçãoForm devolução;
+        CadUsuario usuarioCad; 
+        EditarUsuarioForm usuarioEdit;
 
         //Proporção dos Forms
         private void mdiProp()
@@ -68,9 +76,16 @@ namespace BibliotecaApp.Forms.Inicio
             btnIn();
 
             btnInicio.Enabled = false;
-            btnLivro.Enabled = true;
+            btnLivros.Enabled = true;
             btnRel.Enabled = true;
-            btnUsuario.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnDev.Enabled = true;
+            btnLivroCad.Enabled = true;
+            btnEmprestimoRap.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnUser.Enabled = true;
+            btnUserCad.Enabled = true;
+            btnUserEdit.Enabled = true;
         }
         #endregion
 
@@ -92,13 +107,36 @@ namespace BibliotecaApp.Forms.Inicio
             inicio = null;
         }
 
+        #region Form do Usuários
+
         //Form usuário
-        private void btnUsuario_Click(object sender, EventArgs e)
+        private async void btnUsuario_Click(object sender, EventArgs e)
         {
-            btnUsuario.Enabled = false;
-            btnLivro.Enabled = true;
+
+            btnUsuario.Enabled = false; // Desabilita o botão
+
+            userTransition.Start();
+
+            await Task.Delay(400);
+
+            btnUsuario.Enabled = true; // Reabilita o botão
+
+        }
+
+        //Botão de cadastro do usuário
+        private void btnUser_Click(object sender, EventArgs e)
+        {
+            btnUser.Enabled = false;
             btnRel.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnLivros.Enabled = true;
             btnInicio.Enabled = true;
+            btnDev.Enabled = true;
+            btnLivroCad.Enabled = true;
+            btnEmprestimoRap.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnUserCad.Enabled = true;
+            btnUserEdit.Enabled = true;
 
             usuario = new UsuarioForm();
             usuario.FormClosed += Usuario_FormClosed;
@@ -107,36 +145,75 @@ namespace BibliotecaApp.Forms.Inicio
             usuario.Show();
         }
 
+        //Botão de cadastro do usuário
+        private void btnUserCad_Click(object sender, EventArgs e)
+        {
+            btnUserCad.Enabled = false;
+            btnRel.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnLivros.Enabled = true;
+            btnInicio.Enabled = true;
+            btnDev.Enabled = true;
+            btnLivroCad.Enabled = true;
+            btnEmprestimoRap.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnUser.Enabled = true;
+            btnUserEdit.Enabled = true;
+
+            usuarioCad = new CadUsuario();
+            usuarioCad.FormClosed += UsuarioCad_FormClosed;
+            usuarioCad.MdiParent = this;
+            usuarioCad.Dock = DockStyle.Fill;
+            usuarioCad.Show();
+        }
+
+        private void UsuarioCad_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            usuarioCad = null;
+        }
+
+        //Botão de edição do usuário
+        private void btnUserEdit_Click(object sender, EventArgs e)
+        {
+            btnUserEdit.Enabled = false;
+            btnRel.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnLivros.Enabled = true;
+            btnInicio.Enabled = true;
+            btnDev.Enabled = true;
+            btnLivroCad.Enabled = true;
+            btnEmprestimoRap.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnUser.Enabled = true;
+            btnUserCad.Enabled = true;
+
+            usuarioEdit = new EditarUsuarioForm();
+            usuarioEdit.FormClosed += UsuarioEdit_FormClosed;
+            usuarioEdit.MdiParent = this;
+            usuarioEdit.Dock = DockStyle.Fill;
+            usuarioEdit.Show();
+        }
+
+        private void UsuarioEdit_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            usuarioEdit = null;
+        }
+
+        //Botão Usuário(Biblioteca)
+
+        #endregion
+
         private void Usuario_FormClosed(object sender, FormClosedEventArgs e)
         {
             usuario = null;
         }
 
-        //Form Livros
+        #region Form dos Livros
+        //Botão Expansão do Livro
         private async void btnLivro_Click(object sender, EventArgs e)
         {
             btnLivro.Enabled = false; // Desabilita o botão
-            btnUsuario.Enabled = true;
-            btnRel.Enabled = true;
-            btnInicio.Enabled = true;
-
-            if (livros == null)
-            {
-                btnUsuario.Enabled = true;
-                btnRel.Enabled = true;
-                btnInicio.Enabled = true;
-
-                livros = new LivrosForm();
-                livros.FormClosed += Livros_FormClosed;
-                livros.MdiParent = this;
-                livros.Dock = DockStyle.Fill;
-                livros.Show();
-            }
-            else
-            {
-                livros.BringToFront(); // Opcional: traz o form para frente se já estiver aberto
-            }
-
+            
             livroTransition.Start();
 
             await Task.Delay(500);
@@ -144,18 +221,157 @@ namespace BibliotecaApp.Forms.Inicio
             btnLivro.Enabled = true; // Reabilita o botão
         }
 
+        //Botão Livro(Bilbioteca)
+        private void btnLivros_Click(object sender, EventArgs e)
+        {
+            btnLivros.Enabled = false;
+            btnRel.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnInicio.Enabled = true;
+            btnDev.Enabled = true;
+            btnLivroCad.Enabled = true;
+            btnEmprestimoRap.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnUser.Enabled = true;
+            btnUserCad.Enabled = true;
+            btnUserEdit.Enabled = true;
+
+            livros = new LivrosForm();
+            livros.FormClosed += Livros_FormClosed;
+            livros.MdiParent = this;
+            livros.Dock = DockStyle.Fill;
+            livros.Show();
+        }
         private void Livros_FormClosed(object sender, FormClosedEventArgs e)
         {
             livros = null;
         }
 
+        //Botão de empréstimo do livro
+        private void btnEmprestimo_Click(object sender, EventArgs e)
+        {
+            btnEmprestimo.Enabled = false;
+            btnRel.Enabled = true;
+            btnLivros.Enabled = true;
+            btnInicio.Enabled = true;
+            btnDev.Enabled = true;
+            btnLivroCad.Enabled = true;
+            btnEmprestimoRap.Enabled = true;
+            btnUser.Enabled = true;
+            btnUserCad.Enabled = true;
+            btnUserEdit.Enabled = true;
+
+            emprestimo = new EmprestimoForm();
+            emprestimo.FormClosed += Emprestimo_FormClosed;
+            emprestimo.MdiParent = this;
+            emprestimo.Dock = DockStyle.Fill;
+            emprestimo.Show();
+        }
+
+        private void Emprestimo_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            emprestimo = null;
+        }
+
+        //Botão Empréstimo Rápido
+        private void btnEmprestimoRap_Click(object sender, EventArgs e)
+        {
+            btnEmprestimoRap.Enabled = false;
+            btnRel.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnLivros.Enabled = true;
+            btnInicio.Enabled = true;
+            btnDev.Enabled = true;
+            btnLivroCad.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnUser.Enabled = true;
+            btnUserCad.Enabled = true;
+            btnUserEdit.Enabled = true;
+
+            emprestimoRap = new EmprestimoRapForm();
+            emprestimoRap.FormClosed += EmprestimoRap_FormClosed;
+            emprestimoRap.MdiParent = this;
+            emprestimoRap.Dock = DockStyle.Fill;
+            emprestimoRap.Show();
+
+        }
+
+        //Botão de empréstimo rápido
+        private void EmprestimoRap_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            emprestimo = null;
+        }
+        private void btnLivroCad_Click(object sender, EventArgs e)
+        {
+            btnLivroCad.Enabled = false;
+            btnRel.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnLivros.Enabled = true;
+            btnInicio.Enabled = true;
+            btnDev.Enabled = true;
+            btnEmprestimoRap.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnUser.Enabled = true;
+            btnUserCad.Enabled = true;
+            btnUserEdit.Enabled = true;
+
+            cadastroLivro = new CadastroLivroForm();
+            cadastroLivro.FormClosed += CadastroLivro_FormClosed;
+            cadastroLivro.MdiParent = this;
+            cadastroLivro.Dock = DockStyle.Fill;
+            cadastroLivro.Show();
+
+        }
+
+        private void CadastroLivro_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            cadastroLivro = null;
+        }
+
+        //Botão Devolução
+        private void btnDev_Click(object sender, EventArgs e)
+        {
+            btnDev.Enabled = false;
+            btnRel.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnLivros.Enabled = true;
+            btnInicio.Enabled = true;
+            btnLivroCad.Enabled = true;
+            btnEmprestimoRap.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnUser.Enabled = true;
+            btnUserCad.Enabled = true;
+            btnUserEdit.Enabled = true;
+
+            devolução = new DevoluçãoForm();
+            devolução.FormClosed += Devolução_FormClosed;
+            devolução.MdiParent = this;
+            devolução.Dock = DockStyle.Fill;
+            devolução.Show();
+        }
+
+        private void Devolução_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            devolução = null;
+        }
+
+
+        #endregion
+
         //Form rel
         private void btnRel_Click(object sender, EventArgs e)
         {
             btnRel.Enabled = false;
-            btnLivro.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnLivros.Enabled = true;
             btnInicio.Enabled = true;
-            btnUsuario.Enabled = true;
+            btnDev.Enabled = true;
+            btnLivroCad.Enabled = true;
+            btnEmprestimoRap.Enabled = true;
+            btnEmprestimo.Enabled = true;
+            btnUser.Enabled = true;
+            btnUserCad.Enabled = true;
+            btnUserEdit.Enabled = true;
 
             rel = new RelForm();
             rel.FormClosed += Relatorios_FormClosed;
@@ -249,8 +465,6 @@ namespace BibliotecaApp.Forms.Inicio
         //Load para fechar o Login
         private void MainForm_Load(object sender, EventArgs e)
         {
-
-
             if (LoginForm.cancelar == false)
             {
                 Application.Exit();
@@ -286,15 +500,37 @@ namespace BibliotecaApp.Forms.Inicio
             }
         }
 
-        //Transição de expansão do livro
+        //Transição de expansão do livro e usuário
+        bool userExpand = false;
         bool livroExpand = false;
+        private void userTransition_Tick(object sender, EventArgs e)
+        {
+            if (userExpand == false)
+            {
+                userContainer.Height += 10;
+                if (userContainer.Height >= 240)
+                {
+                    userTransition.Stop();
+                    userExpand = true;
+                }
+            }
+            else
+            {
+                userContainer.Height -= 10;
+                if (userContainer.Height <= 60)
+                {
+                    userTransition.Stop();
+                    userExpand = false;
+                }
+            }
+        }
         private void livroTransition_Tick(object sender, EventArgs e)
         {
 
             if (livroExpand == false)
             {
                 livroContainer.Height += 10;
-                if (livroContainer.Height >= 300)
+                if (livroContainer.Height >= 360)
                 {
                     livroTransition.Stop();
                     livroExpand = true;
@@ -312,5 +548,6 @@ namespace BibliotecaApp.Forms.Inicio
         }
 
         #endregion
+
     }
 }

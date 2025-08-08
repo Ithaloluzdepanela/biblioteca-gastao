@@ -252,6 +252,11 @@ namespace BibliotecaApp.Forms.Livros
 
         }
 
+        private void txtNome_Load(object sender, EventArgs e)
+        {
+
+        }
+
 
         #endregion
 
@@ -388,7 +393,7 @@ namespace BibliotecaApp.Forms.Livros
 
         //private void button1_Click(object sender, EventArgs e)
         //{
-            
+
         //}
 
 

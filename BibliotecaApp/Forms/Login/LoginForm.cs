@@ -67,7 +67,7 @@ namespace BibliotecaApp.Forms.Login
             string senha = txtSenha.Text;
 
             // login como administrador (provisório)
-            if (email == "admin@admin.com" && senha == "1234")
+            if (email == "admin" && senha == "1234")
             {
                 // Login como administrador
                 cancelar = true;

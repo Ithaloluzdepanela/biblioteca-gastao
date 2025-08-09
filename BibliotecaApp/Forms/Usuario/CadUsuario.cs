@@ -274,8 +274,8 @@ namespace BibliotecaApp.Froms.Usuario
             lblSenha.Visible = true;
             lblConfirmSenha.Visible = true;
             chkMostrarSenha.Visible = true;
-            btnCadastrar.Location = new Point(541, 903); 
-            btnLimpar.Location = new Point(73, 903);
+            btnCadastrar.Location = new Point(541, 932); 
+            btnLimpar.Location = new Point(73, 932);
 
             SetLabelColors(enabled: true);
             lblTurma.ForeColor = Color.LightGray;
@@ -318,8 +318,8 @@ namespace BibliotecaApp.Froms.Usuario
             lblSenha.Visible = false;
             lblConfirmSenha.Visible = false;
             chkMostrarSenha.Visible = false;
-            btnCadastrar.Location = new Point(541, 782);
-            btnLimpar.Location = new Point(73, 782);
+            btnCadastrar.Location = new Point(541, 788);
+            btnLimpar.Location = new Point(73, 788);
 
 
 
@@ -364,8 +364,8 @@ namespace BibliotecaApp.Froms.Usuario
             lblSenha.Visible = false;
             lblConfirmSenha.Visible = false;
             chkMostrarSenha.Visible = false;
-            btnCadastrar.Location = new Point(541, 782);
-            btnLimpar.Location = new Point(73, 782);
+            btnCadastrar.Location = new Point(541, 788);
+            btnLimpar.Location = new Point(73, 788);
 
             SetLabelColors(enabled: true);
             lblSenha.ForeColor = Color.LightGray;
@@ -414,8 +414,9 @@ namespace BibliotecaApp.Froms.Usuario
             lblSenha.Visible = false;
             lblConfirmSenha.Visible = false;
             chkMostrarSenha.Visible = false;
-            btnCadastrar.Location = new Point(541, 782);
-            btnLimpar.Location = new Point(73, 782);
+            btnCadastrar.Location = new Point(541, 788);
+            btnLimpar.Location = new Point(73, 788);
+            
 
             SetAsteriscoVisibility(true);
             SenhaAst.ForeColor = Color.Transparent;
@@ -643,6 +644,21 @@ VALUES
         }
 
         private void txtNome_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void aviso_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Titulo_Click(object sender, EventArgs e)
         {
 
         }

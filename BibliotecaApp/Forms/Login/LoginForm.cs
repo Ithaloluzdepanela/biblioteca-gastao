@@ -120,6 +120,20 @@ namespace BibliotecaApp.Forms.Login
                                     this.Close();
                                     return;
                                 }
+                                else
+                                {
+                                    MessageBox.Show("Senha incorreta.", "Erro de autenticação",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    txtSenha.Focus();
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("E-mail não encontrado ou usuário sem permissão.", "Erro de autenticação",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                txtEmail.Focus();
+                                return;
                             }
                         }
                     }

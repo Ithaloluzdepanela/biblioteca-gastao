@@ -18,7 +18,7 @@ namespace BibliotecaApp.Forms.Usuario
         public EditarUsuarioForm()
         {
             InitializeComponent();
-            txtNome.Focus();
+          
         }
 
         #region Classe Conexao
@@ -146,6 +146,7 @@ namespace BibliotecaApp.Forms.Usuario
                 }
 
                 MessageBox.Show("Usuário excluído com sucesso!");
+                HabilitarCampos();
                 LimparCampos();
             }
             catch (Exception ex)
@@ -264,24 +265,36 @@ namespace BibliotecaApp.Forms.Usuario
         private void HabilitarCampos()
         {
             txtNome.Visible = true;
+            txtNome.Enabled = true;
             txtEmail.Visible = true;
+            txtEmail.Enabled = true;
             txtTurma.Visible = true;
+            txtTurma.Enabled = true;
             lblTurma.Visible = true;
+            lblTurma.Enabled = true;
             lblEmail.Visible = true;
+            lblEmail.Enabled = true;
             lblNome.Visible = true;
+            lblNome.Enabled = true;
             lblCPF.Visible = true;
+            lblCPF.Enabled = true;
             lblDataNasc.Visible = true;
+            lblDataNasc.Enabled = true;
             lblTelefone.Visible = true;
+            lblTelefone.Enabled = true;
             mtxCPF.Visible = true;
+            mtxCPF.Enabled = true;
             mtxTelefone.Visible = true;
+            mtxTelefone.Enabled = true;
             dtpDataNasc.Visible = true;
+            dtpDataNasc.Enabled = true;
         }
 
         private void ConfigurarEdicaoParaBibliotecario()
         {
             HabilitarCampos();
             txtTurma.Visible = false;
-
+            
           
 
             lblTurma.Visible = false;
@@ -364,19 +377,6 @@ namespace BibliotecaApp.Forms.Usuario
             {
                 return false;
             }
-        }
-
-
-
-
-        private void lblTipoUsuario_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblCPF_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e)

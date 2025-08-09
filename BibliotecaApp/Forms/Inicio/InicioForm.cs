@@ -46,7 +46,7 @@ namespace BibliotecaApp.Forms.Inicio
         //         datanascimento DATETIME,
         //         turma NVARCHAR(30),
         //         telefone NVARCHAR(20),
-        //         tipousuario NVARCHAR(20))";
+        //         tipousuario NVARCHAR(20))";  
         //        comando.ExecuteNonQuery();
 
         //        lblResultado.Text = "Tabela criada";

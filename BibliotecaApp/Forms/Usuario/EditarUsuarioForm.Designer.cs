@@ -55,8 +55,8 @@
             // 
             this.panel2.AutoSize = true;
             this.panel2.BackColor = System.Drawing.Color.White;
-            this.panel2.Controls.Add(this.lblTipoUsuario);
             this.panel2.Controls.Add(this.lstSugestoesUsuario);
+            this.panel2.Controls.Add(this.lblTipoUsuario);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.btnCancelar);
             this.panel2.Controls.Add(this.btnExcluir);
@@ -431,7 +431,6 @@
             this.mtxCPF.Padding = new System.Windows.Forms.Padding(18, 6, 6, 6);
             this.mtxCPF.Size = new System.Drawing.Size(329, 40);
             this.mtxCPF.TabIndex = 96;
-
             // 
             // EditarUsuarioForm
             // 

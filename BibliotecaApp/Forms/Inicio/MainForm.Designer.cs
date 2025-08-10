@@ -1,4 +1,6 @@
-﻿namespace BibliotecaApp.Forms.Inicio
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace BibliotecaApp.Forms.Inicio
 {
     partial class MainForm
     {
@@ -350,11 +352,11 @@
             // livroContainer
             // 
             this.livroContainer.Controls.Add(this.btnDev);
-            this.livroContainer.Controls.Add(this.btnLivro);
             this.livroContainer.Controls.Add(this.btnLivros);
             this.livroContainer.Controls.Add(this.btnLivroCad);
             this.livroContainer.Controls.Add(this.btnEmprestimoRap);
             this.livroContainer.Controls.Add(this.btnEmprestimo);
+            this.livroContainer.Controls.Add(this.btnLivro);
             this.livroContainer.Cursor = System.Windows.Forms.Cursors.Hand;
             this.livroContainer.Location = new System.Drawing.Point(3, 211);
             this.livroContainer.Name = "livroContainer";
@@ -522,7 +524,6 @@
         private System.Windows.Forms.Button btnSair;
         private System.Windows.Forms.Panel relContainer;
         private System.Windows.Forms.Button btnRel;
-        private System.Windows.Forms.Panel userContainer;
         private System.Windows.Forms.Button btnUsuario;
         private System.Windows.Forms.Panel incioContainer;
         private System.Windows.Forms.FlowLayoutPanel menu;
@@ -537,10 +538,11 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnLivros;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnUser;
         private System.Windows.Forms.Button btnUserCad;
-        private System.Windows.Forms.Button btnUserEdit;
         private System.Windows.Forms.Timer userTransition;
+        public System.Windows.Forms.Panel userContainer;
+        public System.Windows.Forms.Button btnUser;
+        public System.Windows.Forms.Button btnUserEdit;
     }
 }
 

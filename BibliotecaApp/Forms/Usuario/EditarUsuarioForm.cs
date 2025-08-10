@@ -520,6 +520,26 @@ namespace BibliotecaApp.Forms.Usuario
             OnUsuarioSelecionado(false);
         }
 
+        public void PreencherUsuario(Usuarios usuario)
+        {
+            HabilitarCampos(true);
+
+            _usuarioSelecionado = usuario;
+            txtNomeUsuario.Text = usuario.Nome;
+            txtNome.Text = usuario.Nome;
+            txtEmail.Text = usuario.Email;
+            mtxCPF.Text = usuario.CPF;
+            dtpDataNasc.Value = usuario.DataNascimento == DateTime.MinValue ? DateTime.Today : usuario.DataNascimento;
+            mtxTelefone.Text = usuario.Telefone;
+            txtTurma.Text = usuario.Turma;
+            lblTipoUsuario.Text = $"Tipo: {usuario.TipoUsuario}";
+            lblTipoUsuario.Visible = true;
+           
+
+            AplicarConfiguracaoEdicaoUsuario();
+            OnUsuarioSelecionado(true);
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);

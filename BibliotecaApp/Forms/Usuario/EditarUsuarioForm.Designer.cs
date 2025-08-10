@@ -28,8 +28,8 @@
         private void InitializeComponent()
         {
             this.panel2 = new System.Windows.Forms.Panel();
-            this.lblTipoUsuario = new System.Windows.Forms.Label();
             this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
+            this.lblTipoUsuario = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnExcluir = new System.Windows.Forms.Button();
@@ -83,19 +83,6 @@
             this.panel2.Size = new System.Drawing.Size(775, 1001);
             this.panel2.TabIndex = 0;
             // 
-            // lblTipoUsuario
-            // 
-            this.lblTipoUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblTipoUsuario.AutoSize = true;
-            this.lblTipoUsuario.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblTipoUsuario.Location = new System.Drawing.Point(74, 217);
-            this.lblTipoUsuario.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblTipoUsuario.Name = "lblTipoUsuario";
-            this.lblTipoUsuario.Size = new System.Drawing.Size(50, 19);
-            this.lblTipoUsuario.TabIndex = 131;
-            this.lblTipoUsuario.Text = "label3";
-            this.lblTipoUsuario.Visible = false;
-            // 
             // lstSugestoesUsuario
             // 
             this.lstSugestoesUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -111,6 +98,19 @@
             this.lstSugestoesUsuario.Visible = false;
             this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
             this.lstSugestoesUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtNomeUsuario_KeyDown);
+            // 
+            // lblTipoUsuario
+            // 
+            this.lblTipoUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblTipoUsuario.AutoSize = true;
+            this.lblTipoUsuario.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblTipoUsuario.Location = new System.Drawing.Point(74, 217);
+            this.lblTipoUsuario.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTipoUsuario.Name = "lblTipoUsuario";
+            this.lblTipoUsuario.Size = new System.Drawing.Size(50, 19);
+            this.lblTipoUsuario.TabIndex = 131;
+            this.lblTipoUsuario.Text = "label3";
+            this.lblTipoUsuario.Visible = false;
             // 
             // label2
             // 

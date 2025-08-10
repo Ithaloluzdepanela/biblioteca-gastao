@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lstSugestoesTurma = new System.Windows.Forms.ListBox();
             this.EmailAst = new System.Windows.Forms.Label();
             this.btnCadastrar = new System.Windows.Forms.Button();
             this.btnLimpar = new System.Windows.Forms.Button();
@@ -69,6 +70,7 @@
             // 
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.lstSugestoesTurma);
             this.panel1.Controls.Add(this.EmailAst);
             this.panel1.Controls.Add(this.btnCadastrar);
             this.panel1.Controls.Add(this.btnLimpar);
@@ -108,6 +110,20 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(775, 1001);
             this.panel1.TabIndex = 0;
+            // 
+            // lstSugestoesTurma
+            // 
+            this.lstSugestoesTurma.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lstSugestoesTurma.Font = new System.Drawing.Font("Segoe UI", 14F);
+            this.lstSugestoesTurma.FormattingEnabled = true;
+            this.lstSugestoesTurma.ItemHeight = 25;
+            this.lstSugestoesTurma.Location = new System.Drawing.Point(72, 443);
+            this.lstSugestoesTurma.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.lstSugestoesTurma.Name = "lstSugestoesTurma";
+            this.lstSugestoesTurma.ScrollAlwaysVisible = true;
+            this.lstSugestoesTurma.Size = new System.Drawing.Size(618, 79);
+            this.lstSugestoesTurma.TabIndex = 131;
+            this.lstSugestoesTurma.Visible = false;
             // 
             // EmailAst
             // 
@@ -443,6 +459,9 @@
             this.txtTurma.TabIndex = 66;
             this.txtTurma.TextColor = System.Drawing.Color.Black;
             this.txtTurma.UseSystemPasswordChar = false;
+            this.txtTurma.TextChanged += new System.EventHandler(this.txtTurma_TextChanged);
+            this.txtTurma.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtTurma_KeyDown);
+            this.txtTurma.Leave += new System.EventHandler(this.txtTurma_Leave);
             // 
             // cbUsuario
             // 
@@ -689,5 +708,6 @@
         private System.Windows.Forms.Button btnLimpar;
         private System.Windows.Forms.Label EmailAst;
         private System.Windows.Forms.Label lblAvisoEmail;
+        private System.Windows.Forms.ListBox lstSugestoesTurma;
     }
 }

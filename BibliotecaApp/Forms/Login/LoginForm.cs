@@ -223,7 +223,7 @@ namespace BibliotecaApp.Forms.Login
                         bool notificadoLembrete = !reader.IsDBNull(4) && reader.GetBoolean(4);
                         bool notificadoAtraso = !reader.IsDBNull(5) && reader.GetBoolean(5);
 
-                        string emailUsuario = reader.GetString(6);
+                        string emailUsuario = reader.IsDBNull(6) ? null : reader.GetString(6);
                         string nomeUsuario = reader.GetString(7);
                         string tituloLivro = reader.GetString(8);
 
@@ -240,7 +240,14 @@ namespace BibliotecaApp.Forms.Login
 
                         if (diferenca.Days == 3 && !notificadoLembrete)
                         {
-                            EnviarEmailLembrete(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
+                            if (!string.IsNullOrWhiteSpace(emailUsuario))
+                            {
+                                EnviarEmailLembrete(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Usuário '{nomeUsuario}' sem e-mail cadastrado para lembrete de empréstimo.");
+                            }
 
                             var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET NotificadoLembrete = 1 WHERE Id = @Id", connection);
                             updateFlagCmd.Parameters.AddWithValue("@Id", id);
@@ -249,7 +256,14 @@ namespace BibliotecaApp.Forms.Login
 
                         if (diferenca.Days < 0 && !notificadoAtraso)
                         {
-                            EnviarEmailAtraso(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
+                            if (!string.IsNullOrWhiteSpace(emailUsuario))
+                            {
+                                EnviarEmailAtraso(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Usuário '{nomeUsuario}' sem e-mail cadastrado para notificação de atraso.");
+                            }
 
                             var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET NotificadoAtraso = 1 WHERE Id = @Id", connection);
                             updateFlagCmd.Parameters.AddWithValue("@Id", id);
@@ -279,7 +293,6 @@ namespace BibliotecaApp.Forms.Login
 
                     DateTime hoje = DateTime.Now.Date;
 
-                    // Buscar TODAS as reservas que não estão finalizadas para processar no C#
                     string sqlBuscarReservas = @"
                 SELECT r.Id, r.Status, r.DataDisponibilidade, r.DataLimiteRetirada, 
                        r.UsuarioId, r.LivroId,
@@ -293,7 +306,6 @@ namespace BibliotecaApp.Forms.Login
                     var reservasParaEmail = new List<dynamic>();
                     var livrosParaLiberar = new List<int>();
 
-                    // Primeiro, buscar todas as reservas
                     using (var cmd = new SqlCeCommand(sqlBuscarReservas, connection))
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -313,13 +325,10 @@ namespace BibliotecaApp.Forms.Login
                                 AutorLivro = reader.GetString(9)
                             };
 
-                            // Lógica de atualização baseada nas datas
                             if (reserva.Status == "Pendente" && reserva.DataDisponibilidade.Date <= hoje)
                             {
-                                // Pendente → Disponível
                                 reservasParaAtualizar.Add(new { Id = reserva.Id, NovoStatus = "Disponível" });
 
-                                // Se ficou disponível hoje, enviar email
                                 if (reserva.DataDisponibilidade.Date == hoje)
                                 {
                                     reservasParaEmail.Add(reserva);
@@ -327,7 +336,6 @@ namespace BibliotecaApp.Forms.Login
                             }
                             else if (reserva.Status == "Disponível" && reserva.DataLimiteRetirada.Date < hoje)
                             {
-                                // Disponível → Expirada
                                 reservasParaAtualizar.Add(new { Id = reserva.Id, NovoStatus = "Expirada" });
                                 livrosParaLiberar.Add(reserva.LivroId);
                             }
@@ -336,7 +344,6 @@ namespace BibliotecaApp.Forms.Login
 
                     progressForm.AtualizarProgresso(25, "Processando reservas...");
 
-                    // Atualizar status das reservas
                     foreach (var reserva in reservasParaAtualizar)
                     {
                         string sqlUpdate = "UPDATE Reservas SET Status = @Status WHERE Id = @Id";
@@ -350,7 +357,6 @@ namespace BibliotecaApp.Forms.Login
 
                     progressForm.AtualizarProgresso(50, "Enviando emails de disponibilidade...");
 
-                    // Enviar emails para reservas que ficaram disponíveis hoje
                     int emailsEnviados = 0;
                     int emailsFalharam = 0;
 
@@ -372,7 +378,7 @@ namespace BibliotecaApp.Forms.Login
                             }
                             else
                             {
-                                System.Diagnostics.Debug.WriteLine($"Email inválido para usuário: {reserva.NomeUsuario}");
+                                System.Diagnostics.Debug.WriteLine($"Usuário '{reserva.NomeUsuario}' sem e-mail cadastrado ou e-mail inválido para reserva.");
                             }
                         }
                         catch (Exception emailEx)
@@ -384,7 +390,6 @@ namespace BibliotecaApp.Forms.Login
 
                     progressForm.AtualizarProgresso(75, "Liberando livros expirados...");
 
-                    // Liberar livros cujas reservas expiraram
                     foreach (var livroId in livrosParaLiberar.Distinct())
                     {
                         string sqlLiberar = "UPDATE Livros SET Disponibilidade = 1 WHERE Id = @LivroId";
@@ -397,7 +402,6 @@ namespace BibliotecaApp.Forms.Login
 
                     progressForm.AtualizarProgresso(100, "Atualização de reservas concluída!");
 
-                    // Log dos resultados
                     if (emailsEnviados > 0 || emailsFalharam > 0)
                     {
                         System.Diagnostics.Debug.WriteLine($"Processamento de emails - Enviados: {emailsEnviados}, Falhas: {emailsFalharam}");

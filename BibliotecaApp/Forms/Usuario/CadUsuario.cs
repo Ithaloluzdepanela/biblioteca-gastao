@@ -25,6 +25,7 @@ namespace BibliotecaApp.Froms.Usuario
         public CadUsuario()
         {
             InitializeComponent();
+
         }
         #endregion
 
@@ -38,6 +39,7 @@ namespace BibliotecaApp.Froms.Usuario
             this.KeyDown += Form_KeyDown;
             chkMostrarSenha.ForeColor = Color.LightGray;
             SetAsteriscoVisibility(false);
+            
         }
 
         private void Form_KeyDown(object sender, KeyEventArgs e)
@@ -220,6 +222,16 @@ namespace BibliotecaApp.Froms.Usuario
                 LimparCampos();
             }
         }
+
+        //------------------------------------------------------------
+        // EVENTO: Alteração no campo de e-mail
+        //------------------------------------------------------------
+        private void txtEmail_TextChanged(object sender, EventArgs e)
+        {
+            lblAvisoEmail.Visible = string.IsNullOrWhiteSpace(txtEmail.Text);
+        }
+
+
         #endregion
 
         #region Métodos Privados
@@ -276,6 +288,7 @@ namespace BibliotecaApp.Froms.Usuario
             chkMostrarSenha.Visible = true;
             btnCadastrar.Location = new Point(541, 932); 
             btnLimpar.Location = new Point(73, 932);
+            CentralizarBotoes();
 
             SetLabelColors(enabled: true);
             lblTurma.ForeColor = Color.LightGray;
@@ -320,7 +333,7 @@ namespace BibliotecaApp.Froms.Usuario
             chkMostrarSenha.Visible = false;
             btnCadastrar.Location = new Point(541, 788);
             btnLimpar.Location = new Point(73, 788);
-
+            CentralizarBotoes();
 
 
             SetLabelColors(enabled: true);
@@ -366,6 +379,7 @@ namespace BibliotecaApp.Froms.Usuario
             chkMostrarSenha.Visible = false;
             btnCadastrar.Location = new Point(541, 788);
             btnLimpar.Location = new Point(73, 788);
+            CentralizarBotoes();
 
             SetLabelColors(enabled: true);
             lblSenha.ForeColor = Color.LightGray;
@@ -381,6 +395,7 @@ namespace BibliotecaApp.Froms.Usuario
             SenhaAst.ForeColor = Color.Transparent;
             ConfirmSenhaAst.ForeColor = Color.Transparent;
             EmailAst.ForeColor = Color.Transparent;
+            lblAvisoEmail.Visible = false;
 
             ConfigurarApparence(
                 txtTurmaEnabled: false,
@@ -416,7 +431,8 @@ namespace BibliotecaApp.Froms.Usuario
             chkMostrarSenha.Visible = false;
             btnCadastrar.Location = new Point(541, 788);
             btnLimpar.Location = new Point(73, 788);
-            
+            CentralizarBotoes();
+
 
             SetAsteriscoVisibility(true);
             SenhaAst.ForeColor = Color.Transparent;
@@ -635,32 +651,22 @@ VALUES
             LimparCampos();
         }
 
+        /// <summary>
+        /// Centraliza os botões de cadastrar e limpar
+        /// </summary>
+        private void CentralizarBotoes()
+        {
+            int espacoEntre = 330;
+            int larguraTotal = btnCadastrar.Width + btnLimpar.Width + espacoEntre;
+            int xInicial = (panel1.Width - larguraTotal) / 2;
+            int y = btnCadastrar.Location.Y; // mantém o Y atual
+
+            btnLimpar.Location = new Point(xInicial, y);
+            btnCadastrar.Location = new Point(xInicial + btnLimpar.Width + espacoEntre, y);
+        }
 
         #endregion
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void txtNome_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void aviso_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Titulo_Click(object sender, EventArgs e)
-        {
-
-        }
+       
     }
 }

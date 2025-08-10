@@ -5,6 +5,7 @@ using BibliotecaApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
+using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -28,6 +29,8 @@ namespace BibliotecaApp.Forms.Livros
             InitializeComponent();
             CarregarDadosIniciais();
             ConfigurarControles();
+            EstilizarListBoxSugestao(lstSugestoesUsuario);
+            EstilizarListBoxSugestao(lstSugestoesLivros);
         }
 
         private void ConfigurarControles()
@@ -583,15 +586,51 @@ namespace BibliotecaApp.Forms.Livros
         #region Métodos de Interface
         private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
         {
-            string texto = txtNomeUsuario.Text.Trim().ToLower();
-            lstSugestoesUsuario.Visible = !string.IsNullOrWhiteSpace(texto);
-            if (lstSugestoesUsuario.Visible)
+            string filtro = txtNomeUsuario.Text.Trim();
+
+            lstSugestoesUsuario.Items.Clear();
+            lstSugestoesUsuario.Visible = false;
+            _cacheUsuarios.Clear();
+
+            if (string.IsNullOrWhiteSpace(filtro))
+                return;
+
+            try
             {
-                lstSugestoesUsuario.Items.Clear();
-                lstSugestoesUsuario.Items.AddRange(
-                    Usuarios.Where(u => u.Nome.ToLower().Contains(texto))
-                           .Select(u => u.Nome)
-                           .ToArray());
+                using (var conexao = EmprestimoForm.Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string sql = @"SELECT Id, Nome, TipoUsuario, Email, Turma
+                           FROM usuarios
+                           WHERE Nome LIKE @nome
+                           ORDER BY Nome";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@nome", filtro + "%");
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var usuario = new Usuarios
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Nome = reader.GetString(1),
+                                    TipoUsuario = reader.GetString(2),
+                                    Email = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                    Turma = reader.IsDBNull(4) ? "" : reader.GetString(4)
+                                };
+                                _cacheUsuarios.Add(usuario);
+                                lstSugestoesUsuario.Items.Add($"{usuario.Nome} - {usuario.Turma}");
+                            }
+                        }
+                    }
+                }
+                lstSugestoesUsuario.Visible = lstSugestoesUsuario.Items.Count > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao buscar usuários:\n{ex.Message}",
+                                "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -640,7 +679,7 @@ namespace BibliotecaApp.Forms.Livros
                 using (var conexao = EmprestimoForm.Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = @"SELECT Disponibilidade, Quantidade FROM Livros WHERE Id = @id";
+                    string sql = @"SELECT Disponibilidade, Quantidade, Nome FROM Livros WHERE Id = @id";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@id", livroId);
@@ -650,21 +689,22 @@ namespace BibliotecaApp.Forms.Livros
                             {
                                 bool disponivel = reader.GetBoolean(0);
                                 int quantidade = reader.GetInt32(1);
+                                string nomeLivro = reader.GetString(2);
 
                                 if (disponivel && quantidade > 0)
                                 {
                                     DialogResult resposta = MessageBox.Show(
-                                        "Este livro está disponível para empréstimo imediato.\n\nDeseja abrir o formulário de empréstimo agora?",
+                                        $"O livro \"{nomeLivro}\" está disponível para empréstimo imediato.\n\nDeseja abrir o formulário de empréstimo agora?",
                                         "Livro Disponível",
-                                        MessageBoxButtons.YesNo,
+                                        MessageBoxButtons.YesNo,    
                                         MessageBoxIcon.Question);
 
                                     if (resposta == DialogResult.Yes)
                                     {
-                                        var form = new EmprestimoForm
-                                        {
-                                            StartPosition = FormStartPosition.CenterScreen
-                                        };
+                                        var form = new EmprestimoForm();
+                                        form.txtLivro.Text = nomeLivro;
+                                        form.AbertoPelaReserva = true;
+                                        form.StartPosition = FormStartPosition.CenterScreen;
                                         form.ShowDialog();
                                     }
                                 }
@@ -806,78 +846,7 @@ namespace BibliotecaApp.Forms.Livros
             return DateTime.Today;
         }
 
-        private void btnBuscarUsuario_Click(object sender, EventArgs e)
-        {
-            string filtro = txtNomeUsuario.Text.Trim();
-
-            // Se o campo estiver vazio, limpa a lista de sugestões
-            if (string.IsNullOrEmpty(filtro))
-            {
-                lstSugestoesUsuario.Items.Clear();
-                lstSugestoesUsuario.Visible = false;
-                return;
-            }
-
-            _cacheUsuarios.Clear();
-            lstSugestoesUsuario.Items.Clear();
-
-            try
-            {
-                using (var conexao = EmprestimoForm.Conexao.ObterConexao())
-                {
-                    conexao.Open();
-
-                    // Busca usuários cujo nome começa com o filtro (case insensitive)
-                    string sql = @"SELECT Id, Nome, TipoUsuario, Email, Turma
-                           FROM usuarios
-                           WHERE Nome LIKE @nome
-                           ORDER BY Nome";
-
-                    using (var cmd = new SqlCeCommand(sql, conexao))
-                    {
-                        cmd.Parameters.AddWithValue("@nome", filtro + "%");
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                var usuario = new Usuarios
-                                {
-                                    Id = reader.GetInt32(0),
-                                    Nome = reader.GetString(1),
-                                    TipoUsuario = reader.GetString(2),
-                                    Email = reader.IsDBNull(3) ? null : reader.GetString(3),
-                                    Turma = reader.IsDBNull(4) ? "" : reader.GetString(4)
-                                };
-
-                                _cacheUsuarios.Add(usuario);
-
-                                // Adiciona nome e turma juntos no ListBox
-                                lstSugestoesUsuario.Items.Add($"{usuario.Nome} - {usuario.Turma}");
-                            }
-                        }
-                    }
-                }
-
-                // Exibe a lista de sugestões se houver resultados
-                lstSugestoesUsuario.Visible = lstSugestoesUsuario.Items.Count > 0;
-
-                // Posiciona a lista de sugestões abaixo do campo de texto
-                if (lstSugestoesUsuario.Visible)
-                {
-                    lstSugestoesUsuario.Top = txtNomeUsuario.Bottom;
-                    lstSugestoesUsuario.Left = txtNomeUsuario.Left;
-                    lstSugestoesUsuario.Width = txtNomeUsuario.Width;
-                    lstSugestoesUsuario.BringToFront();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao buscar usuários:\n{ex.Message}",
-                              "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
+        
 
         private void txtNomeUsuario_KeyDown(object sender, KeyEventArgs e)
         {
@@ -922,6 +891,88 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
         #endregion
+
+        #region estilizacao listbox
+
+     
+
+        private int hoveredIndex = -1;
+
+        private void EstilizarListBoxSugestao(ListBox listBox)
+        {
+            listBox.DrawMode = DrawMode.OwnerDrawFixed;
+            listBox.Font = new Font("Segoe UI", 12, FontStyle.Regular);
+            listBox.ItemHeight = 40;
+
+            listBox.BackColor = Color.White;
+            listBox.ForeColor = Color.FromArgb(30, 61, 88);
+            listBox.BorderStyle = BorderStyle.FixedSingle;
+            listBox.IntegralHeight = false;
+
+            listBox.DrawItem -= ListBoxSugestao_DrawItem;
+            listBox.DrawItem += ListBoxSugestao_DrawItem;
+
+            listBox.MouseMove -= ListBoxSugestao_MouseMove;
+            listBox.MouseMove += ListBoxSugestao_MouseMove;
+
+            listBox.MouseLeave -= ListBoxSugestao_MouseLeave;
+            listBox.MouseLeave += ListBoxSugestao_MouseLeave;
+        }
+
+        private void ListBoxSugestao_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            if (e.Index < 0) return;
+
+            bool hovered = (e.Index == hoveredIndex);
+
+            // Tons de cinza
+            Color backColor = hovered
+                ? Color.FromArgb(235, 235, 235) // cinza claro no hover
+                : Color.White;                  // fundo branco
+
+            Color textColor = Color.FromArgb(60, 60, 60); // cinza escuro
+
+            using (SolidBrush b = new SolidBrush(backColor))
+                e.Graphics.FillRectangle(b, e.Bounds);
+
+            string text = listBox.Items[e.Index].ToString();
+            Font font = listBox.Font;
+
+            Rectangle textRect = new Rectangle(e.Bounds.Left + 12, e.Bounds.Top, e.Bounds.Width - 24, e.Bounds.Height);
+            TextRenderer.DrawText(e.Graphics, text, font, textRect, textColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+
+            // Linha divisória entre itens (cinza bem suave)
+            if (e.Index < listBox.Items.Count - 1)
+            {
+                using (Pen p = new Pen(Color.FromArgb(220, 220, 220)))
+                    e.Graphics.DrawLine(p, e.Bounds.Left + 8, e.Bounds.Bottom - 1, e.Bounds.Right - 8, e.Bounds.Bottom - 1);
+            }
+
+
+        }
+
+
+        private void ListBoxSugestao_MouseMove(object sender, MouseEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            int index = listBox.IndexFromPoint(e.Location);
+            if (index != hoveredIndex)
+            {
+                hoveredIndex = index;
+                listBox.Invalidate();
+            }
+        }
+
+        private void ListBoxSugestao_MouseLeave(object sender, EventArgs e)
+        {
+            hoveredIndex = -1;
+            (sender as ListBox).Invalidate();
+        }
+        #endregion
+
+
+
 
         #region Event Handlers
         private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e) { }

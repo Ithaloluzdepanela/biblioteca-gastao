@@ -29,14 +29,16 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnBuscarLivro = new System.Windows.Forms.Button();
-            this.btnBuscarUsuario = new System.Windows.Forms.Button();
             this.dtpDataDevolucao = new System.Windows.Forms.DateTimePicker();
             this.dtpDataEmprestimo = new System.Windows.Forms.DateTimePicker();
+            this.cbBibliotecaria = new RoundedComboBox();
             this.lstLivros = new System.Windows.Forms.ListBox();
+            this.txtBarcode = new RoundedTextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.chkDevolucaoPersonalizada = new System.Windows.Forms.CheckBox();
             this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
+            this.txtLivro = new RoundedTextBox();
+            this.txtNomeUsuario = new RoundedTextBox();
             this.btnEmprestar = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -44,10 +46,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.cbBibliotecaria = new RoundedComboBox();
-            this.txtBarcode = new RoundedTextBox();
-            this.txtLivro = new RoundedTextBox();
-            this.txtNomeUsuario = new RoundedTextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,16 +53,14 @@
             // 
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.Transparent;
-            this.panel1.Controls.Add(this.btnBuscarLivro);
-            this.panel1.Controls.Add(this.btnBuscarUsuario);
+            this.panel1.Controls.Add(this.lstSugestoesUsuario);
+            this.panel1.Controls.Add(this.lstLivros);
             this.panel1.Controls.Add(this.dtpDataDevolucao);
             this.panel1.Controls.Add(this.dtpDataEmprestimo);
             this.panel1.Controls.Add(this.cbBibliotecaria);
-            this.panel1.Controls.Add(this.lstLivros);
             this.panel1.Controls.Add(this.txtBarcode);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.chkDevolucaoPersonalizada);
-            this.panel1.Controls.Add(this.lstSugestoesUsuario);
             this.panel1.Controls.Add(this.txtLivro);
             this.panel1.Controls.Add(this.txtNomeUsuario);
             this.panel1.Controls.Add(this.btnEmprestar);
@@ -84,32 +80,6 @@
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
-            // btnBuscarLivro
-            // 
-            this.btnBuscarLivro.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnBuscarLivro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.btnBuscarLivro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBuscarLivro.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
-            this.btnBuscarLivro.Location = new System.Drawing.Point(656, 335);
-            this.btnBuscarLivro.Name = "btnBuscarLivro";
-            this.btnBuscarLivro.Size = new System.Drawing.Size(40, 40);
-            this.btnBuscarLivro.TabIndex = 107;
-            this.btnBuscarLivro.UseVisualStyleBackColor = false;
-            this.btnBuscarLivro.Click += new System.EventHandler(this.btnBuscarLivro_Click);
-            // 
-            // btnBuscarUsuario
-            // 
-            this.btnBuscarUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnBuscarUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.btnBuscarUsuario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBuscarUsuario.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
-            this.btnBuscarUsuario.Location = new System.Drawing.Point(656, 254);
-            this.btnBuscarUsuario.Name = "btnBuscarUsuario";
-            this.btnBuscarUsuario.Size = new System.Drawing.Size(40, 40);
-            this.btnBuscarUsuario.TabIndex = 106;
-            this.btnBuscarUsuario.UseVisualStyleBackColor = false;
-            this.btnBuscarUsuario.Click += new System.EventHandler(this.btnBuscarUsuario_Click);
-            // 
             // dtpDataDevolucao
             // 
             this.dtpDataDevolucao.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -122,7 +92,6 @@
             this.dtpDataDevolucao.Size = new System.Drawing.Size(329, 33);
             this.dtpDataDevolucao.TabIndex = 105;
             this.dtpDataDevolucao.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
-            this.dtpDataDevolucao.ValueChanged += new System.EventHandler(this.dtpDataDevolucao_ValueChanged);
             // 
             // dtpDataEmprestimo
             // 
@@ -136,171 +105,6 @@
             this.dtpDataEmprestimo.TabIndex = 104;
             this.dtpDataEmprestimo.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
             this.dtpDataEmprestimo.ValueChanged += new System.EventHandler(this.dtpDataEmprestimo_ValueChanged);
-            // 
-            // lstLivros
-            // 
-            this.lstLivros.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lstLivros.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.lstLivros.FormattingEnabled = true;
-            this.lstLivros.ItemHeight = 25;
-            this.lstLivros.Location = new System.Drawing.Point(80, 375);
-            this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
-            this.lstLivros.Name = "lstLivros";
-            this.lstLivros.ScrollAlwaysVisible = true;
-            this.lstLivros.Size = new System.Drawing.Size(569, 77);
-            this.lstLivros.TabIndex = 102;
-            this.lstLivros.Visible = false;
-            this.lstLivros.Click += new System.EventHandler(this.lstLivros_Click);
-            this.lstLivros.SelectedIndexChanged += new System.EventHandler(this.lstLivros_SelectedIndexChanged);
-            this.lstLivros.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLivros_KeyDown);
-            // 
-            // label7
-            // 
-            this.label7.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label7.Location = new System.Drawing.Point(74, 388);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(162, 25);
-            this.label7.TabIndex = 100;
-            this.label7.Text = "Codigo de barras:";
-            this.label7.Click += new System.EventHandler(this.label7_Click);
-            // 
-            // chkDevolucaoPersonalizada
-            // 
-            this.chkDevolucaoPersonalizada.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.chkDevolucaoPersonalizada.AutoSize = true;
-            this.chkDevolucaoPersonalizada.BackColor = System.Drawing.Color.White;
-            this.chkDevolucaoPersonalizada.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
-            this.chkDevolucaoPersonalizada.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.chkDevolucaoPersonalizada.Location = new System.Drawing.Point(79, 695);
-            this.chkDevolucaoPersonalizada.Margin = new System.Windows.Forms.Padding(4);
-            this.chkDevolucaoPersonalizada.Name = "chkDevolucaoPersonalizada";
-            this.chkDevolucaoPersonalizada.Size = new System.Drawing.Size(162, 24);
-            this.chkDevolucaoPersonalizada.TabIndex = 99;
-            this.chkDevolucaoPersonalizada.Text = "Estender devolução";
-            this.chkDevolucaoPersonalizada.UseVisualStyleBackColor = false;
-            this.chkDevolucaoPersonalizada.CheckedChanged += new System.EventHandler(this.chkDevolucaoPersonalizada_CheckedChanged);
-            // 
-            // lstSugestoesUsuario
-            // 
-            this.lstSugestoesUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lstSugestoesUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.lstSugestoesUsuario.FormattingEnabled = true;
-            this.lstSugestoesUsuario.ItemHeight = 25;
-            this.lstSugestoesUsuario.Location = new System.Drawing.Point(79, 294);
-            this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
-            this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
-            this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
-            this.lstSugestoesUsuario.Size = new System.Drawing.Size(569, 77);
-            this.lstSugestoesUsuario.TabIndex = 98;
-            this.lstSugestoesUsuario.Visible = false;
-            this.lstSugestoesUsuario.Click += new System.EventHandler(this.lstSugestoesUsuario_Click);
-            this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
-            this.lstSugestoesUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstSugestoesUsuario_KeyDown);
-            // 
-            // btnEmprestar
-            // 
-            this.btnEmprestar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnEmprestar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.btnEmprestar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnEmprestar.ForeColor = System.Drawing.Color.White;
-            this.btnEmprestar.Location = new System.Drawing.Point(541, 783);
-            this.btnEmprestar.Margin = new System.Windows.Forms.Padding(4);
-            this.btnEmprestar.Name = "btnEmprestar";
-            this.btnEmprestar.Size = new System.Drawing.Size(155, 70);
-            this.btnEmprestar.TabIndex = 91;
-            this.btnEmprestar.Text = "EMPRESTRAR";
-            this.btnEmprestar.UseVisualStyleBackColor = false;
-            this.btnEmprestar.Click += new System.EventHandler(this.btnEmprestar_Click);
-            // 
-            // label6
-            // 
-            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label6.Location = new System.Drawing.Point(74, 474);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(213, 25);
-            this.label6.TabIndex = 21;
-            this.label6.Text = "Bliotecária responsável:";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
-            // 
-            // label5
-            // 
-            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label5.Location = new System.Drawing.Point(75, 627);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(181, 25);
-            this.label5.TabIndex = 20;
-            this.label5.Text = "Devolução Prevista:";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
-            // 
-            // label4
-            // 
-            this.label4.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label4.Location = new System.Drawing.Point(75, 552);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(192, 25);
-            this.label4.TabIndex = 19;
-            this.label4.Text = "Data de Empréstimo:";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
-            // 
-            // label3
-            // 
-            this.label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(75, 308);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 25);
-            this.label3.TabIndex = 18;
-            this.label3.Text = "Livro:";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
-            // 
-            // label2
-            // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label2.Location = new System.Drawing.Point(75, 227);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(167, 25);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "Nome do Usuario:";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
-            // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold);
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.label1.Location = new System.Drawing.Point(217, 86);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(340, 40);
-            this.label1.TabIndex = 16;
-            this.label1.Text = "EMPRESTIMO DE LIVRO";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // cbBibliotecaria
             // 
@@ -323,6 +127,23 @@
             this.cbBibliotecaria.Size = new System.Drawing.Size(617, 34);
             this.cbBibliotecaria.TabIndex = 103;
             this.cbBibliotecaria.SelectedIndexChanged += new System.EventHandler(this.cbBibliotecaria_SelectedIndexChanged);
+            // 
+            // lstLivros
+            // 
+            this.lstLivros.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lstLivros.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.lstLivros.FormattingEnabled = true;
+            this.lstLivros.ItemHeight = 25;
+            this.lstLivros.Location = new System.Drawing.Point(80, 375);
+            this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
+            this.lstLivros.Name = "lstLivros";
+            this.lstLivros.ScrollAlwaysVisible = true;
+            this.lstLivros.Size = new System.Drawing.Size(616, 127);
+            this.lstLivros.TabIndex = 102;
+            this.lstLivros.Visible = false;
+            this.lstLivros.Click += new System.EventHandler(this.lstLivros_Click);
+            this.lstLivros.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLivros_KeyDown);
             // 
             // txtBarcode
             // 
@@ -353,6 +174,53 @@
             this.txtBarcode.Load += new System.EventHandler(this.txtBarcode_Load);
             this.txtBarcode.Leave += new System.EventHandler(this.txtBarcode_Leave);
             // 
+            // label7
+            // 
+            this.label7.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label7.Location = new System.Drawing.Point(74, 388);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(162, 25);
+            this.label7.TabIndex = 100;
+            this.label7.Text = "Codigo de barras:";
+            // 
+            // chkDevolucaoPersonalizada
+            // 
+            this.chkDevolucaoPersonalizada.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.chkDevolucaoPersonalizada.AutoSize = true;
+            this.chkDevolucaoPersonalizada.BackColor = System.Drawing.Color.White;
+            this.chkDevolucaoPersonalizada.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
+            this.chkDevolucaoPersonalizada.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.chkDevolucaoPersonalizada.Location = new System.Drawing.Point(79, 695);
+            this.chkDevolucaoPersonalizada.Margin = new System.Windows.Forms.Padding(4);
+            this.chkDevolucaoPersonalizada.Name = "chkDevolucaoPersonalizada";
+            this.chkDevolucaoPersonalizada.Size = new System.Drawing.Size(162, 24);
+            this.chkDevolucaoPersonalizada.TabIndex = 99;
+            this.chkDevolucaoPersonalizada.Text = "Estender devolução";
+            this.chkDevolucaoPersonalizada.UseVisualStyleBackColor = false;
+            this.chkDevolucaoPersonalizada.CheckedChanged += new System.EventHandler(this.chkDevolucaoPersonalizada_CheckedChanged);
+            // 
+            // lstSugestoesUsuario
+            // 
+            this.lstSugestoesUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lstSugestoesUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.lstSugestoesUsuario.FormattingEnabled = true;
+            this.lstSugestoesUsuario.ItemHeight = 25;
+            this.lstSugestoesUsuario.Location = new System.Drawing.Point(80, 294);
+            this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
+            this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
+            this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(616, 127);
+            this.lstSugestoesUsuario.TabIndex = 98;
+            this.lstSugestoesUsuario.Visible = false;
+            this.lstSugestoesUsuario.Click += new System.EventHandler(this.lstSugestoesUsuario_Click);
+            this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
+            this.lstSugestoesUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstSugestoesUsuario_KeyDown);
+            // 
             // txtLivro
             // 
             this.txtLivro.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -375,7 +243,7 @@
             this.txtLivro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLivro.PlaceholderMarginLeft = 12;
             this.txtLivro.PlaceholderText = "Busque aqui o livro...";
-            this.txtLivro.Size = new System.Drawing.Size(569, 40);
+            this.txtLivro.Size = new System.Drawing.Size(616, 40);
             this.txtLivro.TabIndex = 95;
             this.txtLivro.TextColor = System.Drawing.Color.Black;
             this.txtLivro.UseSystemPasswordChar = false;
@@ -404,12 +272,106 @@
             this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNomeUsuario.PlaceholderMarginLeft = 12;
             this.txtNomeUsuario.PlaceholderText = "Busque aqui o Nome do Usuario ...";
-            this.txtNomeUsuario.Size = new System.Drawing.Size(570, 40);
+            this.txtNomeUsuario.Size = new System.Drawing.Size(617, 40);
             this.txtNomeUsuario.TabIndex = 94;
             this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
             this.txtNomeUsuario.UseSystemPasswordChar = false;
-            this.txtNomeUsuario.Load += new System.EventHandler(this.txtNomeUsuario_Load_1);
+          
             this.txtNomeUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtNomeUsuario_KeyDown);
+            // 
+            // btnEmprestar
+            // 
+            this.btnEmprestar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnEmprestar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.btnEmprestar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnEmprestar.ForeColor = System.Drawing.Color.White;
+            this.btnEmprestar.Location = new System.Drawing.Point(541, 771);
+            this.btnEmprestar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnEmprestar.Name = "btnEmprestar";
+            this.btnEmprestar.Size = new System.Drawing.Size(155, 70);
+            this.btnEmprestar.TabIndex = 91;
+            this.btnEmprestar.Text = "EMPRESTRAR";
+            this.btnEmprestar.UseVisualStyleBackColor = false;
+            this.btnEmprestar.Click += new System.EventHandler(this.btnEmprestar_Click);
+            // 
+            // label6
+            // 
+            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label6.Location = new System.Drawing.Point(74, 474);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(213, 25);
+            this.label6.TabIndex = 21;
+            this.label6.Text = "Bliotecária responsável:";
+            // 
+            // label5
+            // 
+            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label5.Location = new System.Drawing.Point(75, 627);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(181, 25);
+            this.label5.TabIndex = 20;
+            this.label5.Text = "Devolução Prevista:";
+            // 
+            // label4
+            // 
+            this.label4.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label4.Location = new System.Drawing.Point(75, 552);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(192, 25);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Data de Empréstimo:";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label3.Location = new System.Drawing.Point(75, 308);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 25);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "Livro:";
+            // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label2.Location = new System.Drawing.Point(75, 227);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(167, 25);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Nome do Usuario:";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.label1.Location = new System.Drawing.Point(217, 86);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(340, 40);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "EMPRESTIMO DE LIVRO";
             // 
             // EmprestimoForm
             // 
@@ -445,7 +407,6 @@
         private System.Windows.Forms.Label label2;
         public System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnEmprestar;
-        private RoundedTextBox txtLivro;
         private RoundedTextBox txtNomeUsuario;
         private System.Windows.Forms.ListBox lstSugestoesUsuario;
         private System.Windows.Forms.CheckBox chkDevolucaoPersonalizada;
@@ -455,7 +416,6 @@
         private RoundedComboBox cbBibliotecaria;
         private System.Windows.Forms.DateTimePicker dtpDataDevolucao;
         private System.Windows.Forms.DateTimePicker dtpDataEmprestimo;
-        private System.Windows.Forms.Button btnBuscarUsuario;
-        private System.Windows.Forms.Button btnBuscarLivro;
+        public RoundedTextBox txtLivro;
     }
 }

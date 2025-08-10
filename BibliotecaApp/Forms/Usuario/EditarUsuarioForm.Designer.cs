@@ -23,8 +23,7 @@
         #region Windows Form Designer generated code
 
         /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// Required method for Designer support - do not modify the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -35,7 +34,6 @@
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnExcluir = new System.Windows.Forms.Button();
             this.btnSalvar = new System.Windows.Forms.Button();
-            this.btnBuscarUsuario = new System.Windows.Forms.Button();
             this.txtNomeUsuario = new RoundedTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.dtpDataNasc = new System.Windows.Forms.DateTimePicker();
@@ -63,7 +61,6 @@
             this.panel2.Controls.Add(this.btnCancelar);
             this.panel2.Controls.Add(this.btnExcluir);
             this.panel2.Controls.Add(this.btnSalvar);
-            this.panel2.Controls.Add(this.btnBuscarUsuario);
             this.panel2.Controls.Add(this.txtNomeUsuario);
             this.panel2.Controls.Add(this.label1);
             this.panel2.Controls.Add(this.dtpDataNasc);
@@ -90,11 +87,11 @@
             // 
             this.lblTipoUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTipoUsuario.AutoSize = true;
-            this.lblTipoUsuario.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTipoUsuario.Location = new System.Drawing.Point(606, 173);
+            this.lblTipoUsuario.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblTipoUsuario.Location = new System.Drawing.Point(74, 217);
             this.lblTipoUsuario.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTipoUsuario.Name = "lblTipoUsuario";
-            this.lblTipoUsuario.Size = new System.Drawing.Size(38, 13);
+            this.lblTipoUsuario.Size = new System.Drawing.Size(50, 19);
             this.lblTipoUsuario.TabIndex = 131;
             this.lblTipoUsuario.Text = "label3";
             this.lblTipoUsuario.Visible = false;
@@ -109,7 +106,7 @@
             this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
             this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
-            this.lstSugestoesUsuario.Size = new System.Drawing.Size(452, 129);
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(618, 129);
             this.lstSugestoesUsuario.TabIndex = 130;
             this.lstSugestoesUsuario.Visible = false;
             this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
@@ -134,7 +131,7 @@
             this.btnCancelar.BackColor = System.Drawing.Color.DimGray;
             this.btnCancelar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnCancelar.ForeColor = System.Drawing.Color.White;
-            this.btnCancelar.Location = new System.Drawing.Point(313, 822);
+            this.btnCancelar.Location = new System.Drawing.Point(313, 817);
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(5);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(149, 57);
@@ -149,7 +146,7 @@
             this.btnExcluir.BackColor = System.Drawing.Color.DarkRed;
             this.btnExcluir.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnExcluir.ForeColor = System.Drawing.Color.White;
-            this.btnExcluir.Location = new System.Drawing.Point(547, 822);
+            this.btnExcluir.Location = new System.Drawing.Point(78, 817);
             this.btnExcluir.Margin = new System.Windows.Forms.Padding(5);
             this.btnExcluir.Name = "btnExcluir";
             this.btnExcluir.Size = new System.Drawing.Size(149, 57);
@@ -164,7 +161,7 @@
             this.btnSalvar.BackColor = System.Drawing.Color.DarkGreen;
             this.btnSalvar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSalvar.ForeColor = System.Drawing.Color.White;
-            this.btnSalvar.Location = new System.Drawing.Point(79, 822);
+            this.btnSalvar.Location = new System.Drawing.Point(547, 817);
             this.btnSalvar.Margin = new System.Windows.Forms.Padding(5);
             this.btnSalvar.Name = "btnSalvar";
             this.btnSalvar.Size = new System.Drawing.Size(149, 57);
@@ -172,20 +169,6 @@
             this.btnSalvar.Text = "Salvar";
             this.btnSalvar.UseVisualStyleBackColor = false;
             this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
-            // 
-            // btnBuscarUsuario
-            // 
-            this.btnBuscarUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnBuscarUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.btnBuscarUsuario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBuscarUsuario.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
-            this.btnBuscarUsuario.Location = new System.Drawing.Point(546, 161);
-            this.btnBuscarUsuario.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnBuscarUsuario.Name = "btnBuscarUsuario";
-            this.btnBuscarUsuario.Size = new System.Drawing.Size(37, 37);
-            this.btnBuscarUsuario.TabIndex = 109;
-            this.btnBuscarUsuario.UseVisualStyleBackColor = false;
-            this.btnBuscarUsuario.Click += new System.EventHandler(this.btnBuscarUsuario_Click);
             // 
             // txtNomeUsuario
             // 
@@ -209,11 +192,11 @@
             this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNomeUsuario.PlaceholderMarginLeft = 12;
             this.txtNomeUsuario.PlaceholderText = "Busque aqui o Nome do Usuário ...";
-            this.txtNomeUsuario.Size = new System.Drawing.Size(451, 40);
+            this.txtNomeUsuario.Size = new System.Drawing.Size(617, 40);
             this.txtNomeUsuario.TabIndex = 108;
             this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
             this.txtNomeUsuario.UseSystemPasswordChar = false;
-           
+            this.txtNomeUsuario.TextChanged += new System.EventHandler(this.txtNomeUsuario_TextChanged);
             // 
             // label1
             // 
@@ -221,7 +204,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(75, 130);
+            this.label1.Location = new System.Drawing.Point(74, 128);
             this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(167, 25);
@@ -448,6 +431,7 @@
             this.mtxCPF.Padding = new System.Windows.Forms.Padding(18, 6, 6, 6);
             this.mtxCPF.Size = new System.Drawing.Size(329, 40);
             this.mtxCPF.TabIndex = 96;
+
             // 
             // EditarUsuarioForm
             // 
@@ -477,7 +461,6 @@
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnExcluir;
         private System.Windows.Forms.Button btnSalvar;
-        private System.Windows.Forms.Button btnBuscarUsuario;
         private RoundedTextBox txtNomeUsuario;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DateTimePicker dtpDataNasc;

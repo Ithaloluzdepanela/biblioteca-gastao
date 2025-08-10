@@ -14,7 +14,6 @@ namespace BibliotecaApp.Forms.Usuario
         {
             InitializeComponent();
             this.Load += UsuarioForm_Load;
-
         }
 
         #region Classe Conexao
@@ -146,8 +145,6 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
-
-
         private void ConfigurarGrid()
         {
             dgvUsuarios.SuspendLayout();
@@ -236,5 +233,9 @@ namespace BibliotecaApp.Forms.Usuario
         {
 
         }
+
+        // Adicione estes métodos na sua classe EditarUsuarioForm:
+
+       
     }
 }

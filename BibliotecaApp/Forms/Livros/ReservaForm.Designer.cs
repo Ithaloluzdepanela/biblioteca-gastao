@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+
+
             this.dtpDataReserva = new System.Windows.Forms.DateTimePicker();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();

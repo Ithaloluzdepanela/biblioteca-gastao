@@ -18,7 +18,13 @@ using System.Windows.Forms;
         private bool isMouseOver = false;
         private bool isFocused = false;
 
-        public RoundedTextBox()
+    public event EventHandler TextChanged
+    {
+        add { innerTextBox.TextChanged += value; }
+        remove { innerTextBox.TextChanged -= value; }
+    }
+
+    public RoundedTextBox()
         {
             this.DoubleBuffered = true;
             this.BackColor = Color.White;

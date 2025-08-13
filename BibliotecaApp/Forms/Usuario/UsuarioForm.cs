@@ -1,87 +1,445 @@
-﻿using BibliotecaApp;
-using BibliotecaApp.Froms.Usuario;
+﻿using BibliotecaApp.Forms.Inicio;
+using BibliotecaApp.Forms.Livros;
+using BibliotecaApp.Forms.Relatorio;
+using BibliotecaApp.Forms.Usuario;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
+using System.Data.SqlServerCe;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
+
 
 namespace BibliotecaApp.Forms.Usuario
 {
-
-
     public partial class UsuarioForm : Form
     {
         public UsuarioForm()
         {
             InitializeComponent();
-           
+            this.Load += UsuarioForm_Load;
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-           AbrirCadastroUsuario();
+        #region Classe Conexao
 
+        // Classe estática para conectar ao banco .sdf
+        public static class Conexao
+        {
+            public static string CaminhoBanco
+            {
+                get
+                {
+                    var raiz = Application.StartupPath;
+                    return Path.Combine(raiz, "bibliotecaDB", "bibliotecaDB.sdf");
+                }
+            }
+
+            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
+
+            public static SqlCeConnection ObterConexao()
+            {
+                if (!File.Exists(CaminhoBanco))
+                {
+                    throw new FileNotFoundException("Arquivo .sdf não encontrado no caminho: " + CaminhoBanco);
+                }
+                return new SqlCeConnection(Conectar);
+            }
         }
 
-        private void AbrirCadastroUsuario()
-        {
-            // Remove controles anteriores, se necessário
-            panelConteudo.Controls.Clear();
+        #endregion
 
-            CadUsuario cadastro = new CadUsuario();
-            cadastro.TopLevel = false; // Permite adicionar como controle
-            cadastro.FormBorderStyle = FormBorderStyle.None;
-            cadastro.Dock = DockStyle.None; // Para centralizar manualmente
+        private void UsuarioForm_Load(object sender, EventArgs e)
+        {
+            var caminho = Conexao.CaminhoBanco;
+            if (!File.Exists(caminho))
+            {
+                MessageBox.Show("Arquivo .sdf NÃO encontrado em: " + caminho +
+                                "\nDefina o arquivo como 'Copy to Output Directory'.",
+                                "Banco não encontrado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Teste rápido de conexão e existência de tabela/dados
+            try
+            {
+                using (var c = Conexao.ObterConexao())
+                {
+                    c.Open();
+                    using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM usuarios", c))
+                    {
+                        var count = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                        // Opcional para depurar:
+                        // MessageBox.Show("Registros em 'usuarios': " + count);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Falha ao abrir o banco .sdf ou acessar a tabela 'usuarios': " + ex.Message,
+                                "Erro de conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            // Itens e seleção padrão
+            cmbTipoUsuario.Items.Clear();
+            cmbTipoUsuario.Items.AddRange(new object[] { "Todos", "Aluno(a)", "Professor(a)", "Bibliotecário(a)", "Outros" });
+            cmbTipoUsuario.SelectedItem = "Todos";
+            cmbEmprestimo.SelectedItem = "Todos";
+            if (cmbTipoUsuario.SelectedIndex < 0 && cmbTipoUsuario.Items.Count > 0)
+                cmbTipoUsuario.SelectedIndex = 0;
+
             
-            // Centraliza manualmente
-            cadastro.StartPosition = FormStartPosition.Manual;
-            cadastro.Location = new Point(
-                (panelConteudo.Width - cadastro.Width) / 2,
-                (panelConteudo.Height - cadastro.Height) / 2
 
+            // Estilo e colunas do grid antes de carregar
+            ConfigurarGrid();
+            CarregarUsuarios();
+        }
+
+        private void btnFiltrar_Click(object sender, EventArgs e)
+        {
+            string nome = txtNome.Text?.Trim() ?? string.Empty;
+            string tipo = cmbTipoUsuario.SelectedItem?.ToString() ?? "Todos";
+            string emprestimo = cmbEmprestimo?.SelectedItem?.ToString() ?? "Todos";
+            CarregarUsuarios(nome, tipo, emprestimo);
+        }
+
+        private void CarregarUsuarios(string nomeFiltro = "", string tipoFiltro = "Todos", string emprestimoFiltro = "Todos")
+        {
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+
+                    string sql = @"
+                SELECT
+                    u.id              AS Id,
+                    u.nome            AS Nome,
+                    u.email           AS Email,
+                    u.tipousuario     AS TipoUsuario,
+                    u.cpf             AS CPF,
+                    u.telefone        AS Telefone,
+                    u.turma           AS Turma,
+                    u.datanascimento  AS DataNascimento,
+                    CASE
+                        WHEN EXISTS (
+                            SELECT 1
+                            FROM Emprestimo e
+                            WHERE e.Alocador = u.id
+                              AND e.Status = 'Atrasado'
+                        ) THEN 'Atrasado'
+                        WHEN EXISTS (
+                            SELECT 1
+                            FROM Emprestimo e
+                            WHERE e.Alocador = u.id
+                              AND e.Status <> 'Devolvido'
+                        ) THEN 'Ativo'
+                        ELSE 'Sem empréstimo'
+                    END AS EmprestimoStatus
+                FROM Usuarios u
+                WHERE 1 = 1";
+
+                    if (!string.IsNullOrWhiteSpace(nomeFiltro))
+                        sql += " AND u.nome LIKE @nome ESCAPE '\\'";
+
+                    if (!string.Equals(tipoFiltro, "Todos", StringComparison.OrdinalIgnoreCase))
+                        sql += " AND u.tipousuario LIKE @tipo";
+
+                    if (!string.Equals(emprestimoFiltro, "Todos", StringComparison.OrdinalIgnoreCase))
+                    {
+                        switch (emprestimoFiltro)
+                        {
+                            case "Sem empréstimo":
+                                sql += @"
+                            AND NOT EXISTS (
+                                SELECT 1
+                                FROM Emprestimo e
+                                WHERE e.Alocador = u.id
+                                  AND e.Status <> 'Devolvido'
+                            )";
+                                break;
+
+                            case "Ativo":
+                                sql += @"
+                            AND EXISTS (
+                                SELECT 1
+                                FROM Emprestimo e
+                                WHERE e.Alocador = u.id
+                                  AND e.Status = 'Ativo'
+                            )";
+                                break;
+
+                            case "Atrasado":
+                                sql += @"
+                            AND EXISTS (
+                                SELECT 1
+                                FROM Emprestimo e
+                                WHERE e.Alocador = u.id
+                                  AND e.Status = 'Atrasado'
+                            )";
+                                break;
+                        }
+                    }
+
+                    sql += " ORDER BY u.nome ASC";
+
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    {
+                        if (!string.IsNullOrWhiteSpace(nomeFiltro))
+                        {
+                            var seguro = EscapeLikeValue(nomeFiltro.Trim());
+                            cmd.Parameters.AddWithValue("@nome", seguro + "%"); // prefixo
+                        }
+                        if (!string.Equals(tipoFiltro, "Todos", StringComparison.OrdinalIgnoreCase))
+                            cmd.Parameters.AddWithValue("@tipo", "%" + tipoFiltro + "%");
+
+                        var tabela = new DataTable();
+                        using (var adapter = new SqlCeDataAdapter(cmd))
+                        {
+                            adapter.Fill(tabela);
+                        }
+                        dgvUsuarios.DataSource = tabela;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar usuários: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        //proteçao contra caracteres especiais no LIKE
+        private static string EscapeLikeValue(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.Replace("\\", "\\\\").Replace("%", "\\%").Replace("_", "\\_");
+        }
+
+
+        private void ConfigurarGrid()
+        {
+            dgvUsuarios.SuspendLayout();
+
+            dgvUsuarios.AutoGenerateColumns = false;
+            dgvUsuarios.Columns.Clear();
+
+            // Alinha o conteúdo padrão à esquerda (caso alguma coluna seja criada sem alinhamento explícito)
+            dgvUsuarios.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+
+            DataGridViewTextBoxColumn AddTextCol(string dataProp, string header, float fillWeight, DataGridViewContentAlignment align, int minWidth = 60)
+            {
+                var col = new DataGridViewTextBoxColumn
+                {
+                    DataPropertyName = dataProp,
+                    Name = dataProp,
+                    HeaderText = header,
+                    ReadOnly = true,
+                    FillWeight = fillWeight,
+                    MinimumWidth = minWidth,
+                    DefaultCellStyle = new DataGridViewCellStyle { Alignment = align, WrapMode = DataGridViewTriState.False }
+                };
+                dgvUsuarios.Columns.Add(col);
+                return col;
+            }
+
+            // Se quiser ID à esquerda também, troque para MiddleLeft.
+            AddTextCol("Id", "ID", 50, DataGridViewContentAlignment.MiddleCenter, 40);
+
+            // Todas as colunas de texto alinhadas à esquerda
+            AddTextCol("Nome", "Nome", 180, DataGridViewContentAlignment.MiddleLeft, 120);
+            AddTextCol("Email", "E-mail", 200, DataGridViewContentAlignment.MiddleLeft, 140);
+            AddTextCol("TipoUsuario", "Tipo", 110, DataGridViewContentAlignment.MiddleLeft, 90);
+            AddTextCol("CPF", "CPF", 110, DataGridViewContentAlignment.MiddleLeft, 90);
+            AddTextCol("Telefone", "Telefone", 120, DataGridViewContentAlignment.MiddleLeft, 90);
+            AddTextCol("Turma", "Turma", 180, DataGridViewContentAlignment.MiddleLeft, 140);
+
+            var nasc = AddTextCol("DataNascimento", "Nascimento", 130, DataGridViewContentAlignment.MiddleLeft, 110);
+            nasc.DefaultCellStyle.Format = "dd/MM/yyyy";
+            nasc.DefaultCellStyle.NullValue = "";
+
+            // Coluna de empréstimo também à esquerda
+            AddTextCol("EmprestimoStatus", "Empréstimo", 140, DataGridViewContentAlignment.MiddleLeft, 110);
+
+            // Botão Editar (mantém)
+            var btnEditar = new DataGridViewButtonColumn
+            {
+                Name = "Editar",
+                HeaderText = "",
+                Text = "",
+                UseColumnTextForButtonValue = true,
+                Width = 80,
+                FillWeight = 60,
+                FlatStyle = FlatStyle.Flat
+            };
+            dgvUsuarios.Columns.Add(btnEditar);
+
+            // Aparência
+            dgvUsuarios.BackgroundColor = Color.White;
+            dgvUsuarios.BorderStyle = BorderStyle.None;
+            dgvUsuarios.GridColor = Color.FromArgb(235, 239, 244);
+            dgvUsuarios.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvUsuarios.RowHeadersVisible = false;
+            dgvUsuarios.ReadOnly = true;
+            dgvUsuarios.MultiSelect = false;
+            dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvUsuarios.AllowUserToAddRows = false;
+            dgvUsuarios.AllowUserToDeleteRows = false;
+            dgvUsuarios.AllowUserToResizeRows = false;
+
+            dgvUsuarios.DefaultCellStyle.BackColor = Color.White;
+            dgvUsuarios.DefaultCellStyle.ForeColor = Color.FromArgb(20, 42, 60);
+            dgvUsuarios.DefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
+            dgvUsuarios.DefaultCellStyle.SelectionBackColor = Color.FromArgb(231, 238, 247);
+            dgvUsuarios.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvUsuarios.RowTemplate.Height = 40;
+            dgvUsuarios.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
+
+            // Cabeçalho alinhado à esquerda
+            dgvUsuarios.EnableHeadersVisualStyles = false;
+            dgvUsuarios.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgvUsuarios.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 61, 88);
+            dgvUsuarios.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvUsuarios.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 10.5f, FontStyle.Bold);
+            dgvUsuarios.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvUsuarios.ColumnHeadersHeight = 44;
+            dgvUsuarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+
+            // Largura
+            dgvUsuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            foreach (DataGridViewColumn col in dgvUsuarios.Columns)
+                col.SortMode = DataGridViewColumnSortMode.Automatic;
+
+            // Suavizar rolagem
+            typeof(DataGridView).InvokeMember(
+                "DoubleBuffered",
+                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
+                null,
+                dgvUsuarios,
+                new object[] { true }
             );
 
-            panelConteudo.Controls.Add(cadastro);
-            cadastro.Show();
-            cadastro.BringToFront();
+            dgvUsuarios.ResumeLayout();
+            dgvUsuarios.CellPainting += DgvUsuarios_CellPainting;
+
+            // Mantém a coloração da coluna de empréstimo, se você adicionou antes
+            dgvUsuarios.CellFormatting -= DgvUsuarios_CellFormatting;
+            dgvUsuarios.CellFormatting += DgvUsuarios_CellFormatting;
+
+            foreach (DataGridViewColumn col in dgvUsuarios.Columns)
+            {
+                col.SortMode = DataGridViewColumnSortMode.Automatic;
+                col.Resizable = DataGridViewTriState.False;
+            }
         }
-        private void AbrirEditarUsuario()
+
+        // NOVO: coloração condicional da coluna de empréstimo
+        private void DgvUsuarios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            // Remove controles anteriores
-            panelConteudo.Controls.Clear();
+            if (e.RowIndex < 0) return;
+            if (dgvUsuarios.Columns[e.ColumnIndex].Name != "EmprestimoStatus") return;
+            if (e.Value == null) return;
 
-            EditarUsuarioForm editarUsuario = new EditarUsuarioForm();
-            editarUsuario.TopLevel = false;
-            editarUsuario.FormBorderStyle = FormBorderStyle.None;
-            editarUsuario.Dock = DockStyle.None;
-            editarUsuario.StartPosition = FormStartPosition.Manual;
-
-            // Adiciona ao painel e mostra primeiro (pra ele calcular tamanho)
-            panelConteudo.Controls.Add(editarUsuario);
-            editarUsuario.Show();
-
-            // Agora que já foi mostrado, dá pra centralizar corretamente
-            editarUsuario.Location = new Point(
-                (panelConteudo.Width - editarUsuario.Width) / 2,
-                (panelConteudo.Height - editarUsuario.Height) / 2
-            );
-
-            editarUsuario.BringToFront();
+            var status = e.Value.ToString();
+            if (status.Equals("Atrasado", StringComparison.OrdinalIgnoreCase))
+            {
+                e.CellStyle.ForeColor = Color.FromArgb(178, 34, 34); // vermelho
+                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+            }
+            else if (status.Equals("Ativo", StringComparison.OrdinalIgnoreCase))
+            {
+                e.CellStyle.ForeColor = Color.FromArgb(34, 139, 34); // verde
+                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+            }
+            else
+            {
+                e.CellStyle.ForeColor = Color.FromArgb(100, 100, 100); // cinza
+            }
         }
 
-        private void panelConteudo_Paint(object sender, PaintEventArgs e)
+        private void DgvUsuarios_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            
+            if (e.RowIndex >= 0 && dgvUsuarios.Columns[e.ColumnIndex].Name == "Editar")
+            {
+                e.PaintBackground(e.CellBounds, true);
+
+                // Cores do seu tema
+                Color corFundo = Color.FromArgb(30, 61, 88);  // igual ao cabeçalho
+                Color corTexto = Color.White;
+
+                // Desenha botão arredondado
+                int borderRadius = 8;
+                Rectangle rect = new Rectangle(e.CellBounds.X + 6, e.CellBounds.Y + 6,
+                                               e.CellBounds.Width - 12, e.CellBounds.Height - 12);
+
+                using (SolidBrush brush = new SolidBrush(corFundo))
+                using (Pen pen = new Pen(corFundo, 1))
+                {
+                    System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+                    path.AddArc(rect.X, rect.Y, borderRadius, borderRadius, 180, 90);
+                    path.AddArc(rect.Right - borderRadius, rect.Y, borderRadius, borderRadius, 270, 90);
+                    path.AddArc(rect.Right - borderRadius, rect.Bottom - borderRadius, borderRadius, borderRadius, 0, 90);
+                    path.AddArc(rect.X, rect.Bottom - borderRadius, borderRadius, borderRadius, 90, 90);
+                    path.CloseFigure();
+
+                    e.Graphics.FillPath(brush, path);
+                    e.Graphics.DrawPath(pen, path);
+                }
+
+                // Texto centralizado
+                TextRenderer.DrawText(e.Graphics, "Editar",
+                    new Font("Segoe UI Semibold", 9F),
+                    rect,
+                    corTexto,
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+
+                e.Handled = true;
+            }
         }
 
-        private void pictureBox2_Click(object sender, EventArgs e)
+
+        private void dgvUsuarios_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            AbrirEditarUsuario();
+            // Verifica se clicou na coluna de botão "Editar" e se não é header
+            if (e.RowIndex >= 0 && dgvUsuarios.Columns[e.ColumnIndex].Name == "Editar")
+            {
+                var row = dgvUsuarios.Rows[e.RowIndex];
+                var nome = row.Cells["Nome"].Value?.ToString();
+
+                var confirm = MessageBox.Show($"Deseja editar o usuário \"{nome}\"?", "Editar Usuário", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (confirm == DialogResult.Yes)
+                {
+                    // Cria o formulário de edição
+                    var usuarioEdit = new EditarUsuarioForm();
+
+                    // Preenche os campos do formulário com os dados do usuário selecionado
+                    usuarioEdit.PreencherUsuario(new Usuarios
+                    {
+                        Id = Convert.ToInt32(row.Cells["Id"].Value),
+                        Nome = row.Cells["Nome"].Value?.ToString(),
+                        Email = row.Cells["Email"].Value?.ToString(),
+                        TipoUsuario = row.Cells["TipoUsuario"].Value?.ToString(),
+                        CPF = row.Cells["CPF"].Value?.ToString(),
+                        Telefone = row.Cells["Telefone"].Value?.ToString(),
+                        Turma = row.Cells["Turma"].Value?.ToString(),
+                        DataNascimento = row.Cells["DataNascimento"].Value != DBNull.Value
+                            ? Convert.ToDateTime(row.Cells["DataNascimento"].Value)
+                            : DateTime.MinValue
+                    });
+
+                    //abre o form de ediçao
+
+                    ((MainForm)this.MdiParent).btnUserEdit.Enabled = false;
+                    ((MainForm)this.MdiParent).btnUser.Enabled = true;
+                   
+                    usuarioEdit.MdiParent = this.MdiParent;
+                    usuarioEdit.Dock = DockStyle.Fill;
+                    usuarioEdit.FormClosed += (s, args) => { usuarioEdit.Dispose(); };
+                    usuarioEdit.Show();
+                }
+            }
         }
+
+        
     }
 }

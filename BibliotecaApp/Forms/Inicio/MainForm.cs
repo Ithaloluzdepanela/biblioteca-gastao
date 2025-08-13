@@ -583,6 +583,7 @@ public static bool tema = false;
 
 
         #endregion
+        
 
         private void interruptor_Click(object sender, EventArgs e)
         {

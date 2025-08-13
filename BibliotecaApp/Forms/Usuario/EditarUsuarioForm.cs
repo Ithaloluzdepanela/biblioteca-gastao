@@ -18,7 +18,11 @@ namespace BibliotecaApp.Forms.Usuario
         public EditarUsuarioForm()
         {
             InitializeComponent();
-            txtNome.Focus();
+         
+
+            EstilizarListBoxSugestao(lstSugestoesUsuario);
+            EstilizarListBoxSugestao(lstSugestoesUsuario);
+
         }
 
         #region Classe Conexao
@@ -78,12 +82,13 @@ namespace BibliotecaApp.Forms.Usuario
                 }
 
                 if (CpfJaExiste(mtxCPF.Text.Trim(), _usuarioSelecionado.Id))
-
                 {
                     MessageBox.Show("Já existe outro usuário com esse CPF.", "CPF duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                if (!EmailValido(txtEmail.Text.Trim()))
+
+                string email = txtEmail.Text.Trim();
+                if (!string.IsNullOrEmpty(email) && !EmailValido(email))
                 {
                     MessageBox.Show("E-mail inválido. Digite um e-mail válido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -112,7 +117,7 @@ namespace BibliotecaApp.Forms.Usuario
             dtpDataNasc.Value = _usuarioSelecionado.DataNascimento == DateTime.MinValue ? DateTime.Today : _usuarioSelecionado.DataNascimento;
             mtxTelefone.Text = _usuarioSelecionado.Telefone;
             txtTurma.Text = _usuarioSelecionado.Turma;
-            
+            OnUsuarioSelecionado(true);
 
             lblTipoUsuario.Text = $"Tipo: {_usuarioSelecionado.TipoUsuario}";
             lblTipoUsuario.Visible = true;
@@ -146,6 +151,7 @@ namespace BibliotecaApp.Forms.Usuario
                 }
 
                 MessageBox.Show("Usuário excluído com sucesso!");
+                HabilitarCampos();
                 LimparCampos();
             }
             catch (Exception ex)
@@ -154,20 +160,7 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
-        private void LimparCampos()
-        {
-            txtNomeUsuario.Text = "";
-            txtNome.Text = "";
-            txtEmail.Text = "";
-            mtxCPF.Text = "";
-            dtpDataNasc.Value = DateTime.Today;
-            mtxTelefone.Text = "";
-            txtTurma.Text = "";
-            lblTipoUsuario.Text = "";
-            _usuarioSelecionado = null;
-            lblTipoUsuario.Visible = false;
-            lblTipoUsuario.Text = "";
-        }
+        
 
         
         private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e)
@@ -180,7 +173,19 @@ namespace BibliotecaApp.Forms.Usuario
 
 
 
-        private void btnBuscarUsuario_Click(object sender, EventArgs e)
+        
+
+
+        private void txtNomeUsuario_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Down && lstSugestoesUsuario.Visible && lstSugestoesUsuario.Items.Count > 0)
+            {
+                lstSugestoesUsuario.Focus();
+                lstSugestoesUsuario.SelectedIndex = 0;
+            }
+        }
+
+        private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
         {
             lstSugestoesUsuario.Items.Clear();
             lstSugestoesUsuario.Visible = false;
@@ -189,10 +194,7 @@ namespace BibliotecaApp.Forms.Usuario
             string nomeBusca = txtNomeUsuario.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(nomeBusca))
-            {
-                MessageBox.Show("Digite um nome para buscar.");
                 return;
-            }
 
             try
             {
@@ -203,7 +205,6 @@ namespace BibliotecaApp.Forms.Usuario
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@nome", nomeBusca + "%");
-
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -219,26 +220,14 @@ namespace BibliotecaApp.Forms.Usuario
                                     Turma = reader["Turma"].ToString(),
                                     TipoUsuario = reader["TipoUsuario"].ToString()
                                 };
-
                                 _cacheUsuarios.Add(usuario);
-                                lstSugestoesUsuario.Items.Add(usuario); // Lembre do ToString() que mostra Nome - Turma
+                                lstSugestoesUsuario.Items.Add(usuario); // ToString mostra Nome - Turma
                             }
                         }
                     }
-
                 }
-
-                if (lstSugestoesUsuario.Items.Count > 0)
-                {
-                    lstSugestoesUsuario.Visible = true;
-                    lstSugestoesUsuario.Enabled = true;
-                }
-                else
-                {
-                    MessageBox.Show("Nenhum usuário encontrado com esse nome.");
-                    lstSugestoesUsuario.Visible = false;
-                    lstSugestoesUsuario.Enabled = false;
-                }
+                lstSugestoesUsuario.Visible = lstSugestoesUsuario.Items.Count > 0;
+                lstSugestoesUsuario.Enabled = lstSugestoesUsuario.Items.Count > 0;
             }
             catch (Exception ex)
             {
@@ -246,42 +235,42 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
-
-
-        private void txtNomeUsuario_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Down && lstSugestoesUsuario.Visible && lstSugestoesUsuario.Items.Count > 0)
-            {
-                lstSugestoesUsuario.Focus();
-                lstSugestoesUsuario.SelectedIndex = 0;
-            }
-        }
-
-
         // Configurações de exibição para Edição de Usuário
 
 
         private void HabilitarCampos()
         {
             txtNome.Visible = true;
+            txtNome.Enabled = true;
             txtEmail.Visible = true;
+            txtEmail.Enabled = true;
             txtTurma.Visible = true;
+            txtTurma.Enabled = true;
             lblTurma.Visible = true;
+            lblTurma.Enabled = true;
             lblEmail.Visible = true;
+            lblEmail.Enabled = true;
             lblNome.Visible = true;
+            lblNome.Enabled = true;
             lblCPF.Visible = true;
+            lblCPF.Enabled = true;
             lblDataNasc.Visible = true;
+            lblDataNasc.Enabled = true;
             lblTelefone.Visible = true;
+            lblTelefone.Enabled = true;
             mtxCPF.Visible = true;
+            mtxCPF.Enabled = true;
             mtxTelefone.Visible = true;
+            mtxTelefone.Enabled = true;
             dtpDataNasc.Visible = true;
+            dtpDataNasc.Enabled = true;
         }
 
         private void ConfigurarEdicaoParaBibliotecario()
         {
             HabilitarCampos();
             txtTurma.Visible = false;
-
+            
           
 
             lblTurma.Visible = false;
@@ -367,21 +356,202 @@ namespace BibliotecaApp.Forms.Usuario
         }
 
 
+        #region estilizacao listbox
 
+       
 
-        private void lblTipoUsuario_Click(object sender, EventArgs e)
+        private int hoveredIndex = -1;
+
+        private void EstilizarListBoxSugestao(ListBox listBox)
         {
+            listBox.DrawMode = DrawMode.OwnerDrawFixed;
+            listBox.Font = new Font("Segoe UI", 12, FontStyle.Regular);
+            listBox.ItemHeight = 40;
+
+            listBox.BackColor = Color.White;
+            listBox.ForeColor = Color.FromArgb(30, 61, 88);
+            listBox.BorderStyle = BorderStyle.FixedSingle;
+            listBox.IntegralHeight = false;
+
+            listBox.DrawItem -= ListBoxSugestao_DrawItem;
+            listBox.DrawItem += ListBoxSugestao_DrawItem;
+
+            listBox.MouseMove -= ListBoxSugestao_MouseMove;
+            listBox.MouseMove += ListBoxSugestao_MouseMove;
+
+            listBox.MouseLeave -= ListBoxSugestao_MouseLeave;
+            listBox.MouseLeave += ListBoxSugestao_MouseLeave;
+        }
+
+        private void ListBoxSugestao_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            if (e.Index < 0) return;
+
+            bool hovered = (e.Index == hoveredIndex);
+
+            // Tons de cinza
+            Color backColor = hovered
+                ? Color.FromArgb(235, 235, 235) // cinza claro no hover
+                : Color.White;                  // fundo branco
+
+            Color textColor = Color.FromArgb(60, 60, 60); // cinza escuro
+
+            using (SolidBrush b = new SolidBrush(backColor))
+                e.Graphics.FillRectangle(b, e.Bounds);
+
+            string text = listBox.Items[e.Index].ToString();
+            Font font = listBox.Font;
+
+            Rectangle textRect = new Rectangle(e.Bounds.Left + 12, e.Bounds.Top, e.Bounds.Width - 24, e.Bounds.Height);
+            TextRenderer.DrawText(e.Graphics, text, font, textRect, textColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+
+            // Linha divisória entre itens (cinza bem suave)
+            if (e.Index < listBox.Items.Count - 1)
+            {
+                using (Pen p = new Pen(Color.FromArgb(220, 220, 220)))
+                    e.Graphics.DrawLine(p, e.Bounds.Left + 8, e.Bounds.Bottom - 1, e.Bounds.Right - 8, e.Bounds.Bottom - 1);
+            }
+
 
         }
 
-        private void lblCPF_Click(object sender, EventArgs e)
-        {
 
+        private void ListBoxSugestao_MouseMove(object sender, MouseEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            int index = listBox.IndexFromPoint(e.Location);
+            if (index != hoveredIndex)
+            {
+                hoveredIndex = index;
+                listBox.Invalidate();
+            }
         }
 
-        private void panel2_Paint(object sender, PaintEventArgs e)
+        private void ListBoxSugestao_MouseLeave(object sender, EventArgs e)
         {
+            hoveredIndex = -1;
+            (sender as ListBox).Invalidate();
+        }
+        #endregion
 
+
+
+        private void HabilitarCampos(bool ativo)
+        {
+            txtNome.Enabled = ativo;
+            txtEmail.Enabled = ativo;
+            txtTurma.Enabled = ativo;
+            mtxCPF.Enabled = ativo;
+            mtxTelefone.Enabled = ativo;
+            dtpDataNasc.Enabled = ativo;
+
+            SetCamposColors(ativo);
+            SetLabelColors(ativo);
+        }
+
+        private void SetCamposColors(bool enabled)
+        {
+            Color backColor = enabled ? Color.WhiteSmoke : Color.White;
+            Color borderColor = enabled ? Color.FromArgb(204, 204, 204) : Color.LightGray;
+
+            if (txtNome is RoundedTextBox rtbNome)
+            {
+                rtbNome.BackColor = backColor;
+                rtbNome.BorderColor = borderColor;
+            }
+            if (txtEmail is RoundedTextBox rtbEmail)
+            {
+                rtbEmail.BackColor = backColor;
+                rtbEmail.BorderColor = borderColor;
+            }
+            if (txtTurma is RoundedTextBox rtbTurma)
+            {
+                rtbTurma.BackColor = backColor;
+                rtbTurma.BorderColor = borderColor;
+            }
+            if (mtxCPF is RoundedMaskedTextBox rmtxCPF)
+            {
+                rmtxCPF.BackColor = backColor;
+                rmtxCPF.BorderColor = borderColor;
+            }
+            if (mtxTelefone is RoundedMaskedTextBox rmtxTel)
+            {
+                rmtxTel.BackColor = backColor;
+                rmtxTel.BorderColor = borderColor;
+            }
+            dtpDataNasc.BackColor = backColor;
+        }
+
+        private void SetLabelColors(bool enabled)
+        {
+            Color color = enabled ? Color.FromArgb(20, 41, 60) : Color.LightGray;
+            lblNome.ForeColor = color;
+            lblEmail.ForeColor = color;
+            lblTurma.ForeColor = color;
+            lblCPF.ForeColor = color;
+            lblDataNasc.ForeColor = color;
+            lblTelefone.ForeColor = color;
+        }
+
+        // Chame este método quando um usuário for selecionado ou desmarcado
+        private void OnUsuarioSelecionado(bool selecionado)
+        {
+            HabilitarCampos(selecionado);
+        }
+
+       
+        
+
+        // No método LimparCampos ou quando não houver seleção:
+        private void LimparCampos()
+        {
+            txtNomeUsuario.Text = "";
+            txtNome.Text = "";
+            txtEmail.Text = "";
+            mtxCPF.Text = "";
+            dtpDataNasc.Value = DateTime.Today;
+            mtxTelefone.Text = "";
+            txtTurma.Text = "";
+            lblTipoUsuario.Text = "";
+            _usuarioSelecionado = null;
+            lblTipoUsuario.Visible = false;
+            lblTipoUsuario.Text = "";
+            OnUsuarioSelecionado(false);
+        }
+
+        public void PreencherUsuario(Usuarios usuario)
+        {
+            HabilitarCampos(true);
+
+            _usuarioSelecionado = usuario;
+            txtNomeUsuario.Text = usuario.Nome;
+            txtNome.Text = usuario.Nome;
+            txtEmail.Text = usuario.Email;
+            mtxCPF.Text = usuario.CPF;
+            dtpDataNasc.Value = usuario.DataNascimento == DateTime.MinValue ? DateTime.Today : usuario.DataNascimento;
+            mtxTelefone.Text = usuario.Telefone;
+            txtTurma.Text = usuario.Turma;
+            lblTipoUsuario.Text = $"Tipo: {usuario.TipoUsuario}";
+            lblTipoUsuario.Visible = true;
+           
+
+            AplicarConfiguracaoEdicaoUsuario();
+            OnUsuarioSelecionado(true);
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            // Remove o foco de qualquer controle
+            this.ActiveControl = null;
+
+            // Garante que nenhum controle receba foco após o carregamento
+            this.BeginInvoke(new Action(() => this.ActiveControl = null));
+
+            // Desabilita campos inicialmente
+            HabilitarCampos(false);
         }
     }
-    }
+}

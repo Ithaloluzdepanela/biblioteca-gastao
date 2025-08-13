@@ -36,88 +36,133 @@ namespace BibliotecaApp.Forms.Relatorio
         public RelForm()
         {
             InitializeComponent();
-        }
-
-        private void btnEmprestimos_Click(object sender, EventArgs e)
-        {
-
+            this.Load += RelForm_Load;
         }
 
 
         private void RelForm_Load(object sender, EventArgs e)
         {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string pastaRelatorios = @"\BibliotecaApp\txt.relatorios";
-            string arquivo = "txt.relatorios";
-            if (!File.Exists(pastaRelatorios + arquivo))
+            var caminho = Conexao.CaminhoBanco;
+            if (!File.Exists(caminho))
             {
-                File.Create(pastaRelatorios + arquivo).Close();
+                MessageBox.Show("Arquivo .sdf NÃO encontrado em: " + caminho +
+                                "\nDefina o arquivo como 'Copy to Output Directory'.",
+                                "Banco não encontrado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            File.WriteAllText(pastaRelatorios + arquivo, "Teste de escrita em arquivo", Encoding.Default);
+                // Teste rápido de conexão e existência de tabela/dados
+                try
+                {
+                    using (var c = Conexao.ObterConexao())
+                    {
+                        c.Open();
+                        using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM usuarios", c))
+                        {
+                            var count = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                            // Opcional para depurar:
+                            // MessageBox.Show("Registros em 'usuarios': " + count);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Falha ao abrir o banco .sdf ou acessar a tabela 'usuarios': " + ex.Message,
+                                    "Erro de conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            
         }
 
-        private void tabPageEmprestimos_Click(object sender, EventArgs e)
+        private void dgvHistorico_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
-        }
+           
+            }
 
         private void btnFiltrar_Click(object sender, EventArgs e)
         {
-            using (SqlCeConnection conexao = Conexao.ObterConexao())
+            CarregarLog();
+        }
+
+        private void CarregarLog()
+        {
+            using (var conexao = Conexao.ObterConexao())
             {
-                try
+                conexao.Open();
+
+                // Consulta para empréstimos
+                string sqlEmprestimo = @"
+                    SELECT 
+                        e.Id,
+                        u.Nome AS Usuario,
+                        l.Nome AS Livro,
+                        'Empréstimo' AS Acao,
+                        e.DataEmprestimo AS DataAcao,
+                        b.Nome AS Bibliotecaria
+                    FROM Emprestimo e
+                    LEFT JOIN Usuarios u ON e.Alocador = u.Id
+                    LEFT JOIN Livros l ON e.Livro = l.Id
+                    LEFT JOIN Usuarios b ON e.Responsavel = b.Id
+                    WHERE 1=1";
+
+                // Consulta para reservas
+                string sqlReserva = @"
+                    SELECT 
+                        r.Id,
+                        u.Nome AS Usuario,
+                        l.Nome AS Livro,
+                        'Reserva' AS Acao,
+                        r.DataReserva AS DataAcao,
+                        b.Nome AS Bibliotecaria
+                    FROM Reservas r
+                    LEFT JOIN Usuarios u ON r.UsuarioId = u.Id
+                    LEFT JOIN Livros l ON r.LivroId = l.Id
+                    LEFT JOIN Usuarios b ON r.BibliotecariaId = b.Id
+                    WHERE 1=1";
+
+                // Filtros dinâmicos
+                string filtros = "";
+                if (!string.IsNullOrWhiteSpace(txtUsuario.Text))
+                    filtros += " AND u.Nome LIKE @usuario";
+                if (!string.IsNullOrWhiteSpace(txtLivro.Text))
+                    filtros += " AND l.Nome LIKE @livro";
+                if (cmbAcao.SelectedIndex > 0)
+                    filtros += " AND @acao = Acao";
+                if (!string.IsNullOrWhiteSpace(txtBibliotecaria.Text))
+                    filtros += " AND b.Nome LIKE @bibliotecaria";
+                filtros += " AND DataAcao >= @inicio AND DataAcao <= @fim";
+
+                // Aplica filtros nas duas consultas
+                sqlEmprestimo += filtros;
+                sqlReserva += filtros;
+
+                // Junta as consultas
+                string sqlFinal = $@"
+                    {sqlEmprestimo}
+                    UNION ALL
+                    {sqlReserva}
+                    ORDER BY DataAcao DESC";
+
+                using (var cmd = new SqlCeCommand(sqlFinal, conexao))
                 {
-                    conexao.Open();
+                    if (!string.IsNullOrWhiteSpace(txtUsuario.Text))
+                        cmd.Parameters.AddWithValue("@usuario", "%" + txtUsuario.Text.Trim() + "%");
+                    if (!string.IsNullOrWhiteSpace(txtLivro.Text))
+                        cmd.Parameters.AddWithValue("@livro", "%" + txtLivro.Text.Trim() + "%");
+                    if (cmbAcao.SelectedIndex > 0)
+                        cmd.Parameters.AddWithValue("@acao", cmbAcao.SelectedItem.ToString());
+                    if (!string.IsNullOrWhiteSpace(txtBibliotecaria.Text))
+                        cmd.Parameters.AddWithValue("@bibliotecaria", "%" + txtBibliotecaria.Text.Trim() + "%");
+                    cmd.Parameters.AddWithValue("@inicio", dtpInicio.Value.Date);
+                    cmd.Parameters.AddWithValue("@fim", dtpFim.Value.Date.AddDays(1).AddSeconds(-1));
 
-
-                    string query = @"SELECT * FROM Emprestimo";
-                    if (txtIdLivro.Text != "")
+                    var tabela = new DataTable();
+                    using (var adapter = new SqlCeDataAdapter(cmd))
                     {
-                        query = @"SELECT * FROM Emprestimo WHERE LivroID LIKE '" + txtIdLivro.Text + "'";
+                        adapter.Fill(tabela);
                     }
-                    if (txtIdUsuario.Text != "")
-                    {
-                        query = @"SELECT * FROM Emprestimo WHERE UsuarioID LIKE '" + txtIdUsuario.Text + "'";
-                    }
-                    DataTable dados = new DataTable();
-                    SqlCeDataAdapter adaptador = new SqlCeDataAdapter(query, conexao);
-
-                    lblResultado.Text = "Funcionou";
-
-                    adaptador.Fill(dados);
-
-                    foreach (DataRow linha in dados.Rows)
-                    {
-                        lista.Rows.Add(linha.ItemArray);
-                    }
+                    dgvHistorico.DataSource = tabela;
                 }
-
-                catch (Exception ex)
-                {
-                    lista.Rows.Clear();
-                    lblResultado.Text = $"Erro: {ex.Message}";
-                }
-                finally
-                {
-                    conexao.Close();
-                }
-                txtIdLivro.Text = "";
-                txtIdUsuario.Text = "";
             }
-        }
-
-        private void lblNome_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtTurma_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

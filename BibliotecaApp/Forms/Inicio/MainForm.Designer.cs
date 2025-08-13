@@ -31,6 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panelControl = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.interruptor = new ToggleSwitch.AnimatedToggle();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.ControlPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.picExit = new System.Windows.Forms.PictureBox();
             this.picMax = new System.Windows.Forms.PictureBox();
@@ -59,6 +62,8 @@
             this.livroTransition = new System.Windows.Forms.Timer(this.components);
             this.userTransition = new System.Windows.Forms.Timer(this.components);
             this.panelControl.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.ControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMax)).BeginInit();
@@ -77,14 +82,52 @@
             // 
             this.panelControl.AllowDrop = true;
             this.panelControl.BackColor = System.Drawing.Color.White;
+            this.panelControl.Controls.Add(this.panel2);
             this.panelControl.Controls.Add(this.ControlPanel);
             this.panelControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelControl.Location = new System.Drawing.Point(205, 0);
             this.panelControl.Name = "panelControl";
-            this.panelControl.Size = new System.Drawing.Size(795, 30);
+            this.panelControl.Size = new System.Drawing.Size(1235, 30);
             this.panelControl.TabIndex = 0;
             this.panelControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelControl_MouseDown);
             this.panelControl.MouseEnter += new System.EventHandler(this.panelControl_MouseEnter);
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Transparent;
+            this.panel2.Controls.Add(this.interruptor);
+            this.panel2.Controls.Add(this.pictureBox2);
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(83, 30);
+            this.panel2.TabIndex = 10;
+            // 
+            // interruptor
+            // 
+            this.interruptor.BackColor = System.Drawing.Color.Transparent;
+            this.interruptor.Checked = false;
+            this.interruptor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.interruptor.Location = new System.Drawing.Point(1, 5);
+            this.interruptor.Name = "interruptor";
+            this.interruptor.OffBackColor = System.Drawing.Color.LightGray;
+            this.interruptor.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.interruptor.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.interruptor.Size = new System.Drawing.Size(38, 20);
+            this.interruptor.TabIndex = 5;
+            this.interruptor.ToggleColor = System.Drawing.Color.White;
+            this.interruptor.Click += new System.EventHandler(this.interruptor_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox2.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_símbolo_da_lua_22;
+            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.pictureBox2.Location = new System.Drawing.Point(42, 4);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox2.TabIndex = 7;
+            this.pictureBox2.TabStop = false;
             // 
             // ControlPanel
             // 
@@ -94,7 +137,7 @@
             this.ControlPanel.Controls.Add(this.picMin);
             this.ControlPanel.Dock = System.Windows.Forms.DockStyle.Right;
             this.ControlPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.ControlPanel.Location = new System.Drawing.Point(687, 0);
+            this.ControlPanel.Location = new System.Drawing.Point(1127, 0);
             this.ControlPanel.Name = "ControlPanel";
             this.ControlPanel.Size = new System.Drawing.Size(108, 30);
             this.ControlPanel.TabIndex = 4;
@@ -157,16 +200,15 @@
             // btnSair
             // 
             this.btnSair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnSair.FlatAppearance.BorderSize = 0;
             this.btnSair.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSair.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnSair.ForeColor = System.Drawing.Color.White;
             this.btnSair.Image = global::BibliotecaApp.Properties.Resources.icons8_sair_25;
             this.btnSair.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSair.Location = new System.Drawing.Point(0, 0);
+            this.btnSair.Location = new System.Drawing.Point(-5, -3);
             this.btnSair.Name = "btnSair";
             this.btnSair.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
-            this.btnSair.Size = new System.Drawing.Size(200, 60);
+            this.btnSair.Size = new System.Drawing.Size(223, 60);
             this.btnSair.TabIndex = 3;
             this.btnSair.Text = "Sair";
             this.btnSair.UseVisualStyleBackColor = false;
@@ -325,7 +367,7 @@
             this.menu.Dock = System.Windows.Forms.DockStyle.Left;
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
-            this.menu.Size = new System.Drawing.Size(205, 650);
+            this.menu.Size = new System.Drawing.Size(205, 900);
             this.menu.TabIndex = 1;
             // 
             // panel1
@@ -483,9 +525,10 @@
             // MainForm
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 650);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(1440, 900);
             this.Controls.Add(this.panelControl);
             this.Controls.Add(this.menu);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -495,6 +538,8 @@
             this.Name = "MainForm";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.panelControl.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ControlPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMax)).EndInit();
@@ -541,6 +586,9 @@
         private System.Windows.Forms.Button btnUserCad;
         private System.Windows.Forms.Button btnUserEdit;
         private System.Windows.Forms.Timer userTransition;
+        private ToggleSwitch.AnimatedToggle interruptor;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Panel panel2;
     }
 }
 

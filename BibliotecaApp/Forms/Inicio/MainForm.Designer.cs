@@ -58,8 +58,8 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnLivros = new System.Windows.Forms.Button();
             this.btnLivroCad = new System.Windows.Forms.Button();
             this.btnEmprestimoRap = new System.Windows.Forms.Button();
-            this.btnEmprestimo = new System.Windows.Forms.Button();
             this.btnLivro = new System.Windows.Forms.Button();
+            this.btnEmprestimo = new System.Windows.Forms.Button();
             this.livroTransition = new System.Windows.Forms.Timer(this.components);
             this.userTransition = new System.Windows.Forms.Timer(this.components);
             this.interruptor = new ToggleSwitch.AnimatedToggle();
@@ -92,7 +92,6 @@ namespace BibliotecaApp.Forms.Inicio
             this.panelControl.Size = new System.Drawing.Size(1235, 30);
             this.panelControl.TabIndex = 0;
             this.panelControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelControl_MouseDown);
-            this.panelControl.MouseEnter += new System.EventHandler(this.panelControl_MouseEnter);
             // 
             // panel2
             // 
@@ -464,24 +463,6 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnEmprestimoRap.UseVisualStyleBackColor = false;
             this.btnEmprestimoRap.Click += new System.EventHandler(this.btnEmprestimoRap_Click);
             // 
-            // btnEmprestimo
-            // 
-            this.btnEmprestimo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnEmprestimo.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
-            this.btnEmprestimo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEmprestimo.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            this.btnEmprestimo.ForeColor = System.Drawing.Color.Transparent;
-            this.btnEmprestimo.Image = ((System.Drawing.Image)(resources.GetObject("btnEmprestimo.Image")));
-            this.btnEmprestimo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEmprestimo.Location = new System.Drawing.Point(0, 119);
-            this.btnEmprestimo.Name = "btnEmprestimo";
-            this.btnEmprestimo.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
-            this.btnEmprestimo.Size = new System.Drawing.Size(200, 60);
-            this.btnEmprestimo.TabIndex = 4;
-            this.btnEmprestimo.Text = "Empréstimo";
-            this.btnEmprestimo.UseVisualStyleBackColor = false;
-            this.btnEmprestimo.Click += new System.EventHandler(this.btnEmprestimo_Click);
-            // 
             // btnLivro
             // 
             this.btnLivro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
@@ -499,6 +480,24 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnLivro.Text = "Livros";
             this.btnLivro.UseVisualStyleBackColor = false;
             this.btnLivro.Click += new System.EventHandler(this.btnLivro_Click);
+            // 
+            // btnEmprestimo
+            // 
+            this.btnEmprestimo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
+            this.btnEmprestimo.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
+            this.btnEmprestimo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEmprestimo.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.btnEmprestimo.ForeColor = System.Drawing.Color.Transparent;
+            this.btnEmprestimo.Image = ((System.Drawing.Image)(resources.GetObject("btnEmprestimo.Image")));
+            this.btnEmprestimo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnEmprestimo.Location = new System.Drawing.Point(0, 119);
+            this.btnEmprestimo.Name = "btnEmprestimo";
+            this.btnEmprestimo.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
+            this.btnEmprestimo.Size = new System.Drawing.Size(200, 60);
+            this.btnEmprestimo.TabIndex = 4;
+            this.btnEmprestimo.Text = "Empréstimo";
+            this.btnEmprestimo.UseVisualStyleBackColor = false;
+            this.btnEmprestimo.Click += new System.EventHandler(this.btnEmprestimo_Click);
             // 
             // livroTransition
             // 
@@ -523,7 +522,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.interruptor.Size = new System.Drawing.Size(38, 20);
             this.interruptor.TabIndex = 5;
             this.interruptor.ToggleColor = System.Drawing.Color.White;
-            this.interruptor.Click += new System.EventHandler(this.interruptor_Click);
+            this.interruptor.CheckedChanged += new System.EventHandler(this.interruptor_CheckedChanged);
             // 
             // MainForm
             // 

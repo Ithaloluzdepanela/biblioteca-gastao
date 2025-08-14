@@ -89,6 +89,7 @@ public static bool tema = false;
         //Função de maximizar/restaurar o Form
         private void AlternarMaximizado()
         {
+            
             if (!maximizado)
             {
                 tamanhoOriginal = this.Size;
@@ -107,6 +108,11 @@ public static bool tema = false;
 
                 maximizado = false;
             }
+        }
+
+        private void PanelControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -140,7 +146,7 @@ public static bool tema = false;
             if (livroContainer.Height > 60)
             {
                 livroTransition.Start();
-                await Task.Delay(600);
+                await Task.Delay(610);
             }
 
             userTransition.Start();
@@ -429,6 +435,7 @@ public static bool tema = false;
             var confirma = MessageBox.Show(msg, box, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirma == DialogResult.Yes)
             {
+                LoginForm.cancelar = false;
                 this.Close();
             }
         }
@@ -443,7 +450,103 @@ public static bool tema = false;
             Application.Exit();
 
         }
-        
+
+        //Tema escuro
+        private void interruptor_CheckedChanged(object sender, EventArgs e)
+        {
+            if (interruptor.Checked == true)
+            {
+                #region Tema escuro
+                tema = true;
+                if (inicio != null)
+                {
+                    inicio.BackColor = Color.FromArgb(30, 30, 30);
+                }
+                if (usuario != null)
+                {
+                    usuario.BackColor = Color.FromArgb(30, 30, 30);
+                }
+                if (livros != null)
+                {
+                    livros.BackColor = Color.FromArgb(30, 30, 30);
+                }
+                if (rel != null)
+                {
+                    rel.BackColor = Color.FromArgb(30, 30, 30);
+                }
+                if (emprestimo != null)
+                {
+                    emprestimo.BackColor = Color.FromArgb(30, 30, 30);
+                }
+                if (emprestimoRap != null)
+                {
+                    emprestimoRap.BackColor = Color.FromArgb(30, 30, 30);
+                }
+                if (cadastroLivro != null)
+                {
+                    cadastroLivro.BackColor = Color.FromArgb(30, 30, 30);
+                }
+                if (devolução != null)
+                {
+                    devolução.BackColor = Color.FromArgb(30, 30, 30);
+                }
+                if (usuarioCad != null)
+                {
+                    usuarioCad.BackColor = Color.FromArgb(30, 30, 30);
+                }
+                if(usuarioEdit != null)
+                {
+                    usuarioEdit.BackColor = Color.FromArgb(30, 30, 30);
+                }
+
+            }
+            else
+            {
+                tema = false;
+                if (inicio != null)
+                {
+                    inicio.BackColor = Color.FromArgb(240,240,240);
+                }
+                if (usuario != null)
+                {
+                    usuario.BackColor = Color.FromArgb(240,240,240);
+                }
+                if (livros != null)
+                {
+                    livros.BackColor = Color.FromArgb(240, 240, 240);
+                }
+                if (rel != null)
+                {
+                    rel.BackColor = Color.FromArgb(240, 240, 240);
+                }
+                if (emprestimo != null)
+                {
+                    emprestimo.BackColor = Color.FromArgb(240, 240, 240);
+                }
+                if (emprestimoRap != null)
+                {
+                    emprestimoRap.BackColor = Color.FromArgb(240, 240, 240);
+                }
+                if (cadastroLivro != null)
+                {
+                    cadastroLivro.BackColor = Color.FromArgb(240, 240, 240);
+                }
+                if (devolução != null)
+                {
+                    devolução.BackColor = Color.FromArgb(240, 240, 240);
+                }
+                if (usuarioCad != null)
+                {
+                    usuarioCad.BackColor = Color.FromArgb(240, 240, 240);
+                }
+                if (usuarioEdit != null)
+                {
+                    usuarioEdit.BackColor = Color.FromArgb(240, 240, 240);
+                }
+            }
+            #endregion
+        }
+
         //Funcionalidade dos botões
         private void picMax_Click(object sender, EventArgs e)
         {
@@ -516,21 +619,13 @@ public static bool tema = false;
         //Locomoção do painel
         private void panelControl_MouseDown(object sender, MouseEventArgs e)
         {
-            if (maximizado == false)
+            if (maximizado == true)
             {
-                picMax.BackgroundImage = Resources.icons8_verificar_todos_os_20;
+                AlternarMaximizado();
+                picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
             }
             ReleaseCapture();
             SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
-        }
-
-        //Correção para o icone da control box
-        private void panelControl_MouseEnter(object sender, EventArgs e)
-        {
-            if (maximizado == true)
-            {
-                picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
-            }
         }
 
         //Transição de expansão do livro e usuário
@@ -582,18 +677,6 @@ public static bool tema = false;
 
 
         #endregion
-        
 
-        private void interruptor_Click(object sender, EventArgs e)
-        {
-            if (tema == false)
-            {
-                tema = true;
-            }
-            else
-            {
-                tema = false;
-            }
-        }
     }
 }

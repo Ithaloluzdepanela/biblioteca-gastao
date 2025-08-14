@@ -27,6 +27,12 @@ namespace BibliotecaApp.Forms.Login
             txtEmail.KeyDown += txtEmail_KeyDown;
             txtSenha.KeyDown += txtSenha_KeyDown;
         }
+
+        //Fecharo form se o login for cancelado externamente
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+            if (cancelar == true) { this.Close(); }
+        }
         #endregion
 
         #region Eventos de Saída

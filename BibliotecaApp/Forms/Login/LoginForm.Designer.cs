@@ -291,6 +291,7 @@
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "InicioForm";
+            this.Load += new System.EventHandler(this.LoginForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

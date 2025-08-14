@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
+            this.lstLivros = new System.Windows.Forms.ListBox();
             this.dtpDataDevolucao = new System.Windows.Forms.DateTimePicker();
             this.dtpDataEmprestimo = new System.Windows.Forms.DateTimePicker();
             this.cbBibliotecaria = new RoundedComboBox();
-            this.lstLivros = new System.Windows.Forms.ListBox();
             this.txtBarcode = new RoundedTextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.chkDevolucaoPersonalizada = new System.Windows.Forms.CheckBox();
-            this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
             this.txtLivro = new RoundedTextBox();
             this.txtNomeUsuario = new RoundedTextBox();
             this.btnEmprestar = new System.Windows.Forms.Button();
@@ -51,8 +51,9 @@
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.AutoSize = true;
-            this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.lstSugestoesUsuario);
             this.panel1.Controls.Add(this.lstLivros);
             this.panel1.Controls.Add(this.dtpDataDevolucao);
@@ -70,15 +71,49 @@
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.panel1.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(253, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(775, 1001);
+            this.panel1.Size = new System.Drawing.Size(775, 845);
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // lstSugestoesUsuario
+            // 
+            this.lstSugestoesUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lstSugestoesUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.lstSugestoesUsuario.FormattingEnabled = true;
+            this.lstSugestoesUsuario.ItemHeight = 25;
+            this.lstSugestoesUsuario.Location = new System.Drawing.Point(80, 294);
+            this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
+            this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
+            this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(616, 127);
+            this.lstSugestoesUsuario.TabIndex = 98;
+            this.lstSugestoesUsuario.Visible = false;
+            this.lstSugestoesUsuario.Click += new System.EventHandler(this.lstSugestoesUsuario_Click);
+            this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
+            this.lstSugestoesUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstSugestoesUsuario_KeyDown);
+            // 
+            // lstLivros
+            // 
+            this.lstLivros.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lstLivros.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.lstLivros.FormattingEnabled = true;
+            this.lstLivros.ItemHeight = 25;
+            this.lstLivros.Location = new System.Drawing.Point(80, 375);
+            this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
+            this.lstLivros.Name = "lstLivros";
+            this.lstLivros.ScrollAlwaysVisible = true;
+            this.lstLivros.Size = new System.Drawing.Size(616, 127);
+            this.lstLivros.TabIndex = 102;
+            this.lstLivros.Visible = false;
+            this.lstLivros.Click += new System.EventHandler(this.lstLivros_Click);
+            this.lstLivros.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLivros_KeyDown);
             // 
             // dtpDataDevolucao
             // 
@@ -127,23 +162,6 @@
             this.cbBibliotecaria.Size = new System.Drawing.Size(617, 34);
             this.cbBibliotecaria.TabIndex = 103;
             this.cbBibliotecaria.SelectedIndexChanged += new System.EventHandler(this.cbBibliotecaria_SelectedIndexChanged);
-            // 
-            // lstLivros
-            // 
-            this.lstLivros.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lstLivros.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.lstLivros.FormattingEnabled = true;
-            this.lstLivros.ItemHeight = 25;
-            this.lstLivros.Location = new System.Drawing.Point(80, 375);
-            this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
-            this.lstLivros.Name = "lstLivros";
-            this.lstLivros.ScrollAlwaysVisible = true;
-            this.lstLivros.Size = new System.Drawing.Size(616, 127);
-            this.lstLivros.TabIndex = 102;
-            this.lstLivros.Visible = false;
-            this.lstLivros.Click += new System.EventHandler(this.lstLivros_Click);
-            this.lstLivros.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLivros_KeyDown);
             // 
             // txtBarcode
             // 
@@ -203,24 +221,6 @@
             this.chkDevolucaoPersonalizada.UseVisualStyleBackColor = false;
             this.chkDevolucaoPersonalizada.CheckedChanged += new System.EventHandler(this.chkDevolucaoPersonalizada_CheckedChanged);
             // 
-            // lstSugestoesUsuario
-            // 
-            this.lstSugestoesUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lstSugestoesUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.lstSugestoesUsuario.FormattingEnabled = true;
-            this.lstSugestoesUsuario.ItemHeight = 25;
-            this.lstSugestoesUsuario.Location = new System.Drawing.Point(80, 294);
-            this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
-            this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
-            this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
-            this.lstSugestoesUsuario.Size = new System.Drawing.Size(616, 127);
-            this.lstSugestoesUsuario.TabIndex = 98;
-            this.lstSugestoesUsuario.Visible = false;
-            this.lstSugestoesUsuario.Click += new System.EventHandler(this.lstSugestoesUsuario_Click);
-            this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
-            this.lstSugestoesUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstSugestoesUsuario_KeyDown);
-            // 
             // txtLivro
             // 
             this.txtLivro.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -276,7 +276,6 @@
             this.txtNomeUsuario.TabIndex = 94;
             this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
             this.txtNomeUsuario.UseSystemPasswordChar = false;
-          
             this.txtNomeUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtNomeUsuario_KeyDown);
             // 
             // btnEmprestar
@@ -364,20 +363,20 @@
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.label1.Location = new System.Drawing.Point(217, 86);
+            this.label1.Location = new System.Drawing.Point(187, 86);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(340, 40);
+            this.label1.Size = new System.Drawing.Size(401, 46);
             this.label1.TabIndex = 16;
             this.label1.Text = "EMPRESTIMO DE LIVRO";
             // 
             // EmprestimoForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(775, 1001);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(1280, 845);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Segoe UI", 7.8F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

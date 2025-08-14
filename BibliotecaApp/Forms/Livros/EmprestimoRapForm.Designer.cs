@@ -35,31 +35,34 @@
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(167, -1);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(759, 962);
+            this.panel1.Size = new System.Drawing.Size(929, 600);
             this.panel1.TabIndex = 0;
             // 
             // label1
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(267, 466);
+            this.label1.Location = new System.Drawing.Point(360, 403);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(225, 30);
             this.label1.TabIndex = 0;
             this.label1.Text = "EMPRESTIMO RAPIDO";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // EmprestimoRapForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(759, 962);
+            this.ClientSize = new System.Drawing.Size(1280, 600);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;

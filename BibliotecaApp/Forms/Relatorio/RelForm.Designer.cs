@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblRelatorios = new System.Windows.Forms.Label();
             this.dgvHistorico = new System.Windows.Forms.DataGridView();
             this.cmbAcao = new RoundedComboBox();
             this.txtUsuario = new RoundedTextBox();
@@ -43,32 +42,21 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistorico)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // lblRelatorios
-            // 
-            this.lblRelatorios.AutoSize = true;
-            this.lblRelatorios.BackColor = System.Drawing.SystemColors.Control;
-            this.lblRelatorios.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblRelatorios.Font = new System.Drawing.Font("Segoe UI Semibold", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRelatorios.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lblRelatorios.Location = new System.Drawing.Point(0, 0);
-            this.lblRelatorios.Name = "lblRelatorios";
-            this.lblRelatorios.Size = new System.Drawing.Size(156, 37);
-            this.lblRelatorios.TabIndex = 0;
-            this.lblRelatorios.Text = "HISTÓRICO";
             // 
             // dgvHistorico
             // 
             this.dgvHistorico.AllowUserToAddRows = false;
             this.dgvHistorico.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.dgvHistorico.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgvHistorico.Location = new System.Drawing.Point(43, 241);
+            this.dgvHistorico.Location = new System.Drawing.Point(19, 189);
             this.dgvHistorico.Name = "dgvHistorico";
             this.dgvHistorico.ReadOnly = true;
             this.dgvHistorico.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dgvHistorico.Size = new System.Drawing.Size(1254, 644);
+            this.dgvHistorico.Size = new System.Drawing.Size(1054, 644);
             this.dgvHistorico.TabIndex = 23;
             this.dgvHistorico.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvHistorico_CellContentClick);
             // 
@@ -90,12 +78,12 @@
             "Empréstimos",
             "Reservas"});
             this.cmbAcao.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbAcao.Location = new System.Drawing.Point(905, 96);
+            this.cmbAcao.Location = new System.Drawing.Point(834, 50);
             this.cmbAcao.Name = "cmbAcao";
             this.cmbAcao.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbAcao.PlaceholderMargin = 10;
             this.cmbAcao.PlaceholderText = "Filtre por tipo da ação...";
-            this.cmbAcao.Size = new System.Drawing.Size(274, 34);
+            this.cmbAcao.Size = new System.Drawing.Size(244, 34);
             this.cmbAcao.TabIndex = 90;
             // 
             // txtUsuario
@@ -112,7 +100,7 @@
             this.txtUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtUsuario.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtUsuario.Location = new System.Drawing.Point(46, 90);
+            this.txtUsuario.Location = new System.Drawing.Point(18, 49);
             this.txtUsuario.Name = "txtUsuario";
             this.txtUsuario.Padding = new System.Windows.Forms.Padding(7);
             this.txtUsuario.PlaceholderColor = System.Drawing.Color.Gray;
@@ -138,7 +126,7 @@
             this.txtLivro.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLivro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtLivro.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtLivro.Location = new System.Drawing.Point(409, 90);
+            this.txtLivro.Location = new System.Drawing.Point(462, 49);
             this.txtLivro.Name = "txtLivro";
             this.txtLivro.Padding = new System.Windows.Forms.Padding(7);
             this.txtLivro.PlaceholderColor = System.Drawing.Color.Gray;
@@ -159,11 +147,11 @@
             this.btnFiltrar.ForeColor = System.Drawing.Color.White;
             this.btnFiltrar.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(1215, 120);
+            this.btnFiltrar.Location = new System.Drawing.Point(888, 114);
             this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
-            this.btnFiltrar.Size = new System.Drawing.Size(116, 53);
+            this.btnFiltrar.Size = new System.Drawing.Size(134, 52);
             this.btnFiltrar.TabIndex = 111;
             this.btnFiltrar.Text = "      Filtrar";
             this.btnFiltrar.UseVisualStyleBackColor = false;
@@ -171,9 +159,10 @@
             // dtpFim
             // 
             this.dtpFim.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dtpFim.CalendarMonthBackground = System.Drawing.SystemColors.Control;
             this.dtpFim.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.dtpFim.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFim.Location = new System.Drawing.Point(499, 178);
+            this.dtpFim.Location = new System.Drawing.Point(208, 126);
             this.dtpFim.Name = "dtpFim";
             this.dtpFim.Size = new System.Drawing.Size(122, 33);
             this.dtpFim.TabIndex = 113;
@@ -181,9 +170,10 @@
             // dtpInicio
             // 
             this.dtpInicio.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dtpInicio.CalendarMonthBackground = System.Drawing.SystemColors.Control;
             this.dtpInicio.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.dtpInicio.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpInicio.Location = new System.Drawing.Point(193, 178);
+            this.dtpInicio.Location = new System.Drawing.Point(24, 126);
             this.dtpInicio.Name = "dtpInicio";
             this.dtpInicio.Size = new System.Drawing.Size(122, 33);
             this.dtpInicio.TabIndex = 114;
@@ -202,7 +192,7 @@
             this.txtBibliotecaria.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBibliotecaria.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtBibliotecaria.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtBibliotecaria.Location = new System.Drawing.Point(702, 178);
+            this.txtBibliotecaria.Location = new System.Drawing.Point(368, 126);
             this.txtBibliotecaria.Name = "txtBibliotecaria";
             this.txtBibliotecaria.Padding = new System.Windows.Forms.Padding(7);
             this.txtBibliotecaria.PlaceholderColor = System.Drawing.Color.Gray;
@@ -218,10 +208,10 @@
             // 
             this.lblUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblUsuario.AutoSize = true;
-            this.lblUsuario.BackColor = System.Drawing.Color.White;
+            this.lblUsuario.BackColor = System.Drawing.Color.Transparent;
             this.lblUsuario.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblUsuario.Location = new System.Drawing.Point(81, 60);
+            this.lblUsuario.Location = new System.Drawing.Point(13, 21);
             this.lblUsuario.Name = "lblUsuario";
             this.lblUsuario.Size = new System.Drawing.Size(167, 25);
             this.lblUsuario.TabIndex = 116;
@@ -231,10 +221,10 @@
             // 
             this.lblLivro.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblLivro.AutoSize = true;
-            this.lblLivro.BackColor = System.Drawing.Color.White;
+            this.lblLivro.BackColor = System.Drawing.Color.Transparent;
             this.lblLivro.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLivro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblLivro.Location = new System.Drawing.Point(431, 60);
+            this.lblLivro.Location = new System.Drawing.Point(363, 21);
             this.lblLivro.Name = "lblLivro";
             this.lblLivro.Size = new System.Drawing.Size(144, 25);
             this.lblLivro.TabIndex = 117;
@@ -244,10 +234,10 @@
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.White;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(711, 148);
+            this.label1.Location = new System.Drawing.Point(366, 98);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(207, 25);
             this.label1.TabIndex = 118;
@@ -257,10 +247,10 @@
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.White;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label2.Location = new System.Drawing.Point(914, 68);
+            this.label2.Location = new System.Drawing.Point(829, 21);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(128, 25);
             this.label2.TabIndex = 119;
@@ -270,10 +260,10 @@
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.White;
+            this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(157, 148);
+            this.label3.Location = new System.Drawing.Point(19, 98);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(161, 25);
             this.label3.TabIndex = 120;
@@ -283,35 +273,44 @@
             // 
             this.label5.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label5.AutoSize = true;
-            this.label5.BackColor = System.Drawing.Color.White;
+            this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label5.Location = new System.Drawing.Point(494, 148);
+            this.label5.Location = new System.Drawing.Point(203, 98);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(146, 25);
             this.label5.TabIndex = 122;
             this.label5.Text = "Fim do Período:";
             // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.btnFiltrar);
+            this.panel1.Controls.Add(this.dgvHistorico);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.cmbAcao);
+            this.panel1.Controls.Add(this.txtBibliotecaria);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.dtpFim);
+            this.panel1.Controls.Add(this.dtpInicio);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.lblUsuario);
+            this.panel1.Controls.Add(this.lblLivro);
+            this.panel1.Controls.Add(this.txtUsuario);
+            this.panel1.Location = new System.Drawing.Point(94, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1092, 845);
+            this.panel1.TabIndex = 123;
+            // 
             // RelForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1416, 912);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.lblLivro);
-            this.Controls.Add(this.lblUsuario);
-            this.Controls.Add(this.txtBibliotecaria);
-            this.Controls.Add(this.dtpInicio);
-            this.Controls.Add(this.dtpFim);
-            this.Controls.Add(this.btnFiltrar);
+            this.ClientSize = new System.Drawing.Size(1280, 845);
             this.Controls.Add(this.txtLivro);
-            this.Controls.Add(this.cmbAcao);
-            this.Controls.Add(this.txtUsuario);
-            this.Controls.Add(this.dgvHistorico);
-            this.Controls.Add(this.lblRelatorios);
+            this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -319,14 +318,13 @@
             this.Text = "InicioForm";
             this.Load += new System.EventHandler(this.RelForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistorico)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label lblRelatorios;
         private System.Windows.Forms.DataGridView dgvHistorico;
         private RoundedComboBox cmbAcao;
         public RoundedTextBox txtUsuario;
@@ -341,5 +339,6 @@
         public System.Windows.Forms.Label label2;
         public System.Windows.Forms.Label label3;
         public System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Panel panel1;
     }
 }

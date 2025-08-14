@@ -33,8 +33,6 @@ namespace BibliotecaApp.Forms.Inicio
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panelControl = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.ControlPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.picExit = new System.Windows.Forms.PictureBox();
             this.picMax = new System.Windows.Forms.PictureBox();
@@ -62,10 +60,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnEmprestimo = new System.Windows.Forms.Button();
             this.livroTransition = new System.Windows.Forms.Timer(this.components);
             this.userTransition = new System.Windows.Forms.Timer(this.components);
-            this.interruptor = new ToggleSwitch.AnimatedToggle();
             this.panelControl.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.ControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMax)).BeginInit();
@@ -84,36 +79,14 @@ namespace BibliotecaApp.Forms.Inicio
             // 
             this.panelControl.AllowDrop = true;
             this.panelControl.BackColor = System.Drawing.Color.White;
-            this.panelControl.Controls.Add(this.panel2);
             this.panelControl.Controls.Add(this.ControlPanel);
             this.panelControl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelControl.ForeColor = System.Drawing.SystemColors.Control;
             this.panelControl.Location = new System.Drawing.Point(205, 0);
             this.panelControl.Name = "panelControl";
             this.panelControl.Size = new System.Drawing.Size(1235, 30);
             this.panelControl.TabIndex = 0;
             this.panelControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelControl_MouseDown);
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.Transparent;
-            this.panel2.Controls.Add(this.interruptor);
-            this.panel2.Controls.Add(this.pictureBox2);
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(83, 30);
-            this.panel2.TabIndex = 10;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox2.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_símbolo_da_lua_22;
-            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.pictureBox2.Location = new System.Drawing.Point(42, 4);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(20, 20);
-            this.pictureBox2.TabIndex = 7;
-            this.pictureBox2.TabStop = false;
             // 
             // ControlPanel
             // 
@@ -509,21 +482,6 @@ namespace BibliotecaApp.Forms.Inicio
             this.userTransition.Interval = 5;
             this.userTransition.Tick += new System.EventHandler(this.userTransition_Tick);
             // 
-            // interruptor
-            // 
-            this.interruptor.BackColor = System.Drawing.Color.Transparent;
-            this.interruptor.Checked = false;
-            this.interruptor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.interruptor.Location = new System.Drawing.Point(1, 5);
-            this.interruptor.Name = "interruptor";
-            this.interruptor.OffBackColor = System.Drawing.Color.LightGray;
-            this.interruptor.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.interruptor.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.interruptor.Size = new System.Drawing.Size(38, 20);
-            this.interruptor.TabIndex = 5;
-            this.interruptor.ToggleColor = System.Drawing.Color.White;
-            this.interruptor.CheckedChanged += new System.EventHandler(this.interruptor_CheckedChanged);
-            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -540,8 +498,6 @@ namespace BibliotecaApp.Forms.Inicio
             this.Name = "MainForm";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.panelControl.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ControlPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMax)).EndInit();
@@ -585,9 +541,6 @@ namespace BibliotecaApp.Forms.Inicio
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnUserCad;
         private System.Windows.Forms.Timer userTransition;
-        private ToggleSwitch.AnimatedToggle interruptor;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Panel panel2;
         public System.Windows.Forms.Panel userContainer;
         public System.Windows.Forms.Button btnUser;
         public System.Windows.Forms.Button btnUserEdit;

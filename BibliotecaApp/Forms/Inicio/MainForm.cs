@@ -454,97 +454,7 @@ public static bool tema = false;
         //Tema escuro
         private void interruptor_CheckedChanged(object sender, EventArgs e)
         {
-            if (interruptor.Checked == true)
-            {
-                #region Tema escuro
-                tema = true;
-                if (inicio != null)
-                {
-                    inicio.BackColor = Color.FromArgb(30, 30, 30);
-                }
-                if (usuario != null)
-                {
-                    usuario.BackColor = Color.FromArgb(30, 30, 30);
-                }
-                if (livros != null)
-                {
-                    livros.BackColor = Color.FromArgb(30, 30, 30);
-                }
-                if (rel != null)
-                {
-                    rel.BackColor = Color.FromArgb(30, 30, 30);
-                }
-                if (emprestimo != null)
-                {
-                    emprestimo.BackColor = Color.FromArgb(30, 30, 30);
-                }
-                if (emprestimoRap != null)
-                {
-                    emprestimoRap.BackColor = Color.FromArgb(30, 30, 30);
-                }
-                if (cadastroLivro != null)
-                {
-                    cadastroLivro.BackColor = Color.FromArgb(30, 30, 30);
-                }
-                if (devolução != null)
-                {
-                    devolução.BackColor = Color.FromArgb(30, 30, 30);
-                }
-                if (usuarioCad != null)
-                {
-                    usuarioCad.BackColor = Color.FromArgb(30, 30, 30);
-                }
-                if(usuarioEdit != null)
-                {
-                    usuarioEdit.BackColor = Color.FromArgb(30, 30, 30);
-                }
 
-            }
-            else
-            {
-                tema = false;
-                if (inicio != null)
-                {
-                    inicio.BackColor = Color.FromArgb(240,240,240);
-                }
-                if (usuario != null)
-                {
-                    usuario.BackColor = Color.FromArgb(240,240,240);
-                }
-                if (livros != null)
-                {
-                    livros.BackColor = Color.FromArgb(240, 240, 240);
-                }
-                if (rel != null)
-                {
-                    rel.BackColor = Color.FromArgb(240, 240, 240);
-                }
-                if (emprestimo != null)
-                {
-                    emprestimo.BackColor = Color.FromArgb(240, 240, 240);
-                }
-                if (emprestimoRap != null)
-                {
-                    emprestimoRap.BackColor = Color.FromArgb(240, 240, 240);
-                }
-                if (cadastroLivro != null)
-                {
-                    cadastroLivro.BackColor = Color.FromArgb(240, 240, 240);
-                }
-                if (devolução != null)
-                {
-                    devolução.BackColor = Color.FromArgb(240, 240, 240);
-                }
-                if (usuarioCad != null)
-                {
-                    usuarioCad.BackColor = Color.FromArgb(240, 240, 240);
-                }
-                if (usuarioEdit != null)
-                {
-                    usuarioEdit.BackColor = Color.FromArgb(240, 240, 240);
-                }
-            }
-            #endregion
         }
 
         //Funcionalidade dos botões
@@ -677,6 +587,5 @@ public static bool tema = false;
 
 
         #endregion
-
     }
 }

@@ -439,7 +439,5 @@ namespace BibliotecaApp.Forms.Usuario
                 }
             }
         }
-
-        
     }
 }

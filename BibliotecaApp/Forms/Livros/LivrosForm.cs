@@ -252,11 +252,6 @@ namespace BibliotecaApp.Forms.Livros
 
         }
 
-        private void txtNome_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnAlterar_Click(object sender, EventArgs e)
         {
            

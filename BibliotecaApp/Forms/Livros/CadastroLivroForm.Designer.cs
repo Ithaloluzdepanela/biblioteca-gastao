@@ -49,11 +49,11 @@
             // 
             this.Titulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Titulo.AutoSize = true;
-            this.Titulo.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Titulo.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
             this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.Titulo.Location = new System.Drawing.Point(226, 120);
+            this.Titulo.Location = new System.Drawing.Point(198, 121);
             this.Titulo.Name = "Titulo";
-            this.Titulo.Size = new System.Drawing.Size(322, 40);
+            this.Titulo.Size = new System.Drawing.Size(379, 46);
             this.Titulo.TabIndex = 93;
             this.Titulo.Text = "CADASTRO DE LIVROS";
             // 
@@ -62,11 +62,11 @@
             this.lblNome.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblNome.AutoSize = true;
             this.lblNome.BackColor = System.Drawing.Color.Transparent;
-            this.lblNome.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.lblNome.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblNome.Location = new System.Drawing.Point(75, 252);
+            this.lblNome.Location = new System.Drawing.Point(82, 250);
             this.lblNome.Name = "lblNome";
-            this.lblNome.Size = new System.Drawing.Size(126, 23);
+            this.lblNome.Size = new System.Drawing.Size(142, 25);
             this.lblNome.TabIndex = 94;
             this.lblNome.Text = "Nome Do Livro";
             // 
@@ -75,11 +75,11 @@
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(75, 334);
+            this.label1.Location = new System.Drawing.Point(82, 332);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 23);
+            this.label1.Size = new System.Drawing.Size(74, 25);
             this.label1.TabIndex = 96;
             this.label1.Text = "Gênero";
             // 
@@ -88,11 +88,11 @@
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label2.Location = new System.Drawing.Point(75, 415);
+            this.label2.Location = new System.Drawing.Point(82, 413);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(100, 23);
+            this.label2.Size = new System.Drawing.Size(112, 25);
             this.label2.TabIndex = 98;
             this.label2.Text = "Quantidade";
             // 
@@ -101,11 +101,11 @@
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(75, 499);
+            this.label3.Location = new System.Drawing.Point(82, 497);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 23);
+            this.label3.Size = new System.Drawing.Size(61, 25);
             this.label3.TabIndex = 100;
             this.label3.Text = "Autor";
             // 
@@ -114,11 +114,11 @@
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label4.Location = new System.Drawing.Point(75, 586);
+            this.label4.Location = new System.Drawing.Point(82, 584);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(141, 23);
+            this.label4.Size = new System.Drawing.Size(157, 25);
             this.label4.TabIndex = 103;
             this.label4.Text = "Codigo de Barras";
             // 
@@ -152,8 +152,9 @@
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.AutoSize = true;
-            this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.btnCadastrar);
             this.panel1.Controls.Add(this.btnLimpar);
             this.panel1.Controls.Add(this.label4);
@@ -167,11 +168,11 @@
             this.panel1.Controls.Add(this.txtNome);
             this.panel1.Controls.Add(this.lblNome);
             this.panel1.Controls.Add(this.Titulo);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.panel1.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(253, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(775, 1001);
+            this.panel1.Size = new System.Drawing.Size(775, 845);
             this.panel1.TabIndex = 93;
             // 
             // mtxCodigoBarras
@@ -302,8 +303,8 @@
             // CadastroLivroForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(775, 1001);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(1280, 845);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

@@ -29,19 +29,24 @@
         private void InitializeComponent()
         {
             this.dgvHistorico = new System.Windows.Forms.DataGridView();
-            this.cmbAcao = new RoundedComboBox();
-            this.txtUsuario = new RoundedTextBox();
-            this.txtLivro = new RoundedTextBox();
+            this.NomeU = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NomeL = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Acao = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Bibliotecaria = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DataAcao = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnFiltrar = new System.Windows.Forms.Button();
             this.dtpFim = new System.Windows.Forms.DateTimePicker();
             this.dtpInicio = new System.Windows.Forms.DateTimePicker();
-            this.txtBibliotecaria = new RoundedTextBox();
             this.lblUsuario = new System.Windows.Forms.Label();
             this.lblLivro = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.txtBibliotecaria = new RoundedTextBox();
+            this.txtLivro = new RoundedTextBox();
+            this.cmbAcao = new RoundedComboBox();
+            this.txtUsuario = new RoundedTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistorico)).BeginInit();
             this.panel1.SuspendLayout();
@@ -51,7 +56,15 @@
             // 
             this.dgvHistorico.AllowUserToAddRows = false;
             this.dgvHistorico.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dgvHistorico.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvHistorico.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvHistorico.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.NomeU,
+            this.NomeL,
+            this.Acao,
+            this.Bibliotecaria,
+            this.DataAcao});
+            this.dgvHistorico.Location = new System.Drawing.Point(43, 241);
             this.dgvHistorico.Location = new System.Drawing.Point(19, 189);
             this.dgvHistorico.Name = "dgvHistorico";
             this.dgvHistorico.ReadOnly = true;
@@ -60,8 +73,11 @@
             this.dgvHistorico.TabIndex = 23;
             this.dgvHistorico.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvHistorico_CellContentClick);
             // 
-            // cmbAcao
+            // NomeU
             // 
+            this.NomeU.HeaderText = "Nome do Usuário";
+            this.NomeU.Name = "NomeU";
+            this.NomeU.ReadOnly = true;
             this.cmbAcao.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.cmbAcao.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cmbAcao.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -86,8 +102,23 @@
             this.cmbAcao.Size = new System.Drawing.Size(244, 34);
             this.cmbAcao.TabIndex = 90;
             // 
-            // txtUsuario
+            // NomeL
             // 
+            this.NomeL.HeaderText = "Nome do Livro";
+            this.NomeL.Name = "NomeL";
+            this.NomeL.ReadOnly = true;
+            // 
+            // Acao
+            // 
+            this.Acao.HeaderText = "Ação";
+            this.Acao.Name = "Acao";
+            this.Acao.ReadOnly = true;
+            // 
+            // Bibliotecaria
+            // 
+            this.Bibliotecaria.HeaderText = "Bibliotecaria";
+            this.Bibliotecaria.Name = "Bibliotecaria";
+            this.Bibliotecaria.ReadOnly = true;
             this.txtUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtUsuario.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
             this.txtUsuario.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
@@ -112,8 +143,11 @@
             this.txtUsuario.TextColor = System.Drawing.Color.Black;
             this.txtUsuario.UseSystemPasswordChar = false;
             // 
-            // txtLivro
+            // DataAcao
             // 
+            this.DataAcao.HeaderText = "Data da Ação";
+            this.DataAcao.Name = "DataAcao";
+            this.DataAcao.ReadOnly = true;
             this.txtLivro.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtLivro.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
             this.txtLivro.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
@@ -282,6 +316,110 @@
             this.label5.TabIndex = 122;
             this.label5.Text = "Fim do Período:";
             // 
+            // txtBibliotecaria
+            // 
+            this.txtBibliotecaria.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtBibliotecaria.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtBibliotecaria.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtBibliotecaria.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtBibliotecaria.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtBibliotecaria.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtBibliotecaria.BorderRadius = 10;
+            this.txtBibliotecaria.BorderThickness = 1;
+            this.txtBibliotecaria.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtBibliotecaria.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBibliotecaria.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtBibliotecaria.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtBibliotecaria.Location = new System.Drawing.Point(702, 178);
+            this.txtBibliotecaria.Name = "txtBibliotecaria";
+            this.txtBibliotecaria.Padding = new System.Windows.Forms.Padding(7);
+            this.txtBibliotecaria.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtBibliotecaria.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBibliotecaria.PlaceholderMarginLeft = 12;
+            this.txtBibliotecaria.PlaceholderText = "Digite aqui o nome da bibliotecaria..";
+            this.txtBibliotecaria.Size = new System.Drawing.Size(442, 40);
+            this.txtBibliotecaria.TabIndex = 115;
+            this.txtBibliotecaria.TextColor = System.Drawing.Color.Black;
+            this.txtBibliotecaria.UseSystemPasswordChar = false;
+            // 
+            // txtLivro
+            // 
+            this.txtLivro.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtLivro.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtLivro.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtLivro.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtLivro.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtLivro.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtLivro.BorderRadius = 10;
+            this.txtLivro.BorderThickness = 1;
+            this.txtLivro.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtLivro.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLivro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtLivro.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtLivro.Location = new System.Drawing.Point(409, 90);
+            this.txtLivro.Name = "txtLivro";
+            this.txtLivro.Padding = new System.Windows.Forms.Padding(7);
+            this.txtLivro.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtLivro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLivro.PlaceholderMarginLeft = 12;
+            this.txtLivro.PlaceholderText = "Digite aqui o nome do livro...";
+            this.txtLivro.Size = new System.Drawing.Size(442, 40);
+            this.txtLivro.TabIndex = 91;
+            this.txtLivro.TextColor = System.Drawing.Color.Black;
+            this.txtLivro.UseSystemPasswordChar = false;
+            // 
+            // cmbAcao
+            // 
+            this.cmbAcao.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cmbAcao.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cmbAcao.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.cmbAcao.BorderRadius = 8;
+            this.cmbAcao.BorderThickness = 1;
+            this.cmbAcao.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cmbAcao.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAcao.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbAcao.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbAcao.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.cmbAcao.FormattingEnabled = true;
+            this.cmbAcao.Items.AddRange(new object[] {
+            "Todas",
+            "Empréstimos",
+            "Reservas"});
+            this.cmbAcao.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbAcao.Location = new System.Drawing.Point(905, 96);
+            this.cmbAcao.Name = "cmbAcao";
+            this.cmbAcao.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbAcao.PlaceholderMargin = 10;
+            this.cmbAcao.PlaceholderText = "Filtre por tipo da ação...";
+            this.cmbAcao.Size = new System.Drawing.Size(274, 34);
+            this.cmbAcao.TabIndex = 90;
+            // 
+            // txtUsuario
+            // 
+            this.txtUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtUsuario.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtUsuario.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtUsuario.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtUsuario.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtUsuario.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtUsuario.BorderRadius = 10;
+            this.txtUsuario.BorderThickness = 1;
+            this.txtUsuario.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtUsuario.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtUsuario.Location = new System.Drawing.Point(46, 90);
+            this.txtUsuario.Name = "txtUsuario";
+            this.txtUsuario.Padding = new System.Windows.Forms.Padding(7);
+            this.txtUsuario.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtUsuario.PlaceholderMarginLeft = 12;
+            this.txtUsuario.PlaceholderText = "Digite aqui o nome do usuário...";
+            this.txtUsuario.Size = new System.Drawing.Size(331, 40);
+            this.txtUsuario.TabIndex = 89;
+            this.txtUsuario.TextColor = System.Drawing.Color.Black;
+            this.txtUsuario.UseSystemPasswordChar = false;
+            // 
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
@@ -339,6 +477,11 @@
         public System.Windows.Forms.Label label2;
         public System.Windows.Forms.Label label3;
         public System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NomeU;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NomeL;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Acao;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Bibliotecaria;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DataAcao;
         private System.Windows.Forms.Panel panel1;
     }
 }

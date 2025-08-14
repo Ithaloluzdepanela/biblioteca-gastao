@@ -182,10 +182,10 @@ namespace BibliotecaApp.Forms.Relatorio
             dgvHistorico.AutoGenerateColumns = false;
             dgvHistorico.Columns.Clear();
 
-            // Alinha o conteúdo padrão à esquerda (caso alguma coluna seja criada sem alinhamento explícito)
+            // Alinha o conteúdo padrão à esquerda
             dgvHistorico.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
-            DataGridViewTextBoxColumn AddTextCol(string dataProp, string header, float fillWeight, DataGridViewContentAlignment align, int minWidth = 60)
+            DataGridViewTextBoxColumn AddTextCol(string dataProp, string header, float fillWeight, DataGridViewContentAlignment align, int minWidth = 60, string format = null)
             {
                 var col = new DataGridViewTextBoxColumn
                 {
@@ -197,10 +197,67 @@ namespace BibliotecaApp.Forms.Relatorio
                     MinimumWidth = minWidth,
                     DefaultCellStyle = new DataGridViewCellStyle { Alignment = align, WrapMode = DataGridViewTriState.False }
                 };
+                if (!string.IsNullOrEmpty(format))
+                    col.DefaultCellStyle.Format = format;
                 dgvHistorico.Columns.Add(col);
                 return col;
             }
 
+            AddTextCol("NomeU", "Nome do Usuário", 180, DataGridViewContentAlignment.MiddleLeft, 120);
+            AddTextCol("NomeL", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120);
+            AddTextCol("Acao", "Ação", 110, DataGridViewContentAlignment.MiddleLeft, 90);
+            AddTextCol("Bibliotecaria", "Bibliotecária", 140, DataGridViewContentAlignment.MiddleLeft, 110);
+            AddTextCol("DataAcao", "Data da Ação", 130, DataGridViewContentAlignment.MiddleLeft, 110, "dd/MM/yyyy HH:mm");
+
+            // Aparência
+            dgvHistorico.BackgroundColor = Color.White;
+            dgvHistorico.BorderStyle = BorderStyle.None;
+            dgvHistorico.GridColor = Color.FromArgb(235, 239, 244);
+            dgvHistorico.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvHistorico.RowHeadersVisible = false;
+            dgvHistorico.ReadOnly = true;
+            dgvHistorico.MultiSelect = false;
+            dgvHistorico.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvHistorico.AllowUserToAddRows = false;
+            dgvHistorico.AllowUserToDeleteRows = false;
+            dgvHistorico.AllowUserToResizeRows = false;
+
+            dgvHistorico.DefaultCellStyle.BackColor = Color.White;
+            dgvHistorico.DefaultCellStyle.ForeColor = Color.FromArgb(20, 42, 60);
+            dgvHistorico.DefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
+            dgvHistorico.DefaultCellStyle.SelectionBackColor = Color.FromArgb(231, 238, 247);
+            dgvHistorico.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvHistorico.RowTemplate.Height = 40;
+            dgvHistorico.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
+
+            // Cabeçalho alinhado à esquerda
+            dgvHistorico.EnableHeadersVisualStyles = false;
+            dgvHistorico.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgvHistorico.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 61, 88);
+            dgvHistorico.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvHistorico.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 10.5f, FontStyle.Bold);
+            dgvHistorico.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvHistorico.ColumnHeadersHeight = 44;
+            dgvHistorico.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+
+            dgvHistorico.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            foreach (DataGridViewColumn col in dgvHistorico.Columns)
+            {
+                col.SortMode = DataGridViewColumnSortMode.Automatic;
+                col.Resizable = DataGridViewTriState.False;
+            }
+
+            // Suavizar rolagem
+            typeof(DataGridView).InvokeMember(
+                "DoubleBuffered",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty,
+                null,
+                dgvHistorico,
+                new object[] { true }
+            );
+
+            dgvHistorico.ResumeLayout();
         }
     }
 }

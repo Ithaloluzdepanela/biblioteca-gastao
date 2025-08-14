@@ -50,33 +50,40 @@ namespace BibliotecaApp.Forms.Relatorio
                                 "Banco não encontrado", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-                // Teste rápido de conexão e existência de tabela/dados
-                try
+            // Teste rápido de conexão e existência de tabela/dados
+            try
+            {
+                using (var c = Conexao.ObterConexao())
                 {
-                    using (var c = Conexao.ObterConexao())
+                    c.Open();
+                    using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM usuarios", c))
                     {
-                        c.Open();
-                        using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM usuarios", c))
-                        {
-                            var count = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
-                            // Opcional para depurar:
-                            // MessageBox.Show("Registros em 'usuarios': " + count);
-                        }
+                        var count = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                        // Opcional para depurar:
+                        // MessageBox.Show("Registros em 'usuarios': " + count);
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Falha ao abrir o banco .sdf ou acessar a tabela 'usuarios': " + ex.Message,
-                                    "Erro de conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Falha ao abrir o banco .sdf ou acessar a tabela 'usuarios': " + ex.Message,
+                                "Erro de conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+
+
+
+            // Configurações iniciais do DataGridView
+            ConfigurarGrid();
+
         }
 
         private void dgvHistorico_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-           
-            }
+
+        }
 
         private void btnFiltrar_Click(object sender, EventArgs e)
         {
@@ -93,8 +100,8 @@ namespace BibliotecaApp.Forms.Relatorio
                 string sqlEmprestimo = @"
                     SELECT 
                         e.Id,
-                        u.Nome AS Usuario,
-                        l.Nome AS Livro,
+                        u.Nome AS NomeU,
+                        l.Nome AS NomeL,
                         'Empréstimo' AS Acao,
                         e.DataEmprestimo AS DataAcao,
                         b.Nome AS Bibliotecaria
@@ -108,8 +115,8 @@ namespace BibliotecaApp.Forms.Relatorio
                 string sqlReserva = @"
                     SELECT 
                         r.Id,
-                        u.Nome AS Usuario,
-                        l.Nome AS Livro,
+                        u.Nome AS NomeU,
+                        l.Nome AS NomeL,
                         'Reserva' AS Acao,
                         r.DataReserva AS DataAcao,
                         b.Nome AS Bibliotecaria
@@ -125,8 +132,10 @@ namespace BibliotecaApp.Forms.Relatorio
                     filtros += " AND u.Nome LIKE @usuario";
                 if (!string.IsNullOrWhiteSpace(txtLivro.Text))
                     filtros += " AND l.Nome LIKE @livro";
-                if (cmbAcao.SelectedIndex > 0)
-                    filtros += " AND @acao = Acao";
+                if (cmbAcao.SelectedIndex == 1) // Empréstimos
+                    filtros += " AND 'Empréstimo' = @acao";
+                else if (cmbAcao.SelectedIndex == 2) // Reservas
+                    filtros += " AND 'Reserva' = @acao";
                 if (!string.IsNullOrWhiteSpace(txtBibliotecaria.Text))
                     filtros += " AND b.Nome LIKE @bibliotecaria";
                 filtros += " AND DataAcao >= @inicio AND DataAcao <= @fim";
@@ -148,8 +157,10 @@ namespace BibliotecaApp.Forms.Relatorio
                         cmd.Parameters.AddWithValue("@usuario", "%" + txtUsuario.Text.Trim() + "%");
                     if (!string.IsNullOrWhiteSpace(txtLivro.Text))
                         cmd.Parameters.AddWithValue("@livro", "%" + txtLivro.Text.Trim() + "%");
-                    if (cmbAcao.SelectedIndex > 0)
-                        cmd.Parameters.AddWithValue("@acao", cmbAcao.SelectedItem.ToString());
+                    if (cmbAcao.SelectedIndex == 1)
+                        cmd.Parameters.AddWithValue("@acao", "Empréstimo");
+                    else if (cmbAcao.SelectedIndex == 2)
+                        cmd.Parameters.AddWithValue("@acao", "Reserva");
                     if (!string.IsNullOrWhiteSpace(txtBibliotecaria.Text))
                         cmd.Parameters.AddWithValue("@bibliotecaria", "%" + txtBibliotecaria.Text.Trim() + "%");
                     cmd.Parameters.AddWithValue("@inicio", dtpInicio.Value.Date);
@@ -163,6 +174,33 @@ namespace BibliotecaApp.Forms.Relatorio
                     dgvHistorico.DataSource = tabela;
                 }
             }
+        }
+        private void ConfigurarGrid()
+        {
+            dgvHistorico.SuspendLayout();
+
+            dgvHistorico.AutoGenerateColumns = false;
+            dgvHistorico.Columns.Clear();
+
+            // Alinha o conteúdo padrão à esquerda (caso alguma coluna seja criada sem alinhamento explícito)
+            dgvHistorico.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+
+            DataGridViewTextBoxColumn AddTextCol(string dataProp, string header, float fillWeight, DataGridViewContentAlignment align, int minWidth = 60)
+            {
+                var col = new DataGridViewTextBoxColumn
+                {
+                    DataPropertyName = dataProp,
+                    Name = dataProp,
+                    HeaderText = header,
+                    ReadOnly = true,
+                    FillWeight = fillWeight,
+                    MinimumWidth = minWidth,
+                    DefaultCellStyle = new DataGridViewCellStyle { Alignment = align, WrapMode = DataGridViewTriState.False }
+                };
+                dgvHistorico.Columns.Add(col);
+                return col;
+            }
+
         }
     }
 }

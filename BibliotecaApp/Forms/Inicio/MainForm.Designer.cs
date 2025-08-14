@@ -34,7 +34,6 @@ namespace BibliotecaApp.Forms.Inicio
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panelControl = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.interruptor = new ToggleSwitch.AnimatedToggle();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.ControlPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.picExit = new System.Windows.Forms.PictureBox();
@@ -56,13 +55,14 @@ namespace BibliotecaApp.Forms.Inicio
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.livroContainer = new System.Windows.Forms.Panel();
             this.btnDev = new System.Windows.Forms.Button();
-            this.btnLivro = new System.Windows.Forms.Button();
             this.btnLivros = new System.Windows.Forms.Button();
             this.btnLivroCad = new System.Windows.Forms.Button();
             this.btnEmprestimoRap = new System.Windows.Forms.Button();
             this.btnEmprestimo = new System.Windows.Forms.Button();
+            this.btnLivro = new System.Windows.Forms.Button();
             this.livroTransition = new System.Windows.Forms.Timer(this.components);
             this.userTransition = new System.Windows.Forms.Timer(this.components);
+            this.interruptor = new ToggleSwitch.AnimatedToggle();
             this.panelControl.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -103,21 +103,6 @@ namespace BibliotecaApp.Forms.Inicio
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(83, 30);
             this.panel2.TabIndex = 10;
-            // 
-            // interruptor
-            // 
-            this.interruptor.BackColor = System.Drawing.Color.Transparent;
-            this.interruptor.Checked = false;
-            this.interruptor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.interruptor.Location = new System.Drawing.Point(1, 5);
-            this.interruptor.Name = "interruptor";
-            this.interruptor.OffBackColor = System.Drawing.Color.LightGray;
-            this.interruptor.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.interruptor.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.interruptor.Size = new System.Drawing.Size(38, 20);
-            this.interruptor.TabIndex = 5;
-            this.interruptor.ToggleColor = System.Drawing.Color.White;
-            this.interruptor.Click += new System.EventHandler(this.interruptor_Click);
             // 
             // pictureBox2
             // 
@@ -202,12 +187,13 @@ namespace BibliotecaApp.Forms.Inicio
             // btnSair
             // 
             this.btnSair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.btnSair.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
             this.btnSair.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSair.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnSair.ForeColor = System.Drawing.Color.White;
             this.btnSair.Image = global::BibliotecaApp.Properties.Resources.icons8_sair_25;
             this.btnSair.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSair.Location = new System.Drawing.Point(-5, -3);
+            this.btnSair.Location = new System.Drawing.Point(0, -3);
             this.btnSair.Name = "btnSair";
             this.btnSair.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.btnSair.Size = new System.Drawing.Size(223, 60);
@@ -229,16 +215,16 @@ namespace BibliotecaApp.Forms.Inicio
             // btnRel
             // 
             this.btnRel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnRel.FlatAppearance.BorderSize = 0;
+            this.btnRel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
             this.btnRel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRel.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnRel.ForeColor = System.Drawing.Color.White;
             this.btnRel.Image = global::BibliotecaApp.Properties.Resources.icons8_relatório_25;
             this.btnRel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRel.Location = new System.Drawing.Point(0, 0);
+            this.btnRel.Location = new System.Drawing.Point(0, -3);
             this.btnRel.Name = "btnRel";
             this.btnRel.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.btnRel.Size = new System.Drawing.Size(200, 60);
+            this.btnRel.Size = new System.Drawing.Size(223, 60);
             this.btnRel.TabIndex = 3;
             this.btnRel.Text = "Relatório";
             this.btnRel.UseVisualStyleBackColor = false;
@@ -260,13 +246,13 @@ namespace BibliotecaApp.Forms.Inicio
             // btnUser
             // 
             this.btnUser.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnUser.FlatAppearance.BorderSize = 0;
+            this.btnUser.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUser.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnUser.ForeColor = System.Drawing.Color.Transparent;
             this.btnUser.Image = global::BibliotecaApp.Properties.Resources.icons8_usuário_masculino_25;
             this.btnUser.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUser.Location = new System.Drawing.Point(0, 60);
+            this.btnUser.Location = new System.Drawing.Point(0, 59);
             this.btnUser.Name = "btnUser";
             this.btnUser.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.btnUser.Size = new System.Drawing.Size(200, 60);
@@ -278,13 +264,13 @@ namespace BibliotecaApp.Forms.Inicio
             // btnUserCad
             // 
             this.btnUserCad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnUserCad.FlatAppearance.BorderSize = 0;
+            this.btnUserCad.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnUserCad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUserCad.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnUserCad.ForeColor = System.Drawing.Color.Transparent;
             this.btnUserCad.Image = global::BibliotecaApp.Properties.Resources.icons8_adicionar_usuário_masculino_25;
             this.btnUserCad.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUserCad.Location = new System.Drawing.Point(0, 120);
+            this.btnUserCad.Location = new System.Drawing.Point(0, 119);
             this.btnUserCad.Name = "btnUserCad";
             this.btnUserCad.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.btnUserCad.Size = new System.Drawing.Size(200, 60);
@@ -296,16 +282,16 @@ namespace BibliotecaApp.Forms.Inicio
             // btnUsuario
             // 
             this.btnUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnUsuario.FlatAppearance.BorderSize = 0;
+            this.btnUsuario.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
             this.btnUsuario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUsuario.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnUsuario.ForeColor = System.Drawing.Color.White;
             this.btnUsuario.Image = global::BibliotecaApp.Properties.Resources.icons8_chamada_em_conferência_25;
             this.btnUsuario.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUsuario.Location = new System.Drawing.Point(0, 0);
+            this.btnUsuario.Location = new System.Drawing.Point(0, -3);
             this.btnUsuario.Name = "btnUsuario";
             this.btnUsuario.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.btnUsuario.Size = new System.Drawing.Size(200, 60);
+            this.btnUsuario.Size = new System.Drawing.Size(223, 60);
             this.btnUsuario.TabIndex = 3;
             this.btnUsuario.Text = "Usuários";
             this.btnUsuario.UseVisualStyleBackColor = false;
@@ -314,13 +300,13 @@ namespace BibliotecaApp.Forms.Inicio
             // btnUserEdit
             // 
             this.btnUserEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnUserEdit.FlatAppearance.BorderSize = 0;
+            this.btnUserEdit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnUserEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUserEdit.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnUserEdit.ForeColor = System.Drawing.Color.White;
             this.btnUserEdit.Image = global::BibliotecaApp.Properties.Resources.icons8_registration_25;
             this.btnUserEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUserEdit.Location = new System.Drawing.Point(0, 180);
+            this.btnUserEdit.Location = new System.Drawing.Point(0, 179);
             this.btnUserEdit.Name = "btnUserEdit";
             this.btnUserEdit.Padding = new System.Windows.Forms.Padding(6, 0, 0, 2);
             this.btnUserEdit.Size = new System.Drawing.Size(200, 60);
@@ -342,16 +328,16 @@ namespace BibliotecaApp.Forms.Inicio
             // btnInicio
             // 
             this.btnInicio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnInicio.FlatAppearance.BorderSize = 0;
+            this.btnInicio.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
             this.btnInicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnInicio.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnInicio.ForeColor = System.Drawing.Color.White;
             this.btnInicio.Image = global::BibliotecaApp.Properties.Resources.icons8_página_inicial_25;
             this.btnInicio.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnInicio.Location = new System.Drawing.Point(0, 0);
+            this.btnInicio.Location = new System.Drawing.Point(0, -3);
             this.btnInicio.Name = "btnInicio";
             this.btnInicio.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.btnInicio.Size = new System.Drawing.Size(200, 60);
+            this.btnInicio.Size = new System.Drawing.Size(223, 60);
             this.btnInicio.TabIndex = 3;
             this.btnInicio.Text = "Início";
             this.btnInicio.UseVisualStyleBackColor = false;
@@ -397,8 +383,8 @@ namespace BibliotecaApp.Forms.Inicio
             this.livroContainer.Controls.Add(this.btnLivros);
             this.livroContainer.Controls.Add(this.btnLivroCad);
             this.livroContainer.Controls.Add(this.btnEmprestimoRap);
-            this.livroContainer.Controls.Add(this.btnEmprestimo);
             this.livroContainer.Controls.Add(this.btnLivro);
+            this.livroContainer.Controls.Add(this.btnEmprestimo);
             this.livroContainer.Cursor = System.Windows.Forms.Cursors.Hand;
             this.livroContainer.Location = new System.Drawing.Point(3, 211);
             this.livroContainer.Name = "livroContainer";
@@ -409,13 +395,13 @@ namespace BibliotecaApp.Forms.Inicio
             // btnDev
             // 
             this.btnDev.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnDev.FlatAppearance.BorderSize = 0;
+            this.btnDev.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnDev.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDev.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnDev.ForeColor = System.Drawing.Color.White;
             this.btnDev.Image = ((System.Drawing.Image)(resources.GetObject("btnDev.Image")));
             this.btnDev.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDev.Location = new System.Drawing.Point(0, 300);
+            this.btnDev.Location = new System.Drawing.Point(0, 299);
             this.btnDev.Name = "btnDev";
             this.btnDev.Padding = new System.Windows.Forms.Padding(10, 0, 0, 2);
             this.btnDev.Size = new System.Drawing.Size(200, 60);
@@ -424,34 +410,16 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnDev.UseVisualStyleBackColor = false;
             this.btnDev.Click += new System.EventHandler(this.btnDev_Click);
             // 
-            // btnLivro
-            // 
-            this.btnLivro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnLivro.FlatAppearance.BorderSize = 0;
-            this.btnLivro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLivro.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            this.btnLivro.ForeColor = System.Drawing.Color.White;
-            this.btnLivro.Image = ((System.Drawing.Image)(resources.GetObject("btnLivro.Image")));
-            this.btnLivro.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLivro.Location = new System.Drawing.Point(0, 0);
-            this.btnLivro.Name = "btnLivro";
-            this.btnLivro.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.btnLivro.Size = new System.Drawing.Size(200, 60);
-            this.btnLivro.TabIndex = 3;
-            this.btnLivro.Text = "Livros";
-            this.btnLivro.UseVisualStyleBackColor = false;
-            this.btnLivro.Click += new System.EventHandler(this.btnLivro_Click);
-            // 
             // btnLivros
             // 
             this.btnLivros.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnLivros.FlatAppearance.BorderSize = 0;
+            this.btnLivros.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnLivros.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLivros.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnLivros.ForeColor = System.Drawing.Color.Transparent;
             this.btnLivros.Image = global::BibliotecaApp.Properties.Resources.icons8_livro_25;
             this.btnLivros.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLivros.Location = new System.Drawing.Point(0, 60);
+            this.btnLivros.Location = new System.Drawing.Point(0, 59);
             this.btnLivros.Name = "btnLivros";
             this.btnLivros.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.btnLivros.Size = new System.Drawing.Size(200, 60);
@@ -463,13 +431,13 @@ namespace BibliotecaApp.Forms.Inicio
             // btnLivroCad
             // 
             this.btnLivroCad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnLivroCad.FlatAppearance.BorderSize = 0;
+            this.btnLivroCad.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnLivroCad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLivroCad.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnLivroCad.ForeColor = System.Drawing.Color.Transparent;
             this.btnLivroCad.Image = ((System.Drawing.Image)(resources.GetObject("btnLivroCad.Image")));
             this.btnLivroCad.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLivroCad.Location = new System.Drawing.Point(0, 240);
+            this.btnLivroCad.Location = new System.Drawing.Point(0, 239);
             this.btnLivroCad.Name = "btnLivroCad";
             this.btnLivroCad.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.btnLivroCad.Size = new System.Drawing.Size(200, 60);
@@ -481,13 +449,13 @@ namespace BibliotecaApp.Forms.Inicio
             // btnEmprestimoRap
             // 
             this.btnEmprestimoRap.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnEmprestimoRap.FlatAppearance.BorderSize = 0;
+            this.btnEmprestimoRap.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnEmprestimoRap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEmprestimoRap.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btnEmprestimoRap.ForeColor = System.Drawing.Color.White;
             this.btnEmprestimoRap.Image = ((System.Drawing.Image)(resources.GetObject("btnEmprestimoRap.Image")));
             this.btnEmprestimoRap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEmprestimoRap.Location = new System.Drawing.Point(0, 180);
+            this.btnEmprestimoRap.Location = new System.Drawing.Point(0, 179);
             this.btnEmprestimoRap.Name = "btnEmprestimoRap";
             this.btnEmprestimoRap.Padding = new System.Windows.Forms.Padding(6, 0, 0, 2);
             this.btnEmprestimoRap.Size = new System.Drawing.Size(200, 60);
@@ -499,13 +467,13 @@ namespace BibliotecaApp.Forms.Inicio
             // btnEmprestimo
             // 
             this.btnEmprestimo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnEmprestimo.FlatAppearance.BorderSize = 0;
+            this.btnEmprestimo.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnEmprestimo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEmprestimo.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnEmprestimo.ForeColor = System.Drawing.Color.Transparent;
             this.btnEmprestimo.Image = ((System.Drawing.Image)(resources.GetObject("btnEmprestimo.Image")));
             this.btnEmprestimo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEmprestimo.Location = new System.Drawing.Point(0, 120);
+            this.btnEmprestimo.Location = new System.Drawing.Point(0, 119);
             this.btnEmprestimo.Name = "btnEmprestimo";
             this.btnEmprestimo.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.btnEmprestimo.Size = new System.Drawing.Size(200, 60);
@@ -513,6 +481,24 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnEmprestimo.Text = "Empréstimo";
             this.btnEmprestimo.UseVisualStyleBackColor = false;
             this.btnEmprestimo.Click += new System.EventHandler(this.btnEmprestimo_Click);
+            // 
+            // btnLivro
+            // 
+            this.btnLivro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.btnLivro.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
+            this.btnLivro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLivro.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.btnLivro.ForeColor = System.Drawing.Color.White;
+            this.btnLivro.Image = ((System.Drawing.Image)(resources.GetObject("btnLivro.Image")));
+            this.btnLivro.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnLivro.Location = new System.Drawing.Point(0, -3);
+            this.btnLivro.Name = "btnLivro";
+            this.btnLivro.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+            this.btnLivro.Size = new System.Drawing.Size(223, 60);
+            this.btnLivro.TabIndex = 3;
+            this.btnLivro.Text = "Livros";
+            this.btnLivro.UseVisualStyleBackColor = false;
+            this.btnLivro.Click += new System.EventHandler(this.btnLivro_Click);
             // 
             // livroTransition
             // 
@@ -523,6 +509,21 @@ namespace BibliotecaApp.Forms.Inicio
             // 
             this.userTransition.Interval = 5;
             this.userTransition.Tick += new System.EventHandler(this.userTransition_Tick);
+            // 
+            // interruptor
+            // 
+            this.interruptor.BackColor = System.Drawing.Color.Transparent;
+            this.interruptor.Checked = false;
+            this.interruptor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.interruptor.Location = new System.Drawing.Point(1, 5);
+            this.interruptor.Name = "interruptor";
+            this.interruptor.OffBackColor = System.Drawing.Color.LightGray;
+            this.interruptor.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.interruptor.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.interruptor.Size = new System.Drawing.Size(38, 20);
+            this.interruptor.TabIndex = 5;
+            this.interruptor.ToggleColor = System.Drawing.Color.White;
+            this.interruptor.Click += new System.EventHandler(this.interruptor_Click);
             // 
             // MainForm
             // 

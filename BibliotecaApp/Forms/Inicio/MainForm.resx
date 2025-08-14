@@ -151,17 +151,6 @@
         YJY4I82LAnYdStwMNdMAJsBF30OCo2ZGAeP2n11nzFzz+uMFU9TCJNJpOsgAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="btnEmprestimo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsMAAALDAE/QCLIAAAAB3RJ
-        TUUH6QgEEg8uBmFaYgAAAPpJREFUSEvtlTFqAkEUhm0khbmAfRrBzhukCHoDYRtrrQTBK+QWQiorU6US
-        bGxFCxc8iKAgyhcGZ3D4dwKZ3UUs/OAxvNk3/8dssVuplAxQBXpm1WelYAXfXPkBXnSmEFYw8yRmNf3t
-        RkATGALjyOoDNSABplZmMKvpEydoAyf7MA9f3qVMHn7vNud6KpKt5AUlqZ6KJJW8x5Isgc8/aiezuSUd
-        nXMAI5nNLTkCq0BtgLPM5pbE8JREoZKu37vNUiVBnhKPtWZmKCi5AAPNzGAlB+ADaEVWXfOCAJMCElOv
-        mpkBaAB7fQ8RLDQzCPBm/9n6Wf9PvWve3fkFmRKqr9e6NNgAAAAASUVORK5CYII=
-</value>
-  </data>
   <data name="btnLivro.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -171,6 +160,17 @@
         DP0cWns7yJTcYbRk70T4/PuSPGG75LAP8BX3dpApyeUfSG7SwCqmi8NM/YFKdtPARTrMxdQfqGQMD3Gw
         R8lxzG+DEaz3+SSvP3deNklSXJYbWKmp4p4bjxm14LoLSVFLGIo5lWAB7/Gd1LAXc2rBTPqvX2bUGSZj
         xu/nG7JxCPFEIN7IAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnEmprestimo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsMAAALDAE/QCLIAAAAB3RJ
+        TUUH6QgEEg8uBmFaYgAAAPpJREFUSEvtlTFqAkEUhm0khbmAfRrBzhukCHoDYRtrrQTBK+QWQiorU6US
+        bGxFCxc8iKAgyhcGZ3D4dwKZ3UUs/OAxvNk3/8dssVuplAxQBXpm1WelYAXfXPkBXnSmEFYw8yRmNf3t
+        RkATGALjyOoDNSABplZmMKvpEydoAyf7MA9f3qVMHn7vNud6KpKt5AUlqZ6KJJW8x5Isgc8/aiezuSUd
+        nXMAI5nNLTkCq0BtgLPM5pbE8JREoZKu37vNUiVBnhKPtWZmKCi5AAPNzGAlB+ADaEVWXfOCAJMCElOv
+        mpkBaAB7fQ8RLDQzCPBm/9n6Wf9PvWve3fkFmRKqr9e6NNgAAAAASUVORK5CYII=
 </value>
   </data>
   <metadata name="livroTransition.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

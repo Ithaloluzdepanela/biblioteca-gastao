@@ -28,8 +28,6 @@ namespace BibliotecaApp.Forms.Inicio
             InitializeComponent();
             mdiProp();
             btnIn();
-            this.Size = new Size(1440, 900);
-
         }
 public static bool tema = false;
 
@@ -88,6 +86,7 @@ public static bool tema = false;
             btnUserEdit.Enabled = true;
         }
 
+        //Função de maximizar/restaurar o Form
         private void AlternarMaximizado()
         {
             if (!maximizado)
@@ -450,7 +449,7 @@ public static bool tema = false;
         {
             AlternarMaximizado();
 
-            if (maximizado == true)
+            if (maximizado == false)
             {
                 picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
             }
@@ -507,7 +506,7 @@ public static bool tema = false;
             //Inicializar com tela cheia
             if (LoginForm.cancelar == true)
             {
-                this.WindowState = FormWindowState.Maximized;
+                AlternarMaximizado();
             }
 
 

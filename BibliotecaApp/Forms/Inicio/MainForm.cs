@@ -30,14 +30,19 @@ namespace BibliotecaApp.Forms.Inicio
             mdiProp();
             btnIn();
         }
+
         
 
         #region Componentes de inicialização
 
-        
+        private void tamanho()
+        {
+            this.Width = 1440; this.Height = 700;
+        }
         private Size tamanhoOriginal;
         private Point localOriginal;
         private bool maximizado = false;
+        
 
         //Funções da API para movimentar a aba
         [DllImport("user32.dll")]
@@ -454,12 +459,6 @@ namespace BibliotecaApp.Forms.Inicio
 
         }
 
-        //Tema escuro
-        private void interruptor_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         //Funcionalidade dos botões
         private void picMax_Click(object sender, EventArgs e)
         {
@@ -524,7 +523,7 @@ namespace BibliotecaApp.Forms.Inicio
             {
                 AlternarMaximizado();
             }
-
+            ////userLbl.Text = Sessao.NomeBibliotecariaLogada;
 
 
         }
@@ -594,7 +593,7 @@ namespace BibliotecaApp.Forms.Inicio
        
         private void Usuário_Click(object sender, EventArgs e)
         {
-
+            
         }
     }
 }

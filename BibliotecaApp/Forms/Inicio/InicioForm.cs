@@ -91,14 +91,6 @@ namespace BibliotecaApp.Forms.Inicio
             timerRelogio.Start();
             AtualizarRelogio();
 
-            if (MainForm.tema == true)
-            {
-                this.BackColor = Color.FromArgb(30, 30, 30);
-            }
-            else
-            {
-                this.BackColor = Color.FromArgb(240, 240, 240);
-            }
 
         }
 

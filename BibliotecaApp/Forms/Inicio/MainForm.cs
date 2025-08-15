@@ -3,6 +3,7 @@ using BibliotecaApp.Forms.Login;
 using BibliotecaApp.Forms.Relatorio;
 using BibliotecaApp.Forms.Usuario;
 using BibliotecaApp.Froms.Usuario;
+using BibliotecaApp.Models;
 using BibliotecaApp.Properties;
 using System;
 using System.Collections.Generic;
@@ -29,11 +30,11 @@ namespace BibliotecaApp.Forms.Inicio
             mdiProp();
             btnIn();
         }
-public static bool tema = false;
-
+        
 
         #region Componentes de inicialização
 
+        
         private Size tamanhoOriginal;
         private Point localOriginal;
         private bool maximizado = false;
@@ -142,7 +143,7 @@ public static bool tema = false;
         {
 
             btnUsuario.Enabled = false; // Desabilita o botão
-
+            btnLivro.Enabled = false;
             if (livroContainer.Height > 60)
             {
                 livroTransition.Start();
@@ -154,6 +155,7 @@ public static bool tema = false;
             await Task.Delay(400);
 
             btnUsuario.Enabled = true; // Reabilita o botão
+            btnLivro.Enabled = true;
 
         }
 
@@ -247,11 +249,12 @@ public static bool tema = false;
         private async void btnLivro_Click(object sender, EventArgs e)
         {
             btnLivro.Enabled = false; // Desabilita o botão
-            
+            btnUsuario.Enabled = false;
             if (userContainer.Height > 60)
             {
                 userTransition.Start();
                 await Task.Delay(400);
+                
             }
 
             livroTransition.Start();
@@ -259,7 +262,7 @@ public static bool tema = false;
             await Task.Delay(500);
 
             btnLivro.Enabled = true; // Reabilita o botão
-
+            btnUsuario.Enabled = true;
             
         }
 
@@ -587,5 +590,11 @@ public static bool tema = false;
 
 
         #endregion
+
+       
+        private void Usuário_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

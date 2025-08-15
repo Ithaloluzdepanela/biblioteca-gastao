@@ -34,45 +34,50 @@ namespace BibliotecaApp.Forms.Inicio
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panelControl = new System.Windows.Forms.Panel();
             this.ControlPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.sairContainer = new System.Windows.Forms.Panel();
+            this.relContainer = new System.Windows.Forms.Panel();
+            this.userContainer = new System.Windows.Forms.Panel();
+            this.incioContainer = new System.Windows.Forms.Panel();
+            this.menu = new System.Windows.Forms.FlowLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.livroContainer = new System.Windows.Forms.Panel();
+            this.livroTransition = new System.Windows.Forms.Timer(this.components);
+            this.userTransition = new System.Windows.Forms.Timer(this.components);
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.userLbl = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.picExit = new System.Windows.Forms.PictureBox();
             this.picMax = new System.Windows.Forms.PictureBox();
             this.picMin = new System.Windows.Forms.PictureBox();
-            this.sairContainer = new System.Windows.Forms.Panel();
-            this.btnSair = new System.Windows.Forms.Button();
-            this.relContainer = new System.Windows.Forms.Panel();
-            this.btnRel = new System.Windows.Forms.Button();
-            this.userContainer = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnInicio = new System.Windows.Forms.Button();
             this.btnUser = new System.Windows.Forms.Button();
             this.btnUserCad = new System.Windows.Forms.Button();
             this.btnUsuario = new System.Windows.Forms.Button();
             this.btnUserEdit = new System.Windows.Forms.Button();
-            this.incioContainer = new System.Windows.Forms.Panel();
-            this.btnInicio = new System.Windows.Forms.Button();
-            this.menu = new System.Windows.Forms.FlowLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.livroContainer = new System.Windows.Forms.Panel();
             this.btnDev = new System.Windows.Forms.Button();
             this.btnLivros = new System.Windows.Forms.Button();
             this.btnLivroCad = new System.Windows.Forms.Button();
             this.btnEmprestimoRap = new System.Windows.Forms.Button();
             this.btnLivro = new System.Windows.Forms.Button();
             this.btnEmprestimo = new System.Windows.Forms.Button();
-            this.livroTransition = new System.Windows.Forms.Timer(this.components);
-            this.userTransition = new System.Windows.Forms.Timer(this.components);
+            this.btnRel = new System.Windows.Forms.Button();
+            this.btnSair = new System.Windows.Forms.Button();
             this.panelControl.SuspendLayout();
             this.ControlPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picExit)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picMax)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picMin)).BeginInit();
             this.sairContainer.SuspendLayout();
             this.relContainer.SuspendLayout();
             this.userContainer.SuspendLayout();
             this.incioContainer.SuspendLayout();
             this.menu.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.livroContainer.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picExit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMax)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panelControl
@@ -100,6 +105,132 @@ namespace BibliotecaApp.Forms.Inicio
             this.ControlPanel.Name = "ControlPanel";
             this.ControlPanel.Size = new System.Drawing.Size(108, 30);
             this.ControlPanel.TabIndex = 4;
+            // 
+            // sairContainer
+            // 
+            this.sairContainer.Controls.Add(this.btnSair);
+            this.sairContainer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.sairContainer.Location = new System.Drawing.Point(3, 343);
+            this.sairContainer.Name = "sairContainer";
+            this.sairContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.sairContainer.Size = new System.Drawing.Size(200, 60);
+            this.sairContainer.TabIndex = 7;
+            // 
+            // relContainer
+            // 
+            this.relContainer.Controls.Add(this.btnRel);
+            this.relContainer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.relContainer.Location = new System.Drawing.Point(3, 277);
+            this.relContainer.Name = "relContainer";
+            this.relContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.relContainer.Size = new System.Drawing.Size(200, 60);
+            this.relContainer.TabIndex = 6;
+            // 
+            // userContainer
+            // 
+            this.userContainer.Controls.Add(this.btnUser);
+            this.userContainer.Controls.Add(this.btnUserCad);
+            this.userContainer.Controls.Add(this.btnUsuario);
+            this.userContainer.Controls.Add(this.btnUserEdit);
+            this.userContainer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.userContainer.Location = new System.Drawing.Point(3, 145);
+            this.userContainer.Name = "userContainer";
+            this.userContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.userContainer.Size = new System.Drawing.Size(200, 60);
+            this.userContainer.TabIndex = 4;
+            // 
+            // incioContainer
+            // 
+            this.incioContainer.Controls.Add(this.btnInicio);
+            this.incioContainer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.incioContainer.Location = new System.Drawing.Point(3, 79);
+            this.incioContainer.Name = "incioContainer";
+            this.incioContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.incioContainer.Size = new System.Drawing.Size(200, 60);
+            this.incioContainer.TabIndex = 2;
+            // 
+            // menu
+            // 
+            this.menu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.menu.Controls.Add(this.panel1);
+            this.menu.Controls.Add(this.incioContainer);
+            this.menu.Controls.Add(this.userContainer);
+            this.menu.Controls.Add(this.livroContainer);
+            this.menu.Controls.Add(this.relContainer);
+            this.menu.Controls.Add(this.sairContainer);
+            this.menu.Controls.Add(this.panel2);
+            this.menu.Dock = System.Windows.Forms.DockStyle.Left;
+            this.menu.Location = new System.Drawing.Point(0, 0);
+            this.menu.Name = "menu";
+            this.menu.Size = new System.Drawing.Size(205, 900);
+            this.menu.TabIndex = 1;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(196, 70);
+            this.panel1.TabIndex = 10;
+            // 
+            // livroContainer
+            // 
+            this.livroContainer.Controls.Add(this.btnDev);
+            this.livroContainer.Controls.Add(this.btnLivros);
+            this.livroContainer.Controls.Add(this.btnLivroCad);
+            this.livroContainer.Controls.Add(this.btnEmprestimoRap);
+            this.livroContainer.Controls.Add(this.btnLivro);
+            this.livroContainer.Controls.Add(this.btnEmprestimo);
+            this.livroContainer.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.livroContainer.Location = new System.Drawing.Point(3, 211);
+            this.livroContainer.Name = "livroContainer";
+            this.livroContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.livroContainer.Size = new System.Drawing.Size(200, 60);
+            this.livroContainer.TabIndex = 8;
+            // 
+            // livroTransition
+            // 
+            this.livroTransition.Interval = 5;
+            this.livroTransition.Tick += new System.EventHandler(this.livroTransition_Tick);
+            // 
+            // userTransition
+            // 
+            this.userTransition.Interval = 5;
+            this.userTransition.Tick += new System.EventHandler(this.userTransition_Tick);
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Transparent;
+            this.panel2.Controls.Add(this.pictureBox2);
+            this.panel2.Controls.Add(this.userLbl);
+            this.panel2.Location = new System.Drawing.Point(3, 409);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(196, 374);
+            this.panel2.TabIndex = 3;
+            // 
+            // userLbl
+            // 
+            this.userLbl.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.userLbl.AutoSize = true;
+            this.userLbl.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.userLbl.ForeColor = System.Drawing.Color.White;
+            this.userLbl.Location = new System.Drawing.Point(32, 344);
+            this.userLbl.Name = "userLbl";
+            this.userLbl.Size = new System.Drawing.Size(77, 25);
+            this.userLbl.TabIndex = 4;
+            this.userLbl.Text = "Usuário";
+            this.userLbl.Click += new System.EventHandler(this.Usuário_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox2.Image = global::BibliotecaApp.Properties.Resources.icons8_usuário_30;
+            this.pictureBox2.Location = new System.Drawing.Point(0, 341);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(30, 30);
+            this.pictureBox2.TabIndex = 3;
+            this.pictureBox2.TabStop = false;
             // 
             // picExit
             // 
@@ -146,74 +277,33 @@ namespace BibliotecaApp.Forms.Inicio
             this.picMin.MouseEnter += new System.EventHandler(this.picMin_MouseEnter);
             this.picMin.MouseLeave += new System.EventHandler(this.picMin_MouseLeave);
             // 
-            // sairContainer
+            // pictureBox1
             // 
-            this.sairContainer.Controls.Add(this.btnSair);
-            this.sairContainer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sairContainer.Location = new System.Drawing.Point(3, 343);
-            this.sairContainer.Name = "sairContainer";
-            this.sairContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.sairContainer.Size = new System.Drawing.Size(200, 60);
-            this.sairContainer.TabIndex = 7;
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Image = global::BibliotecaApp.Properties.Resources.Brasão_da_Gastão59x65;
+            this.pictureBox1.Location = new System.Drawing.Point(67, 1);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(59, 67);
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
             // 
-            // btnSair
+            // btnInicio
             // 
-            this.btnSair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnSair.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
-            this.btnSair.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSair.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            this.btnSair.ForeColor = System.Drawing.Color.White;
-            this.btnSair.Image = global::BibliotecaApp.Properties.Resources.icons8_sair_25;
-            this.btnSair.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSair.Location = new System.Drawing.Point(0, -3);
-            this.btnSair.Name = "btnSair";
-            this.btnSair.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
-            this.btnSair.Size = new System.Drawing.Size(223, 60);
-            this.btnSair.TabIndex = 3;
-            this.btnSair.Text = "Sair";
-            this.btnSair.UseVisualStyleBackColor = false;
-            this.btnSair.Click += new System.EventHandler(this.btnSair_Click);
-            // 
-            // relContainer
-            // 
-            this.relContainer.Controls.Add(this.btnRel);
-            this.relContainer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.relContainer.Location = new System.Drawing.Point(3, 277);
-            this.relContainer.Name = "relContainer";
-            this.relContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.relContainer.Size = new System.Drawing.Size(200, 60);
-            this.relContainer.TabIndex = 6;
-            // 
-            // btnRel
-            // 
-            this.btnRel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnRel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
-            this.btnRel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRel.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            this.btnRel.ForeColor = System.Drawing.Color.White;
-            this.btnRel.Image = global::BibliotecaApp.Properties.Resources.icons8_relatório_25;
-            this.btnRel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRel.Location = new System.Drawing.Point(0, -3);
-            this.btnRel.Name = "btnRel";
-            this.btnRel.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.btnRel.Size = new System.Drawing.Size(223, 60);
-            this.btnRel.TabIndex = 3;
-            this.btnRel.Text = "Relatório";
-            this.btnRel.UseVisualStyleBackColor = false;
-            this.btnRel.Click += new System.EventHandler(this.btnRel_Click);
-            // 
-            // userContainer
-            // 
-            this.userContainer.Controls.Add(this.btnUser);
-            this.userContainer.Controls.Add(this.btnUserCad);
-            this.userContainer.Controls.Add(this.btnUsuario);
-            this.userContainer.Controls.Add(this.btnUserEdit);
-            this.userContainer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.userContainer.Location = new System.Drawing.Point(3, 145);
-            this.userContainer.Name = "userContainer";
-            this.userContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.userContainer.Size = new System.Drawing.Size(200, 60);
-            this.userContainer.TabIndex = 4;
+            this.btnInicio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.btnInicio.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
+            this.btnInicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInicio.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.btnInicio.ForeColor = System.Drawing.Color.White;
+            this.btnInicio.Image = global::BibliotecaApp.Properties.Resources.icons8_página_inicial_25;
+            this.btnInicio.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnInicio.Location = new System.Drawing.Point(0, -3);
+            this.btnInicio.Name = "btnInicio";
+            this.btnInicio.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+            this.btnInicio.Size = new System.Drawing.Size(223, 60);
+            this.btnInicio.TabIndex = 3;
+            this.btnInicio.Text = "Início";
+            this.btnInicio.UseVisualStyleBackColor = false;
+            this.btnInicio.Click += new System.EventHandler(this.btnInicio_Click);
             // 
             // btnUser
             // 
@@ -286,83 +376,6 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnUserEdit.Text = "Editar";
             this.btnUserEdit.UseVisualStyleBackColor = false;
             this.btnUserEdit.Click += new System.EventHandler(this.btnUserEdit_Click);
-            // 
-            // incioContainer
-            // 
-            this.incioContainer.Controls.Add(this.btnInicio);
-            this.incioContainer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.incioContainer.Location = new System.Drawing.Point(3, 79);
-            this.incioContainer.Name = "incioContainer";
-            this.incioContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.incioContainer.Size = new System.Drawing.Size(200, 60);
-            this.incioContainer.TabIndex = 2;
-            // 
-            // btnInicio
-            // 
-            this.btnInicio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnInicio.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
-            this.btnInicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnInicio.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            this.btnInicio.ForeColor = System.Drawing.Color.White;
-            this.btnInicio.Image = global::BibliotecaApp.Properties.Resources.icons8_página_inicial_25;
-            this.btnInicio.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnInicio.Location = new System.Drawing.Point(0, -3);
-            this.btnInicio.Name = "btnInicio";
-            this.btnInicio.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.btnInicio.Size = new System.Drawing.Size(223, 60);
-            this.btnInicio.TabIndex = 3;
-            this.btnInicio.Text = "Início";
-            this.btnInicio.UseVisualStyleBackColor = false;
-            this.btnInicio.Click += new System.EventHandler(this.btnInicio_Click);
-            // 
-            // menu
-            // 
-            this.menu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.menu.Controls.Add(this.panel1);
-            this.menu.Controls.Add(this.incioContainer);
-            this.menu.Controls.Add(this.userContainer);
-            this.menu.Controls.Add(this.livroContainer);
-            this.menu.Controls.Add(this.relContainer);
-            this.menu.Controls.Add(this.sairContainer);
-            this.menu.Dock = System.Windows.Forms.DockStyle.Left;
-            this.menu.Location = new System.Drawing.Point(0, 0);
-            this.menu.Name = "menu";
-            this.menu.Size = new System.Drawing.Size(205, 900);
-            this.menu.TabIndex = 1;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Transparent;
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(196, 70);
-            this.panel1.TabIndex = 10;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Image = global::BibliotecaApp.Properties.Resources.Brasão_da_Gastão59x65;
-            this.pictureBox1.Location = new System.Drawing.Point(67, 1);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(59, 67);
-            this.pictureBox1.TabIndex = 9;
-            this.pictureBox1.TabStop = false;
-            // 
-            // livroContainer
-            // 
-            this.livroContainer.Controls.Add(this.btnDev);
-            this.livroContainer.Controls.Add(this.btnLivros);
-            this.livroContainer.Controls.Add(this.btnLivroCad);
-            this.livroContainer.Controls.Add(this.btnEmprestimoRap);
-            this.livroContainer.Controls.Add(this.btnLivro);
-            this.livroContainer.Controls.Add(this.btnEmprestimo);
-            this.livroContainer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.livroContainer.Location = new System.Drawing.Point(3, 211);
-            this.livroContainer.Name = "livroContainer";
-            this.livroContainer.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.livroContainer.Size = new System.Drawing.Size(200, 60);
-            this.livroContainer.TabIndex = 8;
             // 
             // btnDev
             // 
@@ -472,15 +485,41 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnEmprestimo.UseVisualStyleBackColor = false;
             this.btnEmprestimo.Click += new System.EventHandler(this.btnEmprestimo_Click);
             // 
-            // livroTransition
+            // btnRel
             // 
-            this.livroTransition.Interval = 5;
-            this.livroTransition.Tick += new System.EventHandler(this.livroTransition_Tick);
+            this.btnRel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.btnRel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
+            this.btnRel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRel.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.btnRel.ForeColor = System.Drawing.Color.White;
+            this.btnRel.Image = global::BibliotecaApp.Properties.Resources.icons8_relatório_25;
+            this.btnRel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRel.Location = new System.Drawing.Point(0, -3);
+            this.btnRel.Name = "btnRel";
+            this.btnRel.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+            this.btnRel.Size = new System.Drawing.Size(223, 60);
+            this.btnRel.TabIndex = 3;
+            this.btnRel.Text = "Relatório";
+            this.btnRel.UseVisualStyleBackColor = false;
+            this.btnRel.Click += new System.EventHandler(this.btnRel_Click);
             // 
-            // userTransition
+            // btnSair
             // 
-            this.userTransition.Interval = 5;
-            this.userTransition.Tick += new System.EventHandler(this.userTransition_Tick);
+            this.btnSair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.btnSair.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
+            this.btnSair.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSair.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.btnSair.ForeColor = System.Drawing.Color.White;
+            this.btnSair.Image = global::BibliotecaApp.Properties.Resources.icons8_sair_25;
+            this.btnSair.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSair.Location = new System.Drawing.Point(0, -3);
+            this.btnSair.Name = "btnSair";
+            this.btnSair.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
+            this.btnSair.Size = new System.Drawing.Size(223, 60);
+            this.btnSair.TabIndex = 3;
+            this.btnSair.Text = "Sair";
+            this.btnSair.UseVisualStyleBackColor = false;
+            this.btnSair.Click += new System.EventHandler(this.btnSair_Click);
             // 
             // MainForm
             // 
@@ -488,6 +527,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ClientSize = new System.Drawing.Size(1440, 900);
             this.Controls.Add(this.panelControl);
             this.Controls.Add(this.menu);
@@ -499,17 +539,20 @@ namespace BibliotecaApp.Forms.Inicio
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.panelControl.ResumeLayout(false);
             this.ControlPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picExit)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picMax)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picMin)).EndInit();
             this.sairContainer.ResumeLayout(false);
             this.relContainer.ResumeLayout(false);
             this.userContainer.ResumeLayout(false);
             this.incioContainer.ResumeLayout(false);
             this.menu.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.livroContainer.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picExit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMax)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMin)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -544,6 +587,9 @@ namespace BibliotecaApp.Forms.Inicio
         public System.Windows.Forms.Panel userContainer;
         public System.Windows.Forms.Button btnUser;
         public System.Windows.Forms.Button btnUserEdit;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label userLbl;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }
 

@@ -494,11 +494,12 @@ namespace BibliotecaApp.Forms.Inicio
             this.panel2.CausesValidation = false;
             this.panel2.Controls.Add(this.pictureBox2);
             this.panel2.Controls.Add(this.userLbl);
-            this.panel2.Location = new System.Drawing.Point(279, 117);
+            this.panel2.Location = new System.Drawing.Point(241, 414);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(189, 36);
             this.panel2.TabIndex = 12;
             this.panel2.TabStop = true;
+            this.panel2.Visible = false;
             // 
             // pictureBox2
             // 
@@ -530,8 +531,8 @@ namespace BibliotecaApp.Forms.Inicio
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ClientSize = new System.Drawing.Size(1440, 800);
-            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelControl);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.menu);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

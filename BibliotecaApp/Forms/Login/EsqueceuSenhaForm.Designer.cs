@@ -38,11 +38,21 @@
             this.lblTop = new System.Windows.Forms.Label();
             this.picExit = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblCodigo = new System.Windows.Forms.Label();
             this.pnBarra2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtConfirmarSenha = new System.Windows.Forms.TextBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtNovaSenha = new System.Windows.Forms.TextBox();
+            this.pnSenha = new System.Windows.Forms.Panel();
+            this.btnTrocarSenha = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).BeginInit();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.pnSenha.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblReenviar
@@ -58,7 +68,7 @@
             // 
             // btnEnviar
             // 
-            this.btnEnviar.Location = new System.Drawing.Point(245, 278);
+            this.btnEnviar.Location = new System.Drawing.Point(255, 304);
             this.btnEnviar.Name = "btnEnviar";
             this.btnEnviar.Size = new System.Drawing.Size(175, 55);
             this.btnEnviar.TabIndex = 2;
@@ -70,25 +80,25 @@
             // 
             this.txtTeste.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtTeste.Font = new System.Drawing.Font("Segoe UI", 10.2F);
-            this.txtTeste.Location = new System.Drawing.Point(206, 221);
+            this.txtTeste.Location = new System.Drawing.Point(203, 235);
             this.txtTeste.Name = "txtTeste";
             this.txtTeste.Size = new System.Drawing.Size(277, 19);
             this.txtTeste.TabIndex = 3;
             // 
             // btnTeste
             // 
-            this.btnTeste.Location = new System.Drawing.Point(0, 430);
+            this.btnTeste.Location = new System.Drawing.Point(0, 397);
             this.btnTeste.Name = "btnTeste";
-            this.btnTeste.Size = new System.Drawing.Size(149, 29);
+            this.btnTeste.Size = new System.Drawing.Size(175, 55);
             this.btnTeste.TabIndex = 4;
-            this.btnTeste.Text = "Testar";
+            this.btnTeste.Text = "Confirmar";
             this.btnTeste.UseVisualStyleBackColor = true;
             this.btnTeste.Click += new System.EventHandler(this.btnTestar_Click);
             // 
             // pnBarra
             // 
             this.pnBarra.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(154)))), ((int)(((byte)(245)))));
-            this.pnBarra.Location = new System.Drawing.Point(205, 178);
+            this.pnBarra.Location = new System.Drawing.Point(202, 193);
             this.pnBarra.Name = "pnBarra";
             this.pnBarra.Size = new System.Drawing.Size(280, 2);
             this.pnBarra.TabIndex = 14;
@@ -97,7 +107,7 @@
             // 
             this.lblDigite.AutoSize = true;
             this.lblDigite.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDigite.Location = new System.Drawing.Point(206, 131);
+            this.lblDigite.Location = new System.Drawing.Point(203, 146);
             this.lblDigite.Name = "lblDigite";
             this.lblDigite.Size = new System.Drawing.Size(93, 13);
             this.lblDigite.TabIndex = 11;
@@ -110,7 +120,7 @@
             this.txtEmail.BackColor = System.Drawing.Color.White;
             this.txtEmail.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmail.Location = new System.Drawing.Point(206, 157);
+            this.txtEmail.Location = new System.Drawing.Point(203, 171);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(277, 19);
             this.txtEmail.TabIndex = 12;
@@ -121,11 +131,11 @@
             this.lblTop.AutoSize = true;
             this.lblTop.BackColor = System.Drawing.Color.Transparent;
             this.lblTop.Font = new System.Drawing.Font("Segoe UI", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTop.Location = new System.Drawing.Point(202, 1);
+            this.lblTop.Location = new System.Drawing.Point(194, 6);
             this.lblTop.Name = "lblTop";
-            this.lblTop.Size = new System.Drawing.Size(280, 47);
+            this.lblTop.Size = new System.Drawing.Size(298, 47);
             this.lblTop.TabIndex = 15;
-            this.lblTop.Text = "Recuperar Senha";
+            this.lblTop.Text = "Digite o seu Email";
             // 
             // picExit
             // 
@@ -141,28 +151,31 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.pictureBox1);
             this.panel2.Controls.Add(this.lblTop);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(684, 59);
+            this.panel2.Size = new System.Drawing.Size(684, 70);
             this.panel2.TabIndex = 17;
             // 
-            // button1
+            // pictureBox1
             // 
-            this.button1.Location = new System.Drawing.Point(512, 378);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(149, 29);
-            this.button1.TabIndex = 18;
-            this.button1.Text = "Testar";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox1.Image = global::BibliotecaApp.Properties.Resources.icons8_x_20;
+            this.pictureBox1.Location = new System.Drawing.Point(661, 3);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox1.TabIndex = 20;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // lblCodigo
             // 
             this.lblCodigo.AutoSize = true;
             this.lblCodigo.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCodigo.Location = new System.Drawing.Point(207, 202);
+            this.lblCodigo.Location = new System.Drawing.Point(204, 217);
             this.lblCodigo.Name = "lblCodigo";
             this.lblCodigo.Size = new System.Drawing.Size(133, 13);
             this.lblCodigo.TabIndex = 19;
@@ -171,10 +184,87 @@
             // pnBarra2
             // 
             this.pnBarra2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(154)))), ((int)(((byte)(245)))));
-            this.pnBarra2.Location = new System.Drawing.Point(205, 242);
+            this.pnBarra2.Location = new System.Drawing.Point(202, 257);
             this.pnBarra2.Name = "pnBarra2";
             this.pnBarra2.Size = new System.Drawing.Size(280, 2);
             this.pnBarra2.TabIndex = 15;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(154)))), ((int)(((byte)(245)))));
+            this.panel1.Location = new System.Drawing.Point(3, 97);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(280, 2);
+            this.panel1.TabIndex = 21;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 57);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(90, 13);
+            this.label1.TabIndex = 22;
+            this.label1.Text = "Confirmar senha";
+            // 
+            // txtConfirmarSenha
+            // 
+            this.txtConfirmarSenha.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtConfirmarSenha.Font = new System.Drawing.Font("Segoe UI", 10.2F);
+            this.txtConfirmarSenha.Location = new System.Drawing.Point(3, 75);
+            this.txtConfirmarSenha.Name = "txtConfirmarSenha";
+            this.txtConfirmarSenha.Size = new System.Drawing.Size(277, 19);
+            this.txtConfirmarSenha.TabIndex = 20;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(154)))), ((int)(((byte)(245)))));
+            this.panel3.Location = new System.Drawing.Point(3, 43);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(280, 2);
+            this.panel3.TabIndex = 24;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(3, 3);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(118, 13);
+            this.label2.TabIndex = 25;
+            this.label2.Text = "Digite sua nova senha";
+            // 
+            // txtNovaSenha
+            // 
+            this.txtNovaSenha.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtNovaSenha.Font = new System.Drawing.Font("Segoe UI", 10.2F);
+            this.txtNovaSenha.Location = new System.Drawing.Point(3, 21);
+            this.txtNovaSenha.Name = "txtNovaSenha";
+            this.txtNovaSenha.Size = new System.Drawing.Size(277, 19);
+            this.txtNovaSenha.TabIndex = 23;
+            // 
+            // pnSenha
+            // 
+            this.pnSenha.Controls.Add(this.panel3);
+            this.pnSenha.Controls.Add(this.panel1);
+            this.pnSenha.Controls.Add(this.label1);
+            this.pnSenha.Controls.Add(this.txtNovaSenha);
+            this.pnSenha.Controls.Add(this.label2);
+            this.pnSenha.Controls.Add(this.txtConfirmarSenha);
+            this.pnSenha.Location = new System.Drawing.Point(519, 158);
+            this.pnSenha.Name = "pnSenha";
+            this.pnSenha.Size = new System.Drawing.Size(283, 111);
+            this.pnSenha.TabIndex = 26;
+            // 
+            // btnTrocarSenha
+            // 
+            this.btnTrocarSenha.Location = new System.Drawing.Point(506, 397);
+            this.btnTrocarSenha.Name = "btnTrocarSenha";
+            this.btnTrocarSenha.Size = new System.Drawing.Size(175, 55);
+            this.btnTrocarSenha.TabIndex = 28;
+            this.btnTrocarSenha.Text = "Trocar Senha";
+            this.btnTrocarSenha.UseVisualStyleBackColor = true;
+            this.btnTrocarSenha.Click += new System.EventHandler(this.btnTrocarSenha_Click);
             // 
             // EsqueceuSenhaForm
             // 
@@ -182,11 +272,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(684, 461);
+            this.Controls.Add(this.btnTrocarSenha);
+            this.Controls.Add(this.pnSenha);
             this.Controls.Add(this.pnBarra2);
             this.Controls.Add(this.lblCodigo);
             this.Controls.Add(this.pnBarra);
             this.Controls.Add(this.lblDigite);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.txtEmail);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.txtTeste);
@@ -202,6 +293,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.pnSenha.ResumeLayout(false);
+            this.pnSenha.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -218,8 +312,16 @@
         private System.Windows.Forms.Label lblTop;
         private System.Windows.Forms.PictureBox picExit;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label lblCodigo;
         private System.Windows.Forms.Panel pnBarra2;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtConfirmarSenha;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txtNovaSenha;
+        private System.Windows.Forms.Panel pnSenha;
+        private System.Windows.Forms.Button btnTrocarSenha;
     }
 }

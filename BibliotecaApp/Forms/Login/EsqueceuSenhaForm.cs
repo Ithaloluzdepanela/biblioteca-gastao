@@ -1,120 +1,95 @@
 ﻿using BibliotecaApp.Services;
+using BibliotecaApp.Utils;
 using System;
+using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Net.Mail;
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
-using static BibliotecaApp.Forms.Livros.CadastroLivroForm;
 
 namespace BibliotecaApp.Forms.Login
 {
     public partial class EsqueceuSenhaForm : Form
     {
-        // Ajuste estes nomes se necessário
+        #region Constants
         private const string TabelaUsuarios = "usuarios";
         private const string ColunaNome = "nome";
         private const string ColunaEmail = "email";
+        #endregion
+
+        #region Private Fields
         // Estado do código gerado
         private string _codigoAtual;
         private DateTime? _expiraEm;
         private string _emailDestino;
+
         // Cooldown "Reenviar Código"
         private readonly Timer _cooldownTimer = new Timer { Interval = 1000 };
         private int _secondsRemaining = 0;
+
         // Exibição temporária do código
         private readonly Timer _revealTimer = new Timer { Interval = 1000 };
         private int _revealSecondsLeft = 0;
         private bool _showingCode = false;
+
         // Guardas de reentrância (impede cliques duplos gerarem ações duplicadas)
         private bool _isSending = false;
         private bool _isVerifying = false;
+        #endregion
+
+        #region Constructor
         public EsqueceuSenhaForm()
         {
             InitializeComponent();
             ConfigurarTimers();
             AtualizarLblReenviar();
         }
+        #endregion
 
-        private void ConfigurarTimers()
+        #region Form Events
+        private void EsqueceuSenhaForm_Load(object sender, EventArgs e)
         {
-            // Timer do cooldown
-            _cooldownTimer.Tick += (s, e) =>
-            {
-                if (_secondsRemaining > 0)
-                {
-                    _secondsRemaining--;
-                    AtualizarLblReenviar();
-                }
-
-                if (_secondsRemaining <= 0)
-                {
-                    _cooldownTimer.Stop();
-                    AtualizarLblReenviar();
-                }
-            };
-
-            // Timer da exibição temporária do código
-            _revealTimer.Tick += (s, e) =>
-            {
-                if (_revealSecondsLeft > 0)
-                {
-                    _revealSecondsLeft--;
-                    if (_showingCode)
-                    {
-                        lblReenviar.Text = $"Código: {_codigoAtual} (some em {_revealSecondsLeft}s)";
-                    }
-                }
-
-                if (_revealSecondsLeft <= 0)
-                {
-                    _revealTimer.Stop();
-                    _showingCode = false;
-                    AtualizarLblReenviar();
-                }
-            };
+            txtTeste.BackColor = Color.White;
+            txtTeste.Location = new Point(-200, -200);
+            lblCodigo.Location = new Point(-200, -200);
+            pnBarra2.Location = new Point(-200, -200);
+            btnTeste.Location = new Point(-200, -200);
+            pnSenha.Location = new Point(-200, -200);
+            btnTrocarSenha.Location = new Point(-200, -200);
         }
 
-        private void AtualizarLblReenviar()
+        private void picExit_Click(object sender, EventArgs e)
         {
-            if (_showingCode)
-            {
-                // Enquanto exibindo o código, não alteramos o texto aqui.
-                return;
-            }
+            Application.Exit();
+        }
 
-            if (_secondsRemaining > 0)
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            Form loginForm = Application.OpenForms["LoginForm"];
+
+            if (loginForm != null)
             {
-                lblReenviar.Text = $"Reenviar em {_secondsRemaining}s";
-                lblReenviar.ForeColor = SystemColors.GrayText;
-                lblReenviar.Cursor = Cursors.No;
+                this.Hide();
+                loginForm.Show();
+                loginForm.BringToFront();
             }
             else
             {
-                lblReenviar.Text = "Reenviar código";
-                lblReenviar.ForeColor = Color.RoyalBlue;
-                lblReenviar.Cursor = Cursors.Hand;
+                this.Hide();
+                LoginForm novoLogin = new LoginForm();
+                novoLogin.Show();
             }
         }
+        #endregion
 
-        private void IniciarCooldown(int seconds)
-        {
-            _secondsRemaining = seconds;
-            _cooldownTimer.Stop();
-            _cooldownTimer.Start();
-            AtualizarLblReenviar();
-        }
-
-        // ========== Eventos (ligue-os no Designer apenas UMA vez) ==========
-
-        // Botão Enviar (Click -> btnEnviar_Click)
+        #region Button Events
         private void btnEnviar_Click(object sender, EventArgs e)
         {
-            // Captura o e-mail antes de ocultar o campo
             string email = txtEmail.Text?.Trim();
 
-            // Verifica se o e-mail é válido antes de fazer qualquer mudança na UI
             if (string.IsNullOrEmpty(email))
             {
                 MessageBox.Show(
@@ -126,36 +101,17 @@ namespace BibliotecaApp.Forms.Login
                 return;
             }
 
-            // Tenta enviar o código - só muda a UI se for bem-sucedido
             if (EnviarCodigoComValidacao(email))
             {
-                // Só atualiza a UI se o email foi validado e o código enviado com sucesso
-                lblTop.Text = "Digite o Código de Verificação";
-
-
-                // Oculta e desativa o campo de e-mail
-                txtEmail.Visible = false;
-                txtEmail.Enabled = false;
-                pnBarra.Visible = false;
-                lblDigite.Visible = false; // Oculta a barra de progresso (ou outro painel)
-
-                txtTeste.Focus();
-
-
-                lblReenviar.Visible = true; // Certifique-se de que o label de reenviar código esteja visível
-
-                txtTeste.Location = txtEmail.Location;
-                pnBarra2.Location = pnBarra.Location;
-                lblCodigo.Location = lblDigite.Location;
+                TransicionarParaVerificacaoCodigo();
             }
-            // Se EnviarCodigoComValidacao retornar false, a UI permanece inalterada
         }
 
-        // Botão Verificar (Click -> btnTestar_Click)
         private void btnTestar_Click(object sender, EventArgs e)
         {
-            if (_isVerifying) return; // guarda anti-duplo clique
+            if (_isVerifying) return;
             _isVerifying = true;
+
             try
             {
                 var codigoDigitado = txtTeste.Text?.Trim() ?? string.Empty;
@@ -181,8 +137,8 @@ namespace BibliotecaApp.Forms.Login
                 if (codigoDigitado == _codigoAtual)
                 {
                     MessageBox.Show("Código correto! Você pode prosseguir com a redefinição de senha.");
-                    // Ex.: new RedefinirSenhaForm(_emailDestino).Show();
-                    InutilizarCodigo(); // invalidar após sucesso
+                    TransicionarParaNovaSenha();
+                    InutilizarCodigo();
                     AtualizarLblReenviar();
                 }
                 else
@@ -196,10 +152,72 @@ namespace BibliotecaApp.Forms.Login
             }
         }
 
-        // Label Reenviar (Click -> lblReenviar_Click)
+        private void btnTrocarSenha_Click(object sender, EventArgs e)
+        {
+            string novaSenha = txtNovaSenha.Text?.Trim();
+            string confirmarSenha = txtConfirmarSenha.Text?.Trim();
+
+            if (string.IsNullOrWhiteSpace(novaSenha) || string.IsNullOrWhiteSpace(confirmarSenha))
+            {
+                MessageBox.Show("Preencha os dois campos de senha.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (novaSenha.Length < 4)
+            {
+                MessageBox.Show("A senha deve ter pelo menos 4 caracteres.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (novaSenha != confirmarSenha)
+            {
+                MessageBox.Show("As senhas não coincidem. Verifique e tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            // Gerar hash e salt usando a classe CriptografiaSenha
+            string hashGerado;
+            string saltGerado;
+            CriptografiaSenha.CriarHash(novaSenha, out hashGerado, out saltGerado);
+
+            // Atualizar no banco de dados
+            try
+            {
+                using (SqlCeConnection conn = Conexao.ObterConexao())
+                {
+                    conn.Open();
+                    string query = $"UPDATE usuarios SET Senha_Hash = @Hash, Senha_Salt = @Salt WHERE Email = @Email";
+
+                    using (SqlCeCommand cmd = new SqlCeCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Hash", hashGerado);
+                        cmd.Parameters.AddWithValue("@Salt", saltGerado);
+                        cmd.Parameters.AddWithValue("@Email", _emailDestino); // ou txtEmail.Text.Trim()
+
+                        int linhasAfetadas = cmd.ExecuteNonQuery();
+
+                        if (linhasAfetadas > 0)
+                        {
+                            MessageBox.Show("Senha alterada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.Close(); // ou redirecionar para tela de login
+                        }
+                        else
+                        {
+                            MessageBox.Show("Usuário não encontrado. Verifique o e-mail.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao conectar ao banco de dados: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        #endregion
+
+        #region Label Events
         private void lblReenviar_Click(object sender, EventArgs e)
         {
-            // Clique normal: reenvia se cooldown terminou
             if (_secondsRemaining > 0)
             {
                 MessageBox.Show("Aguarde o término da contagem para reenviar o código.");
@@ -216,21 +234,121 @@ namespace BibliotecaApp.Forms.Login
             EnviarCodigo(email, reiniciarCooldown: true);
         }
 
-        // Label Reenviar (DoubleClick -> lblReenviar_DoubleClick)
         private void lblReenviar_DoubleClick(object sender, EventArgs e)
         {
-            // Duplo clique: mostrar o código por 8s (sem clique direito)
             MostrarCodigoTemporariamente();
         }
+        #endregion
 
-        // ========== Núcleo da lógica ==========
+        #region UI Transition Methods
+        private void TransicionarParaVerificacaoCodigo()
+        {
+            lblTop.Text = "Digite o Código de Verificação";
+            lblTop.Location = new Point(96, 9);
 
+            txtEmail.Visible = false;
+            txtEmail.Enabled = false;
+            pnBarra.Visible = false;
+            lblDigite.Visible = false;
+
+            txtTeste.Location = txtEmail.Location;
+            pnBarra2.Location = pnBarra.Location;
+            lblCodigo.Location = lblDigite.Location;
+            btnTeste.Location = btnEnviar.Location;
+            lblReenviar.Visible = true;
+
+            txtTeste.Focus();
+        }
+
+        private void TransicionarParaNovaSenha()
+        {
+            lblTop.Text = "Digite sua nova senha";
+            lblTop.Location = new Point(25, 9);
+
+            txtTeste.Visible = false;
+            pnBarra2.Visible = false;
+            lblCodigo.Visible = false;
+            btnTeste.Visible = false;
+            lblReenviar.Visible = false;
+
+            pnSenha.Location = lblDigite.Location;
+            btnTrocarSenha.Location = btnTeste.Location;
+
+            txtNovaSenha.Focus();
+        }
+        #endregion
+
+        #region Timer Configuration
+        private void ConfigurarTimers()
+        {
+            _cooldownTimer.Tick += (s, e) =>
+            {
+                if (_secondsRemaining > 0)
+                {
+                    _secondsRemaining--;
+                    AtualizarLblReenviar();
+                }
+
+                if (_secondsRemaining <= 0)
+                {
+                    _cooldownTimer.Stop();
+                    AtualizarLblReenviar();
+                }
+            };
+
+            _revealTimer.Tick += (s, e) =>
+            {
+                if (_revealSecondsLeft > 0)
+                {
+                    _revealSecondsLeft--;
+                    if (_showingCode)
+                    {
+                        lblReenviar.Text = $"Código: {_codigoAtual} (some em {_revealSecondsLeft}s)";
+                    }
+                }
+
+                if (_revealSecondsLeft <= 0)
+                {
+                    _revealTimer.Stop();
+                    _showingCode = false;
+                    AtualizarLblReenviar();
+                }
+            };
+        }
+
+        private void AtualizarLblReenviar()
+        {
+            if (_showingCode) return;
+
+            if (_secondsRemaining > 0)
+            {
+                lblReenviar.Text = $"Reenviar em {_secondsRemaining}s";
+                lblReenviar.ForeColor = SystemColors.GrayText;
+                lblReenviar.Cursor = Cursors.No;
+            }
+            else
+            {
+                lblReenviar.Text = "Reenviar código";
+                lblReenviar.ForeColor = Color.RoyalBlue;
+                lblReenviar.Cursor = Cursors.Hand;
+            }
+        }
+
+        private void IniciarCooldown(int seconds)
+        {
+            _secondsRemaining = seconds;
+            _cooldownTimer.Stop();
+            _cooldownTimer.Start();
+            AtualizarLblReenviar();
+        }
+        #endregion
+
+        #region Email and Code Logic
         private bool EnviarCodigoComValidacao(string email)
         {
-            if (_isSending) return false; // guarda anti-duplo clique
+            if (_isSending) return false;
             _isSending = true;
 
-            // Desabilita UI durante envio para evitar cliques duplos
             var prevBtnEnviar = btnEnviar.Enabled;
             var prevLblReenviar = lblReenviar.Enabled;
             btnEnviar.Enabled = false;
@@ -238,19 +356,18 @@ namespace BibliotecaApp.Forms.Login
 
             try
             {
-                // 1) Validar preenchimento e formato
                 if (string.IsNullOrWhiteSpace(email))
                 {
                     MessageBox.Show("Por favor, preencha o campo de e-mail.");
                     return false;
                 }
+
                 if (!EmailValido(email))
                 {
                     MessageBox.Show("E-mail inválido.");
                     return false;
                 }
 
-                // 2) Buscar nome no banco
                 string nome;
                 try
                 {
@@ -268,12 +385,10 @@ namespace BibliotecaApp.Forms.Login
                     return false;
                 }
 
-                // 3) Gerar código (6 dígitos) e expiração
                 _codigoAtual = GerarCodigoSeisDigitos();
                 _expiraEm = DateTime.UtcNow.AddMinutes(10);
                 _emailDestino = email;
 
-                // 4) Montar e enviar e-mail
                 var assunto = "🔐 Código de Verificação - Biblioteca Monteiro Lobato";
                 var corpoHtml = $@"
 <html>
@@ -289,16 +404,17 @@ namespace BibliotecaApp.Forms.Login
     </div>
   </body>
 </html>";
+
                 try
                 {
                     EmailService.Enviar(email, assunto, corpoHtml);
                     MessageBox.Show("Código enviado com sucesso para " + email);
 
-                    _showingCode = false; // se estiver mostrando, interrompe
+                    _showingCode = false;
                     _revealTimer.Stop();
                     IniciarCooldown(60);
 
-                    return true; // Sucesso
+                    return true;
                 }
                 catch (Exception ex)
                 {
@@ -328,16 +444,16 @@ namespace BibliotecaApp.Forms.Login
             }
 
             _showingCode = true;
-            _revealSecondsLeft = 8; // tempo de exibição do código
+            _revealSecondsLeft = 8;
             lblReenviar.Text = $"Código: {_codigoAtual} (some em {_revealSecondsLeft}s)";
             lblReenviar.ForeColor = Color.DarkGreen;
 
             _revealTimer.Stop();
             _revealTimer.Start();
         }
+        #endregion
 
-        // ========== Utilitários ==========
-
+        #region Utility Methods
         private static bool EmailValido(string email)
         {
             try
@@ -353,12 +469,10 @@ namespace BibliotecaApp.Forms.Login
 
         private static string GerarCodigoSeisDigitos()
         {
-            // Gera um número entre 100000 e 999999 de forma criptograficamente segura (sem GetInt32)
-            int numero = GetSecureInt32(100000, 1_000_000); // [100000, 1000000)
+            int numero = GetSecureInt32(100000, 1_000_000);
             return numero.ToString("D6");
         }
 
-        // Gera um inteiro seguro e uniforme no intervalo [minValue, maxValue)
         private static int GetSecureInt32(int minValue, int maxValue)
         {
             if (minValue >= maxValue)
@@ -404,9 +518,10 @@ namespace BibliotecaApp.Forms.Login
         {
             _codigoAtual = null;
             _expiraEm = null;
-            // Mantemos _emailDestino se for útil para o próximo passo (ex.: redefinir senha)
         }
+        #endregion
 
+        #region Database Methods
         private string ObterNomePorEmail(string email)
         {
             var sql = $"SELECT {ColunaNome} FROM {TabelaUsuarios} WHERE {ColunaEmail} = @Email";
@@ -426,42 +541,6 @@ namespace BibliotecaApp.Forms.Login
                 }
             }
         }
-
-        private void picExit_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // Só atualiza a UI se o email foi validado e o código enviado com sucesso
-            lblTop.Text = "Digite o Código de Verificação";
-
-
-            // Oculta e desativa o campo de e-mail
-            txtEmail.Visible = false;
-            txtEmail.Enabled = false;
-            pnBarra.Visible = false;
-            lblDigite.Visible = false; // Oculta a barra de progresso (ou outro painel)
-
-            txtTeste.Focus();
-
-
-            lblReenviar.Visible= true; // Certifique-se de que o label de reenviar código esteja visível
-
-            txtTeste.Location = txtEmail.Location;
-            pnBarra2.Location = pnBarra.Location;
-            lblCodigo.Location = lblDigite.Location;
-
-        }
-
-        private void EsqueceuSenhaForm_Load(object sender, EventArgs e)
-        {
-            txtTeste.BackColor=Color.White;
-            // Coloca o TextBox fora da área visível
-            txtTeste.Location = new Point(-200, -200); // Fora da tela
-            lblCodigo.Location= new Point(-200, -200); // Fora da tela
-            pnBarra2.Location= new Point(-200, -200); // Fora da tela
-        }
+        #endregion
     }
 }

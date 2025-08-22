@@ -522,8 +522,14 @@ namespace BibliotecaApp.Forms.Login
 
         private void lblEsqueceuSenha_Click(object sender, EventArgs e)
         {
-            EsqueceuSenhaForm popup = new EsqueceuSenhaForm();
-            popup.ShowDialog(); // Abre como modal
+            this.Hide(); // Esconde o formulário atual
+
+            using (EsqueceuSenhaForm popup = new EsqueceuSenhaForm())
+            {
+                popup.ShowDialog(); // Abre como modal
+            }
+
+            this.Show(); // Reexibe o formulário anterior após o fechamento do modal
         }
     }
 }

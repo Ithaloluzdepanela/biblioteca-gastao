@@ -1,39 +1,35 @@
-﻿using System;
+﻿using BibliotecaApp.Services;
+using System;
 using System.Data.SqlServerCe;
+using System.Drawing;
 using System.Net.Mail;
 using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Forms;
-using System.Drawing;
-using BibliotecaApp.Services;
-using static BibliotecaApp.Forms.Login.LoginForm;
+using static BibliotecaApp.Forms.Livros.CadastroLivroForm;
 
 namespace BibliotecaApp.Forms.Login
 {
     public partial class EsqueceuSenhaForm : Form
     {
         // Ajuste estes nomes se necessário
-        private const string TabelaUsuarios = "usuarios"; 
-        private const string ColunaNome = "nome";              
-        private const string ColunaEmail = "email";             
-
+        private const string TabelaUsuarios = "usuarios";
+        private const string ColunaNome = "nome";
+        private const string ColunaEmail = "email";
         // Estado do código gerado
         private string _codigoAtual;
         private DateTime? _expiraEm;
         private string _emailDestino;
-
         // Cooldown "Reenviar Código"
         private readonly Timer _cooldownTimer = new Timer { Interval = 1000 };
         private int _secondsRemaining = 0;
-
         // Exibição temporária do código
         private readonly Timer _revealTimer = new Timer { Interval = 1000 };
         private int _revealSecondsLeft = 0;
         private bool _showingCode = false;
-
         // Guardas de reentrância (impede cliques duplos gerarem ações duplicadas)
         private bool _isSending = false;
         private bool _isVerifying = false;
-
         public EsqueceuSenhaForm()
         {
             InitializeComponent();
@@ -115,8 +111,44 @@ namespace BibliotecaApp.Forms.Login
         // Botão Enviar (Click -> btnEnviar_Click)
         private void btnEnviar_Click(object sender, EventArgs e)
         {
-            var email = txtEmail.Text?.Trim() ?? string.Empty;
-            EnviarCodigo(email, reiniciarCooldown: true);
+            // Captura o e-mail antes de ocultar o campo
+            string email = txtEmail.Text?.Trim();
+
+            // Verifica se o e-mail é válido antes de fazer qualquer mudança na UI
+            if (string.IsNullOrEmpty(email))
+            {
+                MessageBox.Show(
+                    "O campo de e-mail está vazio. Por favor, preencha o e-mail.",
+                    "Aviso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+            }
+
+            // Tenta enviar o código - só muda a UI se for bem-sucedido
+            if (EnviarCodigoComValidacao(email))
+            {
+                // Só atualiza a UI se o email foi validado e o código enviado com sucesso
+                lblTop.Text = "Digite o Código de Verificação";
+
+
+                // Oculta e desativa o campo de e-mail
+                txtEmail.Visible = false;
+                txtEmail.Enabled = false;
+                pnBarra.Visible = false;
+                lblDigite.Visible = false; // Oculta a barra de progresso (ou outro painel)
+
+                txtTeste.Focus();
+
+
+                lblReenviar.Visible = true; // Certifique-se de que o label de reenviar código esteja visível
+
+                txtTeste.Location = txtEmail.Location;
+                pnBarra2.Location = pnBarra.Location;
+                lblCodigo.Location = lblDigite.Location;
+            }
+            // Se EnviarCodigoComValidacao retornar false, a UI permanece inalterada
         }
 
         // Botão Verificar (Click -> btnTestar_Click)
@@ -193,9 +225,9 @@ namespace BibliotecaApp.Forms.Login
 
         // ========== Núcleo da lógica ==========
 
-        private void EnviarCodigo(string email, bool reiniciarCooldown)
+        private bool EnviarCodigoComValidacao(string email)
         {
-            if (_isSending) return; // guarda anti-duplo clique
+            if (_isSending) return false; // guarda anti-duplo clique
             _isSending = true;
 
             // Desabilita UI durante envio para evitar cliques duplos
@@ -210,12 +242,12 @@ namespace BibliotecaApp.Forms.Login
                 if (string.IsNullOrWhiteSpace(email))
                 {
                     MessageBox.Show("Por favor, preencha o campo de e-mail.");
-                    return;
+                    return false;
                 }
                 if (!EmailValido(email))
                 {
                     MessageBox.Show("E-mail inválido.");
-                    return;
+                    return false;
                 }
 
                 // 2) Buscar nome no banco
@@ -227,13 +259,13 @@ namespace BibliotecaApp.Forms.Login
                 catch (Exception ex)
                 {
                     MessageBox.Show("Erro ao acessar o banco de dados: " + ex.Message);
-                    return;
+                    return false;
                 }
 
                 if (string.IsNullOrEmpty(nome))
                 {
                     MessageBox.Show("E-mail não encontrado no sistema.");
-                    return;
+                    return false;
                 }
 
                 // 3) Gerar código (6 dígitos) e expiração
@@ -257,22 +289,21 @@ namespace BibliotecaApp.Forms.Login
     </div>
   </body>
 </html>";
-
                 try
                 {
                     EmailService.Enviar(email, assunto, corpoHtml);
                     MessageBox.Show("Código enviado com sucesso para " + email);
 
-                    if (reiniciarCooldown)
-                    {
-                        _showingCode = false; // se estiver mostrando, interrompe
-                        _revealTimer.Stop();
-                        IniciarCooldown(60);
-                    }
+                    _showingCode = false; // se estiver mostrando, interrompe
+                    _revealTimer.Stop();
+                    IniciarCooldown(60);
+
+                    return true; // Sucesso
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Erro ao enviar e-mail: " + ex.Message);
+                    return false;
                 }
             }
             finally
@@ -281,6 +312,11 @@ namespace BibliotecaApp.Forms.Login
                 btnEnviar.Enabled = prevBtnEnviar;
                 lblReenviar.Enabled = prevLblReenviar;
             }
+        }
+
+        private void EnviarCodigo(string email, bool reiniciarCooldown)
+        {
+            EnviarCodigoComValidacao(email);
         }
 
         private void MostrarCodigoTemporariamente()
@@ -389,6 +425,43 @@ namespace BibliotecaApp.Forms.Login
                     return Convert.ToString(result);
                 }
             }
+        }
+
+        private void picExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Só atualiza a UI se o email foi validado e o código enviado com sucesso
+            lblTop.Text = "Digite o Código de Verificação";
+
+
+            // Oculta e desativa o campo de e-mail
+            txtEmail.Visible = false;
+            txtEmail.Enabled = false;
+            pnBarra.Visible = false;
+            lblDigite.Visible = false; // Oculta a barra de progresso (ou outro painel)
+
+            txtTeste.Focus();
+
+
+            lblReenviar.Visible= true; // Certifique-se de que o label de reenviar código esteja visível
+
+            txtTeste.Location = txtEmail.Location;
+            pnBarra2.Location = pnBarra.Location;
+            lblCodigo.Location = lblDigite.Location;
+
+        }
+
+        private void EsqueceuSenhaForm_Load(object sender, EventArgs e)
+        {
+            txtTeste.BackColor=Color.White;
+            // Coloca o TextBox fora da área visível
+            txtTeste.Location = new Point(-200, -200); // Fora da tela
+            lblCodigo.Location= new Point(-200, -200); // Fora da tela
+            pnBarra2.Location= new Point(-200, -200); // Fora da tela
         }
     }
 }

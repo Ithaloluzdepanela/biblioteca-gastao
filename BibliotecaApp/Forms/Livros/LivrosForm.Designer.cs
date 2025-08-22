@@ -29,28 +29,26 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnDevolução = new System.Windows.Forms.Button();
             this.btnProcurar = new System.Windows.Forms.Button();
             this.Lista = new System.Windows.Forms.DataGridView();
+            this.btnAlterar = new System.Windows.Forms.Button();
             this.lblTotal = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.picReserva = new System.Windows.Forms.PictureBox();
             this.txtNome = new RoundedTextBox();
-            this.picEmprestimo = new System.Windows.Forms.PictureBox();
             this.cbDisponibilidade = new RoundedComboBox();
             this.cbFiltro = new RoundedComboBox();
             this.lblTeste = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Lista)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picReserva)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).BeginInit();
             this.SuspendLayout();
             // 
             // btnDevolução
             // 
-            this.btnDevolução.Location = new System.Drawing.Point(713, 360);
+            this.btnDevolução.Location = new System.Drawing.Point(680, 316);
             this.btnDevolução.Name = "btnDevolução";
             this.btnDevolução.Size = new System.Drawing.Size(73, 56);
             this.btnDevolução.TabIndex = 12;
@@ -61,7 +59,7 @@
             // btnProcurar
             // 
             this.btnProcurar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnProcurar.Location = new System.Drawing.Point(565, 12);
+            this.btnProcurar.Location = new System.Drawing.Point(548, 66);
             this.btnProcurar.Name = "btnProcurar";
             this.btnProcurar.Size = new System.Drawing.Size(108, 45);
             this.btnProcurar.TabIndex = 7;
@@ -75,16 +73,16 @@
             this.Lista.AllowUserToDeleteRows = false;
             this.Lista.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.Lista.BackgroundColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Lista.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Lista.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.Lista.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Lista.Location = new System.Drawing.Point(49, 105);
+            this.Lista.Location = new System.Drawing.Point(18, 206);
             this.Lista.Name = "Lista";
             this.Lista.ReadOnly = true;
             this.Lista.RowHeadersWidth = 51;
@@ -94,43 +92,41 @@
             this.Lista.TabIndex = 3;
             this.Lista.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Lista_CellFormatting);
             // 
+            // btnAlterar
+            // 
+            this.btnAlterar.Location = new System.Drawing.Point(680, 227);
+            this.btnAlterar.Name = "btnAlterar";
+            this.btnAlterar.Size = new System.Drawing.Size(73, 56);
+            this.btnAlterar.TabIndex = 14;
+            this.btnAlterar.Text = "Alterar";
+            this.btnAlterar.UseVisualStyleBackColor = true;
+            this.btnAlterar.Click += new System.EventHandler(this.btnAlterar_Click);
+            // 
             // lblTotal
             // 
             this.lblTotal.AutoSize = true;
             this.lblTotal.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotal.Location = new System.Drawing.Point(364, 70);
+            this.lblTotal.Location = new System.Drawing.Point(347, 124);
             this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(0, 23);
+            this.lblTotal.Size = new System.Drawing.Size(0, 19);
             this.lblTotal.TabIndex = 11;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.SystemColors.Control;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 45);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Livros";
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.picReserva);
             this.panel1.Controls.Add(this.txtNome);
-            this.panel1.Controls.Add(this.picEmprestimo);
+            this.panel1.Controls.Add(this.btnAlterar);
             this.panel1.Controls.Add(this.Lista);
             this.panel1.Controls.Add(this.cbDisponibilidade);
             this.panel1.Controls.Add(this.btnProcurar);
             this.panel1.Controls.Add(this.btnDevolução);
             this.panel1.Controls.Add(this.cbFiltro);
             this.panel1.Controls.Add(this.lblTotal);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 45);
+            this.panel1.Location = new System.Drawing.Point(253, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(819, 655);
+            this.panel1.Size = new System.Drawing.Size(775, 845);
             this.panel1.TabIndex = 16;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
@@ -139,7 +135,7 @@
             this.picReserva.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
             this.picReserva.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_quadrado_arredondado_20;
             this.picReserva.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.picReserva.Location = new System.Drawing.Point(713, 487);
+            this.picReserva.Location = new System.Drawing.Point(680, 435);
             this.picReserva.Name = "picReserva";
             this.picReserva.Size = new System.Drawing.Size(40, 40);
             this.picReserva.TabIndex = 24;
@@ -158,7 +154,7 @@
             this.txtNome.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtNome.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNome.Location = new System.Drawing.Point(103, 12);
+            this.txtNome.Location = new System.Drawing.Point(86, 66);
             this.txtNome.Name = "txtNome";
             this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -169,19 +165,6 @@
             this.txtNome.TabIndex = 8;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
-            this.txtNome.Load += new System.EventHandler(this.txtNome_Load);
-            // 
-            // picEmprestimo
-            // 
-            this.picEmprestimo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
-            this.picEmprestimo.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_cardápio_30;
-            this.picEmprestimo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.picEmprestimo.Location = new System.Drawing.Point(713, 422);
-            this.picEmprestimo.Name = "picEmprestimo";
-            this.picEmprestimo.Size = new System.Drawing.Size(40, 40);
-            this.picEmprestimo.TabIndex = 15;
-            this.picEmprestimo.TabStop = false;
-            this.picEmprestimo.Click += new System.EventHandler(this.picEmprestimo_Click);
             // 
             // cbDisponibilidade
             // 
@@ -198,12 +181,12 @@
             "Disponíveis",
             "Indisponíveis"});
             this.cbDisponibilidade.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbDisponibilidade.Location = new System.Drawing.Point(314, 65);
+            this.cbDisponibilidade.Location = new System.Drawing.Point(297, 119);
             this.cbDisponibilidade.Name = "cbDisponibilidade";
             this.cbDisponibilidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbDisponibilidade.PlaceholderMargin = 10;
             this.cbDisponibilidade.PlaceholderText = "Selecionar Filtro";
-            this.cbDisponibilidade.Size = new System.Drawing.Size(190, 31);
+            this.cbDisponibilidade.Size = new System.Drawing.Size(190, 26);
             this.cbDisponibilidade.TabIndex = 13;
             // 
             // cbFiltro
@@ -221,12 +204,12 @@
             "Autor",
             "Gênero"});
             this.cbFiltro.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbFiltro.Location = new System.Drawing.Point(103, 65);
+            this.cbFiltro.Location = new System.Drawing.Point(86, 119);
             this.cbFiltro.Name = "cbFiltro";
             this.cbFiltro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbFiltro.PlaceholderMargin = 10;
             this.cbFiltro.PlaceholderText = "Selecionar Filtro";
-            this.cbFiltro.Size = new System.Drawing.Size(190, 31);
+            this.cbFiltro.Size = new System.Drawing.Size(190, 26);
             this.cbFiltro.TabIndex = 9;
             // 
             // lblTeste
@@ -234,16 +217,15 @@
             this.lblTeste.AutoSize = true;
             this.lblTeste.Location = new System.Drawing.Point(129, 9);
             this.lblTeste.Name = "lblTeste";
-            this.lblTeste.Size = new System.Drawing.Size(0, 20);
+            this.lblTeste.Size = new System.Drawing.Size(0, 15);
             this.lblTeste.TabIndex = 17;
             // 
             // LivrosForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(819, 700);
+            this.ClientSize = new System.Drawing.Size(1280, 845);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.lblTeste);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -253,22 +235,20 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picReserva)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.PictureBox picEmprestimo;
         private System.Windows.Forms.Button btnDevolução;
         private System.Windows.Forms.Button btnProcurar;
         private System.Windows.Forms.DataGridView Lista;
         private RoundedComboBox cbFiltro;
+        private System.Windows.Forms.Button btnAlterar;
         private System.Windows.Forms.Label lblTotal;
         private RoundedComboBox cbDisponibilidade;
         private RoundedTextBox txtNome;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblTeste;
         private System.Windows.Forms.PictureBox picReserva;

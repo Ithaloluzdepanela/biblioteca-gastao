@@ -90,6 +90,8 @@ namespace BibliotecaApp.Forms.Inicio
             timerRelogio.Tick += timerRelogio_Tick;
             timerRelogio.Start();
             AtualizarRelogio();
+
+
         }
 
         private void lblRelogio_Click(object sender, EventArgs e)

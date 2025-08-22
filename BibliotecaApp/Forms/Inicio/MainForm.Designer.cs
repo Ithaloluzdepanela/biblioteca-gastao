@@ -1,4 +1,6 @@
-﻿namespace BibliotecaApp.Forms.Inicio
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace BibliotecaApp.Forms.Inicio
 {
     partial class MainForm
     {
@@ -51,13 +53,16 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.livroContainer = new System.Windows.Forms.Panel();
             this.btnDev = new System.Windows.Forms.Button();
-            this.btnLivro = new System.Windows.Forms.Button();
             this.btnLivros = new System.Windows.Forms.Button();
             this.btnLivroCad = new System.Windows.Forms.Button();
             this.btnEmprestimoRap = new System.Windows.Forms.Button();
+            this.btnLivro = new System.Windows.Forms.Button();
             this.btnEmprestimo = new System.Windows.Forms.Button();
             this.livroTransition = new System.Windows.Forms.Timer(this.components);
             this.userTransition = new System.Windows.Forms.Timer(this.components);
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.userLbl = new System.Windows.Forms.Label();
             this.panelControl.SuspendLayout();
             this.ControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).BeginInit();
@@ -71,6 +76,8 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.livroContainer.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // panelControl
@@ -79,12 +86,12 @@
             this.panelControl.BackColor = System.Drawing.Color.White;
             this.panelControl.Controls.Add(this.ControlPanel);
             this.panelControl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelControl.ForeColor = System.Drawing.SystemColors.Control;
             this.panelControl.Location = new System.Drawing.Point(205, 0);
             this.panelControl.Name = "panelControl";
-            this.panelControl.Size = new System.Drawing.Size(795, 30);
+            this.panelControl.Size = new System.Drawing.Size(1235, 30);
             this.panelControl.TabIndex = 0;
             this.panelControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelControl_MouseDown);
-            this.panelControl.MouseEnter += new System.EventHandler(this.panelControl_MouseEnter);
             // 
             // ControlPanel
             // 
@@ -94,7 +101,7 @@
             this.ControlPanel.Controls.Add(this.picMin);
             this.ControlPanel.Dock = System.Windows.Forms.DockStyle.Right;
             this.ControlPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.ControlPanel.Location = new System.Drawing.Point(687, 0);
+            this.ControlPanel.Location = new System.Drawing.Point(1127, 0);
             this.ControlPanel.Name = "ControlPanel";
             this.ControlPanel.Size = new System.Drawing.Size(108, 30);
             this.ControlPanel.TabIndex = 4;
@@ -157,16 +164,16 @@
             // btnSair
             // 
             this.btnSair.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnSair.FlatAppearance.BorderSize = 0;
+            this.btnSair.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
             this.btnSair.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSair.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnSair.ForeColor = System.Drawing.Color.White;
             this.btnSair.Image = global::BibliotecaApp.Properties.Resources.icons8_sair_25;
             this.btnSair.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSair.Location = new System.Drawing.Point(0, 0);
+            this.btnSair.Location = new System.Drawing.Point(0, -3);
             this.btnSair.Name = "btnSair";
             this.btnSair.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
-            this.btnSair.Size = new System.Drawing.Size(200, 60);
+            this.btnSair.Size = new System.Drawing.Size(223, 60);
             this.btnSair.TabIndex = 3;
             this.btnSair.Text = "Sair";
             this.btnSair.UseVisualStyleBackColor = false;
@@ -185,16 +192,16 @@
             // btnRel
             // 
             this.btnRel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnRel.FlatAppearance.BorderSize = 0;
+            this.btnRel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
             this.btnRel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRel.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnRel.ForeColor = System.Drawing.Color.White;
             this.btnRel.Image = global::BibliotecaApp.Properties.Resources.icons8_relatório_25;
             this.btnRel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRel.Location = new System.Drawing.Point(0, 0);
+            this.btnRel.Location = new System.Drawing.Point(0, -3);
             this.btnRel.Name = "btnRel";
             this.btnRel.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.btnRel.Size = new System.Drawing.Size(200, 60);
+            this.btnRel.Size = new System.Drawing.Size(223, 60);
             this.btnRel.TabIndex = 3;
             this.btnRel.Text = "Relatório";
             this.btnRel.UseVisualStyleBackColor = false;
@@ -216,13 +223,13 @@
             // btnUser
             // 
             this.btnUser.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnUser.FlatAppearance.BorderSize = 0;
+            this.btnUser.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUser.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnUser.ForeColor = System.Drawing.Color.Transparent;
             this.btnUser.Image = global::BibliotecaApp.Properties.Resources.icons8_usuário_masculino_25;
             this.btnUser.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUser.Location = new System.Drawing.Point(0, 60);
+            this.btnUser.Location = new System.Drawing.Point(0, 59);
             this.btnUser.Name = "btnUser";
             this.btnUser.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.btnUser.Size = new System.Drawing.Size(200, 60);
@@ -234,13 +241,13 @@
             // btnUserCad
             // 
             this.btnUserCad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnUserCad.FlatAppearance.BorderSize = 0;
+            this.btnUserCad.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnUserCad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUserCad.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnUserCad.ForeColor = System.Drawing.Color.Transparent;
             this.btnUserCad.Image = global::BibliotecaApp.Properties.Resources.icons8_adicionar_usuário_masculino_25;
             this.btnUserCad.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUserCad.Location = new System.Drawing.Point(0, 120);
+            this.btnUserCad.Location = new System.Drawing.Point(0, 119);
             this.btnUserCad.Name = "btnUserCad";
             this.btnUserCad.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.btnUserCad.Size = new System.Drawing.Size(200, 60);
@@ -252,16 +259,16 @@
             // btnUsuario
             // 
             this.btnUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnUsuario.FlatAppearance.BorderSize = 0;
+            this.btnUsuario.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
             this.btnUsuario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUsuario.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnUsuario.ForeColor = System.Drawing.Color.White;
             this.btnUsuario.Image = global::BibliotecaApp.Properties.Resources.icons8_chamada_em_conferência_25;
             this.btnUsuario.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUsuario.Location = new System.Drawing.Point(0, 0);
+            this.btnUsuario.Location = new System.Drawing.Point(0, -3);
             this.btnUsuario.Name = "btnUsuario";
             this.btnUsuario.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.btnUsuario.Size = new System.Drawing.Size(200, 60);
+            this.btnUsuario.Size = new System.Drawing.Size(223, 60);
             this.btnUsuario.TabIndex = 3;
             this.btnUsuario.Text = "Usuários";
             this.btnUsuario.UseVisualStyleBackColor = false;
@@ -270,13 +277,13 @@
             // btnUserEdit
             // 
             this.btnUserEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnUserEdit.FlatAppearance.BorderSize = 0;
+            this.btnUserEdit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnUserEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUserEdit.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnUserEdit.ForeColor = System.Drawing.Color.White;
             this.btnUserEdit.Image = global::BibliotecaApp.Properties.Resources.icons8_registration_25;
             this.btnUserEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUserEdit.Location = new System.Drawing.Point(0, 180);
+            this.btnUserEdit.Location = new System.Drawing.Point(0, 179);
             this.btnUserEdit.Name = "btnUserEdit";
             this.btnUserEdit.Padding = new System.Windows.Forms.Padding(6, 0, 0, 2);
             this.btnUserEdit.Size = new System.Drawing.Size(200, 60);
@@ -298,16 +305,16 @@
             // btnInicio
             // 
             this.btnInicio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnInicio.FlatAppearance.BorderSize = 0;
+            this.btnInicio.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
             this.btnInicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnInicio.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnInicio.ForeColor = System.Drawing.Color.White;
             this.btnInicio.Image = global::BibliotecaApp.Properties.Resources.icons8_página_inicial_25;
             this.btnInicio.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnInicio.Location = new System.Drawing.Point(0, 0);
+            this.btnInicio.Location = new System.Drawing.Point(0, -3);
             this.btnInicio.Name = "btnInicio";
             this.btnInicio.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.btnInicio.Size = new System.Drawing.Size(200, 60);
+            this.btnInicio.Size = new System.Drawing.Size(223, 60);
             this.btnInicio.TabIndex = 3;
             this.btnInicio.Text = "Início";
             this.btnInicio.UseVisualStyleBackColor = false;
@@ -325,7 +332,7 @@
             this.menu.Dock = System.Windows.Forms.DockStyle.Left;
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
-            this.menu.Size = new System.Drawing.Size(205, 650);
+            this.menu.Size = new System.Drawing.Size(205, 800);
             this.menu.TabIndex = 1;
             // 
             // panel1
@@ -350,10 +357,10 @@
             // livroContainer
             // 
             this.livroContainer.Controls.Add(this.btnDev);
-            this.livroContainer.Controls.Add(this.btnLivro);
             this.livroContainer.Controls.Add(this.btnLivros);
             this.livroContainer.Controls.Add(this.btnLivroCad);
             this.livroContainer.Controls.Add(this.btnEmprestimoRap);
+            this.livroContainer.Controls.Add(this.btnLivro);
             this.livroContainer.Controls.Add(this.btnEmprestimo);
             this.livroContainer.Cursor = System.Windows.Forms.Cursors.Hand;
             this.livroContainer.Location = new System.Drawing.Point(3, 211);
@@ -365,13 +372,13 @@
             // btnDev
             // 
             this.btnDev.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnDev.FlatAppearance.BorderSize = 0;
+            this.btnDev.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnDev.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDev.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnDev.ForeColor = System.Drawing.Color.White;
             this.btnDev.Image = ((System.Drawing.Image)(resources.GetObject("btnDev.Image")));
             this.btnDev.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDev.Location = new System.Drawing.Point(0, 300);
+            this.btnDev.Location = new System.Drawing.Point(0, 299);
             this.btnDev.Name = "btnDev";
             this.btnDev.Padding = new System.Windows.Forms.Padding(10, 0, 0, 2);
             this.btnDev.Size = new System.Drawing.Size(200, 60);
@@ -380,34 +387,16 @@
             this.btnDev.UseVisualStyleBackColor = false;
             this.btnDev.Click += new System.EventHandler(this.btnDev_Click);
             // 
-            // btnLivro
-            // 
-            this.btnLivro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.btnLivro.FlatAppearance.BorderSize = 0;
-            this.btnLivro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLivro.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            this.btnLivro.ForeColor = System.Drawing.Color.White;
-            this.btnLivro.Image = ((System.Drawing.Image)(resources.GetObject("btnLivro.Image")));
-            this.btnLivro.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLivro.Location = new System.Drawing.Point(0, 0);
-            this.btnLivro.Name = "btnLivro";
-            this.btnLivro.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.btnLivro.Size = new System.Drawing.Size(200, 60);
-            this.btnLivro.TabIndex = 3;
-            this.btnLivro.Text = "Livros";
-            this.btnLivro.UseVisualStyleBackColor = false;
-            this.btnLivro.Click += new System.EventHandler(this.btnLivro_Click);
-            // 
             // btnLivros
             // 
             this.btnLivros.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnLivros.FlatAppearance.BorderSize = 0;
+            this.btnLivros.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnLivros.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLivros.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnLivros.ForeColor = System.Drawing.Color.Transparent;
             this.btnLivros.Image = global::BibliotecaApp.Properties.Resources.icons8_livro_25;
             this.btnLivros.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLivros.Location = new System.Drawing.Point(0, 60);
+            this.btnLivros.Location = new System.Drawing.Point(0, 59);
             this.btnLivros.Name = "btnLivros";
             this.btnLivros.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.btnLivros.Size = new System.Drawing.Size(200, 60);
@@ -419,13 +408,13 @@
             // btnLivroCad
             // 
             this.btnLivroCad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnLivroCad.FlatAppearance.BorderSize = 0;
+            this.btnLivroCad.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnLivroCad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLivroCad.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnLivroCad.ForeColor = System.Drawing.Color.Transparent;
             this.btnLivroCad.Image = ((System.Drawing.Image)(resources.GetObject("btnLivroCad.Image")));
             this.btnLivroCad.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLivroCad.Location = new System.Drawing.Point(0, 240);
+            this.btnLivroCad.Location = new System.Drawing.Point(0, 239);
             this.btnLivroCad.Name = "btnLivroCad";
             this.btnLivroCad.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.btnLivroCad.Size = new System.Drawing.Size(200, 60);
@@ -437,13 +426,13 @@
             // btnEmprestimoRap
             // 
             this.btnEmprestimoRap.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnEmprestimoRap.FlatAppearance.BorderSize = 0;
+            this.btnEmprestimoRap.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnEmprestimoRap.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEmprestimoRap.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btnEmprestimoRap.ForeColor = System.Drawing.Color.White;
             this.btnEmprestimoRap.Image = ((System.Drawing.Image)(resources.GetObject("btnEmprestimoRap.Image")));
             this.btnEmprestimoRap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEmprestimoRap.Location = new System.Drawing.Point(0, 180);
+            this.btnEmprestimoRap.Location = new System.Drawing.Point(0, 179);
             this.btnEmprestimoRap.Name = "btnEmprestimoRap";
             this.btnEmprestimoRap.Padding = new System.Windows.Forms.Padding(6, 0, 0, 2);
             this.btnEmprestimoRap.Size = new System.Drawing.Size(200, 60);
@@ -452,16 +441,34 @@
             this.btnEmprestimoRap.UseVisualStyleBackColor = false;
             this.btnEmprestimoRap.Click += new System.EventHandler(this.btnEmprestimoRap_Click);
             // 
+            // btnLivro
+            // 
+            this.btnLivro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.btnLivro.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(78)))), ((int)(((byte)(157)))));
+            this.btnLivro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLivro.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.btnLivro.ForeColor = System.Drawing.Color.White;
+            this.btnLivro.Image = ((System.Drawing.Image)(resources.GetObject("btnLivro.Image")));
+            this.btnLivro.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnLivro.Location = new System.Drawing.Point(0, -3);
+            this.btnLivro.Name = "btnLivro";
+            this.btnLivro.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+            this.btnLivro.Size = new System.Drawing.Size(223, 60);
+            this.btnLivro.TabIndex = 3;
+            this.btnLivro.Text = "Livros";
+            this.btnLivro.UseVisualStyleBackColor = false;
+            this.btnLivro.Click += new System.EventHandler(this.btnLivro_Click);
+            // 
             // btnEmprestimo
             // 
             this.btnEmprestimo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(98)))), ((int)(((byte)(144)))));
-            this.btnEmprestimo.FlatAppearance.BorderSize = 0;
+            this.btnEmprestimo.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(88)))), ((int)(((byte)(130)))));
             this.btnEmprestimo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEmprestimo.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.btnEmprestimo.ForeColor = System.Drawing.Color.Transparent;
             this.btnEmprestimo.Image = ((System.Drawing.Image)(resources.GetObject("btnEmprestimo.Image")));
             this.btnEmprestimo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEmprestimo.Location = new System.Drawing.Point(0, 120);
+            this.btnEmprestimo.Location = new System.Drawing.Point(0, 119);
             this.btnEmprestimo.Name = "btnEmprestimo";
             this.btnEmprestimo.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.btnEmprestimo.Size = new System.Drawing.Size(200, 60);
@@ -480,13 +487,52 @@
             this.userTransition.Interval = 5;
             this.userTransition.Tick += new System.EventHandler(this.userTransition_Tick);
             // 
+            // panel2
+            // 
+            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.panel2.CausesValidation = false;
+            this.panel2.Controls.Add(this.pictureBox2);
+            this.panel2.Controls.Add(this.userLbl);
+            this.panel2.Location = new System.Drawing.Point(241, 414);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(189, 36);
+            this.panel2.TabIndex = 12;
+            this.panel2.TabStop = true;
+            this.panel2.Visible = false;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox2.Image = global::BibliotecaApp.Properties.Resources.icons8_usuário_30;
+            this.pictureBox2.Location = new System.Drawing.Point(2, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(30, 30);
+            this.pictureBox2.TabIndex = 3;
+            this.pictureBox2.TabStop = false;
+            // 
+            // userLbl
+            // 
+            this.userLbl.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.userLbl.AutoSize = true;
+            this.userLbl.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.userLbl.ForeColor = System.Drawing.Color.White;
+            this.userLbl.Location = new System.Drawing.Point(34, 6);
+            this.userLbl.Name = "userLbl";
+            this.userLbl.Size = new System.Drawing.Size(77, 25);
+            this.userLbl.TabIndex = 4;
+            this.userLbl.Text = "Usuário";
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 650);
+            this.AutoSize = true;
+            this.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.ClientSize = new System.Drawing.Size(1440, 800);
             this.Controls.Add(this.panelControl);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.menu);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -507,6 +553,9 @@
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.livroContainer.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -522,7 +571,6 @@
         private System.Windows.Forms.Button btnSair;
         private System.Windows.Forms.Panel relContainer;
         private System.Windows.Forms.Button btnRel;
-        private System.Windows.Forms.Panel userContainer;
         private System.Windows.Forms.Button btnUsuario;
         private System.Windows.Forms.Panel incioContainer;
         private System.Windows.Forms.FlowLayoutPanel menu;
@@ -537,10 +585,14 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnLivros;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnUser;
         private System.Windows.Forms.Button btnUserCad;
-        private System.Windows.Forms.Button btnUserEdit;
         private System.Windows.Forms.Timer userTransition;
+        public System.Windows.Forms.Panel userContainer;
+        public System.Windows.Forms.Button btnUser;
+        public System.Windows.Forms.Button btnUserEdit;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label userLbl;
     }
 }
 

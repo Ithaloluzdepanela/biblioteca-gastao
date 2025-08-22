@@ -29,20 +29,25 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblEmprestimo = new System.Windows.Forms.Label();
+            this.cmbEmprestimo = new RoundedComboBox();
             this.btnFiltrar = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.cmbTipoUsuario = new RoundedComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.Titulo = new System.Windows.Forms.Label();
-            this.dgvUsuarios = new System.Windows.Forms.DataGridView();
-            this.cmbTipoUsuario = new RoundedComboBox();
             this.txtNome = new RoundedTextBox();
+            this.dgvUsuarios = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsuarios)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.lblEmprestimo);
+            this.panel1.Controls.Add(this.cmbEmprestimo);
             this.panel1.Controls.Add(this.btnFiltrar);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.cmbTipoUsuario);
@@ -50,12 +55,51 @@
             this.panel1.Controls.Add(this.Titulo);
             this.panel1.Controls.Add(this.txtNome);
             this.panel1.Controls.Add(this.dgvUsuarios);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(94, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1152, 1001);
+            this.panel1.Size = new System.Drawing.Size(1092, 845);
             this.panel1.TabIndex = 3;
+            // 
+            // lblEmprestimo
+            // 
+            this.lblEmprestimo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblEmprestimo.AutoSize = true;
+            this.lblEmprestimo.BackColor = System.Drawing.Color.White;
+            this.lblEmprestimo.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEmprestimo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.lblEmprestimo.Location = new System.Drawing.Point(485, 66);
+            this.lblEmprestimo.Name = "lblEmprestimo";
+            this.lblEmprestimo.Size = new System.Drawing.Size(224, 25);
+            this.lblEmprestimo.TabIndex = 112;
+            this.lblEmprestimo.Text = "Situação de Empréstimo:";
+            // 
+            // cmbEmprestimo
+            // 
+            this.cmbEmprestimo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cmbEmprestimo.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cmbEmprestimo.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.cmbEmprestimo.BorderRadius = 8;
+            this.cmbEmprestimo.BorderThickness = 1;
+            this.cmbEmprestimo.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cmbEmprestimo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbEmprestimo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbEmprestimo.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbEmprestimo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.cmbEmprestimo.FormattingEnabled = true;
+            this.cmbEmprestimo.Items.AddRange(new object[] {
+            "Todos",
+            "Sem empréstimo",
+            "Ativo",
+            "Atrasado"});
+            this.cmbEmprestimo.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbEmprestimo.Location = new System.Drawing.Point(490, 94);
+            this.cmbEmprestimo.Name = "cmbEmprestimo";
+            this.cmbEmprestimo.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbEmprestimo.PlaceholderMargin = 10;
+            this.cmbEmprestimo.PlaceholderText = "Filtre por situação...";
+            this.cmbEmprestimo.Size = new System.Drawing.Size(274, 34);
+            this.cmbEmprestimo.TabIndex = 111;
             // 
             // btnFiltrar
             // 
@@ -66,7 +110,7 @@
             this.btnFiltrar.ForeColor = System.Drawing.Color.White;
             this.btnFiltrar.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(884, 171);
+            this.btnFiltrar.Location = new System.Drawing.Point(944, 136);
             this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
@@ -83,47 +127,11 @@
             this.label3.BackColor = System.Drawing.Color.White;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(494, 152);
+            this.label3.Location = new System.Drawing.Point(781, 66);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(122, 25);
             this.label3.TabIndex = 89;
             this.label3.Text = "Tipo usuário:";
-            // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.White;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(13, 149);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 25);
-            this.label1.TabIndex = 87;
-            this.label1.Text = "Nome:";
-            // 
-            // Titulo
-            // 
-            this.Titulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Titulo.AutoSize = true;
-            this.Titulo.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.Titulo.Location = new System.Drawing.Point(413, 41);
-            this.Titulo.Name = "Titulo";
-            this.Titulo.Size = new System.Drawing.Size(378, 40);
-            this.Titulo.TabIndex = 86;
-            this.Titulo.Text = "USUARIOS CADASTRADOS";
-            // 
-            // dgvUsuarios
-            // 
-            this.dgvUsuarios.AllowUserToAddRows = false;
-            this.dgvUsuarios.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgvUsuarios.Location = new System.Drawing.Point(18, 268);
-            this.dgvUsuarios.Name = "dgvUsuarios";
-            this.dgvUsuarios.ReadOnly = true;
-            this.dgvUsuarios.Size = new System.Drawing.Size(1116, 677);
-            this.dgvUsuarios.TabIndex = 0;
             // 
             // cmbTipoUsuario
             // 
@@ -145,13 +153,38 @@
             "Professor(a)",
             "Outros"});
             this.cmbTipoUsuario.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbTipoUsuario.Location = new System.Drawing.Point(499, 180);
+            this.cmbTipoUsuario.Location = new System.Drawing.Point(786, 94);
             this.cmbTipoUsuario.Name = "cmbTipoUsuario";
             this.cmbTipoUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbTipoUsuario.PlaceholderMargin = 10;
-            this.cmbTipoUsuario.PlaceholderText = "Selecione o tipo de usuario...";
-            this.cmbTipoUsuario.Size = new System.Drawing.Size(329, 34);
+            this.cmbTipoUsuario.PlaceholderText = "Filtre por tipo de usuario...";
+            this.cmbTipoUsuario.Size = new System.Drawing.Size(274, 34);
             this.cmbTipoUsuario.TabIndex = 88;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.White;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label1.Location = new System.Drawing.Point(32, 66);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(70, 25);
+            this.label1.TabIndex = 87;
+            this.label1.Text = "Nome:";
+            // 
+            // Titulo
+            // 
+            this.Titulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Titulo.AutoSize = true;
+            this.Titulo.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
+            this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.Titulo.Location = new System.Drawing.Point(358, 9);
+            this.Titulo.Name = "Titulo";
+            this.Titulo.Size = new System.Drawing.Size(447, 46);
+            this.Titulo.TabIndex = 86;
+            this.Titulo.Text = "USUARIOS CADASTRADOS";
             // 
             // txtNome
             // 
@@ -167,7 +200,7 @@
             this.txtNome.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNome.Location = new System.Drawing.Point(18, 177);
+            this.txtNome.Location = new System.Drawing.Point(37, 94);
             this.txtNome.Name = "txtNome";
             this.txtNome.Padding = new System.Windows.Forms.Padding(7);
             this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
@@ -178,13 +211,25 @@
             this.txtNome.TabIndex = 85;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
-            this.txtNome.Load += new System.EventHandler(this.txtNome_Load);
+            // 
+            // dgvUsuarios
+            // 
+            this.dgvUsuarios.AllowUserToAddRows = false;
+            this.dgvUsuarios.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvUsuarios.Location = new System.Drawing.Point(37, 195);
+            this.dgvUsuarios.Name = "dgvUsuarios";
+            this.dgvUsuarios.ReadOnly = true;
+            this.dgvUsuarios.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dgvUsuarios.Size = new System.Drawing.Size(1023, 638);
+            this.dgvUsuarios.TabIndex = 0;
+            this.dgvUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUsuarios_CellContentClick);
             // 
             // UsuarioForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1152, 1001);
+            this.ClientSize = new System.Drawing.Size(1280, 845);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -205,11 +250,13 @@
         #endregion
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.DataGridView dgvUsuarios;
-        private RoundedTextBox txtNome;
         public System.Windows.Forms.Label label1;
         public System.Windows.Forms.Label Titulo;
         public System.Windows.Forms.Label label3;
         private RoundedComboBox cmbTipoUsuario;
         private System.Windows.Forms.Button btnFiltrar;
+        public System.Windows.Forms.Label lblEmprestimo;
+        private RoundedComboBox cmbEmprestimo;
+        public RoundedTextBox txtNome;
     }
 }

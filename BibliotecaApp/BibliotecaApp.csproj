@@ -379,6 +379,15 @@
     <Content Include="BibliotecaDB\bibliotecaDB.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\icons8-usuário-1001.png" />
+    <None Include="Resources\icons8-usuário-501.png" />
+    <None Include="Resources\icons8-usuário-30.png" />
+    <None Include="Resources\icons8-usuário-50.png" />
+    <None Include="Resources\icons8-usuário-100.png" />
+    <None Include="Resources\icons8-símbolo-da-lua-22.png" />
+    <None Include="Resources\icons8-símbolo-da-lua-20.png" />
+    <None Include="Resources\icons8-sol-25.png" />
+    <None Include="Resources\icons8-não-perturbe-2-25.png" />
     <None Include="Resources\icons8-usuário-masculino-25.png" />
     <None Include="Resources\icons8-registration-25.png" />
     <None Include="Resources\icons8-adicionar-usuário-masculino-25.png" />

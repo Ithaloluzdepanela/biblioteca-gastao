@@ -14,6 +14,11 @@ namespace BibliotecaApp.Froms.Usuario
         /// <summary>
         /// Construtor principal com lista de usuários
         /// </summary>
+        /// 
+
+
+        private List<string> turmasCadastradas = new List<string>();
+
         public CadUsuario(List<Usuarios> usuarios)
         {
             InitializeComponent();
@@ -25,6 +30,7 @@ namespace BibliotecaApp.Froms.Usuario
         public CadUsuario()
         {
             InitializeComponent();
+
         }
         #endregion
 
@@ -38,6 +44,19 @@ namespace BibliotecaApp.Froms.Usuario
             this.KeyDown += Form_KeyDown;
             chkMostrarSenha.ForeColor = Color.LightGray;
             SetAsteriscoVisibility(false);
+            CarregarTurmasDoBanco();
+            // Eventos para o autocomplete de Turma
+            txtTurma.KeyDown += txtTurma_KeyDown;
+            txtTurma.Leave += txtTurma_Leave;
+
+            lstSugestoesTurma.Click += lstSugestoesTurma_Click;
+            lstSugestoesTurma.KeyDown += lstSugestoesTurma_KeyDown;
+            lstSugestoesTurma.Leave += lstSugestoesTurma_Leave;
+
+            // Estilo do ListBox e z-order
+            EstilizarListBoxSugestao(lstSugestoesTurma);
+            lstSugestoesTurma.BringToFront();
+
         }
 
         private void Form_KeyDown(object sender, KeyEventArgs e)
@@ -220,6 +239,16 @@ namespace BibliotecaApp.Froms.Usuario
                 LimparCampos();
             }
         }
+
+        //------------------------------------------------------------
+        // EVENTO: Alteração no campo de e-mail
+        //------------------------------------------------------------
+        private void txtEmail_TextChanged(object sender, EventArgs e)
+        {
+            lblAvisoEmail.Visible = string.IsNullOrWhiteSpace(txtEmail.Text);
+        }
+
+
         #endregion
 
         #region Métodos Privados
@@ -276,6 +305,7 @@ namespace BibliotecaApp.Froms.Usuario
             chkMostrarSenha.Visible = true;
             btnCadastrar.Location = new Point(541, 932); 
             btnLimpar.Location = new Point(73, 932);
+            CentralizarBotoes();
 
             SetLabelColors(enabled: true);
             lblTurma.ForeColor = Color.LightGray;
@@ -320,7 +350,7 @@ namespace BibliotecaApp.Froms.Usuario
             chkMostrarSenha.Visible = false;
             btnCadastrar.Location = new Point(541, 788);
             btnLimpar.Location = new Point(73, 788);
-
+            CentralizarBotoes();
 
 
             SetLabelColors(enabled: true);
@@ -366,6 +396,7 @@ namespace BibliotecaApp.Froms.Usuario
             chkMostrarSenha.Visible = false;
             btnCadastrar.Location = new Point(541, 788);
             btnLimpar.Location = new Point(73, 788);
+            CentralizarBotoes();
 
             SetLabelColors(enabled: true);
             lblSenha.ForeColor = Color.LightGray;
@@ -381,6 +412,7 @@ namespace BibliotecaApp.Froms.Usuario
             SenhaAst.ForeColor = Color.Transparent;
             ConfirmSenhaAst.ForeColor = Color.Transparent;
             EmailAst.ForeColor = Color.Transparent;
+            lblAvisoEmail.Visible = false;
 
             ConfigurarApparence(
                 txtTurmaEnabled: false,
@@ -416,7 +448,8 @@ namespace BibliotecaApp.Froms.Usuario
             chkMostrarSenha.Visible = false;
             btnCadastrar.Location = new Point(541, 788);
             btnLimpar.Location = new Point(73, 788);
-            
+            CentralizarBotoes();
+
 
             SetAsteriscoVisibility(true);
             SenhaAst.ForeColor = Color.Transparent;
@@ -632,33 +665,271 @@ VALUES
 
             MessageBox.Show("Cadastro concluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.DialogResult = DialogResult.OK;
+            AdicionarTurmaSeNova(txtTurma.Text.Trim());
             LimparCampos();
         }
 
+        /// <summary>
+        /// Centraliza os botões de cadastrar e limpar
+        /// </summary>
+        private void CentralizarBotoes()
+        {
+            int espacoEntre = 330;
+            int larguraTotal = btnCadastrar.Width + btnLimpar.Width + espacoEntre;
+            int xInicial = (panel1.Width - larguraTotal) / 2;
+            int y = btnCadastrar.Location.Y; // mantém o Y atual
+
+            btnLimpar.Location = new Point(xInicial, y);
+            btnCadastrar.Location = new Point(xInicial + btnLimpar.Width + espacoEntre, y);
+        }
 
         #endregion
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+        private void CarregarTurmasDoBanco()
         {
+            turmasCadastradas.Clear();
 
+            using (var conexao = Conexao.ObterConexao())
+            {
+                try
+                {
+                    conexao.Open();
+                    using (var comando = conexao.CreateCommand())
+                    {
+                        comando.CommandText = "SELECT DISTINCT Turma FROM usuarios WHERE Turma IS NOT NULL AND Turma <> ''";
+
+                        using (var leitor = comando.ExecuteReader())
+                        {
+                            while (leitor.Read())
+                            {
+                                turmasCadastradas.Add(leitor["Turma"].ToString());
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao carregar turmas: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    conexao.Close();
+                }
+            }
         }
 
-        private void txtNome_Load(object sender, EventArgs e)
+        private void txtTurma_TextChanged(object sender, EventArgs e)
         {
+            string texto = txtTurma.Text.Trim();
 
+            if (string.IsNullOrEmpty(texto))
+            {
+                lstSugestoesTurma.Visible = false;
+                return;
+            }
+
+            var sugestoes = turmasCadastradas
+                .Where(t => t != null && t.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(t => t)
+                .ToList();
+
+            lstSugestoesTurma.Items.Clear();
+
+            if (sugestoes.Count > 0)
+            {
+                foreach (var s in sugestoes)
+                    lstSugestoesTurma.Items.Add(s);
+
+                int visibleItems = Math.Min(2, sugestoes.Count); 
+                int extraPadding = 8; 
+                lstSugestoesTurma.Height = visibleItems * lstSugestoesTurma.ItemHeight + extraPadding;
+                lstSugestoesTurma.Width = txtTurma.Width;
+                lstSugestoesTurma.Left = txtTurma.Left;
+                lstSugestoesTurma.Top = txtTurma.Bottom; 
+                lstSugestoesTurma.Visible = true;
+            }
+            else
+            {
+                // Nenhuma sugestão: apenas esconda a lista.
+                // O usuário pode continuar digitando e cadastrar uma turma nova.
+                lstSugestoesTurma.Visible = false;
+            }
         }
 
-        private void aviso_Click(object sender, EventArgs e)
+        private void lstSugestoesTurma_Click(object sender, EventArgs e)
         {
-
+            if (lstSugestoesTurma.SelectedItem != null)
+            {
+                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+                
+            }
         }
 
-        private void label3_Click(object sender, EventArgs e)
+        private void AdicionarTurmaSeNova(string turma)
         {
+            turma = (turma ?? "").Trim();
+            if (string.IsNullOrEmpty(turma)) return;
 
+            bool existe = turmasCadastradas.Any(t => string.Equals(t, turma, StringComparison.OrdinalIgnoreCase));
+            if (!existe)
+            {
+                turmasCadastradas.Add(turma);
+                // Sem insert em tabela de Turmas (ela não existe).
+                // A turma passa a existir de fato quando um usuário é cadastrado com esse valor.
+            }
         }
 
-        private void Titulo_Click(object sender, EventArgs e)
+        private void txtTurma_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!lstSugestoesTurma.Visible || lstSugestoesTurma.Items.Count == 0)
+            {
+                // Enter aqui confirma o texto digitado e segue para o próximo campo
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    this.SelectNextControl((Control)sender, forward: true, tabStopOnly: true, nested: true, wrap: true);
+                }
+                return;
+            }
+
+            // Com lista visível:
+            if (e.KeyCode == Keys.Down)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesTurma.Focus();
+                if (lstSugestoesTurma.Items.Count > 0)
+                    lstSugestoesTurma.SelectedIndex = 0;
+            }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                // Se houver seleção, aplica; senão pega o primeiro item
+                if (lstSugestoesTurma.SelectedItem != null)
+                    txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
+                else if (lstSugestoesTurma.Items.Count > 0)
+                    txtTurma.Text = lstSugestoesTurma.Items[0].ToString();
+
+                lstSugestoesTurma.Visible = false;
+                this.SelectNextControl((Control)sender, forward: true, tabStopOnly: true, nested: true, wrap: true);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesTurma.Visible = false;
+            }
+        }
+
+        private void txtTurma_Leave(object sender, EventArgs e)
+        {
+            // Esconde a lista ao sair do campo, a menos que o foco vá para a própria lista
+            BeginInvoke(new Action(() =>
+            {
+                if (!lstSugestoesTurma.Focused)
+                    lstSugestoesTurma.Visible = false;
+            }));
+        }
+
+        private void lstSugestoesTurma_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && lstSugestoesTurma.SelectedItem != null)
+            {
+                e.SuppressKeyPress = true;
+                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+                this.SelectNextControl(txtTurma, forward: true, tabStopOnly: true, nested: true, wrap: true);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+            }
+        }
+
+        private void lstSugestoesTurma_Leave(object sender, EventArgs e)
+        {
+            // Ao sair da lista, esconda
+            lstSugestoesTurma.Visible = false;
+        }
+
+
+        #region Estilizacao do ListBox de Sugestões
+        // Campo para controle do hover
+        private int hoveredIndex = -1;
+
+        // Estilo e eventos do ListBox de sugestões
+        private void EstilizarListBoxSugestao(ListBox listBox)
+        {
+            listBox.DrawMode = DrawMode.OwnerDrawFixed;
+            listBox.Font = new Font("Segoe UI", 12, FontStyle.Regular);
+            listBox.ItemHeight = 40;
+            listBox.BackColor = Color.White;
+            listBox.ForeColor = Color.FromArgb(30, 61, 88);
+            listBox.BorderStyle = BorderStyle.FixedSingle;
+            listBox.IntegralHeight = false;
+
+            listBox.DrawItem -= ListBoxSugestao_DrawItem;
+            listBox.DrawItem += ListBoxSugestao_DrawItem;
+            listBox.MouseMove -= ListBoxSugestao_MouseMove;
+            listBox.MouseMove += ListBoxSugestao_MouseMove;
+            listBox.MouseLeave -= ListBoxSugestao_MouseLeave;
+            listBox.MouseLeave += ListBoxSugestao_MouseLeave;
+        }
+
+        private void ListBoxSugestao_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            if (e.Index < 0) return;
+
+            bool hovered = (e.Index == hoveredIndex);
+
+            // Tons de cinza
+            Color backColor = hovered
+                ? Color.FromArgb(235, 235, 235) // cinza claro no hover
+                : Color.White;                  // fundo branco
+            Color textColor = Color.FromArgb(60, 60, 60); // cinza escuro
+
+            using (SolidBrush b = new SolidBrush(backColor))
+                e.Graphics.FillRectangle(b, e.Bounds);
+
+            string text = listBox.Items[e.Index].ToString();
+            Font font = listBox.Font;
+
+            Rectangle textRect = new Rectangle(e.Bounds.Left + 12, e.Bounds.Top, e.Bounds.Width - 24, e.Bounds.Height);
+            TextRenderer.DrawText(e.Graphics, text, font, textRect, textColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+
+            // Linha divisória entre itens (cinza bem suave)
+            if (e.Index < listBox.Items.Count - 1)
+            {
+                using (Pen p = new Pen(Color.FromArgb(220, 220, 220)))
+                    e.Graphics.DrawLine(p, e.Bounds.Left + 8, e.Bounds.Bottom - 1, e.Bounds.Right - 8, e.Bounds.Bottom - 1);
+            }
+        }
+
+        private void ListBoxSugestao_MouseMove(object sender, MouseEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            int index = listBox.IndexFromPoint(e.Location);
+            if (index != hoveredIndex)
+            {
+                hoveredIndex = index;
+                listBox.Invalidate();
+            }
+        }
+
+        private void ListBoxSugestao_MouseLeave(object sender, EventArgs e)
+        {
+            hoveredIndex = -1;
+            (sender as ListBox).Invalidate();
+        }
+
+        #endregion
+
+        private void mtxTelefone_Load(object sender, EventArgs e)
         {
 
         }

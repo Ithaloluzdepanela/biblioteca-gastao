@@ -2,21 +2,23 @@
 using BibliotecaApp.Forms.Login;
 using BibliotecaApp.Forms.Relatorio;
 using BibliotecaApp.Forms.Usuario;
+using BibliotecaApp.Froms.Usuario;
+using BibliotecaApp.Models;
 using BibliotecaApp.Properties;
 using System;
-using ToggleSwitch;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ToggleSwitch;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using BibliotecaApp.Froms.Usuario;
 
 namespace BibliotecaApp.Forms.Inicio
 {
@@ -27,19 +29,21 @@ namespace BibliotecaApp.Forms.Inicio
             InitializeComponent();
             mdiProp();
             btnIn();
-            
-            //this.FormBorderStyle = FormBorderStyle.None;
-
-            //this.FormBorderStyle = FormBorderStyle.None;
-
-            //// Pega a área da tela disponível (sem taskbar)
-            //var workingArea = Screen.PrimaryScreen.WorkingArea;
-
-            //// Ajusta o tamanho e posição do formulário para ocupar só a área útil
-            //this.Location = workingArea.Location;
-            //this.Size = workingArea.Size;
         }
+
+        
+
         #region Componentes de inicialização
+
+        private void tamanho()
+        {
+            this.Width = 1440; this.Height = 700;
+        }
+        private Size tamanhoOriginal;
+        private Point localOriginal;
+        private bool maximizado = false;
+        
+
         //Funções da API para movimentar a aba
         [DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
@@ -87,6 +91,36 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserCad.Enabled = true;
             btnUserEdit.Enabled = true;
         }
+
+        //Função de maximizar/restaurar o Form
+        private void AlternarMaximizado()
+        {
+            
+            if (!maximizado)
+            {
+                tamanhoOriginal = this.Size;
+                localOriginal = this.Location;
+
+                Rectangle areaTrabalho = Screen.FromHandle(this.Handle).WorkingArea; // exclui barra de tarefas
+                this.Location = areaTrabalho.Location;
+                this.Size = areaTrabalho.Size;
+
+                maximizado = true;
+            }
+            else
+            {
+                this.Size = tamanhoOriginal;
+                this.Location = localOriginal;
+
+                maximizado = false;
+            }
+        }
+
+        private void PanelControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region Botões
@@ -114,12 +148,19 @@ namespace BibliotecaApp.Forms.Inicio
         {
 
             btnUsuario.Enabled = false; // Desabilita o botão
+            btnLivro.Enabled = false;
+            if (livroContainer.Height > 60)
+            {
+                livroTransition.Start();
+                await Task.Delay(610);
+            }
 
             userTransition.Start();
 
             await Task.Delay(400);
 
             btnUsuario.Enabled = true; // Reabilita o botão
+            btnLivro.Enabled = true;
 
         }
 
@@ -213,12 +254,21 @@ namespace BibliotecaApp.Forms.Inicio
         private async void btnLivro_Click(object sender, EventArgs e)
         {
             btnLivro.Enabled = false; // Desabilita o botão
-            
+            btnUsuario.Enabled = false;
+            if (userContainer.Height > 60)
+            {
+                userTransition.Start();
+                await Task.Delay(400);
+                
+            }
+
             livroTransition.Start();
 
             await Task.Delay(500);
 
             btnLivro.Enabled = true; // Reabilita o botão
+            btnUsuario.Enabled = true;
+            
         }
 
         //Botão Livro(Bilbioteca)
@@ -393,6 +443,7 @@ namespace BibliotecaApp.Forms.Inicio
             var confirma = MessageBox.Show(msg, box, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirma == DialogResult.Yes)
             {
+                LoginForm.cancelar = false;
                 this.Close();
             }
         }
@@ -407,22 +458,19 @@ namespace BibliotecaApp.Forms.Inicio
             Application.Exit();
 
         }
-        bool janela = true;
 
         //Funcionalidade dos botões
         private void picMax_Click(object sender, EventArgs e)
         {
-            if (janela == false)
+            AlternarMaximizado();
+
+            if (maximizado == false)
             {
-                this.WindowState = FormWindowState.Maximized;
-                picMax.BackgroundImage = Resources.icons8_verificar_todos_os_20;
-                janela = true;
+                picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
             }
             else
             {
-                this.WindowState = FormWindowState.Normal;
-                picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
-                janela = false;
+                picMax.BackgroundImage = Resources.icons8_verificar_todos_os_20;
             }
         }
         private void picMin_Click(object sender, EventArgs e)
@@ -473,31 +521,23 @@ namespace BibliotecaApp.Forms.Inicio
             //Inicializar com tela cheia
             if (LoginForm.cancelar == true)
             {
-                this.WindowState = FormWindowState.Maximized;
+                AlternarMaximizado();
             }
+            ////userLbl.Text = Sessao.NomeBibliotecariaLogada;
+
 
         }
 
         //Locomoção do painel
         private void panelControl_MouseDown(object sender, MouseEventArgs e)
         {
-            if (this.WindowState == FormWindowState.Maximized)
+            if (maximizado == true)
             {
-                picMax.BackgroundImage = Resources.icons8_verificar_todos_os_20;
-                janela = true;
+                AlternarMaximizado();
+                picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
             }
             ReleaseCapture();
             SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
-        }
-
-        //Correção para o icone da control box
-        private void panelControl_MouseEnter(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Normal)
-            {
-                picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
-                janela = false;
-            }
         }
 
         //Transição de expansão do livro e usuário
@@ -547,7 +587,13 @@ namespace BibliotecaApp.Forms.Inicio
             }
         }
 
+
         #endregion
 
+       
+        private void Usuário_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

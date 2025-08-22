@@ -313,6 +313,16 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_não_perturbe_2_25 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-não-perturbe-2-25", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_página_inicial_20 {
             get {
                 object obj = ResourceManager.GetObject("icons8-página-inicial-20", resourceCulture);
@@ -426,6 +436,86 @@ namespace BibliotecaApp.Properties {
         internal static System.Drawing.Bitmap icons8_sair_30 {
             get {
                 object obj = ResourceManager.GetObject("icons8-sair-30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_símbolo_da_lua_20 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-símbolo-da-lua-20", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_símbolo_da_lua_22 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-símbolo-da-lua-22", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_sol_25 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-sol-25", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_usuário_100 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-usuário-100", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_usuário_1001 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-usuário-1001", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_usuário_30 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-usuário-30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_usuário_50 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-usuário-50", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_usuário_501 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-usuário-501", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

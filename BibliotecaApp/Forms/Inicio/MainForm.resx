@@ -130,17 +130,6 @@
         faPJLwQfo2/5kUw5AAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="btnLivro.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAASJJREFUSEvl1b0uBVEUhuETQiSqU0qERvyEQiIatSj0KoVCJ6JFIUFD6wrUFBJX
-        4QbEDShpRKIheWROtlOsM5nZ56fBm6xm7bW/NzN7sqfR+LNgCvs4zKgdDMeMSjCPN91xFHMqwVVMyOA2
-        5lRSbIgJeMYWmnG+J0okH5hLa01sJmFdzcbsNiWS1qvAMl7CWhWfWIv5LUok56l/H/o5nMT8FiWS09R/
-        DP0cWns7yJTcYbRk70T4/PuSPGG75LAP8BX3dpApyeUfSG7SwCqmi8NM/YFKdtPARTrMxdQfqGQMD3Gw
-        R8lxzG+DEaz3+SSvP3deNklSXJYbWKmp4p4bjxm14LoLSVFLGIo5lWAB7/Gd1LAXc2rBTPqvX2bUGSZj
-        xu/nG7JxCPFEIN7IAAAAAElFTkSuQmCC
-</value>
-  </data>
   <data name="btnLivroCad.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
@@ -160,6 +149,17 @@
         XwINhPcFMWkQ7Q8+KOHLe1AorapeA6bABtgmzgoYaJ4BLIEb+faaaQAHvZXorJkG0OitRI1mGu9KIrsx
         xUvuulO0JDh+Bs9Ofklkz3sEz065Ek/3fr/Ek92YPyvR80CZEj0T3Us+8JWSk2YaHUvch7nWTKMtuQIL
         YJY4I82LAnYdStwMNdMAJsBF30OCo2ZGAeP2n11nzFzz+uMFU9TCJNJpOsgAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="btnLivro.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        DAAACwwBP0AiyAAAASJJREFUSEvl1b0uBVEUhuETQiSqU0qERvyEQiIatSj0KoVCJ6JFIUFD6wrUFBJX
+        4QbEDShpRKIheWROtlOsM5nZ56fBm6xm7bW/NzN7sqfR+LNgCvs4zKgdDMeMSjCPN91xFHMqwVVMyOA2
+        5lRSbIgJeMYWmnG+J0okH5hLa01sJmFdzcbsNiWS1qvAMl7CWhWfWIv5LUok56l/H/o5nMT8FiWS09R/
+        DP0cWns7yJTcYbRk70T4/PuSPGG75LAP8BX3dpApyeUfSG7SwCqmi8NM/YFKdtPARTrMxdQfqGQMD3Gw
+        R8lxzG+DEaz3+SSvP3deNklSXJYbWKmp4p4bjxm14LoLSVFLGIo5lWAB7/Gd1LAXc2rBTPqvX2bUGSZj
+        xu/nG7JxCPFEIN7IAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnEmprestimo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

@@ -509,5 +509,11 @@ namespace BibliotecaApp.Forms.Login
             // Implementação alternativa do paint do gradientPanel
         }
         #endregion
+
+        private void lblEsqueceuSenha_Click(object sender, EventArgs e)
+        {
+            EsqueceuSenhaForm popup = new EsqueceuSenhaForm();
+            popup.ShowDialog(); // Abre como modal
+        }
     }
 }

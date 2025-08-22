@@ -90,6 +90,12 @@
     <Compile Include="Forms\Livros\EmprestimoRapForm.Designer.cs">
       <DependentUpon>EmprestimoRapForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Login\EsqueceuSenhaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Login\EsqueceuSenhaForm.Designer.cs">
+      <DependentUpon>EsqueceuSenhaForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Relatorio\RelForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -204,6 +210,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Livros\EmprestimoRapForm.resx">
       <DependentUpon>EmprestimoRapForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Login\EsqueceuSenhaForm.resx">
+      <DependentUpon>EsqueceuSenhaForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Relatorio\RelForm.resx">
       <DependentUpon>RelForm.cs</DependentUpon>

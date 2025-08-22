@@ -30,18 +30,15 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LivrosForm));
             this.btnDevolução = new System.Windows.Forms.Button();
             this.btnProcurar = new System.Windows.Forms.Button();
             this.Lista = new System.Windows.Forms.DataGridView();
-            this.btnAlterar = new System.Windows.Forms.Button();
             this.lblTotal = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.picReserva = new System.Windows.Forms.PictureBox();
             this.txtNome = new RoundedTextBox();
             this.picEmprestimo = new System.Windows.Forms.PictureBox();
-            this.Pic_Cadastrar = new System.Windows.Forms.PictureBox();
             this.cbDisponibilidade = new RoundedComboBox();
             this.cbFiltro = new RoundedComboBox();
             this.lblTeste = new System.Windows.Forms.Label();
@@ -49,12 +46,11 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picReserva)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).BeginInit();
             this.SuspendLayout();
             // 
             // btnDevolução
             // 
-            this.btnDevolução.Location = new System.Drawing.Point(713, 303);
+            this.btnDevolução.Location = new System.Drawing.Point(713, 360);
             this.btnDevolução.Name = "btnDevolução";
             this.btnDevolução.Size = new System.Drawing.Size(73, 56);
             this.btnDevolução.TabIndex = 12;
@@ -98,15 +94,6 @@
             this.Lista.TabIndex = 3;
             this.Lista.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Lista_CellFormatting);
             // 
-            // btnAlterar
-            // 
-            this.btnAlterar.Location = new System.Drawing.Point(713, 227);
-            this.btnAlterar.Name = "btnAlterar";
-            this.btnAlterar.Size = new System.Drawing.Size(73, 56);
-            this.btnAlterar.TabIndex = 14;
-            this.btnAlterar.Text = "Alterar";
-            this.btnAlterar.UseVisualStyleBackColor = true;
-            // 
             // lblTotal
             // 
             this.lblTotal.AutoSize = true;
@@ -134,8 +121,6 @@
             this.panel1.Controls.Add(this.picReserva);
             this.panel1.Controls.Add(this.txtNome);
             this.panel1.Controls.Add(this.picEmprestimo);
-            this.panel1.Controls.Add(this.Pic_Cadastrar);
-            this.panel1.Controls.Add(this.btnAlterar);
             this.panel1.Controls.Add(this.Lista);
             this.panel1.Controls.Add(this.cbDisponibilidade);
             this.panel1.Controls.Add(this.btnProcurar);
@@ -197,19 +182,6 @@
             this.picEmprestimo.TabIndex = 15;
             this.picEmprestimo.TabStop = false;
             this.picEmprestimo.Click += new System.EventHandler(this.picEmprestimo_Click);
-            // 
-            // Pic_Cadastrar
-            // 
-            this.Pic_Cadastrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
-            this.Pic_Cadastrar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Pic_Cadastrar.Image = ((System.Drawing.Image)(resources.GetObject("Pic_Cadastrar.Image")));
-            this.Pic_Cadastrar.Location = new System.Drawing.Point(713, 365);
-            this.Pic_Cadastrar.Name = "Pic_Cadastrar";
-            this.Pic_Cadastrar.Size = new System.Drawing.Size(40, 40);
-            this.Pic_Cadastrar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.Pic_Cadastrar.TabIndex = 2;
-            this.Pic_Cadastrar.TabStop = false;
-            this.Pic_Cadastrar.Click += new System.EventHandler(this.Pic_Cadastrar_Click);
             // 
             // cbDisponibilidade
             // 
@@ -282,21 +254,17 @@
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picReserva)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picEmprestimo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Pic_Cadastrar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox Pic_Cadastrar;
         private System.Windows.Forms.PictureBox picEmprestimo;
         private System.Windows.Forms.Button btnDevolução;
         private System.Windows.Forms.Button btnProcurar;
         private System.Windows.Forms.DataGridView Lista;
         private RoundedComboBox cbFiltro;
-        private System.Windows.Forms.Button btnAlterar;
         private System.Windows.Forms.Label lblTotal;
         private RoundedComboBox cbDisponibilidade;
         private RoundedTextBox txtNome;

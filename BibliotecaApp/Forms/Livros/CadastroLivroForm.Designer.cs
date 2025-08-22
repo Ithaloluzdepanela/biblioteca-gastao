@@ -34,7 +34,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.btnLimpar = new System.Windows.Forms.Button();
             this.btnCadastrar = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.mtxCodigoBarras = new RoundedMaskedTextBox();
@@ -42,6 +41,8 @@
             this.txtQuantidade = new RoundedTextBox();
             this.txtGenero = new RoundedTextBox();
             this.txtNome = new RoundedTextBox();
+            this.btnSalvar = new System.Windows.Forms.Button();
+            this.btnExcluir = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +54,7 @@
             this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.Titulo.Location = new System.Drawing.Point(226, 120);
             this.Titulo.Name = "Titulo";
-            this.Titulo.Size = new System.Drawing.Size(322, 40);
+            this.Titulo.Size = new System.Drawing.Size(414, 50);
             this.Titulo.TabIndex = 93;
             this.Titulo.Text = "CADASTRO DE LIVROS";
             // 
@@ -66,7 +67,7 @@
             this.lblNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.lblNome.Location = new System.Drawing.Point(75, 252);
             this.lblNome.Name = "lblNome";
-            this.lblNome.Size = new System.Drawing.Size(126, 23);
+            this.lblNome.Size = new System.Drawing.Size(159, 30);
             this.lblNome.TabIndex = 94;
             this.lblNome.Text = "Nome Do Livro";
             // 
@@ -79,7 +80,7 @@
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.label1.Location = new System.Drawing.Point(75, 334);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 23);
+            this.label1.Size = new System.Drawing.Size(83, 30);
             this.label1.TabIndex = 96;
             this.label1.Text = "Gênero";
             // 
@@ -92,7 +93,7 @@
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.label2.Location = new System.Drawing.Point(75, 415);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(100, 23);
+            this.label2.Size = new System.Drawing.Size(125, 30);
             this.label2.TabIndex = 98;
             this.label2.Text = "Quantidade";
             // 
@@ -105,7 +106,7 @@
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.label3.Location = new System.Drawing.Point(75, 499);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 23);
+            this.label3.Size = new System.Drawing.Size(68, 30);
             this.label3.TabIndex = 100;
             this.label3.Text = "Autor";
             // 
@@ -118,23 +119,9 @@
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.label4.Location = new System.Drawing.Point(75, 586);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(141, 23);
+            this.label4.Size = new System.Drawing.Size(179, 30);
             this.label4.TabIndex = 103;
             this.label4.Text = "Codigo de Barras";
-            // 
-            // btnLimpar
-            // 
-            this.btnLimpar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnLimpar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.btnLimpar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnLimpar.ForeColor = System.Drawing.Color.White;
-            this.btnLimpar.Location = new System.Drawing.Point(79, 757);
-            this.btnLimpar.Name = "btnLimpar";
-            this.btnLimpar.Size = new System.Drawing.Size(150, 60);
-            this.btnLimpar.TabIndex = 104;
-            this.btnLimpar.Text = "LIMPAR";
-            this.btnLimpar.UseVisualStyleBackColor = false;
-            this.btnLimpar.Click += new System.EventHandler(this.btnLimpar_Click);
             // 
             // btnCadastrar
             // 
@@ -154,8 +141,9 @@
             // 
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.btnExcluir);
+            this.panel1.Controls.Add(this.btnSalvar);
             this.panel1.Controls.Add(this.btnCadastrar);
-            this.panel1.Controls.Add(this.btnLimpar);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.mtxCodigoBarras);
             this.panel1.Controls.Add(this.txtAutor);
@@ -299,6 +287,34 @@
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
             // 
+            // btnSalvar
+            // 
+            this.btnSalvar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnSalvar.BackColor = System.Drawing.Color.DarkGreen;
+            this.btnSalvar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnSalvar.ForeColor = System.Drawing.Color.White;
+            this.btnSalvar.Location = new System.Drawing.Point(322, 760);
+            this.btnSalvar.Margin = new System.Windows.Forms.Padding(5);
+            this.btnSalvar.Name = "btnSalvar";
+            this.btnSalvar.Size = new System.Drawing.Size(149, 57);
+            this.btnSalvar.TabIndex = 127;
+            this.btnSalvar.Text = "Salvar";
+            this.btnSalvar.UseVisualStyleBackColor = false;
+            // 
+            // btnExcluir
+            // 
+            this.btnExcluir.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnExcluir.BackColor = System.Drawing.Color.DarkRed;
+            this.btnExcluir.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnExcluir.ForeColor = System.Drawing.Color.White;
+            this.btnExcluir.Location = new System.Drawing.Point(85, 757);
+            this.btnExcluir.Margin = new System.Windows.Forms.Padding(5);
+            this.btnExcluir.Name = "btnExcluir";
+            this.btnExcluir.Size = new System.Drawing.Size(149, 57);
+            this.btnExcluir.TabIndex = 128;
+            this.btnExcluir.Text = "Excluir ";
+            this.btnExcluir.UseVisualStyleBackColor = false;
+            // 
             // CadastroLivroForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -331,9 +347,10 @@
         private RoundedTextBox txtAutor;
         private RoundedMaskedTextBox mtxCodigoBarras;
         public System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnLimpar;
         private System.Windows.Forms.Button btnCadastrar;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label Titulo;
+        private System.Windows.Forms.Button btnSalvar;
+        private System.Windows.Forms.Button btnExcluir;
     }
 }

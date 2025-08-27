@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using System.Windows.Forms;
+using System.IO;
 
 namespace BibliotecaApp.Services
 {
@@ -9,8 +11,8 @@ namespace BibliotecaApp.Services
         private static readonly string remetente = "biblioteca.gastaovalle@gmail.com"; // coloque o seu
         private static readonly string senha = "azwo xvrr ljar sttj"; // senha de app do Gmail
 
-        
-        public static void Enviar(string destinatario, string assunto, string mensagem)
+
+        public static void Enviar(string destinatario, string assunto, string mensagem, string caminhoAnexo = null)
         {
             try
             {
@@ -24,13 +26,17 @@ namespace BibliotecaApp.Services
                         IsBodyHtml = true
                     };
 
+                    if (!string.IsNullOrEmpty(caminhoAnexo) && File.Exists(caminhoAnexo))
+                        mail.Attachments.Add(new Attachment(caminhoAnexo));
+
                     smtp.Send(mail);
                 }
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("Erro ao enviar e-mail: " + ex.Message);
+                MessageBox.Show("Erro ao enviar e-mail: " + ex.Message);
             }
         }
+
     }
 }

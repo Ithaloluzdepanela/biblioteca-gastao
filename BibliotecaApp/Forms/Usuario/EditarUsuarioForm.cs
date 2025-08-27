@@ -15,14 +15,47 @@ namespace BibliotecaApp.Forms.Usuario
 {
     public partial class EditarUsuarioForm : Form
     {
+        private Size originalSize;
         public EditarUsuarioForm()
         {
             InitializeComponent();
          
 
             EstilizarListBoxSugestao(lstSugestoesUsuario);
-            EstilizarListBoxSugestao(lstSugestoesUsuario);
+            originalSize = this.Size;
+            foreach (Control ctrl in this.Controls)
+            {
+                ctrl.Tag = ctrl.Bounds;
+            }
 
+            // Evento de resize
+            this.Resize += EditarUsuarioForm_Resize;
+
+        }
+
+        private void EditarUsuarioForm_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+                return; // não faz nada se estiver minimizado
+
+            float xRatio = (float)this.Width / originalSize.Width;
+            float yRatio = (float)this.Height / originalSize.Height;
+
+            foreach (Control ctrl in this.Controls)
+            {
+                if (ctrl.Tag is Rectangle originalBounds)
+                {
+                    ctrl.Width = (int)(originalBounds.Width * xRatio);
+                    ctrl.Height = (int)(originalBounds.Height * yRatio);
+                    ctrl.Left = (int)(originalBounds.Left * xRatio);
+                    ctrl.Top = (int)(originalBounds.Top * yRatio);
+
+                    // Ajustar fonte junto
+                    ctrl.Font = new Font(ctrl.Font.FontFamily,
+                        10 * Math.Min(xRatio, yRatio), // 10 = tamanho base, ajuste se quiser
+                        ctrl.Font.Style);
+                }
+            }
         }
 
         #region Classe Conexao
@@ -527,7 +560,7 @@ namespace BibliotecaApp.Forms.Usuario
             _usuarioSelecionado = usuario;
             txtNomeUsuario.Text = usuario.Nome;
             txtNome.Text = usuario.Nome;
-            txtEmail.Text = usuario.Email;
+            txtEmail.Text = usuario.Email;  
             mtxCPF.Text = usuario.CPF;
             dtpDataNasc.Value = usuario.DataNascimento == DateTime.MinValue ? DateTime.Today : usuario.DataNascimento;
             mtxTelefone.Text = usuario.Telefone;

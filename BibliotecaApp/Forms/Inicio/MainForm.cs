@@ -60,7 +60,7 @@ namespace BibliotecaApp.Forms.Inicio
         LivrosForm livros;
         RelForm rel;
         EmprestimoForm emprestimo;
-        EmprestimoRapForm emprestimoRap;
+        EmprestimoRapidoForm emprestimoRap;
         CadastroLivroForm cadastroLivro;
         DevoluçãoForm devolução;
         CadUsuario usuarioCad; 
@@ -338,7 +338,7 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserCad.Enabled = true;
             btnUserEdit.Enabled = true;
 
-            emprestimoRap = new EmprestimoRapForm();
+            emprestimoRap = new EmprestimoRapidoForm();
             emprestimoRap.FormClosed += EmprestimoRap_FormClosed;
             emprestimoRap.MdiParent = this;
             emprestimoRap.Dock = DockStyle.Fill;

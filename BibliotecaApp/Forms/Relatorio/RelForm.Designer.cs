@@ -39,15 +39,18 @@
             this.dtpInicio = new System.Windows.Forms.DateTimePicker();
             this.lblUsuario = new System.Windows.Forms.Label();
             this.lblLivro = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.txtBibliotecaria = new RoundedTextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
+            this.lstLivros = new System.Windows.Forms.ListBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.cbBibliotecaria = new RoundedComboBox();
             this.txtLivro = new RoundedTextBox();
             this.cmbAcao = new RoundedComboBox();
             this.txtUsuario = new RoundedTextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistorico)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +58,7 @@
             // dgvHistorico
             // 
             this.dgvHistorico.AllowUserToAddRows = false;
-            this.dgvHistorico.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dgvHistorico.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.dgvHistorico.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvHistorico.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvHistorico.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -64,13 +67,12 @@
             this.Acao,
             this.Bibliotecaria,
             this.DataAcao});
-            this.dgvHistorico.Location = new System.Drawing.Point(19, 189);
+            this.dgvHistorico.Location = new System.Drawing.Point(113, 380);
             this.dgvHistorico.Name = "dgvHistorico";
             this.dgvHistorico.ReadOnly = true;
             this.dgvHistorico.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dgvHistorico.Size = new System.Drawing.Size(1054, 644);
+            this.dgvHistorico.Size = new System.Drawing.Size(1054, 437);
             this.dgvHistorico.TabIndex = 23;
-            this.dgvHistorico.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvHistorico_CellContentClick);
             // 
             // NomeU
             // 
@@ -111,7 +113,7 @@
             this.btnFiltrar.ForeColor = System.Drawing.Color.White;
             this.btnFiltrar.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(888, 114);
+            this.btnFiltrar.Location = new System.Drawing.Point(982, 241);
             this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
@@ -119,6 +121,7 @@
             this.btnFiltrar.TabIndex = 111;
             this.btnFiltrar.Text = "      Filtrar";
             this.btnFiltrar.UseVisualStyleBackColor = false;
+            this.btnFiltrar.Click += new System.EventHandler(this.btnFiltrar_Click);
             // 
             // dtpFim
             // 
@@ -126,7 +129,7 @@
             this.dtpFim.CalendarMonthBackground = System.Drawing.SystemColors.Control;
             this.dtpFim.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.dtpFim.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFim.Location = new System.Drawing.Point(208, 126);
+            this.dtpFim.Location = new System.Drawing.Point(302, 253);
             this.dtpFim.Name = "dtpFim";
             this.dtpFim.Size = new System.Drawing.Size(122, 33);
             this.dtpFim.TabIndex = 113;
@@ -137,7 +140,7 @@
             this.dtpInicio.CalendarMonthBackground = System.Drawing.SystemColors.Control;
             this.dtpInicio.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.dtpInicio.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpInicio.Location = new System.Drawing.Point(24, 126);
+            this.dtpInicio.Location = new System.Drawing.Point(118, 253);
             this.dtpInicio.Name = "dtpInicio";
             this.dtpInicio.Size = new System.Drawing.Size(122, 33);
             this.dtpInicio.TabIndex = 114;
@@ -149,7 +152,7 @@
             this.lblUsuario.BackColor = System.Drawing.Color.Transparent;
             this.lblUsuario.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblUsuario.Location = new System.Drawing.Point(13, 21);
+            this.lblUsuario.Location = new System.Drawing.Point(107, 148);
             this.lblUsuario.Name = "lblUsuario";
             this.lblUsuario.Size = new System.Drawing.Size(167, 25);
             this.lblUsuario.TabIndex = 116;
@@ -162,24 +165,11 @@
             this.lblLivro.BackColor = System.Drawing.Color.Transparent;
             this.lblLivro.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLivro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblLivro.Location = new System.Drawing.Point(363, 21);
+            this.lblLivro.Location = new System.Drawing.Point(457, 148);
             this.lblLivro.Name = "lblLivro";
             this.lblLivro.Size = new System.Drawing.Size(144, 25);
             this.lblLivro.TabIndex = 117;
             this.lblLivro.Text = "Nome do Livro:";
-            // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(366, 98);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(207, 25);
-            this.label1.TabIndex = 118;
-            this.label1.Text = "Nome da Bibliotecaria:";
             // 
             // label2
             // 
@@ -188,7 +178,7 @@
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label2.Location = new System.Drawing.Point(813, 21);
+            this.label2.Location = new System.Drawing.Point(907, 148);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(128, 25);
             this.label2.TabIndex = 119;
@@ -201,7 +191,7 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(19, 98);
+            this.label3.Location = new System.Drawing.Point(113, 225);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(161, 25);
             this.label3.TabIndex = 120;
@@ -214,37 +204,114 @@
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label5.Location = new System.Drawing.Point(203, 98);
+            this.label5.Location = new System.Drawing.Point(297, 225);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(146, 25);
             this.label5.TabIndex = 122;
             this.label5.Text = "Fim do Período:";
             // 
-            // txtBibliotecaria
+            // panel1
             // 
-            this.txtBibliotecaria.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtBibliotecaria.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtBibliotecaria.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtBibliotecaria.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtBibliotecaria.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtBibliotecaria.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtBibliotecaria.BorderRadius = 10;
-            this.txtBibliotecaria.BorderThickness = 1;
-            this.txtBibliotecaria.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtBibliotecaria.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBibliotecaria.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtBibliotecaria.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtBibliotecaria.Location = new System.Drawing.Point(368, 126);
-            this.txtBibliotecaria.Name = "txtBibliotecaria";
-            this.txtBibliotecaria.Padding = new System.Windows.Forms.Padding(7);
-            this.txtBibliotecaria.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtBibliotecaria.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBibliotecaria.PlaceholderMarginLeft = 12;
-            this.txtBibliotecaria.PlaceholderText = "Digite aqui o nome da bibliotecaria..";
-            this.txtBibliotecaria.Size = new System.Drawing.Size(442, 40);
-            this.txtBibliotecaria.TabIndex = 115;
-            this.txtBibliotecaria.TextColor = System.Drawing.Color.Black;
-            this.txtBibliotecaria.UseSystemPasswordChar = false;
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.lstSugestoesUsuario);
+            this.panel1.Controls.Add(this.lstLivros);
+            this.panel1.Controls.Add(this.cbBibliotecaria);
+            this.panel1.Controls.Add(this.txtLivro);
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.btnFiltrar);
+            this.panel1.Controls.Add(this.dgvHistorico);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.cmbAcao);
+            this.panel1.Controls.Add(this.dtpFim);
+            this.panel1.Controls.Add(this.dtpInicio);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.lblUsuario);
+            this.panel1.Controls.Add(this.lblLivro);
+            this.panel1.Controls.Add(this.txtUsuario);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1280, 845);
+            this.panel1.TabIndex = 123;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.label1.Location = new System.Drawing.Point(538, 53);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(204, 46);
+            this.label1.TabIndex = 128;
+            this.label1.Text = "RELATÓRIO";
+            // 
+            // lstSugestoesUsuario
+            // 
+            this.lstSugestoesUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lstSugestoesUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.lstSugestoesUsuario.FormattingEnabled = true;
+            this.lstSugestoesUsuario.ItemHeight = 25;
+            this.lstSugestoesUsuario.Location = new System.Drawing.Point(112, 216);
+            this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
+            this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
+            this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(331, 102);
+            this.lstSugestoesUsuario.TabIndex = 126;
+            this.lstSugestoesUsuario.Visible = false;
+            // 
+            // lstLivros
+            // 
+            this.lstLivros.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lstLivros.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.lstLivros.FormattingEnabled = true;
+            this.lstLivros.ItemHeight = 25;
+            this.lstLivros.Location = new System.Drawing.Point(462, 216);
+            this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
+            this.lstLivros.Name = "lstLivros";
+            this.lstLivros.ScrollAlwaysVisible = true;
+            this.lstLivros.Size = new System.Drawing.Size(429, 102);
+            this.lstLivros.TabIndex = 127;
+            this.lstLivros.Visible = false;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label6.Location = new System.Drawing.Point(457, 225);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(213, 25);
+            this.label6.TabIndex = 124;
+            this.label6.Text = "Bliotecária responsável:";
+            // 
+            // cbBibliotecaria
+            // 
+            this.cbBibliotecaria.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cbBibliotecaria.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cbBibliotecaria.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.cbBibliotecaria.BorderRadius = 8;
+            this.cbBibliotecaria.BorderThickness = 1;
+            this.cbBibliotecaria.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cbBibliotecaria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBibliotecaria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbBibliotecaria.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.cbBibliotecaria.FormattingEnabled = true;
+            this.cbBibliotecaria.ItemsFont = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.cbBibliotecaria.Location = new System.Drawing.Point(462, 253);
+            this.cbBibliotecaria.Name = "cbBibliotecaria";
+            this.cbBibliotecaria.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F);
+            this.cbBibliotecaria.PlaceholderMargin = 10;
+            this.cbBibliotecaria.PlaceholderText = "Selecione a Bliotecária...";
+            this.cbBibliotecaria.Size = new System.Drawing.Size(429, 34);
+            this.cbBibliotecaria.TabIndex = 125;
             // 
             // txtLivro
             // 
@@ -260,14 +327,15 @@
             this.txtLivro.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLivro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtLivro.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtLivro.Location = new System.Drawing.Point(368, 49);
+            this.txtLivro.Location = new System.Drawing.Point(462, 176);
             this.txtLivro.Name = "txtLivro";
             this.txtLivro.Padding = new System.Windows.Forms.Padding(7);
             this.txtLivro.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtLivro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLivro.PlaceholderMarginLeft = 12;
             this.txtLivro.PlaceholderText = "Digite aqui o nome do livro...";
-            this.txtLivro.Size = new System.Drawing.Size(442, 40);
+            this.txtLivro.SelectionStart = 0;
+            this.txtLivro.Size = new System.Drawing.Size(429, 40);
             this.txtLivro.TabIndex = 91;
             this.txtLivro.TextColor = System.Drawing.Color.Black;
             this.txtLivro.UseSystemPasswordChar = false;
@@ -293,7 +361,7 @@
             "Empréstimos",
             "Reservas"});
             this.cmbAcao.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbAcao.Location = new System.Drawing.Point(818, 49);
+            this.cmbAcao.Location = new System.Drawing.Point(912, 179);
             this.cmbAcao.Name = "cmbAcao";
             this.cmbAcao.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbAcao.PlaceholderMargin = 10;
@@ -315,40 +383,18 @@
             this.txtUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtUsuario.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtUsuario.Location = new System.Drawing.Point(18, 49);
+            this.txtUsuario.Location = new System.Drawing.Point(112, 176);
             this.txtUsuario.Name = "txtUsuario";
             this.txtUsuario.Padding = new System.Windows.Forms.Padding(7);
             this.txtUsuario.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUsuario.PlaceholderMarginLeft = 12;
             this.txtUsuario.PlaceholderText = "Digite aqui o nome do usuário...";
+            this.txtUsuario.SelectionStart = 0;
             this.txtUsuario.Size = new System.Drawing.Size(331, 40);
             this.txtUsuario.TabIndex = 89;
             this.txtUsuario.TextColor = System.Drawing.Color.Black;
             this.txtUsuario.UseSystemPasswordChar = false;
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.txtLivro);
-            this.panel1.Controls.Add(this.btnFiltrar);
-            this.panel1.Controls.Add(this.dgvHistorico);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.cmbAcao);
-            this.panel1.Controls.Add(this.txtBibliotecaria);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.dtpFim);
-            this.panel1.Controls.Add(this.dtpInicio);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.lblUsuario);
-            this.panel1.Controls.Add(this.lblLivro);
-            this.panel1.Controls.Add(this.txtUsuario);
-            this.panel1.Location = new System.Drawing.Point(94, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1092, 845);
-            this.panel1.TabIndex = 123;
             // 
             // RelForm
             // 
@@ -377,10 +423,8 @@
         private System.Windows.Forms.Button btnFiltrar;
         private System.Windows.Forms.DateTimePicker dtpFim;
         private System.Windows.Forms.DateTimePicker dtpInicio;
-        public RoundedTextBox txtBibliotecaria;
         public System.Windows.Forms.Label lblUsuario;
         public System.Windows.Forms.Label lblLivro;
-        public System.Windows.Forms.Label label1;
         public System.Windows.Forms.Label label2;
         public System.Windows.Forms.Label label3;
         public System.Windows.Forms.Label label5;
@@ -390,5 +434,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Bibliotecaria;
         private System.Windows.Forms.DataGridViewTextBoxColumn DataAcao;
         private System.Windows.Forms.Panel panel1;
+        private RoundedComboBox cbBibliotecaria;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ListBox lstSugestoesUsuario;
+        private System.Windows.Forms.ListBox lstLivros;
+        public System.Windows.Forms.Label label1;
     }
 }

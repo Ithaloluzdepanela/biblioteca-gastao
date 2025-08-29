@@ -30,8 +30,6 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.btnDevolução = new System.Windows.Forms.Button();
             this.btnProcurar = new System.Windows.Forms.Button();
             this.dgvLivros = new System.Windows.Forms.DataGridView();
             this.lblTotal = new System.Windows.Forms.Label();
@@ -48,7 +46,6 @@
             // 
             // btnProcurar
             // 
-            this.btnProcurar.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnProcurar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnProcurar.Location = new System.Drawing.Point(564, 66);
             this.btnProcurar.Name = "btnProcurar";
@@ -85,43 +82,9 @@
             this.dgvLivros.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvLivros_CellContentClick);
             this.dgvLivros.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Lista_CellFormatting);
             this.dgvLivros.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvLivros_CellPainting);
-            this.Lista.AllowUserToAddRows = false;
-            this.Lista.AllowUserToDeleteRows = false;
-            this.Lista.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Lista.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.Lista.BackgroundColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Lista.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.Lista.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Lista.Location = new System.Drawing.Point(18, 206);
-            this.Lista.Name = "Lista";
-            this.Lista.ReadOnly = true;
-            this.Lista.RowHeadersWidth = 51;
-            this.Lista.RowTemplate.Height = 24;
-            this.Lista.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Lista.Size = new System.Drawing.Size(642, 435);
-            this.Lista.TabIndex = 3;
-            this.Lista.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Lista_CellFormatting);
-            // 
-            // btnAlterar
-            // 
-            this.btnAlterar.Location = new System.Drawing.Point(680, 227);
-            this.btnAlterar.Name = "btnAlterar";
-            this.btnAlterar.Size = new System.Drawing.Size(73, 56);
-            this.btnAlterar.TabIndex = 14;
-            this.btnAlterar.Text = "Alterar";
-            this.btnAlterar.UseVisualStyleBackColor = true;
-            this.btnAlterar.Click += new System.EventHandler(this.btnAlterar_Click);
             // 
             // lblTotal
             // 
-            this.lblTotal.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTotal.AutoSize = true;
             this.lblTotal.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotal.Location = new System.Drawing.Point(98, 148);
@@ -159,7 +122,6 @@
             // 
             // txtNome
             // 
-            this.txtNome.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtNome.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
             this.txtNome.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
             this.txtNome.BackColor = System.Drawing.Color.White;
@@ -184,7 +146,6 @@
             // 
             // cbDisponibilidade
             // 
-            this.cbDisponibilidade.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.cbDisponibilidade.BorderColor = System.Drawing.Color.Black;
             this.cbDisponibilidade.BorderRadius = 8;
             this.cbDisponibilidade.BorderThickness = 2;
@@ -208,7 +169,6 @@
             // 
             // cbFiltro
             // 
-            this.cbFiltro.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.cbFiltro.BorderColor = System.Drawing.Color.Black;
             this.cbFiltro.BorderRadius = 8;
             this.cbFiltro.BorderThickness = 2;

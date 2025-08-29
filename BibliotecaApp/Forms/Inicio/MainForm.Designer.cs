@@ -58,11 +58,11 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnEmprestimoRap = new System.Windows.Forms.Button();
             this.btnLivro = new System.Windows.Forms.Button();
             this.btnEmprestimo = new System.Windows.Forms.Button();
-            this.livroTransition = new System.Windows.Forms.Timer(this.components);
-            this.userTransition = new System.Windows.Forms.Timer(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.userLbl = new System.Windows.Forms.Label();
+            this.livroTransition = new System.Windows.Forms.Timer(this.components);
+            this.userTransition = new System.Windows.Forms.Timer(this.components);
             this.panelControl.SuspendLayout();
             this.ControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).BeginInit();
@@ -329,7 +329,6 @@ namespace BibliotecaApp.Forms.Inicio
             this.menu.Controls.Add(this.livroContainer);
             this.menu.Controls.Add(this.relContainer);
             this.menu.Controls.Add(this.sairContainer);
-            this.menu.Controls.Add(this.panel2);
             this.menu.Dock = System.Windows.Forms.DockStyle.Left;
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
@@ -478,24 +477,14 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnEmprestimo.UseVisualStyleBackColor = false;
             this.btnEmprestimo.Click += new System.EventHandler(this.btnEmprestimo_Click);
             // 
-            // livroTransition
-            // 
-            this.livroTransition.Interval = 5;
-            this.livroTransition.Tick += new System.EventHandler(this.livroTransition_Tick);
-            // 
-            // userTransition
-            // 
-            this.userTransition.Interval = 5;
-            this.userTransition.Tick += new System.EventHandler(this.userTransition_Tick);
-            // 
             // panel2
             // 
-            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
             this.panel2.CausesValidation = false;
             this.panel2.Controls.Add(this.pictureBox2);
             this.panel2.Controls.Add(this.userLbl);
-            this.panel2.Location = new System.Drawing.Point(3, 409);
+            this.panel2.Location = new System.Drawing.Point(7, 764);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(189, 36);
             this.panel2.TabIndex = 12;
@@ -517,11 +506,21 @@ namespace BibliotecaApp.Forms.Inicio
             this.userLbl.AutoSize = true;
             this.userLbl.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.userLbl.ForeColor = System.Drawing.Color.White;
-            this.userLbl.Location = new System.Drawing.Point(34, 6);
+            this.userLbl.Location = new System.Drawing.Point(60, 6);
             this.userLbl.Name = "userLbl";
             this.userLbl.Size = new System.Drawing.Size(77, 25);
             this.userLbl.TabIndex = 4;
             this.userLbl.Text = "Usuário";
+            // 
+            // livroTransition
+            // 
+            this.livroTransition.Interval = 5;
+            this.livroTransition.Tick += new System.EventHandler(this.livroTransition_Tick);
+            // 
+            // userTransition
+            // 
+            this.userTransition.Interval = 5;
+            this.userTransition.Tick += new System.EventHandler(this.userTransition_Tick);
             // 
             // MainForm
             // 
@@ -531,6 +530,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ClientSize = new System.Drawing.Size(1440, 800);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelControl);
             this.Controls.Add(this.menu);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

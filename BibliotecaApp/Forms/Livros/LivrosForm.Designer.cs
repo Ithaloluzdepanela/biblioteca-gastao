@@ -34,14 +34,12 @@
             this.dgvLivros = new System.Windows.Forms.DataGridView();
             this.lblTotal = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.picReserva = new System.Windows.Forms.PictureBox();
             this.txtNome = new RoundedTextBox();
             this.cbDisponibilidade = new RoundedComboBox();
             this.cbFiltro = new RoundedComboBox();
             this.lblTeste = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLivros)).BeginInit();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picReserva)).BeginInit();
             this.SuspendLayout();
             // 
             // btnProcurar
@@ -96,7 +94,6 @@
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.picReserva);
             this.panel1.Controls.Add(this.txtNome);
             this.panel1.Controls.Add(this.dgvLivros);
             this.panel1.Controls.Add(this.cbDisponibilidade);
@@ -107,18 +104,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(775, 845);
             this.panel1.TabIndex = 16;
-            // 
-            // picReserva
-            // 
-            this.picReserva.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
-            this.picReserva.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_quadrado_arredondado_20;
-            this.picReserva.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.picReserva.Location = new System.Drawing.Point(3, 763);
-            this.picReserva.Name = "picReserva";
-            this.picReserva.Size = new System.Drawing.Size(40, 40);
-            this.picReserva.TabIndex = 24;
-            this.picReserva.TabStop = false;
-            this.picReserva.Click += new System.EventHandler(this.picReserva_Click);
             // 
             // txtNome
             // 
@@ -139,6 +124,7 @@
             this.txtNome.PlaceholderMarginLeft = 10;
             this.txtNome.PlaceholderText = "Procurar Livro";
             this.txtNome.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(437, 47);
             this.txtNome.TabIndex = 8;
             this.txtNome.TextColor = System.Drawing.Color.Black;
@@ -213,7 +199,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvLivros)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picReserva)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -228,6 +213,5 @@
         private RoundedTextBox txtNome;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblTeste;
-        private System.Windows.Forms.PictureBox picReserva;
     }
 }

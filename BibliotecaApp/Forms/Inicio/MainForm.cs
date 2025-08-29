@@ -149,6 +149,7 @@ namespace BibliotecaApp.Forms.Inicio
 
             btnUsuario.Enabled = false; // Desabilita o botão
             btnLivro.Enabled = false;
+           
             if (livroContainer.Height > 60)
             {
                 livroTransition.Start();
@@ -255,6 +256,7 @@ namespace BibliotecaApp.Forms.Inicio
         {
             btnLivro.Enabled = false; // Desabilita o botão
             btnUsuario.Enabled = false;
+            
             if (userContainer.Height > 60)
             {
                 userTransition.Start();
@@ -588,9 +590,11 @@ namespace BibliotecaApp.Forms.Inicio
         }
 
 
+
+
+
         #endregion
 
-       
         
     }
 }

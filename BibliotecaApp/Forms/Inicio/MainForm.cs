@@ -523,7 +523,7 @@ namespace BibliotecaApp.Forms.Inicio
             {
                 AlternarMaximizado();
             }
-            ////userLbl.Text = Sessao.NomeBibliotecariaLogada;
+            userLbl.Text = Sessao.NomeBibliotecariaLogada;
 
 
         }
@@ -591,9 +591,6 @@ namespace BibliotecaApp.Forms.Inicio
         #endregion
 
        
-        private void Usuário_Click(object sender, EventArgs e)
-        {
-            
-        }
+        
     }
 }

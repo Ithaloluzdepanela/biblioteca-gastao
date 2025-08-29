@@ -29,11 +29,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.btnDevolução = new System.Windows.Forms.Button();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnProcurar = new System.Windows.Forms.Button();
-            this.Lista = new System.Windows.Forms.DataGridView();
-            this.btnAlterar = new System.Windows.Forms.Button();
+            this.dgvLivros = new System.Windows.Forms.DataGridView();
             this.lblTotal = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.picReserva = new System.Windows.Forms.PictureBox();
@@ -41,25 +39,15 @@
             this.cbDisponibilidade = new RoundedComboBox();
             this.cbFiltro = new RoundedComboBox();
             this.lblTeste = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.Lista)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLivros)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picReserva)).BeginInit();
             this.SuspendLayout();
             // 
-            // btnDevolução
-            // 
-            this.btnDevolução.Location = new System.Drawing.Point(680, 316);
-            this.btnDevolução.Name = "btnDevolução";
-            this.btnDevolução.Size = new System.Drawing.Size(73, 56);
-            this.btnDevolução.TabIndex = 12;
-            this.btnDevolução.Text = "Devolução";
-            this.btnDevolução.UseVisualStyleBackColor = true;
-            this.btnDevolução.Click += new System.EventHandler(this.btnDevolução_Click);
-            // 
             // btnProcurar
             // 
             this.btnProcurar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnProcurar.Location = new System.Drawing.Point(548, 66);
+            this.btnProcurar.Location = new System.Drawing.Point(564, 66);
             this.btnProcurar.Name = "btnProcurar";
             this.btnProcurar.Size = new System.Drawing.Size(108, 45);
             this.btnProcurar.TabIndex = 7;
@@ -67,46 +55,39 @@
             this.btnProcurar.UseVisualStyleBackColor = true;
             this.btnProcurar.Click += new System.EventHandler(this.btnProcurar_Click);
             // 
-            // Lista
+            // dgvLivros
             // 
-            this.Lista.AllowUserToAddRows = false;
-            this.Lista.AllowUserToDeleteRows = false;
-            this.Lista.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.Lista.BackgroundColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Lista.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.Lista.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Lista.Location = new System.Drawing.Point(18, 206);
-            this.Lista.Name = "Lista";
-            this.Lista.ReadOnly = true;
-            this.Lista.RowHeadersWidth = 51;
-            this.Lista.RowTemplate.Height = 24;
-            this.Lista.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Lista.Size = new System.Drawing.Size(642, 435);
-            this.Lista.TabIndex = 3;
-            this.Lista.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Lista_CellFormatting);
-            // 
-            // btnAlterar
-            // 
-            this.btnAlterar.Location = new System.Drawing.Point(680, 227);
-            this.btnAlterar.Name = "btnAlterar";
-            this.btnAlterar.Size = new System.Drawing.Size(73, 56);
-            this.btnAlterar.TabIndex = 14;
-            this.btnAlterar.Text = "Alterar";
-            this.btnAlterar.UseVisualStyleBackColor = true;
-            this.btnAlterar.Click += new System.EventHandler(this.btnAlterar_Click);
+            this.dgvLivros.AllowUserToAddRows = false;
+            this.dgvLivros.AllowUserToDeleteRows = false;
+            this.dgvLivros.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvLivros.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvLivros.BackgroundColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLivros.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvLivros.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvLivros.Location = new System.Drawing.Point(18, 196);
+            this.dgvLivros.Name = "dgvLivros";
+            this.dgvLivros.ReadOnly = true;
+            this.dgvLivros.RowHeadersWidth = 51;
+            this.dgvLivros.RowTemplate.Height = 24;
+            this.dgvLivros.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvLivros.Size = new System.Drawing.Size(738, 449);
+            this.dgvLivros.TabIndex = 3;
+            this.dgvLivros.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvLivros_CellContentClick);
+            this.dgvLivros.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Lista_CellFormatting);
+            this.dgvLivros.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvLivros_CellPainting);
             // 
             // lblTotal
             // 
             this.lblTotal.AutoSize = true;
             this.lblTotal.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotal.Location = new System.Drawing.Point(347, 124);
+            this.lblTotal.Location = new System.Drawing.Point(98, 148);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(0, 19);
             this.lblTotal.TabIndex = 11;
@@ -117,25 +98,22 @@
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.picReserva);
             this.panel1.Controls.Add(this.txtNome);
-            this.panel1.Controls.Add(this.btnAlterar);
-            this.panel1.Controls.Add(this.Lista);
+            this.panel1.Controls.Add(this.dgvLivros);
             this.panel1.Controls.Add(this.cbDisponibilidade);
             this.panel1.Controls.Add(this.btnProcurar);
-            this.panel1.Controls.Add(this.btnDevolução);
             this.panel1.Controls.Add(this.cbFiltro);
             this.panel1.Controls.Add(this.lblTotal);
             this.panel1.Location = new System.Drawing.Point(253, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(775, 845);
             this.panel1.TabIndex = 16;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // picReserva
             // 
             this.picReserva.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(80)))), ((int)(((byte)(115)))));
             this.picReserva.BackgroundImage = global::BibliotecaApp.Properties.Resources.icons8_quadrado_arredondado_20;
             this.picReserva.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.picReserva.Location = new System.Drawing.Point(680, 435);
+            this.picReserva.Location = new System.Drawing.Point(3, 763);
             this.picReserva.Name = "picReserva";
             this.picReserva.Size = new System.Drawing.Size(40, 40);
             this.picReserva.TabIndex = 24;
@@ -154,7 +132,7 @@
             this.txtNome.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtNome.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNome.Location = new System.Drawing.Point(86, 66);
+            this.txtNome.Location = new System.Drawing.Point(102, 66);
             this.txtNome.Name = "txtNome";
             this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -181,7 +159,7 @@
             "Disponíveis",
             "Indisponíveis"});
             this.cbDisponibilidade.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbDisponibilidade.Location = new System.Drawing.Point(297, 119);
+            this.cbDisponibilidade.Location = new System.Drawing.Point(309, 119);
             this.cbDisponibilidade.Name = "cbDisponibilidade";
             this.cbDisponibilidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbDisponibilidade.PlaceholderMargin = 10;
@@ -204,7 +182,7 @@
             "Autor",
             "Gênero"});
             this.cbFiltro.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbFiltro.Location = new System.Drawing.Point(86, 119);
+            this.cbFiltro.Location = new System.Drawing.Point(102, 119);
             this.cbFiltro.Name = "cbFiltro";
             this.cbFiltro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbFiltro.PlaceholderMargin = 10;
@@ -231,7 +209,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "LivrosForm";
-            ((System.ComponentModel.ISupportInitialize)(this.Lista)).EndInit();
+            this.Load += new System.EventHandler(this.LivrosForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLivros)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picReserva)).EndInit();
@@ -241,11 +220,9 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button btnDevolução;
         private System.Windows.Forms.Button btnProcurar;
-        private System.Windows.Forms.DataGridView Lista;
+        private System.Windows.Forms.DataGridView dgvLivros;
         private RoundedComboBox cbFiltro;
-        private System.Windows.Forms.Button btnAlterar;
         private System.Windows.Forms.Label lblTotal;
         private RoundedComboBox cbDisponibilidade;
         private RoundedTextBox txtNome;

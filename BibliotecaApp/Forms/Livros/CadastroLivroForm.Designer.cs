@@ -56,6 +56,7 @@
             this.Titulo.Size = new System.Drawing.Size(379, 46);
             this.Titulo.TabIndex = 93;
             this.Titulo.Text = "CADASTRO DE LIVROS";
+            this.Titulo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // lblNome
             // 

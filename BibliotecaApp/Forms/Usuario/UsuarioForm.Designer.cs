@@ -30,14 +30,14 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblEmprestimo = new System.Windows.Forms.Label();
+            this.cmbEmprestimo = new RoundedComboBox();
             this.btnFiltrar = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.cmbTipoUsuario = new RoundedComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.Titulo = new System.Windows.Forms.Label();
-            this.dgvUsuarios = new System.Windows.Forms.DataGridView();
-            this.cmbEmprestimo = new RoundedComboBox();
-            this.cmbTipoUsuario = new RoundedComboBox();
             this.txtNome = new RoundedTextBox();
+            this.dgvUsuarios = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsuarios)).BeginInit();
             this.SuspendLayout();
@@ -74,6 +74,33 @@
             this.lblEmprestimo.TabIndex = 112;
             this.lblEmprestimo.Text = "Situação de Empréstimo:";
             // 
+            // cmbEmprestimo
+            // 
+            this.cmbEmprestimo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cmbEmprestimo.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cmbEmprestimo.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.cmbEmprestimo.BorderRadius = 8;
+            this.cmbEmprestimo.BorderThickness = 1;
+            this.cmbEmprestimo.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cmbEmprestimo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbEmprestimo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbEmprestimo.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbEmprestimo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.cmbEmprestimo.FormattingEnabled = true;
+            this.cmbEmprestimo.Items.AddRange(new object[] {
+            "Todos",
+            "Sem empréstimo",
+            "Ativo",
+            "Atrasado"});
+            this.cmbEmprestimo.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbEmprestimo.Location = new System.Drawing.Point(512, 126);
+            this.cmbEmprestimo.Name = "cmbEmprestimo";
+            this.cmbEmprestimo.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbEmprestimo.PlaceholderMargin = 10;
+            this.cmbEmprestimo.PlaceholderText = "Filtre por situação...";
+            this.cmbEmprestimo.Size = new System.Drawing.Size(274, 34);
+            this.cmbEmprestimo.TabIndex = 111;
+            // 
             // btnFiltrar
             // 
             this.btnFiltrar.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -106,71 +133,6 @@
             this.label3.TabIndex = 89;
             this.label3.Text = "Tipo usuário:";
             // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.White;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(38, 95);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 25);
-            this.label1.TabIndex = 87;
-            this.label1.Text = "Nome:";
-            // 
-            // Titulo
-            // 
-            this.Titulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Titulo.AutoSize = true;
-            this.Titulo.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
-            this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.Titulo.Location = new System.Drawing.Point(452, 9);
-            this.Titulo.Name = "Titulo";
-            this.Titulo.Size = new System.Drawing.Size(447, 46);
-            this.Titulo.TabIndex = 86;
-            this.Titulo.Text = "USUARIOS CADASTRADOS";
-            // 
-            // dgvUsuarios
-            // 
-            this.dgvUsuarios.AllowUserToAddRows = false;
-            this.dgvUsuarios.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgvUsuarios.Location = new System.Drawing.Point(43, 196);
-            this.dgvUsuarios.Name = "dgvUsuarios";
-            this.dgvUsuarios.ReadOnly = true;
-            this.dgvUsuarios.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dgvUsuarios.Size = new System.Drawing.Size(1194, 638);
-            this.dgvUsuarios.TabIndex = 0;
-            this.dgvUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUsuarios_CellContentClick);
-            // 
-            // cmbEmprestimo
-            // 
-            this.cmbEmprestimo.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.cmbEmprestimo.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.cmbEmprestimo.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.cmbEmprestimo.BorderRadius = 8;
-            this.cmbEmprestimo.BorderThickness = 1;
-            this.cmbEmprestimo.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cmbEmprestimo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEmprestimo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbEmprestimo.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbEmprestimo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.cmbEmprestimo.FormattingEnabled = true;
-            this.cmbEmprestimo.Items.AddRange(new object[] {
-            "Todos",
-            "Sem empréstimo",
-            "Ativo",
-            "Atrasado"});
-            this.cmbEmprestimo.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbEmprestimo.Location = new System.Drawing.Point(512, 126);
-            this.cmbEmprestimo.Name = "cmbEmprestimo";
-            this.cmbEmprestimo.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbEmprestimo.PlaceholderMargin = 10;
-            this.cmbEmprestimo.PlaceholderText = "Filtre por situação...";
-            this.cmbEmprestimo.Size = new System.Drawing.Size(274, 34);
-            this.cmbEmprestimo.TabIndex = 111;
-            // 
             // cmbTipoUsuario
             // 
             this.cmbTipoUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -199,6 +161,31 @@
             this.cmbTipoUsuario.Size = new System.Drawing.Size(274, 34);
             this.cmbTipoUsuario.TabIndex = 88;
             // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.White;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label1.Location = new System.Drawing.Point(38, 95);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(70, 25);
+            this.label1.TabIndex = 87;
+            this.label1.Text = "Nome:";
+            // 
+            // Titulo
+            // 
+            this.Titulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Titulo.AutoSize = true;
+            this.Titulo.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
+            this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.Titulo.Location = new System.Drawing.Point(452, 9);
+            this.Titulo.Name = "Titulo";
+            this.Titulo.Size = new System.Drawing.Size(447, 46);
+            this.Titulo.TabIndex = 86;
+            this.Titulo.Text = "USUARIOS CADASTRADOS";
+            // 
             // txtNome
             // 
             this.txtNome.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -224,6 +211,19 @@
             this.txtNome.TabIndex = 85;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
+            // 
+            // dgvUsuarios
+            // 
+            this.dgvUsuarios.AllowUserToAddRows = false;
+            this.dgvUsuarios.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvUsuarios.Location = new System.Drawing.Point(43, 196);
+            this.dgvUsuarios.Name = "dgvUsuarios";
+            this.dgvUsuarios.ReadOnly = true;
+            this.dgvUsuarios.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dgvUsuarios.Size = new System.Drawing.Size(1194, 638);
+            this.dgvUsuarios.TabIndex = 0;
+            this.dgvUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUsuarios_CellContentClick);
             // 
             // UsuarioForm
             // 

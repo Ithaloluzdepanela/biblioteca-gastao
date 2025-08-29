@@ -182,63 +182,65 @@ namespace BibliotecaApp.Forms.Login
                     AtualizarEmprestimos(progressForm);
                     AtualizarReservas(progressForm);
 
+                    //Retirar comentarios para ativar o envio semanal do relatorio!!!
+
+
                     //---- Envio Semanal Relatorio ----
 
-                    if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
+
+                    if (!ControleSemanal.JaEnviadoEstaSemana())
                     {
-                        try
-                        {
-                            progressForm.AtualizarProgresso(90, "Gerando relatório semanal...");
+//                        try
+//                        {
+//                            progressForm.AtualizarProgresso(90, "Gerando relatório semanal...");
 
-                            using (var conexao = Conexao.ObterConexao())
-                            {
-                                conexao.Open();
-                                string pdfPath = GerarRelatorioAtrasados(conexao);
+//                            using (var conexao = Conexao.ObterConexao())
+//                            {
+//                                conexao.Open();
+//                                string pdfPath = GerarRelatorioAtrasados(conexao);
 
-                                progressForm.AtualizarProgresso(95, "Enviando relatório para secretaria...");
+//                                progressForm.AtualizarProgresso(95, "Enviando relatório para secretaria...");
 
-                                // Assunto com data
-                                string assunto = $"📑 Relatório semanal de alunos não aptos - {DateTime.Now:dd/MM/yyyy}";
+//                                string assunto = $"📑 Relatório semanal de alunos não aptos - {DateTime.Now:dd/MM/yyyy}";
+//                                string corpo = $@"
+//<html>
+//<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+//    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+//        <h2 style='color: #2c3e50;'>📚 Biblioteca Monteiro Lobato</h2>
+//        <p>Prezada secretaria,</p>
+//        <p>Segue em anexo o relatório semanal de alunos que <strong>não estão aptos</strong> a retirar documentos,
+//           devido a <span style='color:#d35400; font-weight:bold;'>empréstimos em atraso</span>.</p>
+//        <p style='font-size: 16px;'><strong>📅 Data do relatório:</strong> {DateTime.Now:dd/MM/yyyy}</p>
+//        <p>O PDF anexo contém a lista de alunos e suas respectivas turmas.</p>
+//        <p style='margin-top:20px;'>Atenciosamente,<br/><strong>Sistema da Biblioteca</strong></p>
+//        <hr />
+//        <p style='font-size: 13px; color: #888;'>Este é um e-mail automático. Não responda a esta mensagem.</p>
+//    </div>
+//</body>
+//</html>";
 
-                                // Corpo do email em HTML estilizado
-                                string corpo = $@"
-                <html>
-                <body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
-                    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
-                        <h2 style='color: #2c3e50;'>📚 Biblioteca Monteiro Lobato</h2>
-                        <p>Prezada secretaria,</p>
-                        <p>Segue em anexo o relatório semanal de alunos que <strong>não estão aptos</strong> a retirar documentos,
-                           devido a <span style='color:#d35400; font-weight:bold;'>empréstimos em atraso</span>.</p>
-                        <p style='font-size: 16px;'>
-                            <strong>📅 Data do relatório:</strong> {DateTime.Now:dd/MM/yyyy}
-                        </p>
-                        <p>O PDF anexo contém a lista de alunos e suas respectivas turmas.</p>
-                        <p style='margin-top:20px;'>Atenciosamente,<br/><strong>Sistema da Biblioteca</strong></p>
-                        <hr />
-                        <p style='font-size: 13px; color: #888;'>Este é um e-mail automático. Não responda a esta mensagem.</p>
-                    </div>
-                </body>
-                </html>";
+//                                EmailService.Enviar(
+//                                    "secretaria.79448@gmail.com", 
+//                                    assunto,
+//                                    corpo,
+//                                    pdfPath
+//                                );
 
-                                EmailService.Enviar(
-                                    "s//ecretaria.79448@gmail.com", //corrigir na versão final
-                                    assunto,
-                                    corpo,
-                                    pdfPath
-                                );
-                            }
+//                                // Registra envio no TXT
+//                                ControleSemanal.RegistrarEnvio();
 
-                            progressForm.AtualizarProgresso(100, "Relatório semanal enviado com sucesso!");
-                        }
-                        catch 
-                        {
-                            
-                        }
+//                                progressForm.AtualizarProgresso(100, "Relatório semanal enviado com sucesso!");
+//                            }
+//                        }
+//                        catch
+//                        {
+//                            progressForm.AtualizarProgresso(100, "Falha ao enviar relatório.");
+//                        }
                     }
-
                 });
             }
         }
+
 
         // ---- PDF Relatorio Gerador ----
         private string GerarRelatorioAtrasados(SqlCeConnection conexao)
@@ -651,6 +653,32 @@ namespace BibliotecaApp.Forms.Login
         }
         #endregion
 
+
+
+        #region ControleSemanal (TXT)
+        public static class ControleSemanal
+        {
+            private static readonly string txtPath = Path.Combine(Application.StartupPath, "EnvioRelatorioSemanal.txt");
+
+            public static bool JaEnviadoEstaSemana()
+            {
+                if (!File.Exists(txtPath)) return false;
+
+                string conteudo = File.ReadAllText(txtPath);
+                if (DateTime.TryParse(conteudo, out DateTime ultimaData))
+                {
+                    var diff = (DateTime.Now - ultimaData).TotalDays;
+                    return diff < 7; // menos de 7 dias = já enviou
+                }
+                return false;
+            }
+
+            public static void RegistrarEnvio()
+            {
+                File.WriteAllText(txtPath, DateTime.Now.ToString("yyyy-MM-dd"));
+            }
+        }
+        #endregion
 
         private void lblEsqueceuSenha_Click(object sender, EventArgs e)
         {

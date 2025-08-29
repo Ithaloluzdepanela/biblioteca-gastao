@@ -30,17 +30,20 @@ namespace BibliotecaApp.Forms.Livros
         public EmprestimoRapidoForm()
         {
             InitializeComponent();
+            this.KeyPreview = true;
+            this.KeyDown += EmprestimoRapidoForm_KeyDown;
         }
 
         private void EmprestimoRapidoForm_Load(object sender, EventArgs e)
         {
+            //Limpeza Automatica Semanal
+            LimparEmprestimosSemana();
             // Carrega dados para sugestões (turmas, livros, professores) e bibliotecárias
             CarregarSugestoesECombo();
 
-            // Default devolução: 2 horas depois
-            dtpDevolucao.Value = DateTime.Now.AddHours(2);
-            dtpDevolucao.Format = DateTimePickerFormat.Custom;
-            dtpDevolucao.CustomFormat = "dd/MM/yyyy HH:mm";
+            txtProfessor.Focus();
+
+            lblHoraEmprestimo.Text = $"Hora do Empréstimo: {DateTime.Now: HH:mm}";
 
             // Configura DataGrid
             ConfigurarGridRapidos();
@@ -50,7 +53,91 @@ namespace BibliotecaApp.Forms.Livros
             lstSugestoesProfessor.Visible = false;
             lstSugestoesLivro.Visible = false;
             lstSugestoesTurma.Visible = false;
+
+            EstilizarListBoxSugestao(lstSugestoesProfessor);
+            EstilizarListBoxSugestao(lstSugestoesLivro);
+            EstilizarListBoxSugestao(lstSugestoesTurma);
         }
+
+
+        private void EmprestimoRapidoForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true; // evita bip ou comportamento padrão
+
+                // Se o foco estiver no botão Registrar -> dispara o clique
+                if (this.ActiveControl == btnRegistrar)
+                {
+                    btnRegistrar.PerformClick();
+                }
+                else
+                {
+                    // Senão, navega para o próximo campo
+                    this.SelectNextControl(this.ActiveControl, !e.Shift, true, true, true);
+                }
+            }
+        }
+
+
+        private void LimparEmprestimosSemana()
+        {
+            try
+            {
+                // Caminho para a pasta AppData dentro do diretório do programa
+                string pastaAppData = Path.Combine(Application.StartupPath, "AppData");
+
+                // Cria a pasta se não existir
+                if (!Directory.Exists(pastaAppData))
+                    Directory.CreateDirectory(pastaAppData);
+
+                string arquivoControle = Path.Combine(pastaAppData, "limpeza.txt");
+
+                DateTime ultimaLimpeza = DateTime.MinValue;
+                if (File.Exists(arquivoControle))
+                {
+                    DateTime.TryParse(File.ReadAllText(arquivoControle), out ultimaLimpeza);
+                }
+
+                // Obtem a data da segunda-feira desta semana
+                DateTime segundaDaSemana = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek + (int)DayOfWeek.Monday);
+
+                // Só limpa se a última limpeza não foi nesta semana
+                if (ultimaLimpeza < segundaDaSemana)
+                {
+                    using (var conexao = Conexao.ObterConexao())
+                    {
+                        conexao.Open();
+
+                        // Apaga todos os registros
+                        using (var cmd = new SqlCeCommand("DELETE FROM EmprestimoRapido", conexao))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // Reseta o ID
+                        using (var cmdReset = new SqlCeCommand(
+                            "ALTER TABLE EmprestimoRapido ALTER COLUMN Id IDENTITY (1,1)", conexao))
+                        {
+                            cmdReset.ExecuteNonQuery();
+                        }
+                    }
+
+                    // Atualiza data da última limpeza
+                    File.WriteAllText(arquivoControle, DateTime.Now.ToString("yyyy-MM-dd"));
+
+                    MessageBox.Show("Histórico de Empréstimos foi limpo. Novo ciclo semanal iniciado.",
+                                    "Limpeza Semanal", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao limpar empréstimos rápidos: " + ex.Message);
+            }
+        }
+
+
+
 
         private void CarregarSugestoesECombo()
         {
@@ -105,11 +192,20 @@ namespace BibliotecaApp.Forms.Livros
                         }
                     }
 
-                    // Se Sessao.NomeBibliotecariaLogada disponível, selecionar
+                    // Seleciona automaticamente a logada
                     if (!string.IsNullOrWhiteSpace(Sessao.NomeBibliotecariaLogada))
                     {
                         int idx = cbBibliotecaria.Items.IndexOf(Sessao.NomeBibliotecariaLogada);
-                        if (idx >= 0) cbBibliotecaria.SelectedIndex = idx;
+                        if (idx >= 0)
+                            cbBibliotecaria.SelectedIndex = idx;
+                        else
+                        {
+
+                        }
+                        {
+                            cbBibliotecaria.Items.Add(Sessao.NomeBibliotecariaLogada);
+                            cbBibliotecaria.SelectedIndex = cbBibliotecaria.Items.Count - 1;
+                        }
                     }
 
                     // fallback
@@ -305,7 +401,7 @@ namespace BibliotecaApp.Forms.Livros
             txtLivro.Text = "";
             txtTurma.Text = "";
             numQuantidade.Value = 1;
-            dtpDevolucao.Value = DateTime.Now.AddHours(2);
+
         }
         #endregion
 
@@ -331,20 +427,42 @@ namespace BibliotecaApp.Forms.Livros
                 return c;
             }
 
-            AddTextCol("Id", "ID", 40, DataGridViewContentAlignment.MiddleCenter);
+            var colId = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Id",
+                Name = "Id",
+                HeaderText = "ID", 
+                Visible=false,
+            };
+            dgvRapidos.Columns.Add(colId);
+
+            var ColPoint = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Point",
+                Name = "Point",
+                HeaderText = "•",
+                ReadOnly = true,
+                Width = 30,  // largura fixa
+                MinimumWidth = 30,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None, // não cresce
+                DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+            };
+            dgvRapidos.Columns.Add(ColPoint);
+
             AddTextCol("Professor", "Professor", 180, DataGridViewContentAlignment.MiddleLeft);
             AddTextCol("Livro", "Livro", 200, DataGridViewContentAlignment.MiddleLeft);
             AddTextCol("Turma", "Turma", 120, DataGridViewContentAlignment.MiddleLeft);
-            AddTextCol("Quantidade", "Qt", 60, DataGridViewContentAlignment.MiddleCenter);
+            AddTextCol("Quantidade", "Qtd", 60, DataGridViewContentAlignment.MiddleCenter);
 
-            var colEmp = AddTextCol("DataHoraEmprestimo", "Emprestado em", 150, DataGridViewContentAlignment.MiddleCenter);
-            colEmp.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
-            var colDev = AddTextCol("DataHoraDevolucaoPrevista", "Devolução (real)", 150, DataGridViewContentAlignment.MiddleCenter);
-            colDev.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
+            var colEmp = AddTextCol("DataHoraEmprestimo", "Emprestado em", 130, DataGridViewContentAlignment.MiddleLeft);
+            colEmp.DefaultCellStyle.Format = "dd/MM HH:mm";
+            var colDev = AddTextCol("DataHoraDevolucaoReal", "Devolução", 130, DataGridViewContentAlignment.MiddleLeft);
+            colDev.DefaultCellStyle.Format = "dd/MM HH:mm";
 
 
-            AddTextCol("Bibliotecaria", "Biblio.", 120, DataGridViewContentAlignment.MiddleLeft);
-            AddTextCol("Status", "Status", 100, DataGridViewContentAlignment.MiddleCenter);
+
+            AddTextCol("Bibliotecaria", "Bibliotecaria", 120, DataGridViewContentAlignment.MiddleLeft);
+            AddTextCol("Status", "Status", 100, DataGridViewContentAlignment.MiddleLeft);
 
             var btnFinalizar = new DataGridViewButtonColumn
             {
@@ -352,7 +470,9 @@ namespace BibliotecaApp.Forms.Livros
                 HeaderText = "",
                 Text = "",
                 UseColumnTextForButtonValue = true,
-                Width = 90,
+                Width = 100,                   // largura fixa
+                MinimumWidth = 70,            // impede encolher
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None, // impede crescer
                 FlatStyle = FlatStyle.Flat
             };
             dgvRapidos.Columns.Add(btnFinalizar);
@@ -369,6 +489,7 @@ namespace BibliotecaApp.Forms.Livros
             dgvRapidos.AllowUserToAddRows = false;
             dgvRapidos.AllowUserToDeleteRows = false;
             dgvRapidos.AllowUserToResizeRows = false;
+           
 
             dgvRapidos.DefaultCellStyle.BackColor = Color.White;
             dgvRapidos.DefaultCellStyle.ForeColor = Color.FromArgb(20, 42, 60);
@@ -386,15 +507,17 @@ namespace BibliotecaApp.Forms.Livros
             dgvRapidos.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dgvRapidos.ColumnHeadersHeight = 44;
             dgvRapidos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dgvRapidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+         
+            dgvRapidos.AllowUserToResizeColumns = false;
+            dgvRapidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
 
             // double buffer
             typeof(DataGridView).InvokeMember(
-                "DoubleBuffered",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty,
-                null,
-                dgvRapidos,
-                new object[] { true });
+       "DoubleBuffered",
+       System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty,
+       null,
+       dgvRapidos,
+       new object[] { true });
 
             dgvRapidos.ResumeLayout();
         }
@@ -410,10 +533,10 @@ namespace BibliotecaApp.Forms.Livros
                 tabela.Columns.Add("Turma", typeof(string));
                 tabela.Columns.Add("Quantidade", typeof(int));
                 tabela.Columns.Add("DataHoraEmprestimo", typeof(DateTime));
-                tabela.Columns.Add("DataHoraDevolucaoPrevista", typeof(DateTime));
+                tabela.Columns.Add("DataHoraDevolucaoReal", typeof(DateTime));
+
                 tabela.Columns.Add("Bibliotecaria", typeof(string));
                 tabela.Columns.Add("Status", typeof(string));
-
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
@@ -423,7 +546,7 @@ namespace BibliotecaApp.Forms.Livros
     FROM EmprestimoRapido r
     INNER JOIN Usuarios u ON r.ProfessorId = u.Id
     INNER JOIN Livros l ON r.LivroId = l.Id
-    ORDER BY r.DataHoraEmprestimo DESC";
+    ORDER BY r.Id DESC";
 
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     using (var reader = cmd.ExecuteReader())
@@ -439,9 +562,9 @@ namespace BibliotecaApp.Forms.Livros
                             row["DataHoraEmprestimo"] = reader.GetDateTime(5);
 
                             if (!reader.IsDBNull(6))
-                                row["DataHoraDevolucaoPrevista"] = reader.GetDateTime(6); // coluna do DataTable (ver nota abaixo)
+                                row["DataHoraDevolucaoReal"] = reader.GetDateTime(6); // coluna do DataTable (ver nota abaixo)
                             else
-                                row["DataHoraDevolucaoPrevista"] = DBNull.Value;
+                                row["DataHoraDevolucaoReal"] = DBNull.Value;
 
                             row["Bibliotecaria"] = reader.GetString(7);
                             row["Status"] = reader.GetString(8);
@@ -593,12 +716,83 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-
-
-
         #endregion
 
-       
-        
+        #region estilizacao listbox
+        private int hoveredIndex = -1;
+
+        private void EstilizarListBoxSugestao(ListBox listBox)
+        {
+            listBox.DrawMode = DrawMode.OwnerDrawFixed;
+            listBox.Font = new Font("Segoe UI", 12, FontStyle.Regular);
+            listBox.ItemHeight = 40;
+
+            listBox.BackColor = Color.White;
+            listBox.ForeColor = Color.FromArgb(30, 61, 88);
+            listBox.BorderStyle = BorderStyle.FixedSingle;
+            listBox.IntegralHeight = false;
+
+            listBox.DrawItem -= ListBoxSugestao_DrawItem;
+            listBox.DrawItem += ListBoxSugestao_DrawItem;
+
+            listBox.MouseMove -= ListBoxSugestao_MouseMove;
+            listBox.MouseMove += ListBoxSugestao_MouseMove;
+
+            listBox.MouseLeave -= ListBoxSugestao_MouseLeave;
+            listBox.MouseLeave += ListBoxSugestao_MouseLeave;
+        }
+
+        private void ListBoxSugestao_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            if (e.Index < 0) return;
+
+            bool hovered = (e.Index == hoveredIndex);
+
+            // Tons de cinza
+            Color backColor = hovered
+                ? Color.FromArgb(235, 235, 235) // cinza claro no hover
+                : Color.White;                  // fundo branco
+
+            Color textColor = Color.FromArgb(60, 60, 60); // cinza escuro
+
+            using (SolidBrush b = new SolidBrush(backColor))
+                e.Graphics.FillRectangle(b, e.Bounds);
+
+            string text = listBox.Items[e.Index].ToString();
+            Font font = listBox.Font;
+
+            Rectangle textRect = new Rectangle(e.Bounds.Left + 12, e.Bounds.Top, e.Bounds.Width - 24, e.Bounds.Height);
+            TextRenderer.DrawText(e.Graphics, text, font, textRect, textColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+
+            // Linha divisória entre itens (cinza bem suave)
+            if (e.Index < listBox.Items.Count - 1)
+            {
+                using (Pen p = new Pen(Color.FromArgb(220, 220, 220)))
+                    e.Graphics.DrawLine(p, e.Bounds.Left + 8, e.Bounds.Bottom - 1, e.Bounds.Right - 8, e.Bounds.Bottom - 1);
+            }
+
+
+        }
+
+
+        private void ListBoxSugestao_MouseMove(object sender, MouseEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            int index = listBox.IndexFromPoint(e.Location);
+            if (index != hoveredIndex)
+            {
+                hoveredIndex = index;
+                listBox.Invalidate();
+            }
+        }
+
+        private void ListBoxSugestao_MouseLeave(object sender, EventArgs e)
+        {
+            hoveredIndex = -1;
+            (sender as ListBox).Invalidate();
+        }
+        #endregion
+
     }
 }

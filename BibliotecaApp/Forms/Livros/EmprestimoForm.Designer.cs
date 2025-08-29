@@ -185,6 +185,7 @@
             this.txtBarcode.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBarcode.PlaceholderMarginLeft = 12;
             this.txtBarcode.PlaceholderText = "Clique e Escaneei para buscar informacoes...";
+            this.txtBarcode.SelectionStart = 0;
             this.txtBarcode.Size = new System.Drawing.Size(617, 40);
             this.txtBarcode.TabIndex = 101;
             this.txtBarcode.TextColor = System.Drawing.Color.Black;
@@ -243,6 +244,7 @@
             this.txtLivro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLivro.PlaceholderMarginLeft = 12;
             this.txtLivro.PlaceholderText = "Busque aqui o livro...";
+            this.txtLivro.SelectionStart = 0;
             this.txtLivro.Size = new System.Drawing.Size(616, 40);
             this.txtLivro.TabIndex = 95;
             this.txtLivro.TextColor = System.Drawing.Color.Black;
@@ -272,6 +274,7 @@
             this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNomeUsuario.PlaceholderMarginLeft = 12;
             this.txtNomeUsuario.PlaceholderText = "Busque aqui o Nome do Usuario ...";
+            this.txtNomeUsuario.SelectionStart = 0;
             this.txtNomeUsuario.Size = new System.Drawing.Size(617, 40);
             this.txtNomeUsuario.TabIndex = 94;
             this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
@@ -284,7 +287,7 @@
             this.btnEmprestar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.btnEmprestar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnEmprestar.ForeColor = System.Drawing.Color.White;
-            this.btnEmprestar.Location = new System.Drawing.Point(541, 771);
+            this.btnEmprestar.Location = new System.Drawing.Point(541, 769);
             this.btnEmprestar.Margin = new System.Windows.Forms.Padding(4);
             this.btnEmprestar.Name = "btnEmprestar";
             this.btnEmprestar.Size = new System.Drawing.Size(155, 70);

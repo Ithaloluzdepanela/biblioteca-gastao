@@ -96,6 +96,15 @@
     <Compile Include="Forms\Livros\EmprestimoRapidoForm.Designer.cs">
       <DependentUpon>EmprestimoRapidoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Livros\LivrosForm.Designer.cs">
+      <DependentUpon>LivrosForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Login\EsqueceuSenhaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Login\EsqueceuSenhaForm.Designer.cs">
+      <DependentUpon>EsqueceuSenhaForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Relatorio\RelForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -146,9 +155,6 @@
     </Compile>
     <Compile Include="Forms\Livros\LivrosForm.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Livros\LivrosForm.Designer.cs">
-      <DependentUpon>LivrosForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Login\LoginForm.cs">
       <SubType>Form</SubType>
@@ -210,6 +216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Livros\EmprestimoRapidoForm.resx">
       <DependentUpon>EmprestimoRapidoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Login\EsqueceuSenhaForm.resx">
+      <DependentUpon>EsqueceuSenhaForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Relatorio\RelForm.resx">
       <DependentUpon>RelForm.cs</DependentUpon>

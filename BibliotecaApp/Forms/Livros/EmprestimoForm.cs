@@ -22,7 +22,7 @@ namespace BibliotecaApp.Forms.Livros
         private bool _carregandoLivroAutomaticamente = false;
         private List<Livro> _cacheLivros = new List<Livro>();
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
-
+        ReservaForm reservaForm;
 
         #endregion
 
@@ -194,7 +194,8 @@ namespace BibliotecaApp.Forms.Livros
                 }
             }
 
-            // Verifica se o livro está disponível
+          
+
             if (!livro.Disponibilidade || livro.Quantidade <= 0)
             {
                 DialogResult resposta = MessageBox.Show(
@@ -205,13 +206,42 @@ namespace BibliotecaApp.Forms.Livros
 
                 if (resposta == DialogResult.Yes)
                 {
-                    var form = new ReservaForm();
-                    form.txtLivro.Text = livro.Nome;
-                    form.StartPosition = FormStartPosition.CenterScreen;
-                    form.ShowDialog();
+                    using (var form = new ReservaForm())
+                    {
+                        // preenche os dados conhecidos
+                        form.PreFillFromEmprestimo(
+                            usuario: usuario,                       // objeto Usuarios obtido anteriormente
+                            livro: livro,                           // objeto Livro
+                            bibliotecaria: responsavel,             // o responsável (Usuarios) selecionado
+                            codigoBarras: !string.IsNullOrWhiteSpace(txtBarcode.Text) ? txtBarcode.Text.Trim() : livro.CodigoDeBarras,
+                            sugestaoDataDevolucao: dtpDataDevolucao.Value
+                        );
+
+                        // abre modal com o EmprestimoForm como owner (ajuda posicionamento)
+                        var res = form.ShowDialog(this);
+
+                        if (res == DialogResult.OK)
+                        {
+                            // Reserva foi criada — recarrega listas/estado, e volta ao EmprestimoForm
+                            CarregarLivrosDoBanco();
+                            CarregarUsuariosDoBanco();
+                            MessageBox.Show("Reserva criada com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // opcional: limpa campos no EmprestimoForm se desejar
+                            LimparCampos();
+                        }
+                        else
+                        {
+                            // cancelado ou fechado — apenas retorne para o EmprestimoForm
+                            txtNomeUsuario.Focus();
+                        }
+                    }
                 }
                 return;
             }
+
+
+
 
             try
             {
@@ -298,6 +328,11 @@ namespace BibliotecaApp.Forms.Livros
             {
                 MessageBox.Show("Erro ao registrar empréstimo:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void reservaForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            reservaForm = null;
         }
         #endregion
 

@@ -1,0 +1,604 @@
+﻿// EmprestimoRapidoForm.cs
+using BibliotecaApp.Models;
+using BibliotecaApp.Services;
+using BibliotecaApp.Forms.Utils;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlServerCe;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+
+namespace BibliotecaApp.Forms.Livros
+{
+    public partial class EmprestimoRapidoForm : Form
+    {
+        private List<string> turmasCadastradas = new List<string>();
+        private List<string> livrosCadastrados = new List<string>();
+        private List<string> professoresCadastrados = new List<string>();
+
+        // Conexao (reaproveita padrão)
+        public static class Conexao
+        {
+            public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
+            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
+            public static SqlCeConnection ObterConexao() => new SqlCeConnection(Conectar);
+        }
+
+        public EmprestimoRapidoForm()
+        {
+            InitializeComponent();
+        }
+
+        private void EmprestimoRapidoForm_Load(object sender, EventArgs e)
+        {
+            // Carrega dados para sugestões (turmas, livros, professores) e bibliotecárias
+            CarregarSugestoesECombo();
+
+            // Default devolução: 2 horas depois
+            dtpDevolucao.Value = DateTime.Now.AddHours(2);
+            dtpDevolucao.Format = DateTimePickerFormat.Custom;
+            dtpDevolucao.CustomFormat = "dd/MM/yyyy HH:mm";
+
+            // Configura DataGrid
+            ConfigurarGridRapidos();
+            CarregarGridRapidos();
+
+            // Esconde listboxes inicialmente
+            lstSugestoesProfessor.Visible = false;
+            lstSugestoesLivro.Visible = false;
+            lstSugestoesTurma.Visible = false;
+        }
+
+        private void CarregarSugestoesECombo()
+        {
+            turmasCadastradas.Clear();
+            livrosCadastrados.Clear();
+            professoresCadastrados.Clear();
+            cbBibliotecaria.Items.Clear();
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+
+                    // Turmas (distinct)
+                    using (var cmd = new SqlCeCommand("SELECT DISTINCT Turma FROM Usuarios WHERE Turma IS NOT NULL AND Turma <> ''", conexao))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            turmasCadastradas.Add(reader.GetString(0));
+                        }
+                    }
+
+                    // Livros disponíveis
+                    using (var cmd = new SqlCeCommand("SELECT Nome FROM Livros WHERE Nome IS NOT NULL", conexao))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            livrosCadastrados.Add(reader.GetString(0));
+                        }
+                    }
+
+                    // Professores
+                    using (var cmd = new SqlCeCommand("SELECT Nome FROM Usuarios WHERE TipoUsuario LIKE '%Professor%'", conexao))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            professoresCadastrados.Add(reader.GetString(0));
+                        }
+                    }
+
+                    // Bibliotecárias (para combo)
+                    using (var cmd = new SqlCeCommand("SELECT Nome FROM Usuarios WHERE TipoUsuario = 'Bibliotecário(a)'", conexao))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            cbBibliotecaria.Items.Add(reader.GetString(0));
+                        }
+                    }
+
+                    // Se Sessao.NomeBibliotecariaLogada disponível, selecionar
+                    if (!string.IsNullOrWhiteSpace(Sessao.NomeBibliotecariaLogada))
+                    {
+                        int idx = cbBibliotecaria.Items.IndexOf(Sessao.NomeBibliotecariaLogada);
+                        if (idx >= 0) cbBibliotecaria.SelectedIndex = idx;
+                    }
+
+                    // fallback
+                    if (cbBibliotecaria.Items.Count == 0 && !string.IsNullOrWhiteSpace(Sessao.NomeBibliotecariaLogada))
+                    {
+                        cbBibliotecaria.Items.Add(Sessao.NomeBibliotecariaLogada);
+                        cbBibliotecaria.SelectedIndex = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar dados iniciais: " + ex.Message);
+            }
+        }
+
+        #region Autocomplete listboxes (Professor / Livro / Turma)
+        private void txtProfessor_TextChanged(object sender, EventArgs e)
+        {
+            var txt = txtProfessor.Text.Trim().ToLower();
+            lstSugestoesProfessor.Items.Clear();
+            if (string.IsNullOrWhiteSpace(txt)) { lstSugestoesProfessor.Visible = false; return; }
+
+            var sugest = professoresCadastrados.Where(x => x.ToLower().Contains(txt)).ToArray();
+            if (sugest.Any())
+            {
+                lstSugestoesProfessor.Items.AddRange(sugest);
+                lstSugestoesProfessor.Visible = true;
+            }
+            else lstSugestoesProfessor.Visible = false;
+        }
+
+        private void lstSugestoesProfessor_Click(object sender, EventArgs e)
+        {
+            if (lstSugestoesProfessor.SelectedItem != null)
+            {
+                txtProfessor.Text = lstSugestoesProfessor.SelectedItem.ToString();
+                lstSugestoesProfessor.Visible = false;
+            }
+        }
+
+        private void txtLivro_TextChanged(object sender, EventArgs e)
+        {
+            var txt = txtLivro.Text.Trim().ToLower();
+            lstSugestoesLivro.Items.Clear();
+            if (string.IsNullOrWhiteSpace(txt)) { lstSugestoesLivro.Visible = false; return; }
+
+            var sugest = livrosCadastrados.Where(x => x.ToLower().Contains(txt)).ToArray();
+            if (sugest.Any())
+            {
+                lstSugestoesLivro.Items.AddRange(sugest);
+                lstSugestoesLivro.Visible = true;
+            }
+            else lstSugestoesLivro.Visible = false;
+        }
+
+        private void lstSugestoesLivro_Click(object sender, EventArgs e)
+        {
+            if (lstSugestoesLivro.SelectedItem != null)
+            {
+                txtLivro.Text = lstSugestoesLivro.SelectedItem.ToString();
+                lstSugestoesLivro.Visible = false;
+            }
+        }
+
+        private void txtTurma_TextChanged(object sender, EventArgs e)
+        {
+            var txt = txtTurma.Text.Trim().ToLower();
+            lstSugestoesTurma.Items.Clear();
+            if (string.IsNullOrWhiteSpace(txt)) { lstSugestoesTurma.Visible = false; return; }
+
+            var sugest = turmasCadastradas.Where(x => x.ToLower().Contains(txt)).ToArray();
+            if (sugest.Any())
+            {
+                lstSugestoesTurma.Items.AddRange(sugest);
+                lstSugestoesTurma.Visible = true;
+            }
+            else lstSugestoesTurma.Visible = false;
+        }
+
+        private void lstSugestoesTurma_Click(object sender, EventArgs e)
+        {
+            if (lstSugestoesTurma.SelectedItem != null)
+            {
+                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
+                lstSugestoesTurma.Visible = false;
+            }
+        }
+        #endregion
+
+        #region Registrar Empréstimo Rápido
+        private void btnRegistrar_Click(object sender, EventArgs e)
+        {
+            // validações
+            if (string.IsNullOrWhiteSpace(txtProfessor.Text) ||
+                string.IsNullOrWhiteSpace(txtLivro.Text) ||
+                string.IsNullOrWhiteSpace(txtTurma.Text) ||
+                numQuantidade.Value <= 0 ||
+                cbBibliotecaria.SelectedItem == null)
+            {
+                MessageBox.Show("Preencha todos os campos obrigatórios.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+
+                    // checar livro e quantidade disponível
+                    int livroId;
+                    int quantidadeDisponivel;
+                    using (var cmd = new SqlCeCommand("SELECT Id, Quantidade FROM Livros WHERE Nome = @nome", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@nome", txtLivro.Text.Trim());
+                        using (var r = cmd.ExecuteReader())
+                        {
+                            if (!r.Read())
+                            {
+                                MessageBox.Show("Livro não encontrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                            livroId = Convert.ToInt32(r["Id"]);
+                            quantidadeDisponivel = Convert.ToInt32(r["Quantidade"]);
+                        }
+                    }
+
+                    int q = (int)numQuantidade.Value;
+                    if (q > quantidadeDisponivel)
+                    {
+                        MessageBox.Show($"Quantidade indisponível. Estoque atual: {quantidadeDisponivel}", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // obter professor id
+                    int professorId;
+                    using (var cmd = new SqlCeCommand("SELECT Id FROM Usuarios WHERE Nome = @nome AND TipoUsuario LIKE @tipo", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@nome", txtProfessor.Text.Trim());
+                        cmd.Parameters.AddWithValue("@tipo", "%Professor%");
+                        var obj = cmd.ExecuteScalar();
+                        if (obj == null)
+                        {
+                            MessageBox.Show("Professor não encontrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        professorId = Convert.ToInt32(obj);
+                    }
+
+                    // Inserir EmprestimoRapido
+                    string insertSql = @"INSERT INTO EmprestimoRapido
+    (ProfessorId, LivroId, Turma, Quantidade, DataHoraEmprestimo, DataHoraDevolucaoReal, Bibliotecaria, Status)
+    VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
+
+                    using (var cmd = new SqlCeCommand(insertSql, conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@prof", professorId);
+                        cmd.Parameters.AddWithValue("@livro", livroId);
+                        cmd.Parameters.AddWithValue("@turma", txtTurma.Text.Trim());
+                        cmd.Parameters.AddWithValue("@qt", q);
+                        cmd.Parameters.AddWithValue("@dataEmp", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@bibli", cbBibliotecaria.SelectedItem.ToString());
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Atualizar quantidade do livro
+                    int novaQuantidade = quantidadeDisponivel - q;
+                    bool disponivel = novaQuantidade > 0;
+                    using (var cmd = new SqlCeCommand("UPDATE Livros SET Quantidade = @qt, Disponibilidade = @disp WHERE Id = @id", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@qt", novaQuantidade);
+                        cmd.Parameters.AddWithValue("@disp", disponivel);
+                        cmd.Parameters.AddWithValue("@id", livroId);
+                        cmd.ExecuteNonQuery();
+                    }
+                } // using conexao
+
+                MessageBox.Show("Empréstimo rápido registrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimparCampos();
+                CarregarSugestoesECombo(); // recarrega quantidades / listas
+                CarregarGridRapidos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao registrar empréstimo rápido: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LimparCampos()
+        {
+            txtProfessor.Text = "";
+            txtLivro.Text = "";
+            txtTurma.Text = "";
+            numQuantidade.Value = 1;
+            dtpDevolucao.Value = DateTime.Now.AddHours(2);
+        }
+        #endregion
+
+        #region Grid: configurar / carregar / finalizar
+        private void ConfigurarGridRapidos()
+        {
+            dgvRapidos.SuspendLayout();
+            dgvRapidos.AutoGenerateColumns = false;
+            dgvRapidos.Columns.Clear();
+
+            DataGridViewTextBoxColumn AddTextCol(string prop, string hdr, int minw, DataGridViewContentAlignment align)
+            {
+                var c = new DataGridViewTextBoxColumn
+                {
+                    DataPropertyName = prop,
+                    Name = prop,
+                    HeaderText = hdr,
+                    ReadOnly = true,
+                    MinimumWidth = minw,
+                    DefaultCellStyle = new DataGridViewCellStyle { Alignment = align }
+                };
+                dgvRapidos.Columns.Add(c);
+                return c;
+            }
+
+            AddTextCol("Id", "ID", 40, DataGridViewContentAlignment.MiddleCenter);
+            AddTextCol("Professor", "Professor", 180, DataGridViewContentAlignment.MiddleLeft);
+            AddTextCol("Livro", "Livro", 200, DataGridViewContentAlignment.MiddleLeft);
+            AddTextCol("Turma", "Turma", 120, DataGridViewContentAlignment.MiddleLeft);
+            AddTextCol("Quantidade", "Qt", 60, DataGridViewContentAlignment.MiddleCenter);
+
+            var colEmp = AddTextCol("DataHoraEmprestimo", "Emprestado em", 150, DataGridViewContentAlignment.MiddleCenter);
+            colEmp.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
+            var colDev = AddTextCol("DataHoraDevolucaoPrevista", "Devolução (real)", 150, DataGridViewContentAlignment.MiddleCenter);
+            colDev.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
+
+
+            AddTextCol("Bibliotecaria", "Biblio.", 120, DataGridViewContentAlignment.MiddleLeft);
+            AddTextCol("Status", "Status", 100, DataGridViewContentAlignment.MiddleCenter);
+
+            var btnFinalizar = new DataGridViewButtonColumn
+            {
+                Name = "Finalizar",
+                HeaderText = "",
+                Text = "",
+                UseColumnTextForButtonValue = true,
+                Width = 90,
+                FlatStyle = FlatStyle.Flat
+            };
+            dgvRapidos.Columns.Add(btnFinalizar);
+
+            // styling (copiado do UsuarioForm)
+            dgvRapidos.BackgroundColor = Color.White;
+            dgvRapidos.BorderStyle = BorderStyle.None;
+            dgvRapidos.GridColor = Color.FromArgb(235, 239, 244);
+            dgvRapidos.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvRapidos.RowHeadersVisible = false;
+            dgvRapidos.ReadOnly = true;
+            dgvRapidos.MultiSelect = false;
+            dgvRapidos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvRapidos.AllowUserToAddRows = false;
+            dgvRapidos.AllowUserToDeleteRows = false;
+            dgvRapidos.AllowUserToResizeRows = false;
+
+            dgvRapidos.DefaultCellStyle.BackColor = Color.White;
+            dgvRapidos.DefaultCellStyle.ForeColor = Color.FromArgb(20, 42, 60);
+            dgvRapidos.DefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
+            dgvRapidos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(231, 238, 247);
+            dgvRapidos.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvRapidos.RowTemplate.Height = 40;
+            dgvRapidos.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
+
+            dgvRapidos.EnableHeadersVisualStyles = false;
+            dgvRapidos.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgvRapidos.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 61, 88);
+            dgvRapidos.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvRapidos.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 10.5f, FontStyle.Bold);
+            dgvRapidos.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvRapidos.ColumnHeadersHeight = 44;
+            dgvRapidos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvRapidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // double buffer
+            typeof(DataGridView).InvokeMember(
+                "DoubleBuffered",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.SetProperty,
+                null,
+                dgvRapidos,
+                new object[] { true });
+
+            dgvRapidos.ResumeLayout();
+        }
+
+        private void CarregarGridRapidos()
+        {
+            try
+            {
+                var tabela = new DataTable();
+                tabela.Columns.Add("Id", typeof(int));
+                tabela.Columns.Add("Professor", typeof(string));
+                tabela.Columns.Add("Livro", typeof(string));
+                tabela.Columns.Add("Turma", typeof(string));
+                tabela.Columns.Add("Quantidade", typeof(int));
+                tabela.Columns.Add("DataHoraEmprestimo", typeof(DateTime));
+                tabela.Columns.Add("DataHoraDevolucaoPrevista", typeof(DateTime));
+                tabela.Columns.Add("Bibliotecaria", typeof(string));
+                tabela.Columns.Add("Status", typeof(string));
+
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string sql = @"
+    SELECT r.Id, u.Nome as Professor, l.Nome as Livro, r.Turma, r.Quantidade,
+           r.DataHoraEmprestimo, r.DataHoraDevolucaoReal, r.Bibliotecaria, r.Status, r.LivroId
+    FROM EmprestimoRapido r
+    INNER JOIN Usuarios u ON r.ProfessorId = u.Id
+    INNER JOIN Livros l ON r.LivroId = l.Id
+    ORDER BY r.DataHoraEmprestimo DESC";
+
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var row = tabela.NewRow();
+                            row["Id"] = reader.GetInt32(0);
+                            row["Professor"] = reader.GetString(1);
+                            row["Livro"] = reader.GetString(2);
+                            row["Turma"] = reader.GetString(3);
+                            row["Quantidade"] = reader.GetInt32(4);
+                            row["DataHoraEmprestimo"] = reader.GetDateTime(5);
+
+                            if (!reader.IsDBNull(6))
+                                row["DataHoraDevolucaoPrevista"] = reader.GetDateTime(6); // coluna do DataTable (ver nota abaixo)
+                            else
+                                row["DataHoraDevolucaoPrevista"] = DBNull.Value;
+
+                            row["Bibliotecaria"] = reader.GetString(7);
+                            row["Status"] = reader.GetString(8);
+                            tabela.Rows.Add(row);
+                        }
+                    }
+
+                }
+
+                dgvRapidos.DataSource = tabela;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar empréstimos rápidos: " + ex.Message);
+            }
+        }
+
+        private void dgvRapidos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (dgvRapidos.Columns[e.ColumnIndex].Name != "Finalizar") return;
+
+            var row = dgvRapidos.Rows[e.RowIndex];
+            var status = row.Cells["Status"].Value?.ToString();
+            if (string.Equals(status, "Devolvido", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Empréstimo já finalizado.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var id = Convert.ToInt32(row.Cells["Id"].Value);
+            var quantidade = Convert.ToInt32(row.Cells["Quantidade"].Value);
+            var livroNome = row.Cells["Livro"].Value?.ToString();
+
+            var confirm = MessageBox.Show($"Finalizar empréstimo rápido de \"{livroNome}\" (qt {quantidade})?", "Confirmar Devolução", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes) return;
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+
+                    // pegar LivroId e atualizar quantidade
+                    int livroId = -1;
+                    using (var cmd = new SqlCeCommand("SELECT LivroId FROM EmprestimoRapido WHERE Id = @id", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
+                        var obj = cmd.ExecuteScalar();
+                        if (obj == null)
+                            throw new Exception("Registro não encontrado.");
+                        livroId = Convert.ToInt32(obj);
+                    }
+
+                    // Atualiza registro EmprestimoRapido -> Status = Devolvido
+                    using (var cmd = new SqlCeCommand("UPDATE EmprestimoRapido SET Status = 'Devolvido', DataHoraDevolucaoReal = @dataReal WHERE Id = @id", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@dataReal", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Atualiza quantidade no Livros (repor)
+                    using (var cmd = new SqlCeCommand("SELECT Quantidade FROM Livros WHERE Id = @id", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@id", livroId);
+                        var obj = cmd.ExecuteScalar();
+                        int atual = obj != null ? Convert.ToInt32(obj) : 0;
+                        int novo = atual + quantidade;
+
+                        using (var cmd2 = new SqlCeCommand("UPDATE Livros SET Quantidade = @qt, Disponibilidade = @disp WHERE Id = @id", conexao))
+                        {
+                            cmd2.Parameters.AddWithValue("@qt", novo);
+                            cmd2.Parameters.AddWithValue("@disp", novo > 0);
+                            cmd2.Parameters.AddWithValue("@id", livroId);
+                            cmd2.ExecuteNonQuery();
+                        }
+                    }
+                }
+
+                MessageBox.Show("Empréstimo finalizado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CarregarSugestoesECombo();
+                CarregarGridRapidos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao finalizar empréstimo: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // CellPainting para desenhar botão arredondado (igual UsuarioForm)
+        private void dgvRapidos_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dgvRapidos.Columns[e.ColumnIndex].Name == "Finalizar")
+            {
+                e.PaintBackground(e.CellBounds, true);
+
+                Color corFundo = Color.FromArgb(30, 61, 88);
+                Color corTexto = Color.White;
+
+                int borderRadius = 8;
+                Rectangle rect = new Rectangle(e.CellBounds.X + 6, e.CellBounds.Y + 6,
+                                               e.CellBounds.Width - 12, e.CellBounds.Height - 12);
+
+                using (SolidBrush brush = new SolidBrush(corFundo))
+                using (Pen pen = new Pen(corFundo, 1))
+                {
+                    System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+                    path.AddArc(rect.X, rect.Y, borderRadius, borderRadius, 180, 90);
+                    path.AddArc(rect.Right - borderRadius, rect.Y, borderRadius, borderRadius, 270, 90);
+                    path.AddArc(rect.Right - borderRadius, rect.Bottom - borderRadius, borderRadius, borderRadius, 0, 90);
+                    path.AddArc(rect.X, rect.Bottom - borderRadius, borderRadius, borderRadius, 90, 90);
+                    path.CloseFigure();
+
+                    e.Graphics.FillPath(brush, path);
+                    e.Graphics.DrawPath(pen, path);
+                }
+
+                TextRenderer.DrawText(e.Graphics, "Finalizar",
+                    new Font("Segoe UI Semibold", 9F),
+                    rect,
+                    corTexto,
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+
+                e.Handled = true;
+            }
+        }
+
+        private void dgvRapidos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (dgvRapidos.Columns[e.ColumnIndex].Name != "Status") return;
+            if (e.Value == null) return;
+
+            var status = e.Value.ToString();
+            if (status.Equals("Atrasado", StringComparison.OrdinalIgnoreCase))
+            {
+                e.CellStyle.ForeColor = Color.FromArgb(178, 34, 34);
+                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+            }
+            else if (status.Equals("Ativo", StringComparison.OrdinalIgnoreCase))
+            {
+                e.CellStyle.ForeColor = Color.FromArgb(34, 139, 34);
+                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+            }
+            else if (status.Equals("Devolvido", StringComparison.OrdinalIgnoreCase))
+            {
+                e.CellStyle.ForeColor = Color.Gray;
+            }
+        }
+
+
+
+
+        #endregion
+
+       
+        
+    }
+}

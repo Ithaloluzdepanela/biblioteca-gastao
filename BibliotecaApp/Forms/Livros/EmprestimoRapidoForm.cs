@@ -49,6 +49,13 @@ namespace BibliotecaApp.Forms.Livros
             ConfigurarGridRapidos();
             CarregarGridRapidos();
 
+            numQuantidade.Text = "1"; // valor inicial
+            numQuantidade.KeyPress += numQuantidade_KeyPress;
+            numQuantidade.TextChanged += numQuantidade_TextChanged;
+
+           
+
+
             // Esconde listboxes inicialmente
             lstSugestoesProfessor.Visible = false;
             lstSugestoesLivro.Visible = false;
@@ -303,7 +310,7 @@ namespace BibliotecaApp.Forms.Livros
             if (string.IsNullOrWhiteSpace(txtProfessor.Text) ||
                 string.IsNullOrWhiteSpace(txtLivro.Text) ||
                 string.IsNullOrWhiteSpace(txtTurma.Text) ||
-                numQuantidade.Value <= 0 ||
+                !int.TryParse(numQuantidade.Text, out int qtd) || qtd <= 0 ||
                 cbBibliotecaria.SelectedItem == null)
             {
                 MessageBox.Show("Preencha todos os campos obrigatórios.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -334,8 +341,7 @@ namespace BibliotecaApp.Forms.Livros
                         }
                     }
 
-                    int q = (int)numQuantidade.Value;
-                    if (q > quantidadeDisponivel)
+                    if (qtd > quantidadeDisponivel)
                     {
                         MessageBox.Show($"Quantidade indisponível. Estoque atual: {quantidadeDisponivel}", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
@@ -358,22 +364,22 @@ namespace BibliotecaApp.Forms.Livros
 
                     // Inserir EmprestimoRapido
                     string insertSql = @"INSERT INTO EmprestimoRapido
-    (ProfessorId, LivroId, Turma, Quantidade, DataHoraEmprestimo, DataHoraDevolucaoReal, Bibliotecaria, Status)
-    VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
+(ProfessorId, LivroId, Turma, Quantidade, DataHoraEmprestimo, DataHoraDevolucaoReal, Bibliotecaria, Status)
+VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
 
                     using (var cmd = new SqlCeCommand(insertSql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@prof", professorId);
                         cmd.Parameters.AddWithValue("@livro", livroId);
                         cmd.Parameters.AddWithValue("@turma", txtTurma.Text.Trim());
-                        cmd.Parameters.AddWithValue("@qt", q);
+                        cmd.Parameters.AddWithValue("@qt", qtd);
                         cmd.Parameters.AddWithValue("@dataEmp", DateTime.Now);
                         cmd.Parameters.AddWithValue("@bibli", cbBibliotecaria.SelectedItem.ToString());
                         cmd.ExecuteNonQuery();
                     }
 
                     // Atualizar quantidade do livro
-                    int novaQuantidade = quantidadeDisponivel - q;
+                    int novaQuantidade = quantidadeDisponivel - qtd;
                     bool disponivel = novaQuantidade > 0;
                     using (var cmd = new SqlCeCommand("UPDATE Livros SET Quantidade = @qt, Disponibilidade = @disp WHERE Id = @id", conexao))
                     {
@@ -395,12 +401,13 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
+
         private void LimparCampos()
         {
             txtProfessor.Text = "";
             txtLivro.Text = "";
             txtTurma.Text = "";
-            numQuantidade.Value = 1;
+            numQuantidade.Text = "1";
 
         }
         #endregion
@@ -794,5 +801,40 @@ namespace BibliotecaApp.Forms.Livros
         }
         #endregion
 
+        private void numQuantidade_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numQuantidade_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+                e.Handled = true;// cancela caracteres não numéricos
+        }
+
+        private void numQuantidade_TextChanged(object sender, EventArgs e)
+        {
+            if (!int.TryParse(numQuantidade.Text, out int valor) || valor < 1)
+            {
+                
+                numQuantidade.SelectionStart = numQuantidade.Text.Length; // cursor no final
+            }
+        }
+
+        private void btnMais_Click(object sender, EventArgs e)
+        {
+            int valor = int.Parse(numQuantidade.Text);
+            valor++;
+            numQuantidade.Text = valor.ToString();
+
+        }
+
+        private void btnMenos_Click(object sender, EventArgs e)
+        {
+            int valor = int.Parse(numQuantidade.Text);
+            if (valor > 1)
+                valor--;
+            numQuantidade.Text = valor.ToString();
+        }
     }
 }

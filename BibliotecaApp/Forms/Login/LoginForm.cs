@@ -9,6 +9,9 @@ using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 using System.Windows.Forms;
 
 namespace BibliotecaApp.Forms.Login
@@ -166,6 +169,8 @@ namespace BibliotecaApp.Forms.Login
         #endregion
 
         #region Métodos de Atualização
+
+
         private async Task AtualizarStatusEmprestimosAsync()
         {
             using (var progressForm = new frmProgresso())
@@ -176,9 +181,134 @@ namespace BibliotecaApp.Forms.Login
                 {
                     AtualizarEmprestimos(progressForm);
                     AtualizarReservas(progressForm);
+
+                    //Retirar comentarios para ativar o envio semanal do relatorio!!!
+
+
+                    //---- Envio Semanal Relatorio ----
+
+
+                    if (!ControleSemanal.JaEnviadoEstaSemana())
+                    {
+//                        try
+//                        {
+//                            progressForm.AtualizarProgresso(90, "Gerando relatório semanal...");
+
+//                            using (var conexao = Conexao.ObterConexao())
+//                            {
+//                                conexao.Open();
+//                                string pdfPath = GerarRelatorioAtrasados(conexao);
+
+//                                progressForm.AtualizarProgresso(95, "Enviando relatório para secretaria...");
+
+//                                string assunto = $"📑 Relatório semanal de alunos não aptos - {DateTime.Now:dd/MM/yyyy}";
+//                                string corpo = $@"
+//<html>
+//<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+//    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+//        <h2 style='color: #2c3e50;'>📚 Biblioteca Monteiro Lobato</h2>
+//        <p>Prezada secretaria,</p>
+//        <p>Segue em anexo o relatório semanal de alunos que <strong>não estão aptos</strong> a retirar documentos,
+//           devido a <span style='color:#d35400; font-weight:bold;'>empréstimos em atraso</span>.</p>
+//        <p style='font-size: 16px;'><strong>📅 Data do relatório:</strong> {DateTime.Now:dd/MM/yyyy}</p>
+//        <p>O PDF anexo contém a lista de alunos e suas respectivas turmas.</p>
+//        <p style='margin-top:20px;'>Atenciosamente,<br/><strong>Sistema da Biblioteca</strong></p>
+//        <hr />
+//        <p style='font-size: 13px; color: #888;'>Este é um e-mail automático. Não responda a esta mensagem.</p>
+//    </div>
+//</body>
+//</html>";
+
+//                                EmailService.Enviar(
+//                                    "secretaria.79448@gmail.com", 
+//                                    assunto,
+//                                    corpo,
+//                                    pdfPath
+//                                );
+
+//                                // Registra envio no TXT
+//                                ControleSemanal.RegistrarEnvio();
+
+//                                progressForm.AtualizarProgresso(100, "Relatório semanal enviado com sucesso!");
+//                            }
+//                        }
+//                        catch
+//                        {
+//                            progressForm.AtualizarProgresso(100, "Falha ao enviar relatório.");
+//                        }
+                    }
                 });
             }
         }
+
+
+        // ---- PDF Relatorio Gerador ----
+        private string GerarRelatorioAtrasados(SqlCeConnection conexao)
+        {
+            string caminho = Path.Combine(Application.StartupPath, $"Relatorio_Atrasados_{DateTime.Now:yyyyMMdd}.pdf");
+
+            using (var fs = new FileStream(caminho, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                var doc = new Document(PageSize.A4, 40, 40, 40, 40);
+                PdfWriter.GetInstance(doc, fs);
+                doc.Open();
+
+                // Título
+                var titulo = new iTextSharp.text.Paragraph(
+                    "Relatório de Alunos NÃO Aptos a Retirar Documentos\n\n",
+                    new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 18f, iTextSharp.text.Font.BOLD, iTextSharp.text.BaseColor.DARK_GRAY)
+                )
+                { Alignment = iTextSharp.text.Element.ALIGN_CENTER };
+                doc.Add(titulo);
+
+                var data = new iTextSharp.text.Paragraph(
+                    $"Gerado em: {DateTime.Now:dd/MM/yyyy HH:mm}\n\n",
+                    new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 12f, iTextSharp.text.Font.ITALIC, new iTextSharp.text.BaseColor(128, 128, 128))
+                )
+                { Alignment = iTextSharp.text.Element.ALIGN_RIGHT };
+                doc.Add(data);
+
+                // Tabela (Nome, Turma)
+                PdfPTable tabela = new PdfPTable(2) { WidthPercentage = 100 };
+                tabela.SetWidths(new float[] { 3, 2 });
+
+                string[] headers = { "Nome", "Turma" };
+                foreach (var h in headers)
+                {
+                    var cell = new PdfPCell(new Phrase(h, new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 12, iTextSharp.text.Font.BOLD, BaseColor.WHITE)))
+                    {
+                        BackgroundColor = new BaseColor(30, 61, 88),
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        Padding = 5
+                    };
+                    tabela.AddCell(cell);
+                }
+
+                string sql = @"SELECT Nome, Turma FROM Usuarios u
+                       WHERE EXISTS (
+                           SELECT 1 FROM Emprestimo e
+                           WHERE e.Alocador = u.Id AND e.Status = 'Atrasado'
+                       )";
+
+                using (var cmd = new SqlCeCommand(sql, conexao))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        tabela.AddCell(reader["Nome"].ToString());
+                        tabela.AddCell(reader["Turma"].ToString());
+                    }
+                }
+
+                doc.Add(tabela);
+                doc.Close();
+            }
+
+            return caminho;
+        }
+
+
+
 
         private void AtualizarEmprestimos(frmProgresso progressForm)
         {
@@ -486,6 +616,9 @@ namespace BibliotecaApp.Forms.Login
 
             BibliotecaApp.Services.EmailService.Enviar(email, assunto, corpo);
         }
+
+
+
         #endregion
 
         #region Eventos de Teclado
@@ -517,6 +650,33 @@ namespace BibliotecaApp.Forms.Login
         private void gradientPanel1_Paint_1(object sender, PaintEventArgs e)
         {
             // Implementação alternativa do paint do gradientPanel
+        }
+        #endregion
+
+
+
+        #region ControleSemanal (TXT)
+        public static class ControleSemanal
+        {
+            private static readonly string txtPath = Path.Combine(Application.StartupPath, "EnvioRelatorioSemanal.txt");
+
+            public static bool JaEnviadoEstaSemana()
+            {
+                if (!File.Exists(txtPath)) return false;
+
+                string conteudo = File.ReadAllText(txtPath);
+                if (DateTime.TryParse(conteudo, out DateTime ultimaData))
+                {
+                    var diff = (DateTime.Now - ultimaData).TotalDays;
+                    return diff < 7; // menos de 7 dias = já enviou
+                }
+                return false;
+            }
+
+            public static void RegistrarEnvio()
+            {
+                File.WriteAllText(txtPath, DateTime.Now.ToString("yyyy-MM-dd"));
+            }
         }
         #endregion
 

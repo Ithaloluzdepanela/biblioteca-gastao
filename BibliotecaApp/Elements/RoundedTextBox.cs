@@ -14,8 +14,8 @@ using System.Windows.Forms;
         private bool useSystemPasswordChar = false;
         private Color _placeholderColor = Color.Gray;
         private Color currentBackColor;
-
-        private bool isMouseOver = false;
+    public bool internalUpdate = false;
+    private bool isMouseOver = false;
         private bool isFocused = false;
 
     public event EventHandler TextChanged
@@ -23,6 +23,7 @@ using System.Windows.Forms;
         add { innerTextBox.TextChanged += value; }
         remove { innerTextBox.TextChanged -= value; }
     }
+
 
     public RoundedTextBox()
         {
@@ -281,4 +282,18 @@ using System.Windows.Forms;
             set => innerTextBox.AutoCompleteCustomSource = value;
         }
 
+    [Category("Comportamento")]
+    [Browsable(true)]
+    [Description("Posição do cursor no texto.")]
+    public int SelectionStart
+    {
+        get => innerTextBox.SelectionStart;
+        set => innerTextBox.SelectionStart = value;
     }
+
+    
+
+   
+
+
+}

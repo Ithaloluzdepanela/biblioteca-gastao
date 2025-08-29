@@ -56,9 +56,9 @@
             this.panel1.Controls.Add(this.txtNome);
             this.panel1.Controls.Add(this.dgvUsuarios);
             this.panel1.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.panel1.Location = new System.Drawing.Point(94, 0);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1092, 845);
+            this.panel1.Size = new System.Drawing.Size(1280, 845);
             this.panel1.TabIndex = 3;
             // 
             // lblEmprestimo
@@ -68,7 +68,7 @@
             this.lblEmprestimo.BackColor = System.Drawing.Color.White;
             this.lblEmprestimo.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEmprestimo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblEmprestimo.Location = new System.Drawing.Point(485, 66);
+            this.lblEmprestimo.Location = new System.Drawing.Point(507, 95);
             this.lblEmprestimo.Name = "lblEmprestimo";
             this.lblEmprestimo.Size = new System.Drawing.Size(224, 25);
             this.lblEmprestimo.TabIndex = 112;
@@ -93,7 +93,7 @@
             "Ativo",
             "Atrasado"});
             this.cmbEmprestimo.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbEmprestimo.Location = new System.Drawing.Point(490, 94);
+            this.cmbEmprestimo.Location = new System.Drawing.Point(512, 126);
             this.cmbEmprestimo.Name = "cmbEmprestimo";
             this.cmbEmprestimo.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbEmprestimo.PlaceholderMargin = 10;
@@ -110,7 +110,7 @@
             this.btnFiltrar.ForeColor = System.Drawing.Color.White;
             this.btnFiltrar.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(944, 136);
+            this.btnFiltrar.Location = new System.Drawing.Point(1121, 117);
             this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
@@ -127,7 +127,7 @@
             this.label3.BackColor = System.Drawing.Color.White;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(781, 66);
+            this.label3.Location = new System.Drawing.Point(787, 95);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(122, 25);
             this.label3.TabIndex = 89;
@@ -153,7 +153,7 @@
             "Professor(a)",
             "Outros"});
             this.cmbTipoUsuario.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbTipoUsuario.Location = new System.Drawing.Point(786, 94);
+            this.cmbTipoUsuario.Location = new System.Drawing.Point(815, 126);
             this.cmbTipoUsuario.Name = "cmbTipoUsuario";
             this.cmbTipoUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbTipoUsuario.PlaceholderMargin = 10;
@@ -168,7 +168,7 @@
             this.label1.BackColor = System.Drawing.Color.White;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(32, 66);
+            this.label1.Location = new System.Drawing.Point(38, 95);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 25);
             this.label1.TabIndex = 87;
@@ -180,7 +180,7 @@
             this.Titulo.AutoSize = true;
             this.Titulo.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
             this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.Titulo.Location = new System.Drawing.Point(358, 9);
+            this.Titulo.Location = new System.Drawing.Point(452, 9);
             this.Titulo.Name = "Titulo";
             this.Titulo.Size = new System.Drawing.Size(447, 46);
             this.Titulo.TabIndex = 86;
@@ -200,7 +200,7 @@
             this.txtNome.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNome.Location = new System.Drawing.Point(37, 94);
+            this.txtNome.Location = new System.Drawing.Point(43, 123);
             this.txtNome.Name = "txtNome";
             this.txtNome.Padding = new System.Windows.Forms.Padding(7);
             this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
@@ -215,13 +215,13 @@
             // dgvUsuarios
             // 
             this.dgvUsuarios.AllowUserToAddRows = false;
-            this.dgvUsuarios.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dgvUsuarios.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgvUsuarios.Location = new System.Drawing.Point(37, 195);
+            this.dgvUsuarios.Location = new System.Drawing.Point(43, 196);
             this.dgvUsuarios.Name = "dgvUsuarios";
             this.dgvUsuarios.ReadOnly = true;
             this.dgvUsuarios.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dgvUsuarios.Size = new System.Drawing.Size(1023, 638);
+            this.dgvUsuarios.Size = new System.Drawing.Size(1194, 638);
             this.dgvUsuarios.TabIndex = 0;
             this.dgvUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUsuarios_CellContentClick);
             // 

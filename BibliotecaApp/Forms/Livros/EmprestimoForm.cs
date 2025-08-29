@@ -221,8 +221,10 @@ namespace BibliotecaApp.Forms.Livros
 
                     // Inserção do novo empréstimo
                     string sqlInserir = @"
-                INSERT INTO Emprestimo (Alocador, Livro, Responsavel, DataEmprestimo, DataDevolucao, DataProrrogacao, DataRealDevolucao, Status)
-                VALUES (@alocador, @livro, @responsavel, @dataEmprestimo, @dataDevolucao, NULL, NULL, 'Ativo')";
+    INSERT INTO Emprestimo 
+        (Alocador, Livro, Responsavel, DataEmprestimo, DataDevolucao, DataProrrogacao, DataRealDevolucao, Status, CodigoBarras)
+    VALUES 
+        (@alocador, @livro, @responsavel, @dataEmprestimo, @dataDevolucao, NULL, NULL, 'Ativo', @codigoBarras)";
 
                     using (var cmdInsert = new SqlCeCommand(sqlInserir, conexao))
                     {
@@ -230,10 +232,22 @@ namespace BibliotecaApp.Forms.Livros
                         cmdInsert.Parameters.AddWithValue("@livro", livro.Id);
                         cmdInsert.Parameters.AddWithValue("@responsavel", responsavel.Id);
                         cmdInsert.Parameters.AddWithValue("@dataEmprestimo", DateTime.Now);
-                        cmdInsert.Parameters.AddWithValue("@dataDevolucao", usuario.TipoUsuario == "Professor" ? DateTime.Now : dtpDataDevolucao.Value);
+
+                        var dataDevolucaoParaInserir = usuario.TipoUsuario == "Professor" ? DateTime.Now : dtpDataDevolucao.Value;
+                        cmdInsert.Parameters.AddWithValue("@dataDevolucao", dataDevolucaoParaInserir);
+
+                        // Prioriza texto do scanner; se vazio usa o código do livro; se ainda vazio grava string vazia ""
+                        string codigoBarras = !string.IsNullOrWhiteSpace(txtBarcode.Text)
+                            ? txtBarcode.Text.Trim()
+                            : (string.IsNullOrWhiteSpace(livro.CodigoDeBarras) ? "" : livro.CodigoDeBarras);
+
+                        // grava sempre uma string (vazia quando não existir)
+                        cmdInsert.Parameters.AddWithValue("@codigoBarras", codigoBarras);
 
                         cmdInsert.ExecuteNonQuery();
                     }
+
+
 
                     // Atualiza a quantidade e disponibilidade do livro
                     livro.Quantidade--;

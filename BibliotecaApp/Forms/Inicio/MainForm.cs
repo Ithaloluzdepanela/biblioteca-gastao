@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToggleSwitch;
@@ -31,7 +32,108 @@ namespace BibliotecaApp.Forms.Inicio
             btnIn();
         }
 
-        
+
+        private void ChecarMapeamentoPendenteAoInicializar()
+        {
+            try
+            {
+                string pasta = Path.Combine(Application.StartupPath, "AppData", "mapeamentoanual");
+                Directory.CreateDirectory(pasta);
+                string arquivoMap = Path.Combine(pasta, $"mapeamento_{DateTime.Now.Year}.txt");
+                string marcador = Path.Combine(pasta, "app_instalado_em.txt");
+
+                // primeira execução: criar marcador e não abrir mapeamento
+                if (!File.Exists(marcador))
+                {
+                    File.WriteAllText(marcador, DateTime.Now.Year.ToString());
+                    return;
+                }
+
+                // se existe arquivo de mapeamento e está pendente -> perguntar
+                if (File.Exists(arquivoMap))
+                {
+                    try
+                    {
+                        var json = File.ReadAllText(arquivoMap);
+                        using (var doc = JsonDocument.Parse(json))
+                        {
+                            if (doc.RootElement.TryGetProperty("Status", out var s) &&
+                                string.Equals(s.GetString(), "pendente", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var msg = $"Existe um mapeamento pendente para o ano {DateTime.Now.Year}.\nDeseja executar o mapeamento agora (Sim) ou lembrar depois (Não)?";
+                                var resp = MessageBox.Show(msg, "Mapeamento pendente", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                                if (resp == DialogResult.Yes)
+                                {
+                                    AbrirMapeamentoModal();
+                                }
+                                // se escolher "Não", nada acontece; aparecerá novamente no próximo startup
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // ignora erro de leitura para não bloquear app
+                    }
+                    return;
+                }
+
+                // se não existe arquivo de mapeamento e app_instalado_em existe com ano < anoAtual -> primeiro ano após instalação: abrir e gerar automaticamente
+                var instaladoStr = File.ReadAllText(marcador).Trim();
+                if (int.TryParse(instaladoStr, out int anoInstalado))
+                {
+                    var anoAtual = DateTime.Now.Year;
+                    if (anoInstalado < anoAtual)
+                    {
+                        var msg = $"É necessário realizar o mapeamento de turmas para o ano {anoAtual}.\nDeseja executar agora (Sim) ou mais tarde (Não)?";
+                        var resp = MessageBox.Show(msg, "Mapeamento Obrigatório", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                        if (resp == DialogResult.Yes)
+                        {
+                            AbrirMapeamentoModal();
+                        }
+                        // se escolher "Não", aparecerá novamente no próximo startup
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Erro checar mapeamento: {ex.Message}");
+            }
+        }
+
+        private void AbrirMapeamentoModal()
+        {
+            var mapeamentoForm = new BibliotecaApp.Forms.Usuario.MapeamentoDeTurmasWizardForm();
+
+            // Configurar como modal dialog
+            mapeamentoForm.StartPosition = FormStartPosition.CenterParent;
+            mapeamentoForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+            mapeamentoForm.MaximizeBox = false;
+            mapeamentoForm.MinimizeBox = false;
+            mapeamentoForm.ShowInTaskbar = false;
+
+            // Abrir como modal - não permite clicar fora
+            var resultado = mapeamentoForm.ShowDialog(this);
+
+            if (resultado == DialogResult.OK)
+            {
+                MessageBox.Show(
+                    "Mapeamento de turmas concluído com sucesso!",
+                    "Sucesso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else if (resultado == DialogResult.Cancel)
+            {
+                MessageBox.Show(
+                    "Mapeamento cancelado. Será solicitado novamente na próxima inicialização.",
+                    "Mapeamento Cancelado",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+        }
+
+
+
 
         #region Componentes de inicialização
 
@@ -527,7 +629,7 @@ namespace BibliotecaApp.Forms.Inicio
             }
             userLbl.Text = Sessao.NomeBibliotecariaLogada;
 
-
+            ChecarMapeamentoPendenteAoInicializar();
         }
 
         //Locomoção do painel

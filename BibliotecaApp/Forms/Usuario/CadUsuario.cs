@@ -659,7 +659,11 @@ VALUES
 
             // Determinar o tipo de turma
             string turmaLower = turmaDigitada.ToLower();
-            if (turmaLower.Contains("d"))
+           if (turmaLower.Contains("p"))
+            {
+                tipo = "Propedêutico";
+            }
+            else if (turmaLower.Contains("d"))
             {
                 tipo = "Desenvolvimento";
             }
@@ -667,10 +671,7 @@ VALUES
             {
                 tipo = "Agronegócio";
             }
-            else if (turmaLower.Contains("p"))
-            {
-                tipo = "Propedêutico";
-            }
+            
             else if (turmaLower.Contains("an"))
             {
                 tipo = "Ano";
@@ -989,5 +990,7 @@ VALUES
         {
             // Não é necessário implementação adicional
         }
+
+        
     }
 }

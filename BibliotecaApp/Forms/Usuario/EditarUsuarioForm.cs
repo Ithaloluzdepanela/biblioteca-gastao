@@ -1,4 +1,6 @@
 ﻿using BibliotecaApp.Forms.Livros;
+using BibliotecaApp.Models;
+using BibliotecaApp.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 
 namespace BibliotecaApp.Forms.Usuario
 {
@@ -128,6 +131,8 @@ namespace BibliotecaApp.Forms.Usuario
                 }
 
                 MessageBox.Show("Usuário atualizado com sucesso!");
+                LimparCampos();
+              
             }
             catch (Exception ex)
             {
@@ -157,7 +162,7 @@ namespace BibliotecaApp.Forms.Usuario
         }
 
 
-        
+
 
         private void btnExcluir_Click(object sender, EventArgs e)
         {
@@ -167,14 +172,127 @@ namespace BibliotecaApp.Forms.Usuario
                 return;
             }
 
-            var confirm = MessageBox.Show("Tem certeza que deseja excluir este usuário?", "Confirmação", MessageBoxButtons.YesNo);
-            if (confirm != DialogResult.Yes) return;
+            // Pedir a senha duas vezes usando o PasswordForm personalizado
+            string senha1 = ObterSenha("Confirmação de Senha", "Digite sua senha:");
+            if (string.IsNullOrEmpty(senha1))
+            {
+                MessageBox.Show("Operação cancelada.");
+                return;
+            }
+
+            string senha2 = ObterSenha("Confirmação de Senha", "Digite sua senha novamente para confirmar:");
+            if (string.IsNullOrEmpty(senha2))
+            {
+                MessageBox.Show("Operação cancelada.");
+                return;
+            }
+
+            if (senha1 != senha2)
+            {
+                MessageBox.Show("As senhas não coincidem. Operação cancelada.");
+                return;
+            }
+
+            // Verificar a senha do bibliotecário logado
+            if (!VerificarSenhaBibliotecaria(senha1))
+            {
+                MessageBox.Show("Senha incorreta. Operação cancelada.");
+                return;
+            }
 
             try
             {
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
+
+                    // Verificar se o usuário tem empréstimos ou reservas ativas
+                    string sqlVerificar = @"
+                SELECT COUNT(*) FROM Emprestimo WHERE Alocador = @id AND Status <> 'Devolvido'
+                UNION ALL
+                SELECT COUNT(*) FROM Reservas WHERE UsuarioId = @id AND Status IN ('Pendente', 'Disponível')";
+
+                    int emprestimosAtivos = 0;
+                    int reservasAtivas = 0;
+
+                    using (var cmdVerificar = new SqlCeCommand(sqlVerificar, conexao))
+                    {
+                        cmdVerificar.Parameters.AddWithValue("@id", _usuarioSelecionado.Id);
+
+                        using (var reader = cmdVerificar.ExecuteReader())
+                        {
+                            if (reader.Read()) emprestimosAtivos = reader.GetInt32(0);
+                            if (reader.Read()) reservasAtivas = reader.GetInt32(0);
+                        }
+                    }
+
+                    // Se houver empréstimos ou reservas ativas, mostrar aviso mais severo
+                    if (emprestimosAtivos > 0 || reservasAtivas > 0)
+                    {
+                        var resultado = MessageBox.Show(
+                            $"⚠️ ATENÇÃO: Este usuário possui registros ativos no sistema:\n\n" +
+                            $"- {emprestimosAtivos} empréstimo(s) ativo(s)\n" +
+                            $"- {reservasAtivas} reserva(s) ativa(s)\n\n" +
+                            $"A exclusão removerá TODOS os dados do usuario, mantendo somente registros do sistema..\n\n" +
+                            $"Tem CERTEZA ABSOLUTA que deseja excluir este usuário?",
+                            "ALERTA - Exclusão com Registros Ativos",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning,
+                            MessageBoxDefaultButton.Button2);
+
+                        if (resultado != DialogResult.Yes)
+                        {
+                            MessageBox.Show("Exclusão cancelada.");
+                            return;
+                        }
+
+                        // Aviso final para confirmação extrema
+                        var confirmacaoFinal = MessageBox.Show(
+                            "🚨 EXCLUSÃO IRREVERSÍVEL 🚨\n\n" +
+                            "Você está prestes a excluir um usuário com registros ativos.\n\n"  +
+                            "Esta ação NÃO PODE SER DESFEITA!\n\n" +
+                            "Confirmar exclusão definitiva?",
+                            "CONFIRMAÇÃO FINAL",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Error,
+                            MessageBoxDefaultButton.Button2);
+
+                        if (confirmacaoFinal != DialogResult.Yes)
+                        {
+                            MessageBox.Show("Exclusão cancelada.");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        // Confirmação normal para usuários sem registros ativos
+                        var confirm = MessageBox.Show(
+                            "Tem certeza que deseja excluir este usuário?\n\n" +
+                            "Todas os dados do usuario seram removidos, mantendo alguns registros do sistema.",
+                            "Confirmação de Exclusão",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question);
+
+                        if (confirm != DialogResult.Yes) return;
+                    }
+
+                    // Primeiro, excluir todas as reservas do usuário para evitar erro de chave estrangeira
+                    if (reservasAtivas > 0)
+                    {
+                        string sqlExcluirReservas = "DELETE FROM Reservas WHERE UsuarioId = @id";
+                        using (var cmdReservas = new SqlCeCommand(sqlExcluirReservas, conexao))
+                        {
+                            cmdReservas.Parameters.AddWithValue("@id", _usuarioSelecionado.Id);
+                            int reservasExcluidas = cmdReservas.ExecuteNonQuery();
+
+                            if (reservasExcluidas > 0)
+                            {
+                                MessageBox.Show($"{reservasExcluidas} reserva(s) do usuário foram removida(s).");
+                            }
+                        }
+                    }
+
+                    // Agora excluir o usuário
                     string sql = "DELETE FROM Usuarios WHERE Id = @id";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
@@ -183,19 +301,74 @@ namespace BibliotecaApp.Forms.Usuario
                     }
                 }
 
-                MessageBox.Show("Usuário excluído com sucesso!");
-                HabilitarCampos();
+                MessageBox.Show("Usuário excluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimparCampos();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao excluir: " + ex.Message);
+                MessageBox.Show("Erro ao excluir: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        
+        private string ObterSenha(string titulo, string mensagem)
+        {
+            using (var passwordForm = new PasswordForm())
+            {
+                passwordForm.Titulo = titulo;
+                passwordForm.Mensagem = mensagem;
 
-        
+                if (passwordForm.ShowDialog() == DialogResult.OK)
+                {
+                    return passwordForm.SenhaDigitada;
+                }
+            }
+            return null;
+        }
+
+        private bool VerificarSenhaBibliotecaria(string senha)
+        {
+            string nomeBibliotecaria = Sessao.NomeBibliotecariaLogada;
+            if (string.IsNullOrEmpty(nomeBibliotecaria))
+            {
+                MessageBox.Show("Nenhum bibliotecário está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string query = @"SELECT Senha_hash, Senha_salt FROM usuarios 
+                             WHERE Nome = @nome AND TipoUsuario LIKE '%Bibliotec%'";
+
+                    using (var comando = new SqlCeCommand(query, conexao))
+                    {
+                        comando.Parameters.AddWithValue("@nome", nomeBibliotecaria);
+                        using (var reader = comando.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                string hashSalvo = reader["Senha_hash"].ToString();
+                                string saltSalvo = reader["Senha_salt"].ToString();
+
+                                // Use a mesma classe de criptografia do login
+                                return CriptografiaSenha.VerificarSenha(senha, hashSalvo, saltSalvo);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao verificar senha: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return false;
+        }
+
+
+
         private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lstSugestoesUsuario.SelectedIndex >= 0)
@@ -586,5 +759,8 @@ namespace BibliotecaApp.Forms.Usuario
             // Desabilita campos inicialmente
             HabilitarCampos(false);
         }
+
+
+        
     }
 }

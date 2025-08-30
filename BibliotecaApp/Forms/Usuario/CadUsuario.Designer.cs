@@ -106,7 +106,7 @@
             this.panel1.Controls.Add(this.DataNascAst);
             this.panel1.Controls.Add(this.lblAvisoEmail);
             this.panel1.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.panel1.Location = new System.Drawing.Point(253, -20);
+            this.panel1.Location = new System.Drawing.Point(253, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(775, 885);
             this.panel1.TabIndex = 0;
@@ -210,6 +210,7 @@
             this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNome.PlaceholderMarginLeft = 12;
             this.txtNome.PlaceholderText = "Digite aqui o nome...";
+            this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(617, 40);
             this.txtNome.TabIndex = 63;
             this.txtNome.TextColor = System.Drawing.Color.Black;
@@ -259,7 +260,7 @@
             this.aviso.AutoSize = true;
             this.aviso.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.aviso.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(54)))), ((int)(((byte)(77)))));
-            this.aviso.Location = new System.Drawing.Point(273, 85);
+            this.aviso.Location = new System.Drawing.Point(273, 80);
             this.aviso.Name = "aviso";
             this.aviso.Size = new System.Drawing.Size(220, 25);
             this.aviso.TabIndex = 85;
@@ -338,6 +339,7 @@
             this.txtConfirmSenha.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtConfirmSenha.PlaceholderMarginLeft = 12;
             this.txtConfirmSenha.PlaceholderText = "Confirme a senha...";
+            this.txtConfirmSenha.SelectionStart = 0;
             this.txtConfirmSenha.Size = new System.Drawing.Size(617, 40);
             this.txtConfirmSenha.TabIndex = 71;
             this.txtConfirmSenha.TextColor = System.Drawing.Color.Black;
@@ -351,7 +353,7 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(250, 77);
+            this.label3.Location = new System.Drawing.Point(250, 72);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 40);
             this.label3.TabIndex = 86;
@@ -428,6 +430,7 @@
             this.txtEmail.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEmail.PlaceholderMarginLeft = 12;
             this.txtEmail.PlaceholderText = "Digite aqui o email...";
+            this.txtEmail.SelectionStart = 0;
             this.txtEmail.Size = new System.Drawing.Size(617, 40);
             this.txtEmail.TabIndex = 64;
             this.txtEmail.TextColor = System.Drawing.Color.Black;
@@ -455,6 +458,7 @@
             this.txtTurma.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTurma.PlaceholderMarginLeft = 12;
             this.txtTurma.PlaceholderText = "Digite aqui a turma...";
+            this.txtTurma.SelectionStart = 0;
             this.txtTurma.Size = new System.Drawing.Size(617, 40);
             this.txtTurma.TabIndex = 66;
             this.txtTurma.TextColor = System.Drawing.Color.Black;
@@ -512,6 +516,7 @@
             this.txtSenha.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSenha.PlaceholderMarginLeft = 12;
             this.txtSenha.PlaceholderText = "Digite aqui uma senha...";
+            this.txtSenha.SelectionStart = 0;
             this.txtSenha.Size = new System.Drawing.Size(617, 40);
             this.txtSenha.TabIndex = 69;
             this.txtSenha.TextColor = System.Drawing.Color.Black;
@@ -585,7 +590,7 @@
             this.Titulo.AutoSize = true;
             this.Titulo.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.Titulo.Location = new System.Drawing.Point(203, 45);
+            this.Titulo.Location = new System.Drawing.Point(203, 40);
             this.Titulo.Name = "Titulo";
             this.Titulo.Size = new System.Drawing.Size(365, 40);
             this.Titulo.TabIndex = 60;

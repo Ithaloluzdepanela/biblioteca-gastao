@@ -42,6 +42,7 @@
     <Reference Include="MaterialSkin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MaterialSkin.0.2.1\lib\MaterialSkin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -199,6 +200,12 @@
     </Compile>
     <Compile Include="Utils\Conexao.cs" />
     <Compile Include="Utils\CriptografiaSenha.cs" />
+    <Compile Include="Utils\PasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\PasswordForm.Designer.cs">
+      <DependentUpon>PasswordForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Elements\AnimatedToggle.resx">
       <DependentUpon>AnimatedToggle.cs</DependentUpon>
     </EmbeddedResource>
@@ -254,6 +261,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Usuario\UsuarioForm.resx">
       <DependentUpon>UsuarioForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utils\PasswordForm.resx">
+      <DependentUpon>PasswordForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

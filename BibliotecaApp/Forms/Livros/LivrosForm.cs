@@ -666,5 +666,10 @@ namespace BibliotecaApp.Forms.Livros
         */
 
         #endregion
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

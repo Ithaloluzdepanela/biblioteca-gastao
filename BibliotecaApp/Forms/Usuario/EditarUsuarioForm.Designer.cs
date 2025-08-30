@@ -53,9 +53,6 @@
             // 
             // panel2
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.panel2.AutoScroll = true;
-            this.panel2.AutoSize = true;
             this.panel2.BackColor = System.Drawing.Color.White;
             this.panel2.Controls.Add(this.lstSugestoesUsuario);
             this.panel2.Controls.Add(this.lblTipoUsuario);
@@ -79,7 +76,8 @@
             this.panel2.Controls.Add(this.mtxCPF);
             this.panel2.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.panel2.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.panel2.Location = new System.Drawing.Point(253, 0);
+            this.panel2.Location = new System.Drawing.Point(350, 0);
+            this.panel2.MaximumSize = new System.Drawing.Size(775, 2000);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(775, 845);
             this.panel2.TabIndex = 0;
@@ -90,7 +88,7 @@
             this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.lstSugestoesUsuario.FormattingEnabled = true;
             this.lstSugestoesUsuario.ItemHeight = 25;
-            this.lstSugestoesUsuario.Location = new System.Drawing.Point(82, 182);
+            this.lstSugestoesUsuario.Location = new System.Drawing.Point(81, 182);
             this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
             this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
@@ -105,7 +103,7 @@
             this.lblTipoUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTipoUsuario.AutoSize = true;
             this.lblTipoUsuario.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblTipoUsuario.Location = new System.Drawing.Point(74, 217);
+            this.lblTipoUsuario.Location = new System.Drawing.Point(78, 188);
             this.lblTipoUsuario.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTipoUsuario.Name = "lblTipoUsuario";
             this.lblTipoUsuario.Size = new System.Drawing.Size(50, 19);
@@ -193,6 +191,7 @@
             this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNomeUsuario.PlaceholderMarginLeft = 12;
             this.txtNomeUsuario.PlaceholderText = "Busque aqui o Nome do Usuário ...";
+            this.txtNomeUsuario.SelectionStart = 0;
             this.txtNomeUsuario.Size = new System.Drawing.Size(617, 40);
             this.txtNomeUsuario.TabIndex = 108;
             this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
@@ -247,6 +246,7 @@
             this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNome.PlaceholderMarginLeft = 12;
             this.txtNome.PlaceholderText = "";
+            this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(617, 40);
             this.txtNome.TabIndex = 91;
             this.txtNome.TextColor = System.Drawing.Color.Black;
@@ -340,6 +340,7 @@
             this.txtEmail.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEmail.PlaceholderMarginLeft = 12;
             this.txtEmail.PlaceholderText = "";
+            this.txtEmail.SelectionStart = 0;
             this.txtEmail.Size = new System.Drawing.Size(617, 40);
             this.txtEmail.TabIndex = 92;
             this.txtEmail.TextColor = System.Drawing.Color.Black;
@@ -368,6 +369,7 @@
             this.txtTurma.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTurma.PlaceholderMarginLeft = 12;
             this.txtTurma.PlaceholderText = "";
+            this.txtTurma.SelectionStart = 0;
             this.txtTurma.Size = new System.Drawing.Size(617, 40);
             this.txtTurma.TabIndex = 94;
             this.txtTurma.TextColor = System.Drawing.Color.Black;
@@ -452,7 +454,6 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

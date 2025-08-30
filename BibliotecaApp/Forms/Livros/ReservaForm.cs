@@ -1,9 +1,9 @@
-﻿using BibliotecaApp.Models;
+﻿using BibliotecaApp.Forms.Utils;
+using BibliotecaApp.Models;
 using BibliotecaApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -17,69 +17,30 @@ namespace BibliotecaApp.Forms.Livros
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
         private List<Livro> _cacheLivros = new List<Livro>();
 
-        // controle de hover para listbox
-        private int hoveredIndex = -1;
-
         public ReservaForm()
         {
             InitializeComponent();
 
             // eventos principais
             this.Load += ReservaForm_Load;
-
-            // liga handlers adicionais (alguns já estão no Designer; ligar aqui evita faltar)
-            txtNomeUsuario.TextChanged += txtNomeUsuario_TextChanged;
-            txtNomeUsuario.KeyDown += txtNomeUsuario_KeyDown;
-            txtNomeUsuario.Leave += txtNomeUsuario_Leave;
-
-            txtLivro.TextChanged += txtLivro_TextChanged;
-            txtLivro.KeyDown += txtLivro_KeyDown;
-            txtLivro.Leave += txtLivro_Leave;
-
             txtBarcode.Leave += txtBarcode_Leave;
-
             btnReservar.Click += btnReservar_Click;
-            btnCancelar.Click += btnCancelar_Click; // tratamento do botão cancelar
+            btnCancelar.Click += btnCancelar_Click;
 
-            // estilizar listboxes como no EmprestimoForm
-            EstilizarListBoxSugestao(lstSugestoesUsuario);
-            EstilizarListBoxSugestao(lstSugestoesLivros);
-
-            // assegura que handlers do designer estão conectados corretamente
-            lstSugestoesUsuario.Click -= lstSugestoesUsuario_Click;
-            lstSugestoesUsuario.Click += lstSugestoesUsuario_Click;
-            lstSugestoesUsuario.SelectedIndexChanged -= lstSugestoesUsuario_SelectedIndexChanged;
-            lstSugestoesUsuario.SelectedIndexChanged += lstSugestoesUsuario_SelectedIndexChanged;
-            lstSugestoesUsuario.KeyDown -= lstSugestoesUsuario_KeyDown;
-            lstSugestoesUsuario.KeyDown += lstSugestoesUsuario_KeyDown;
-
-            lstSugestoesLivros.Click -= lstSugestoesLivros_Click;
-            lstSugestoesLivros.Click += lstSugestoesLivros_Click;
-            lstSugestoesLivros.SelectedIndexChanged -= lstSugestoesLivros_SelectedIndexChanged;
-            lstSugestoesLivros.SelectedIndexChanged += lstSugestoesLivros_SelectedIndexChanged;
-            lstSugestoesLivros.KeyDown -= lstSugestoesLivros_KeyDown;
-            lstSugestoesLivros.KeyDown += lstSugestoesLivros_KeyDown;
+            
+           
         }
 
         private void ReservaForm_Load(object sender, EventArgs e)
         {
-            // garante alinhamento/ancoragem como solicitado
-            try
-            {
-                this.panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
-            }
-            catch { /* se o designer nomear diferente, ignore */ }
-
             CarregarDadosIniciais();
         }
 
         /// <summary>
         /// Preenche a reserva com informações vindas do formulário de empréstimo.
-        /// Chame antes de ShowDialog.
         /// </summary>
         public void PreFillFromEmprestimo(Usuarios usuario, Livro livro, Usuarios bibliotecaria, string codigoBarras, DateTime sugestaoDataDevolucao)
         {
-            // assegura dados carregados
             if (Usuarios.Count == 0 || Livros.Count == 0)
                 CarregarDadosIniciais();
 
@@ -92,7 +53,6 @@ namespace BibliotecaApp.Forms.Livros
             {
                 txtLivro.Text = livro.Nome;
                 txtBarcode.Text = !string.IsNullOrWhiteSpace(codigoBarras) ? codigoBarras : (livro.CodigoDeBarras ?? "");
-                lstSugestoesLivros.Visible = false;
             }
 
             if (bibliotecaria != null && !string.IsNullOrWhiteSpace(bibliotecaria.Nome))
@@ -244,30 +204,19 @@ namespace BibliotecaApp.Forms.Livros
 
             if (!ValidarSelecoes(usuario, livro, bibliotecaria)) return;
 
+            if (UsuarioTemQualquerReservaAtiva(usuario.Id)) return;
+
             if (!ValidarDisponibilidade(livro)) return;
 
             if (VerificarReservaAtiva(usuario.Id, livro.Id)) return;
 
             DateTime dataReserva = dtpDataReserva.Value;
 
-            bool ok = RegistrarReserva(usuario, livro, bibliotecaria, dataReserva);
-            if (ok)
-            {
-                MessageBox.Show("Reserva registrada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // retorna OK para o EmprestimoForm
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-            }
-            else
-            {
-                // RegistrarReserva já mostrou o erro interno; apenas mantenha o formulário aberto
-            }
+            RegistrarReserva(usuario, livro, bibliotecaria, dataReserva);
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            // Apenas fecha e retorna Cancel para o EmprestimoForm
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
@@ -310,15 +259,7 @@ namespace BibliotecaApp.Forms.Livros
             return true;
         }
 
-        #endregion
-
-        #region Banco: registrar / utilitários
-
-        /// <summary>
-        /// Registra a reserva e retorna true se tudo correu bem.
-        /// Não exibe MessageBox de sucesso — isso fica no chamador.
-        /// </summary>
-        private bool RegistrarReserva(Usuarios usuario, Livro livro, Usuarios bibliotecaria, DateTime dataReserva)
+        private void RegistrarReserva(Usuarios usuario, Livro livro, Usuarios bibliotecaria, DateTime dataReserva)
         {
             try
             {
@@ -329,10 +270,10 @@ namespace BibliotecaApp.Forms.Livros
                     var dataLimiteRetirada = dataDisponibilidade.AddDays(7);
 
                     string sql = @"
-                        INSERT INTO Reservas 
-                            (UsuarioId, LivroId, BibliotecariaId, DataReserva, DataDisponibilidade, DataLimiteRetirada, Status)
-                        VALUES
-                            (@usuarioId, @livroId, @bibliotecariaId, @DataReserva, @DataDisponibilidade, @DataLimiteRetirada, 'Pendente')";
+                INSERT INTO Reservas 
+                    (UsuarioId, LivroId, BibliotecariaId, DataReserva, DataDisponibilidade, DataLimiteRetirada, Status)
+                VALUES
+                    (@usuarioId, @livroId, @bibliotecariaId, @DataReserva, @DataDisponibilidade, @DataLimiteRetirada, 'Pendente')";
 
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
@@ -345,27 +286,94 @@ namespace BibliotecaApp.Forms.Livros
                         cmd.ExecuteNonQuery();
                     }
 
-                    // opcional: enviar email de confirmação (se existir EmailService)
-                    try
+                    MessageBox.Show("Reserva registrada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LimparCampos();
+
+                    if (!string.IsNullOrWhiteSpace(usuario.Email) && ValidarEmail(usuario.Email))
                     {
-                        if (!string.IsNullOrWhiteSpace(usuario.Email) && ValidarEmailStatic(usuario.Email))
-                        {
-                            string assunto = "Reserva criada - Biblioteca";
-                            string corpo = $"Olá {usuario.Nome}, sua reserva do livro '{livro.Nome}' foi registrada.";
-                            BibliotecaApp.Services.EmailService.Enviar(usuario.Email, assunto, corpo);
-                        }
+                        EnviarEmailConfirmacao(usuario, livro, dataReserva, dataDisponibilidade);
                     }
-                    catch
+                    else
                     {
-                        // não importa se o e-mail falhar — a reserva já foi salva
+                        MessageBox.Show("Reserva registrada, mas não foi possível enviar email de confirmação.\n" +
+                                      "Email do usuário inválido ou não cadastrado.",
+                                      "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
 
-                    return true;
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao registrar reserva: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao registrar reserva:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void EnviarEmailConfirmacao(Usuarios usuario, Livro livro, DateTime dataReserva, DateTime dataDisponibilidade)
+        {
+            try
+            {
+                string assunto = "📚 Reserva Confirmada - Biblioteca Monteiro Lobato";
+
+                string corpo = $@"
+                <html>
+                <body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+                    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+                        <h2 style='color: #2c3e50;'>Olá, {usuario.Nome} 👋</h2>
+                        
+                        <p>Sua reserva foi registrada com sucesso! Aqui estão os detalhes:</p>
+                        
+                        <div style='background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;'>
+                            <p><strong>📖 Livro:</strong> {livro.Nome}</p>
+                            <p><strong>✍️ Autor:</strong> {livro.Autor}</p>
+                            <p><strong>📅 Data da Reserva:</strong> {dataReserva:dd/MM/yyyy}</p>
+                            <p><strong>📅 Previsão de Disponibilidade:</strong> {dataDisponibilidade:dd/MM/yyyy}</p>
+                        </div>
+                        
+                        <p><strong>⏳ Aguarde:</strong> Assim que o livro estiver disponível, você será avisado por aqui.</p>
+                        
+                        <p style='margin-top: 20px;'>Você terá um prazo de 7 dias para retirar o livro após ele ficar disponível. Fique atento aos e-mails da biblioteca!</p>
+                        
+                        <hr style='margin: 30px 0; border: none; border-top: 1px solid #eee;' />
+                        
+                        <p style='font-size: 14px; color: #888;'>
+                            Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.<br>
+                            Por favor, não responda este e-mail.
+                        </p>
+                    </div>
+                </body>
+                </html>";
+
+                string email = usuario.Email?.Trim();
+                if (ValidarEmail(email))
+                {
+                    EmailService.Enviar(email, assunto, corpo);
+                }
+                else
+                {
+                    throw new Exception("Email inválido: " + email);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao enviar email de confirmação: {ex.Message}",
+                              "Erro no Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private bool ValidarEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+                return System.Text.RegularExpressions.Regex.IsMatch(email, pattern);
+            }
+            catch
+            {
                 return false;
             }
         }
@@ -485,133 +493,18 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
+        private void LimparCampos()
+        {
+            txtNomeUsuario.Text = "";
+            txtLivro.Text = "";
+            txtBarcode.Text = "";
+            dtpDataReserva.Value = DateTime.Today;
+        }
+
         #endregion
-
-        #region Autocomplete / ListBox handlers
-
-        private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
-        {
-            string nomeBusca = txtNomeUsuario.Text.Trim();
-            lstSugestoesUsuario.Items.Clear();
-            lstSugestoesUsuario.Visible = false;
-
-            if (string.IsNullOrWhiteSpace(nomeBusca)) return;
-
-            foreach (var u in _cacheUsuarios.Where(x => x.Nome.StartsWith(nomeBusca, StringComparison.OrdinalIgnoreCase)))
-            {
-                lstSugestoesUsuario.Items.Add($"{u.Nome} - {u.Turma}");
-            }
-
-            lstSugestoesUsuario.Visible = lstSugestoesUsuario.Items.Count > 0;
-        }
-
-        private void txtNomeUsuario_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (!lstSugestoesUsuario.Visible) return;
-            if (e.KeyCode == Keys.Down && lstSugestoesUsuario.SelectedIndex < lstSugestoesUsuario.Items.Count - 1)
-            {
-                e.Handled = true; lstSugestoesUsuario.SelectedIndex++;
-            }
-            else if (e.KeyCode == Keys.Up && lstSugestoesUsuario.SelectedIndex > 0)
-            {
-                e.Handled = true; lstSugestoesUsuario.SelectedIndex--;
-            }
-            else if (e.KeyCode == Keys.Enter && lstSugestoesUsuario.SelectedIndex >= 0)
-            {
-                e.Handled = true; SelecionarUsuarioDaLista();
-            }
-        }
-
-        private void txtNomeUsuario_Leave(object sender, EventArgs e)
-        {
-            if (!lstSugestoesUsuario.Focused) lstSugestoesUsuario.Visible = false;
-        }
-
-        private void lstSugestoesUsuario_Click(object sender, EventArgs e) => SelecionarUsuarioDaLista();
-        private void lstSugestoesUsuario_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter) { SelecionarUsuarioDaLista(); e.Handled = true; }
-        }
-        private void lstSugestoesUsuario_Leave(object sender, EventArgs e) => lstSugestoesUsuario.Visible = false;
-
-        // Esse handler é referenciado no Designer — garante compatibilidade
-        private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e) => SelecionarUsuarioDaLista();
-
-        private void SelecionarUsuarioDaLista()
-        {
-            if (lstSugestoesUsuario.SelectedIndex >= 0)
-            {
-                var text = lstSugestoesUsuario.SelectedItem.ToString();
-                var nome = text.Split(new[] { " - " }, StringSplitOptions.None)[0];
-                txtNomeUsuario.Text = nome;
-                lstSugestoesUsuario.Visible = false;
-                txtLivro.Focus();
-            }
-        }
-
-        // livros
-        private void txtLivro_TextChanged(object sender, EventArgs e)
-        {
-            string filtro = txtLivro.Text.Trim();
-            lstSugestoesLivros.Items.Clear();
-            lstSugestoesLivros.Visible = false;
-
-            if (string.IsNullOrWhiteSpace(filtro)) return;
-
-            foreach (var l in _cacheLivros.Where(x => x.Nome.StartsWith(filtro, StringComparison.OrdinalIgnoreCase)))
-            {
-                lstSugestoesLivros.Items.Add($"{l.Nome} - {l.Autor}");
-            }
-            lstSugestoesLivros.Visible = lstSugestoesLivros.Items.Count > 0;
-        }
-
-        private void txtLivro_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (!lstSugestoesLivros.Visible) return;
-            if (e.KeyCode == Keys.Down && lstSugestoesLivros.SelectedIndex < lstSugestoesLivros.Items.Count - 1)
-            {
-                e.Handled = true; lstSugestoesLivros.SelectedIndex++;
-            }
-            else if (e.KeyCode == Keys.Up && lstSugestoesLivros.SelectedIndex > 0)
-            {
-                e.Handled = true; lstSugestoesLivros.SelectedIndex--;
-            }
-            else if (e.KeyCode == Keys.Enter && lstSugestoesLivros.SelectedIndex >= 0)
-            {
-                e.Handled = true; SelecionarLivroDaLista();
-            }
-        }
-
-        private void txtLivro_Leave(object sender, EventArgs e)
-        {
-            if (!lstSugestoesLivros.Focused) lstSugestoesLivros.Visible = false;
-        }
-
-        private void lstSugestoesLivros_Click(object sender, EventArgs e) => SelecionarLivroDaLista();
-        private void lstSugestoesLivros_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter) { SelecionarLivroDaLista(); e.Handled = true; }
-        }
-        private void lstSugestoesLivros_Leave(object sender, EventArgs e) => lstSugestoesLivros.Visible = false;
-
-        // Esse handler é referenciado no Designer — garante compatibilidade
-        private void lstSugestoesLivros_SelectedIndexChanged(object sender, EventArgs e) => SelecionarLivroDaLista();
-
-        private void SelecionarLivroDaLista()
-        {
-            if (lstSugestoesLivros.SelectedIndex >= 0)
-            {
-                var text = lstSugestoesLivros.SelectedItem.ToString();
-                var nome = text.Split(new[] { " - " }, StringSplitOptions.None)[0];
-                txtLivro.Text = nome;
-                lstSugestoesLivros.Visible = false;
-                txtBarcode.Focus();
-            }
-        }
 
         private void txtBarcode_Leave(object sender, EventArgs e)
         {
-            // opcional: buscar informações do livro por barcode (se desejar)
             var codigo = txtBarcode.Text.Trim();
             if (string.IsNullOrEmpty(codigo)) return;
 
@@ -646,123 +539,71 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-        #endregion
+        #region Métodos estáticos auxiliares
 
-        #region ListBox styling (copiado do EmprestimoForm)
-
-        private void EstilizarListBoxSugestao(ListBox listBox)
+        public static bool ValidarEmailStatic(string email)
         {
-            listBox.DrawMode = DrawMode.OwnerDrawFixed;
-            listBox.Font = new Font("Segoe UI", 12, FontStyle.Regular);
-            listBox.ItemHeight = 40;
-
-            listBox.BackColor = Color.White;
-            listBox.ForeColor = Color.FromArgb(30, 61, 88);
-            listBox.BorderStyle = BorderStyle.FixedSingle;
-            listBox.IntegralHeight = false;
-
-            // (re)atribui para evitar handlers duplicados múltiplos ao reconstruir
-            listBox.DrawItem -= ListBoxSugestao_DrawItem;
-            listBox.DrawItem += ListBoxSugestao_DrawItem;
-
-            listBox.MouseMove -= ListBoxSugestao_MouseMove;
-            listBox.MouseMove += ListBoxSugestao_MouseMove;
-
-            listBox.MouseLeave -= ListBoxSugestao_MouseLeave;
-            listBox.MouseLeave += ListBoxSugestao_MouseLeave;
-        }
-
-        private void ListBoxSugestao_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            var listBox = sender as ListBox;
-            if (e.Index < 0) return;
-
-            bool hovered = (e.Index == hoveredIndex);
-
-            Color backColor = hovered ? Color.FromArgb(235, 235, 235) : Color.White;
-            Color textColor = Color.FromArgb(60, 60, 60);
-
-            using (SolidBrush b = new SolidBrush(backColor))
-                e.Graphics.FillRectangle(b, e.Bounds);
-
-            string text = listBox.Items[e.Index].ToString();
-            Font font = listBox.Font;
-            Rectangle textRect = new Rectangle(e.Bounds.Left + 12, e.Bounds.Top, e.Bounds.Width - 24, e.Bounds.Height);
-            TextRenderer.DrawText(e.Graphics, text, font, textRect, textColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
-
-            if (e.Index < listBox.Items.Count - 1)
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+            try
             {
-                using (Pen p = new Pen(Color.FromArgb(220, 220, 220)))
-                    e.Graphics.DrawLine(p, e.Bounds.Left + 8, e.Bounds.Bottom - 1, e.Bounds.Right - 8, e.Bounds.Bottom - 1);
+                string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+                return System.Text.RegularExpressions.Regex.IsMatch(email, pattern);
+            }
+            catch
+            {
+                return false;
             }
         }
 
-        private void ListBoxSugestao_MouseMove(object sender, MouseEventArgs e)
-        {
-            var listBox = sender as ListBox;
-            int index = listBox.IndexFromPoint(e.Location);
-            if (index != hoveredIndex)
-            {
-                hoveredIndex = index;
-                listBox.Invalidate();
-            }
-        }
-
-        private void ListBoxSugestao_MouseLeave(object sender, EventArgs e)
-        {
-            hoveredIndex = -1;
-            (sender as ListBox).Invalidate();
-        }
-
-        #endregion
-
-        #region Métodos estáticos auxiliares solicitados pelo build
-
-        /// <summary>
-        /// Envia e-mail informando que a reserva está disponível — versão "forte" que recebe modelos.
-        /// dataLimiteRetirada é opcional; se não informado, será dataDisponibilidade + 7 dias.
-        /// </summary>
-        public static void EnviarEmailDisponibilidadeStatic(Usuarios usuario, Livro livro, DateTime dataDisponibilidade, DateTime? dataLimiteRetirada = null)
+        public static void EnviarEmailDisponibilidadeStatic(Usuarios usuario, Livro livro, DateTime dataDisponibilidade, DateTime dataLimiteRetirada)
         {
             try
             {
-                if (usuario == null || string.IsNullOrWhiteSpace(usuario.Email))
-                    return;
-
-                if (!ValidarEmailStatic(usuario.Email))
-                    return;
-
-                DateTime dataLimite = dataLimiteRetirada ?? dataDisponibilidade.AddDays(7);
-
-                string assunto = $"📚 Reserva disponível: {(livro != null ? livro.Nome : "seu livro")}";
+                string assunto = "📚 Seu livro está disponível para retirada - Biblioteca Monteiro Lobato";
                 string corpo = $@"
-<html>
-<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
-    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
-        <h2 style='color: #2c3e50;'>Olá, {System.Net.WebUtility.HtmlEncode(usuario.Nome)} 👋</h2>
-        <p>Sua reserva do livro <strong>{(livro != null ? System.Net.WebUtility.HtmlEncode(livro.Nome) : "—")}</strong> já está disponível.</p>
-        <p><strong>📅 Data de disponibilidade:</strong> {dataDisponibilidade:dd/MM/yyyy}</p>
-        <p><strong>📅 Data limite para retirada:</strong> {dataLimite:dd/MM/yyyy}</p>
-        <p>Por favor, retire o exemplar dentro do prazo para não perder a reserva.</p>
-        <hr />
-        <p style='font-size: 14px; color: #888;'>Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.</p>
-    </div>
-</body>
-</html>";
+        <html>
+        <body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+            <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+                <h2 style='color: #2c3e50;'>Olá, {usuario.Nome} 👋</h2>
+                <p>O livro que você reservou está disponível para retirada!</p>
+                <div style='background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;'>
+                    <p><strong>📖 Livro:</strong> {livro.Nome}</p>
+                    <p><strong>✍️ Autor:</strong> {livro.Autor}</p>
+                    <p><strong>📅 Disponível a partir de:</strong> {dataDisponibilidade:dd/MM/yyyy}</p>
+                    <p><strong>⏰ Prazo para retirada:</strong> até {dataLimiteRetirada:dd/MM/yyyy}</p>
+                </div>
+                <p style='color: #d35400; font-weight: bold;'>
+                    Atenção: Você tem <u>7 dias</u> para retirar o livro a partir da data de disponibilidade.<br>
+                    Após esse prazo, a reserva será expirada автоматически.
+                </p>
+                <p>Compareça à biblioteca até a data limite para garantir seu exemplar.</p>
+                <hr style='margin: 30px 0; border: none; border-top: 1px solid #eee;' />
+                <p style='font-size: 14px; color: #888;'>
+                    Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.<br>
+                    Por favor, não responda este e-mail.
+                </p>
+            </div>
+        </body>
+        </html>";
 
-                // Usa EmailService existente (ajuste se seu EmailService precisar de parâmetros diferentes)
-                BibliotecaApp.Services.EmailService.Enviar(usuario.Email, assunto, corpo);
+                if (!string.IsNullOrWhiteSpace(usuario.Email) && ValidarEmailStatic(usuario.Email))
+                {
+                    BibliotecaApp.Services.EmailService.Enviar(usuario.Email, assunto, corpo);
+                }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Falha ao enviar email de disponibilidade: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine($"Erro ao enviar email de disponibilidade: {ex.Message}");
             }
         }
 
-        /// <summary>
-        /// Sobrecarga conveniente: aceita dados em strings (email, nomeUsuario, nomeLivro)
-        /// e converte em objetos internos antes de chamar a versão principal.
-        /// </summary>
+        public static void EnviarEmailDisponibilidadeStatic(Usuarios usuario, Livro livro, DateTime dataDisponibilidade, DateTime? dataLimiteRetirada = null)
+        {
+            DateTime dataLimite = dataLimiteRetirada ?? dataDisponibilidade.AddDays(7);
+            EnviarEmailDisponibilidadeStatic(usuario, livro, dataDisponibilidade, dataLimite);
+        }
+
         public static void EnviarEmailDisponibilidadeStatic(string email, string nomeUsuario, string nomeLivro, DateTime dataDisponibilidade, DateTime? dataLimiteRetirada = null)
         {
             var usuario = new Usuarios { Nome = nomeUsuario ?? "", Email = email ?? "" };
@@ -770,20 +611,128 @@ namespace BibliotecaApp.Forms.Livros
             EnviarEmailDisponibilidadeStatic(usuario, livro, dataDisponibilidade, dataLimiteRetirada);
         }
 
-        /// <summary>
-        /// Valida se um e-mail é válido (forma estática, usada em várias partes do projeto).
-        /// </summary>
-        public static bool ValidarEmailStatic(string email)
+        #endregion
+
+        #region Controle de reservas ativas
+
+        private bool UsuarioTemQualquerReservaAtiva(int usuarioId)
         {
-            if (string.IsNullOrWhiteSpace(email)) return false;
             try
             {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
+                using (var conexao = EmprestimoForm.Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string sql = @"SELECT COUNT(*) 
+                           FROM Reservas 
+                           WHERE UsuarioId = @usuarioId 
+                             AND Status IN ('Pendente','Disponível')";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@usuarioId", usuarioId);
+                        int count = (int)cmd.ExecuteScalar();
+
+                        if (count > 0)
+                        {
+                            MessageBox.Show(
+                                "Este usuário já possui uma reserva ativa no sistema. " +
+                                "Conclua ou espere a expiração antes de criar outra.",
+                                "Reserva já existente",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning
+                            );
+                            return true;
+                        }
+                    }
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                MessageBox.Show("Erro ao checar reservas do usuário: " + ex.Message,
+                    "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool UsuarioPossuiReservaAtiva(int usuarioId, out string tituloLivro)
+        {
+            tituloLivro = null;
+            try
+            {
+                using (var conexao = EmprestimoForm.Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string sql = @"
+                SELECT TOP 1 l.Nome
+                FROM Reservas r
+                INNER JOIN Livros l ON l.Id = r.LivroId
+                WHERE r.UsuarioId = @usuarioId
+                  AND r.Status IN ('Pendente','Disponível')";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@usuarioId", usuarioId);
+                        var r = cmd.ExecuteScalar();
+                        if (r != null && r != DBNull.Value)
+                        {
+                            tituloLivro = r.ToString();
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            return false;
+        }
+
+        #endregion
+
+        #region Atualização de Reservas (para uso no login)
+
+        public static void AtualizarReservas(frmProgresso progressForm, int totalOperacoes, ref int progressoAtual)
+        {
+            try
+            {
+                using (var conexao = EmprestimoForm.Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    // 1. Atualizar reservas quando o livro ficar disponível
+                    progressForm.AtualizarProgresso(progressoAtual++, "Verificando reservas...");
+                    string updateDisponivel = @"UPDATE Reservas
+                                              SET Status = 'Disponível',
+                                                  DataDisponibilidade = GETDATE(),
+                                                 DataLimiteRetirada = DATEADD(day, 3, GETDATE())
+                                             WHERE Status = 'Pendente'
+                                              AND LivroId IN (SELECT Id FROM Livros WHERE Disponibilidade = 1)";
+                    new SqlCeCommand(updateDisponivel, conexao).ExecuteNonQuery();
+
+                    // 2. Expirar reservas não retiradas em 3 dias
+                    progressForm.AtualizarProgresso(progressoAtual++, "Verificando prazos...");
+                    string updateExpiradas = @"UPDATE Reservas
+                                              SET Status = 'Expirada'
+                                             WHERE Status = 'Disponível'
+                                              AND DataLimiteRetirada < GETDATE()";
+                    new SqlCeCommand(updateExpiradas, conexao).ExecuteNonQuery();
+
+                    // 3. Liberar livros de reservas expiradas
+                    progressForm.AtualizarProgresso(progressoAtual++, "Liberando livros...");
+                    string liberarLivros = @"UPDATE Livros
+                                            SET Disponibilidade = 1
+                                           WHERE Id IN (
+                                               SELECT LivroId FROM Reservas
+                                                WHERE Status = 'Expirada'
+                                           )";
+                    new SqlCeCommand(liberarLivros, conexao).ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                progressForm.Invoke((MethodInvoker)(() =>
+                {
+                    MessageBox.Show($"Erro ao atualizar reservas: {ex.Message}",
+                                  "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }));
             }
         }
 

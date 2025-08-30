@@ -10,19 +10,42 @@ using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 
 namespace BibliotecaApp.Forms.Usuario
 {
     public partial class EditarUsuarioForm : Form
     {
         private Size originalSize;
+        private List<string> turmasCadastradas = new List<string>();
+
+        // Dicionário de turmas padrão
+        private Dictionary<string, string[]> dicionarioTurmas = new Dictionary<string, string[]>
+        {
+            { "Ano", new[] { "6° Ano", "7° Ano", "8° Ano", "9° Ano" } },
+            { "Desenvolvimento", new[] { "1° Desenvolvimento", "2° Desenvolvimento", "3° Desenvolvimento" } },
+            { "Agronegócio", new[] { "1° Agronegócio", "2° Agronegócio", "3° Agronegócio" } },
+            { "Propedêutico", new[] { "1° Propedêutico", "2° Propedêutico", "3° Propedêutico" } }
+        };
+
+        private List<string> todasTurmasPadrao;
+
         public EditarUsuarioForm()
         {
             InitializeComponent();
-         
+
+            this.KeyPreview = true;
+            this.KeyDown += EditarUsuarioForm_KeyDown;
+
+            // Adicionar eventos KeyDown para os controles individuais
+            txtNome.KeyDown += Control_KeyDown;
+            txtEmail.KeyDown += Control_KeyDown;
+            txtTurma.KeyDown += Control_KeyDown;
+            mtxCPF.KeyDown += Control_KeyDown;
+            mtxTelefone.KeyDown += Control_KeyDown;
+            dtpDataNasc.KeyDown += Control_KeyDown;
 
             EstilizarListBoxSugestao(lstSugestoesUsuario);
             originalSize = this.Size;
@@ -34,7 +57,59 @@ namespace BibliotecaApp.Forms.Usuario
             // Evento de resize
             this.Resize += EditarUsuarioForm_Resize;
 
+            // Inicializar lista de todas as turmas padrão
+            InicializarTurmasPadrao();
+
+            // Eventos para o autocomplete de Turma
+            txtTurma.KeyDown += txtTurma_KeyDown;
+            txtTurma.Leave += txtTurma_Leave;
+
+            lstSugestoesTurma.Click += lstSugestoesTurma_Click;
+            lstSugestoesTurma.KeyDown += lstSugestoesTurma_KeyDown;
+            lstSugestoesTurma.Leave += lstSugestoesTurma_Leave;
+
+            // Estilo do ListBox e z-order
+            EstilizarListBoxSugestao(lstSugestoesTurma);
+            lstSugestoesTurma.BringToFront();
         }
+        private void EditarUsuarioForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                this.SelectNextControl(this.ActiveControl, true, true, true, true);
+            }
+        }
+
+        private void Control_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                this.SelectNextControl((Control)sender, true, true, true, true);
+            }
+        }
+
+
+        private void lstSugestoesUsuario_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && lstSugestoesUsuario.SelectedItem != null)
+            {
+                e.SuppressKeyPress = true;
+                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+                this.SelectNextControl(txtTurma, true, true, true, true);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+            }
+        }
+
+        
 
         private void EditarUsuarioForm_Resize(object sender, EventArgs e)
         {
@@ -78,7 +153,7 @@ namespace BibliotecaApp.Forms.Usuario
         #endregion
 
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
-        private Usuarios _usuarioSelecionado;   
+        private Usuarios _usuarioSelecionado;
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
@@ -93,15 +168,35 @@ namespace BibliotecaApp.Forms.Usuario
                 return;
             }
 
+            // Verificar se houve alterações
+            bool haAlteracoes = VerificarAlteracoes();
+
+            if (!haAlteracoes)
+            {
+                MessageBox.Show("Nenhuma alteração foi feita.");
+                return;
+            }
+
+            // Mostrar mensagem de confirmação com as alterações
+            var mensagemConfirmacao = MontarMensagemConfirmacao();
+            var resultado = MessageBox.Show(mensagemConfirmacao, "Confirmar Alterações",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (resultado != DialogResult.Yes)
+            {
+                return;
+            }
+
+            // Resto do código de salvamento...
             try
             {
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
                     string sql = @"UPDATE usuarios SET 
-                            Nome = @nome, Email = @email, CPF = @cpf,
-                            DataNascimento = @data, Telefone = @tel, Turma = @turma
-                           WHERE Id = @id";
+                    Nome = @nome, Email = @email, CPF = @cpf,
+                    DataNascimento = @data, Telefone = @tel, Turma = @turma
+                   WHERE Id = @id";
 
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
@@ -132,7 +227,6 @@ namespace BibliotecaApp.Forms.Usuario
 
                 MessageBox.Show("Usuário atualizado com sucesso!");
                 LimparCampos();
-              
             }
             catch (Exception ex)
             {
@@ -140,11 +234,78 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
+        private bool VerificarAlteracoes()
+        {
+            // Verificar se algum campo foi alterado
+            bool nomeAlterado = txtNome.Text != _usuarioSelecionado.Nome;
+            bool emailAlterado = txtEmail.Text != _usuarioSelecionado.Email;
+            bool cpfAlterado = mtxCPF.Text != _usuarioSelecionado.CPF;
+
+            bool dataAlterada = dtpDataNasc.Value != (_usuarioSelecionado.DataNascimento == DateTime.MinValue ?
+                DateTime.Today : _usuarioSelecionado.DataNascimento);
+
+            bool telefoneAlterado = mtxTelefone.Text != _usuarioSelecionado.Telefone;
+            bool turmaAlterada = txtTurma.Text != _usuarioSelecionado.Turma;
+
+            return nomeAlterado || emailAlterado || cpfAlterado || dataAlterada || telefoneAlterado || turmaAlterada;
+        }
+
+        private string MontarMensagemConfirmacao()
+        {
+            var mensagem = new StringBuilder();
+            mensagem.AppendLine("Confirme as alterações a serem salvas:");
+            mensagem.AppendLine();
+
+            // Nome
+            if (txtNome.Text != _usuarioSelecionado.Nome)
+            {
+                mensagem.AppendLine($"Nome: {_usuarioSelecionado.Nome} → {txtNome.Text}");
+            }
+
+            // Email
+            if (txtEmail.Text != _usuarioSelecionado.Email)
+            {
+                mensagem.AppendLine($"Email: {_usuarioSelecionado.Email} → {txtEmail.Text}");
+            }
+
+            // CPF
+            if (mtxCPF.Text != _usuarioSelecionado.CPF)
+            {
+                mensagem.AppendLine($"CPF: {_usuarioSelecionado.CPF} → {mtxCPF.Text}");
+            }
+
+            // Data de Nascimento
+            DateTime dataOriginal = _usuarioSelecionado.DataNascimento == DateTime.MinValue ?
+                DateTime.Today : _usuarioSelecionado.DataNascimento;
+
+            if (dtpDataNasc.Value != dataOriginal)
+            {
+                mensagem.AppendLine($"Data Nasc.: {dataOriginal:dd/MM/yyyy} → {dtpDataNasc.Value:dd/MM/yyyy}");
+            }
+
+            // Telefone
+            if (mtxTelefone.Text != _usuarioSelecionado.Telefone)
+            {
+                mensagem.AppendLine($"Telefone: {_usuarioSelecionado.Telefone} → {mtxTelefone.Text}");
+            }
+
+            // Turma
+            if (txtTurma.Text != _usuarioSelecionado.Turma)
+            {
+                mensagem.AppendLine($"Turma: {_usuarioSelecionado.Turma} → {txtTurma.Text}");
+            }
+
+            mensagem.AppendLine();
+            mensagem.AppendLine("Deseja salvar estas alterações?");
+
+            return mensagem.ToString();
+        }
+
 
         private void SelecionarUsuario(int index)
         {
             _usuarioSelecionado = _cacheUsuarios[index];
-            
+
             txtNomeUsuario.Text = _usuarioSelecionado.Nome;
             lstSugestoesUsuario.Visible = false;
             AplicarConfiguracaoEdicaoUsuario();
@@ -160,9 +321,6 @@ namespace BibliotecaApp.Forms.Usuario
             lblTipoUsuario.Text = $"Tipo: {_usuarioSelecionado.TipoUsuario}";
             lblTipoUsuario.Visible = true;
         }
-
-
-
 
         private void btnExcluir_Click(object sender, EventArgs e)
         {
@@ -249,7 +407,7 @@ namespace BibliotecaApp.Forms.Usuario
                         // Aviso final para confirmação extrema
                         var confirmacaoFinal = MessageBox.Show(
                             "🚨 EXCLUSÃO IRREVERSÍVEL 🚨\n\n" +
-                            "Você está prestes a excluir um usuário com registros ativos.\n\n"  +
+                            "Você está prestes a excluir um usuário com registros ativos.\n\n" +
                             "Esta ação NÃO PODE SER DESFEITA!\n\n" +
                             "Confirmar exclusão definitiva?",
                             "CONFIRMAÇÃO FINAL",
@@ -367,8 +525,6 @@ namespace BibliotecaApp.Forms.Usuario
             return false;
         }
 
-
-
         private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lstSugestoesUsuario.SelectedIndex >= 0)
@@ -377,17 +533,18 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
-
-
-        
-
-
         private void txtNomeUsuario_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Down && lstSugestoesUsuario.Visible && lstSugestoesUsuario.Items.Count > 0)
             {
+                e.SuppressKeyPress = true;
                 lstSugestoesUsuario.Focus();
                 lstSugestoesUsuario.SelectedIndex = 0;
+            }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                this.SelectNextControl((Control)sender, true, true, true, true);
             }
         }
 
@@ -443,7 +600,6 @@ namespace BibliotecaApp.Forms.Usuario
 
         // Configurações de exibição para Edição de Usuário
 
-
         private void HabilitarCampos()
         {
             txtNome.Visible = true;
@@ -476,45 +632,28 @@ namespace BibliotecaApp.Forms.Usuario
         {
             HabilitarCampos();
             txtTurma.Visible = false;
-            
-          
-
             lblTurma.Visible = false;
-
-           
         }
 
         private void ConfigurarEdicaoParaProfessor()
         {
-            
+            HabilitarCampos();
             txtTurma.Visible = false;
-
-           
-            lblTurma.Visible=false;
-
-
+            lblTurma.Visible = false;
         }
 
         private void ConfigurarEdicaoParaAluno()
         {
             HabilitarCampos();
-        
-
-
-         
         }
 
         private void ConfigurarEdicaoParaOutros()
         {
-           
+            HabilitarCampos();
             txtEmail.Visible = false;
             txtTurma.Visible = false;
-
-
             lblTurma.Visible = false;
             lblEmail.Visible = false;
-
-           
         }
 
         private void AplicarConfiguracaoEdicaoUsuario()
@@ -548,6 +687,7 @@ namespace BibliotecaApp.Forms.Usuario
                 }
             }
         }
+
         private bool EmailValido(string email)
         {
             try
@@ -561,10 +701,7 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
-
         #region estilizacao listbox
-
-       
 
         private int hoveredIndex = -1;
 
@@ -618,10 +755,7 @@ namespace BibliotecaApp.Forms.Usuario
                 using (Pen p = new Pen(Color.FromArgb(220, 220, 220)))
                     e.Graphics.DrawLine(p, e.Bounds.Left + 8, e.Bounds.Bottom - 1, e.Bounds.Right - 8, e.Bounds.Bottom - 1);
             }
-
-
         }
-
 
         private void ListBoxSugestao_MouseMove(object sender, MouseEventArgs e)
         {
@@ -640,8 +774,6 @@ namespace BibliotecaApp.Forms.Usuario
             (sender as ListBox).Invalidate();
         }
         #endregion
-
-
 
         private void HabilitarCampos(bool ativo)
         {
@@ -706,9 +838,6 @@ namespace BibliotecaApp.Forms.Usuario
             HabilitarCampos(selecionado);
         }
 
-       
-        
-
         // No método LimparCampos ou quando não houver seleção:
         private void LimparCampos()
         {
@@ -733,14 +862,13 @@ namespace BibliotecaApp.Forms.Usuario
             _usuarioSelecionado = usuario;
             txtNomeUsuario.Text = usuario.Nome;
             txtNome.Text = usuario.Nome;
-            txtEmail.Text = usuario.Email;  
+            txtEmail.Text = usuario.Email;
             mtxCPF.Text = usuario.CPF;
             dtpDataNasc.Value = usuario.DataNascimento == DateTime.MinValue ? DateTime.Today : usuario.DataNascimento;
             mtxTelefone.Text = usuario.Telefone;
             txtTurma.Text = usuario.Turma;
             lblTipoUsuario.Text = $"Tipo: {usuario.TipoUsuario}";
             lblTipoUsuario.Visible = true;
-           
 
             AplicarConfiguracaoEdicaoUsuario();
             OnUsuarioSelecionado(true);
@@ -758,9 +886,298 @@ namespace BibliotecaApp.Forms.Usuario
 
             // Desabilita campos inicialmente
             HabilitarCampos(false);
+
+            // Carregar turmas do banco
+            CarregarTurmasDoBanco();
+        }
+
+        #region Métodos de Turma
+        private void InicializarTurmasPadrao()
+        {
+            todasTurmasPadrao = new List<string>();
+            foreach (var categoria in dicionarioTurmas.Values)
+            {
+                todasTurmasPadrao.AddRange(categoria);
+            }
+        }
+
+        private void CarregarTurmasDoBanco()
+        {
+            turmasCadastradas.Clear();
+
+            using (var conexao = Conexao.ObterConexao())
+            {
+                try
+                {
+                    conexao.Open();
+                    using (var comando = conexao.CreateCommand())
+                    {
+                        comando.CommandText = "SELECT DISTINCT Turma FROM usuarios WHERE Turma IS NOT NULL AND Turma <> ''";
+
+                        using (var leitor = comando.ExecuteReader())
+                        {
+                            while (leitor.Read())
+                            {
+                                turmasCadastradas.Add(leitor["Turma"].ToString());
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao carregar turmas: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    conexao.Close();
+                }
+            }
+        }
+
+        private string CorrigirTurma(string turmaDigitada)
+        {
+            if (string.IsNullOrWhiteSpace(turmaDigitada))
+                return turmaDigitada;
+
+            // Adicionar ° automaticamente se não tiver
+            if (!turmaDigitada.Contains("°") && Regex.IsMatch(turmaDigitada, @"^\d+"))
+            {
+                turmaDigitada = Regex.Replace(turmaDigitada, @"^(\d+)", "$1°");
+            }
+
+            // Extrair número e tipo
+            string numeroStr = "";
+            string tipo = "";
+            string numeroTurma = "";
+
+            // Extrair o número principal (antes do °)
+            Match matchNumero = Regex.Match(turmaDigitada, @"^(\d+)°");
+            if (matchNumero.Success)
+            {
+                numeroStr = matchNumero.Groups[1].Value;
+            }
+            else
+            {
+                // Se não encontrou o padrão com °, tentar sem °
+                matchNumero = Regex.Match(turmaDigitada, @"^(\d+)\s");
+                if (matchNumero.Success)
+                {
+                    numeroStr = matchNumero.Groups[1].Value;
+                    turmaDigitada = turmaDigitada.Replace(matchNumero.Value, matchNumero.Groups[1].Value + "° ");
+                }
+            }
+
+            // Determinar o tipo de turma
+            string turmaLower = turmaDigitada.ToLower();
+            if (turmaLower.Contains("d"))
+            {
+                tipo = "Desenvolvimento";
+            }
+            else if (turmaLower.Contains("ag"))
+            {
+                tipo = "Agronegócio";
+            }
+            else if (turmaLower.Contains("p"))
+            {
+                tipo = "Propedêutico";
+            }
+            else if (turmaLower.Contains("an"))
+            {
+                tipo = "Ano";
+            }
+
+            // Extrair número da turma (no final)
+            Match matchNumeroTurma = Regex.Match(turmaDigitada, @"(\d+)$");
+            if (matchNumeroTurma.Success)
+            {
+                numeroTurma = matchNumeroTurma.Value;
+            }
+
+            // Corrigir número principal se for impossível
+            if (!string.IsNullOrEmpty(numeroStr))
+            {
+                int numero;
+                if (int.TryParse(numeroStr, out numero))
+                {
+                    if (tipo == "Ano")
+                    {
+                        // Para turmas de Ano: 6° a 9°
+                        if (numero < 6) numero = 6;
+                        else if (numero > 9) numero = 9;
+                    }
+                    else if (!string.IsNullOrEmpty(tipo))
+                    {
+                        // Para outras turmas: 1° a 3°
+                        if (numero < 1) numero = 1;
+                        else if (numero > 3) numero = 3;
+                    }
+
+                    numeroStr = numero.ToString();
+                }
+            }
+
+            // Corrigir número da turma se for impossível
+            if (!string.IsNullOrEmpty(numeroTurma))
+            {
+                int numero;
+                if (int.TryParse(numeroTurma, out numero))
+                {
+                    if (numero < 1) numero = 1;
+                    // Não há limite máximo para o número da turma
+                    numeroTurma = numero.ToString();
+                }
+            }
+
+            // Montar turma corrigida
+            string turmaCorrigida = !string.IsNullOrEmpty(numeroStr) ? numeroStr + "°" : "";
+
+            if (!string.IsNullOrEmpty(tipo))
+            {
+                turmaCorrigida += " " + tipo;
+            }
+
+            if (!string.IsNullOrEmpty(numeroTurma))
+            {
+                turmaCorrigida += " " + numeroTurma;
+            }
+
+            return !string.IsNullOrEmpty(turmaCorrigida) ? turmaCorrigida.Trim() : turmaDigitada;
+        }
+
+        private void txtTurma_TextChanged(object sender, EventArgs e)
+        {
+            string texto = txtTurma.Text.Trim();
+
+            // Não aplicar correções automáticas durante a digitação para não atrapalhar o usuário
+            // Apenas mostrar sugestões baseadas nas turmas já cadastradas
+
+            if (string.IsNullOrEmpty(texto))
+            {
+                lstSugestoesTurma.Visible = false;
+                return;
+            }
+
+            // Buscar sugestões apenas nas turmas já cadastradas
+            var sugestoes = turmasCadastradas
+                .Where(t => t.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Distinct()
+                .OrderBy(t => t)
+                .ToList();
+
+            lstSugestoesTurma.Items.Clear();
+
+            if (sugestoes.Count > 0)
+            {
+                foreach (var s in sugestoes)
+                    lstSugestoesTurma.Items.Add(s);
+
+                int visibleItems = Math.Min(5, sugestoes.Count);
+                int extraPadding = 8;
+                lstSugestoesTurma.Height = visibleItems * lstSugestoesTurma.ItemHeight + extraPadding;
+                lstSugestoesTurma.Width = txtTurma.Width;
+                lstSugestoesTurma.Left = txtTurma.Left;
+                lstSugestoesTurma.Top = txtTurma.Bottom;
+                lstSugestoesTurma.Visible = true;
+            }
+            else
+            {
+                lstSugestoesTurma.Visible = false;
+            }
+        }
+
+        private void txtTurma_Leave(object sender, EventArgs e)
+        {
+            BeginInvoke(new Action(() =>
+            {
+                if (!lstSugestoesTurma.Focused)
+                {
+                    lstSugestoesTurma.Visible = false;
+
+                    string texto = txtTurma.Text.Trim();
+                    if (!string.IsNullOrEmpty(texto))
+                    {
+                        // Corrigir automaticamente a formatação ao sair do campo
+                        string turmaCorrigida = CorrigirTurma(texto);
+                        if (turmaCorrigida != texto)
+                        {
+                            txtTurma.Text = turmaCorrigida;
+                        }
+                    }
+                }
+            }));
+        }
+
+        private void lstSugestoesTurma_Click(object sender, EventArgs e)
+        {
+            if (lstSugestoesTurma.SelectedItem != null)
+            {
+                string turmaSelecionada = lstSugestoesTurma.SelectedItem.ToString();
+                txtTurma.Text = turmaSelecionada;
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+            }
+        }
+
+        private void txtTurma_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!lstSugestoesTurma.Visible || lstSugestoesTurma.Items.Count == 0)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+                return;
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesTurma.Focus();
+                if (lstSugestoesTurma.Items.Count > 0)
+                    lstSugestoesTurma.SelectedIndex = 0;
+            }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                if (lstSugestoesTurma.SelectedItem != null)
+                    txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
+                else if (lstSugestoesTurma.Items.Count > 0)
+                    txtTurma.Text = lstSugestoesTurma.Items[0].ToString();
+
+                lstSugestoesTurma.Visible = false;
+                this.SelectNextControl((Control)sender, true, true, true, true);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesTurma.Visible = false;
+            }
         }
 
 
-        
+        private void lstSugestoesTurma_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && lstSugestoesTurma.SelectedItem != null)
+            {
+                e.SuppressKeyPress = true;
+                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+                this.SelectNextControl(txtTurma, true, true, true, true);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+            }
+        }
+
+        private void lstSugestoesTurma_Leave(object sender, EventArgs e)
+        {
+            lstSugestoesTurma.Visible = false;
+        }
+        #endregion
     }
 }

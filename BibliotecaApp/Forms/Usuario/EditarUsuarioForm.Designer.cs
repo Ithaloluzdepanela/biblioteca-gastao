@@ -28,6 +28,7 @@
         private void InitializeComponent()
         {
             this.panel2 = new System.Windows.Forms.Panel();
+            this.lstSugestoesTurma = new System.Windows.Forms.ListBox();
             this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
             this.lblTipoUsuario = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -54,6 +55,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.lstSugestoesTurma);
             this.panel2.Controls.Add(this.lstSugestoesUsuario);
             this.panel2.Controls.Add(this.lblTipoUsuario);
             this.panel2.Controls.Add(this.label2);
@@ -82,6 +84,20 @@
             this.panel2.Size = new System.Drawing.Size(775, 845);
             this.panel2.TabIndex = 0;
             // 
+            // lstSugestoesTurma
+            // 
+            this.lstSugestoesTurma.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lstSugestoesTurma.Font = new System.Drawing.Font("Segoe UI", 14F);
+            this.lstSugestoesTurma.FormattingEnabled = true;
+            this.lstSugestoesTurma.ItemHeight = 25;
+            this.lstSugestoesTurma.Location = new System.Drawing.Point(81, 450);
+            this.lstSugestoesTurma.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.lstSugestoesTurma.Name = "lstSugestoesTurma";
+            this.lstSugestoesTurma.ScrollAlwaysVisible = true;
+            this.lstSugestoesTurma.Size = new System.Drawing.Size(618, 104);
+            this.lstSugestoesTurma.TabIndex = 132;
+            this.lstSugestoesTurma.Visible = false;
+            // 
             // lstSugestoesUsuario
             // 
             this.lstSugestoesUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -92,7 +108,7 @@
             this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
             this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
-            this.lstSugestoesUsuario.Size = new System.Drawing.Size(618, 129);
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(618, 104);
             this.lstSugestoesUsuario.TabIndex = 130;
             this.lstSugestoesUsuario.Visible = false;
             this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
@@ -134,7 +150,7 @@
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(5);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(149, 57);
-            this.btnCancelar.TabIndex = 128;
+            this.btnCancelar.TabIndex = 9;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = false;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
@@ -164,7 +180,7 @@
             this.btnSalvar.Margin = new System.Windows.Forms.Padding(5);
             this.btnSalvar.Name = "btnSalvar";
             this.btnSalvar.Size = new System.Drawing.Size(149, 57);
-            this.btnSalvar.TabIndex = 126;
+            this.btnSalvar.TabIndex = 8;
             this.btnSalvar.Text = "Salvar";
             this.btnSalvar.UseVisualStyleBackColor = false;
             this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
@@ -191,9 +207,11 @@
             this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNomeUsuario.PlaceholderMarginLeft = 12;
             this.txtNomeUsuario.PlaceholderText = "Busque aqui o Nome do Usuário ...";
+            this.txtNomeUsuario.SelectedText = "";
+            this.txtNomeUsuario.SelectionLength = 0;
             this.txtNomeUsuario.SelectionStart = 0;
             this.txtNomeUsuario.Size = new System.Drawing.Size(617, 40);
-            this.txtNomeUsuario.TabIndex = 108;
+            this.txtNomeUsuario.TabIndex = 1;
             this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
             this.txtNomeUsuario.UseSystemPasswordChar = false;
             this.txtNomeUsuario.TextChanged += new System.EventHandler(this.txtNomeUsuario_TextChanged);
@@ -221,7 +239,7 @@
             this.dtpDataNasc.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.dtpDataNasc.Name = "dtpDataNasc";
             this.dtpDataNasc.Size = new System.Drawing.Size(329, 33);
-            this.dtpDataNasc.TabIndex = 102;
+            this.dtpDataNasc.TabIndex = 7;
             // 
             // txtNome
             // 
@@ -246,9 +264,11 @@
             this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNome.PlaceholderMarginLeft = 12;
             this.txtNome.PlaceholderText = "";
+            this.txtNome.SelectedText = "";
+            this.txtNome.SelectionLength = 0;
             this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(617, 40);
-            this.txtNome.TabIndex = 91;
+            this.txtNome.TabIndex = 2;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
             // 
@@ -340,9 +360,11 @@
             this.txtEmail.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEmail.PlaceholderMarginLeft = 12;
             this.txtEmail.PlaceholderText = "";
+            this.txtEmail.SelectedText = "";
+            this.txtEmail.SelectionLength = 0;
             this.txtEmail.SelectionStart = 0;
             this.txtEmail.Size = new System.Drawing.Size(617, 40);
-            this.txtEmail.TabIndex = 92;
+            this.txtEmail.TabIndex = 3;
             this.txtEmail.TextColor = System.Drawing.Color.Black;
             this.txtEmail.UseSystemPasswordChar = false;
             // 
@@ -369,11 +391,14 @@
             this.txtTurma.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTurma.PlaceholderMarginLeft = 12;
             this.txtTurma.PlaceholderText = "";
+            this.txtTurma.SelectedText = "";
+            this.txtTurma.SelectionLength = 0;
             this.txtTurma.SelectionStart = 0;
             this.txtTurma.Size = new System.Drawing.Size(617, 40);
-            this.txtTurma.TabIndex = 94;
+            this.txtTurma.TabIndex = 4;
             this.txtTurma.TextColor = System.Drawing.Color.Black;
             this.txtTurma.UseSystemPasswordChar = false;
+            this.txtTurma.TextChanged += new System.EventHandler(this.txtTurma_TextChanged);
             // 
             // mtxTelefone
             // 
@@ -396,7 +421,7 @@
             this.mtxTelefone.Name = "mtxTelefone";
             this.mtxTelefone.Padding = new System.Windows.Forms.Padding(15, 6, 6, 6);
             this.mtxTelefone.Size = new System.Drawing.Size(329, 40);
-            this.mtxTelefone.TabIndex = 95;
+            this.mtxTelefone.TabIndex = 5;
             // 
             // lblNome
             // 
@@ -433,7 +458,7 @@
             this.mtxCPF.Name = "mtxCPF";
             this.mtxCPF.Padding = new System.Windows.Forms.Padding(18, 6, 6, 6);
             this.mtxCPF.Size = new System.Drawing.Size(329, 40);
-            this.mtxCPF.TabIndex = 96;
+            this.mtxCPF.TabIndex = 6;
             // 
             // EditarUsuarioForm
             // 
@@ -480,5 +505,6 @@
         public System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListBox lstSugestoesUsuario;
         private System.Windows.Forms.Label lblTipoUsuario;
+        private System.Windows.Forms.ListBox lstSugestoesTurma;
     }
 }

@@ -77,7 +77,7 @@
             this.label2.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(57, 48);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(367, 45);
+            this.label2.Size = new System.Drawing.Size(299, 37);
             this.label2.TabIndex = 10;
             this.label2.Text = "Faça login na sua conta.";
             // 
@@ -87,7 +87,7 @@
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(-2, 8);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(40, 17);
+            this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 11;
             this.label3.Text = "Email";
             // 
@@ -99,7 +99,7 @@
             this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEmail.Location = new System.Drawing.Point(3, 35);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(271, 23);
+            this.txtEmail.Size = new System.Drawing.Size(271, 19);
             this.txtEmail.TabIndex = 12;
             this.txtEmail.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtEmail_KeyDown);
             // 
@@ -145,7 +145,7 @@
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(-2, 8);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(45, 17);
+            this.label4.Size = new System.Drawing.Size(37, 13);
             this.label4.TabIndex = 11;
             this.label4.Text = "Senha";
             // 
@@ -157,7 +157,7 @@
             this.txtSenha.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSenha.Location = new System.Drawing.Point(3, 35);
             this.txtSenha.Name = "txtSenha";
-            this.txtSenha.Size = new System.Drawing.Size(271, 23);
+            this.txtSenha.Size = new System.Drawing.Size(271, 19);
             this.txtSenha.TabIndex = 12;
             this.txtSenha.UseSystemPasswordChar = true;
             this.txtSenha.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSenha_KeyDown);
@@ -166,9 +166,9 @@
             // 
             this.lblEsqueceuSenha.AutoSize = true;
             this.lblEsqueceuSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(154)))), ((int)(((byte)(245)))));
-            this.lblEsqueceuSenha.Location = new System.Drawing.Point(199, 365);
+            this.lblEsqueceuSenha.Location = new System.Drawing.Point(225, 365);
             this.lblEsqueceuSenha.Name = "lblEsqueceuSenha";
-            this.lblEsqueceuSenha.Size = new System.Drawing.Size(146, 20);
+            this.lblEsqueceuSenha.Size = new System.Drawing.Size(117, 15);
             this.lblEsqueceuSenha.TabIndex = 16;
             this.lblEsqueceuSenha.Text = "Esqueceu sua senha?";
             this.lblEsqueceuSenha.Click += new System.EventHandler(this.lblEsqueceuSenha_Click);
@@ -228,7 +228,7 @@
             this.label6.ForeColor = System.Drawing.Color.White;
             this.label6.Location = new System.Drawing.Point(3, 576);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(116, 23);
+            this.label6.Size = new System.Drawing.Size(91, 17);
             this.label6.TabIndex = 3;
             this.label6.Text = "InDev Version";
             // 
@@ -253,7 +253,7 @@
             this.bemVindo.ForeColor = System.Drawing.Color.White;
             this.bemVindo.Location = new System.Drawing.Point(158, 67);
             this.bemVindo.Name = "bemVindo";
-            this.bemVindo.Size = new System.Drawing.Size(179, 45);
+            this.bemVindo.Size = new System.Drawing.Size(147, 37);
             this.bemVindo.TabIndex = 1;
             this.bemVindo.Text = "Bem Vindo";
             // 
@@ -280,7 +280,7 @@
             // 
             // LoginForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(900, 600);

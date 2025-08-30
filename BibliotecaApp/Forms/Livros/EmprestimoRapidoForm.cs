@@ -1,5 +1,4 @@
-﻿// EmprestimoRapidoForm.cs
-using BibliotecaApp.Models;
+﻿using BibliotecaApp.Models;
 using BibliotecaApp.Services;
 using BibliotecaApp.Forms.Utils;
 using System;
@@ -9,6 +8,7 @@ using System.Data.SqlServerCe;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace BibliotecaApp.Forms.Livros
@@ -18,6 +18,17 @@ namespace BibliotecaApp.Forms.Livros
         private List<string> turmasCadastradas = new List<string>();
         private List<string> livrosCadastrados = new List<string>();
         private List<string> professoresCadastrados = new List<string>();
+
+        // Dicionário de turmas padrão
+        private Dictionary<string, string[]> dicionarioTurmas = new Dictionary<string, string[]>
+        {
+            { "Ano", new[] { "6° Ano", "7° Ano", "8° Ano", "9° Ano" } },
+            { "Desenvolvimento", new[] { "1° Desenvolvimento", "2° Desenvolvimento", "3° Desenvolvimento" } },
+            { "Agronegócio", new[] { "1° Agronegócio", "2° Agronegócio", "3° Agronegócio" } },
+            { "Propedêutico", new[] { "1° Propedêutico", "2° Propedêutico", "3° Propedêutico" } }
+        };
+
+        private List<string> todasTurmasPadrao;
 
         // Conexao (reaproveita padrão)
         public static class Conexao
@@ -36,6 +47,9 @@ namespace BibliotecaApp.Forms.Livros
 
         private void EmprestimoRapidoForm_Load(object sender, EventArgs e)
         {
+            // Inicializar lista de todas as turmas padrão
+            InicializarTurmasPadrao();
+
             //Limpeza Automatica Semanal
             LimparEmprestimosSemana();
             // Carrega dados para sugestões (turmas, livros, professores) e bibliotecárias
@@ -53,8 +67,13 @@ namespace BibliotecaApp.Forms.Livros
             numQuantidade.KeyPress += numQuantidade_KeyPress;
             numQuantidade.TextChanged += numQuantidade_TextChanged;
 
-           
+            // Eventos para o autocomplete de Turma
+            txtTurma.KeyDown += txtTurma_KeyDown;
+            txtTurma.Leave += txtTurma_Leave;
 
+            lstSugestoesTurma.Click += lstSugestoesTurma_Click;
+            lstSugestoesTurma.KeyDown += lstSugestoesTurma_KeyDown;
+            lstSugestoesTurma.Leave += lstSugestoesTurma_Leave;
 
             // Esconde listboxes inicialmente
             lstSugestoesProfessor.Visible = false;
@@ -66,6 +85,14 @@ namespace BibliotecaApp.Forms.Livros
             EstilizarListBoxSugestao(lstSugestoesTurma);
         }
 
+        private void InicializarTurmasPadrao()
+        {
+            todasTurmasPadrao = new List<string>();
+            foreach (var categoria in dicionarioTurmas.Values)
+            {
+                todasTurmasPadrao.AddRange(categoria);
+            }
+        }
 
         private void EmprestimoRapidoForm_KeyDown(object sender, KeyEventArgs e)
         {
@@ -85,7 +112,6 @@ namespace BibliotecaApp.Forms.Livros
                 }
             }
         }
-
 
         private void LimparEmprestimosSemana()
         {
@@ -142,9 +168,6 @@ namespace BibliotecaApp.Forms.Livros
                 MessageBox.Show("Erro ao limpar empréstimos rápidos: " + ex.Message);
             }
         }
-
-
-
 
         private void CarregarSugestoesECombo()
         {
@@ -229,7 +252,266 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-        #region Autocomplete listboxes (Professor / Livro / Turma)
+        #region Métodos de Turma
+        private string CorrigirTurma(string turmaDigitada)
+        {
+            if (string.IsNullOrWhiteSpace(turmaDigitada))
+                return turmaDigitada;
+
+            // Adicionar ° automaticamente se não tiver
+            if (!turmaDigitada.Contains("°") && Regex.IsMatch(turmaDigitada, @"^\d+"))
+            {
+                turmaDigitada = Regex.Replace(turmaDigitada, @"^(\d+)", "$1°");
+            }
+
+            // Extrair número e tipo
+            string numeroStr = "";
+            string tipo = "";
+            string numeroTurma = "";
+
+            // Extrair o número principal (antes do °)
+            Match matchNumero = Regex.Match(turmaDigitada, @"^(\d+)°");
+            if (matchNumero.Success)
+            {
+                numeroStr = matchNumero.Groups[1].Value;
+            }
+            else
+            {
+                // Se não encontrou o padrão com °, tentar sem °
+                matchNumero = Regex.Match(turmaDigitada, @"^(\d+)\s");
+                if (matchNumero.Success)
+                {
+                    numeroStr = matchNumero.Groups[1].Value;
+                    turmaDigitada = turmaDigitada.Replace(matchNumero.Value, matchNumero.Groups[1].Value + "° ");
+                }
+            }
+
+            // Determinar o tipo de turma
+            string turmaLower = turmaDigitada.ToLower();
+            if (turmaLower.Contains("d"))
+            {
+                tipo = "Desenvolvimento";
+            }
+            else if (turmaLower.Contains("ag"))
+            {
+                tipo = "Agronegócio";
+            }
+            else if (turmaLower.Contains("p"))
+            {
+                tipo = "Propedêutico";
+            }
+            else if (turmaLower.Contains("an"))
+            {
+                tipo = "Ano";
+            }
+
+            // Extrair número da turma (no final)
+            Match matchNumeroTurma = Regex.Match(turmaDigitada, @"(\d+)$");
+            if (matchNumeroTurma.Success)
+            {
+                numeroTurma = matchNumeroTurma.Value;
+            }
+
+            // Corrigir número principal se for impossível
+            if (!string.IsNullOrEmpty(numeroStr))
+            {
+                int numero;
+                if (int.TryParse(numeroStr, out numero))
+                {
+                    if (tipo == "Ano")
+                    {
+                        // Para turmas de Ano: 6° a 9°
+                        if (numero < 6) numero = 6;
+                        else if (numero > 9) numero = 9;
+                    }
+                    else if (!string.IsNullOrEmpty(tipo))
+                    {
+                        // Para outras turmas: 1° a 3°
+                        if (numero < 1) numero = 1;
+                        else if (numero > 3) numero = 3;
+                    }
+
+                    numeroStr = numero.ToString();
+                }
+            }
+
+            // Corrigir número da turma se for impossível
+            if (!string.IsNullOrEmpty(numeroTurma))
+            {
+                int numero;
+                if (int.TryParse(numeroTurma, out numero))
+                {
+                    if (numero < 1) numero = 1;
+                    // Não há limite máximo para o número da turma
+                    numeroTurma = numero.ToString();
+                }
+            }
+
+            // Montar turma corrigida
+            string turmaCorrigida = !string.IsNullOrEmpty(numeroStr) ? numeroStr + "°" : "";
+
+            if (!string.IsNullOrEmpty(tipo))
+            {
+                turmaCorrigida += " " + tipo;
+            }
+
+            if (!string.IsNullOrEmpty(numeroTurma))
+            {
+                turmaCorrigida += " " + numeroTurma;
+            }
+
+            return !string.IsNullOrEmpty(turmaCorrigida) ? turmaCorrigida.Trim() : turmaDigitada;
+        }
+
+        private void txtTurma_TextChanged(object sender, EventArgs e)
+        {
+            string texto = txtTurma.Text.Trim();
+
+            // Aplicar máscara automática (número seguido de °)
+            if (!string.IsNullOrEmpty(texto) && char.IsDigit(texto[0]) && !texto.Contains("°"))
+            {
+                int i = 0;
+                while (i < texto.Length && char.IsDigit(texto[i]))
+                {
+                    i++;
+                }
+
+                if (i < texto.Length)
+                {
+                    txtTurma.Text = texto.Insert(i, "° ");
+                    txtTurma.SelectionStart = i + 2;
+                }
+                else
+                {
+                    txtTurma.Text = texto + "° ";
+                    txtTurma.SelectionStart = texto.Length + 2;
+                }
+                return;
+            }
+
+            // Buscar sugestões apenas nas turmas já cadastradas
+            var sugestoes = turmasCadastradas
+                .Where(t => t.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Distinct()
+                .OrderBy(t => t)
+                .ToList();
+
+            lstSugestoesTurma.Items.Clear();
+
+            if (sugestoes.Count > 0)
+            {
+                foreach (var s in sugestoes)
+                    lstSugestoesTurma.Items.Add(s);
+
+                int visibleItems = Math.Min(5, sugestoes.Count);
+                int extraPadding = 8;
+                lstSugestoesTurma.Height = visibleItems * lstSugestoesTurma.ItemHeight + extraPadding;
+                lstSugestoesTurma.Width = txtTurma.Width;
+                lstSugestoesTurma.Left = txtTurma.Left;
+                lstSugestoesTurma.Top = txtTurma.Bottom;
+                lstSugestoesTurma.Visible = true;
+            }
+            else
+            {
+                lstSugestoesTurma.Visible = false;
+            }
+        }
+
+        private void txtTurma_Leave(object sender, EventArgs e)
+        {
+            BeginInvoke(new Action(() =>
+            {
+                if (!lstSugestoesTurma.Focused)
+                {
+                    lstSugestoesTurma.Visible = false;
+
+                    string texto = txtTurma.Text.Trim();
+                    if (!string.IsNullOrEmpty(texto))
+                    {
+                        // Corrigir automaticamente a formatação ao sair do campo
+                        string turmaCorrigida = CorrigirTurma(texto);
+                        if (turmaCorrigida != texto)
+                        {
+                            txtTurma.Text = turmaCorrigida;
+                        }
+                    }
+                }
+            }));
+        }
+
+        private void lstSugestoesTurma_Click(object sender, EventArgs e)
+        {
+            if (lstSugestoesTurma.SelectedItem != null)
+            {
+                string turmaSelecionada = lstSugestoesTurma.SelectedItem.ToString();
+                txtTurma.Text = turmaSelecionada;
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+            }
+        }
+
+        private void txtTurma_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!lstSugestoesTurma.Visible || lstSugestoesTurma.Items.Count == 0)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+                return;
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesTurma.Focus();
+                if (lstSugestoesTurma.Items.Count > 0)
+                    lstSugestoesTurma.SelectedIndex = 0;
+            }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                if (lstSugestoesTurma.SelectedItem != null)
+                    txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
+                else if (lstSugestoesTurma.Items.Count > 0)
+                    txtTurma.Text = lstSugestoesTurma.Items[0].ToString();
+
+                lstSugestoesTurma.Visible = false;
+                this.SelectNextControl((Control)sender, true, true, true, true);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesTurma.Visible = false;
+            }
+        }
+
+        private void lstSugestoesTurma_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && lstSugestoesTurma.SelectedItem != null)
+            {
+                e.SuppressKeyPress = true;
+                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+                this.SelectNextControl(txtTurma, true, true, true, true);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesTurma.Visible = false;
+                txtTurma.Focus();
+            }
+        }
+
+        private void lstSugestoesTurma_Leave(object sender, EventArgs e)
+        {
+            lstSugestoesTurma.Visible = false;
+        }
+        #endregion
+
+        #region Autocomplete listboxes (Professor / Livro)
         private void txtProfessor_TextChanged(object sender, EventArgs e)
         {
             var txt = txtProfessor.Text.Trim().ToLower();
@@ -275,30 +557,6 @@ namespace BibliotecaApp.Forms.Livros
             {
                 txtLivro.Text = lstSugestoesLivro.SelectedItem.ToString();
                 lstSugestoesLivro.Visible = false;
-            }
-        }
-
-        private void txtTurma_TextChanged(object sender, EventArgs e)
-        {
-            var txt = txtTurma.Text.Trim().ToLower();
-            lstSugestoesTurma.Items.Clear();
-            if (string.IsNullOrWhiteSpace(txt)) { lstSugestoesTurma.Visible = false; return; }
-
-            var sugest = turmasCadastradas.Where(x => x.ToLower().Contains(txt)).ToArray();
-            if (sugest.Any())
-            {
-                lstSugestoesTurma.Items.AddRange(sugest);
-                lstSugestoesTurma.Visible = true;
-            }
-            else lstSugestoesTurma.Visible = false;
-        }
-
-        private void lstSugestoesTurma_Click(object sender, EventArgs e)
-        {
-            if (lstSugestoesTurma.SelectedItem != null)
-            {
-                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
-                lstSugestoesTurma.Visible = false;
             }
         }
         #endregion
@@ -401,14 +659,12 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
             }
         }
 
-
         private void LimparCampos()
         {
             txtProfessor.Text = "";
             txtLivro.Text = "";
             txtTurma.Text = "";
             numQuantidade.Text = "1";
-
         }
         #endregion
 
@@ -438,8 +694,8 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
             {
                 DataPropertyName = "Id",
                 Name = "Id",
-                HeaderText = "ID", 
-                Visible=false,
+                HeaderText = "ID",
+                Visible = false,
             };
             dgvRapidos.Columns.Add(colId);
 
@@ -465,8 +721,6 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
             colEmp.DefaultCellStyle.Format = "dd/MM HH:mm";
             var colDev = AddTextCol("DataHoraDevolucaoReal", "Devolução", 130, DataGridViewContentAlignment.MiddleLeft);
             colDev.DefaultCellStyle.Format = "dd/MM HH:mm";
-
-
 
             AddTextCol("Bibliotecaria", "Bibliotecaria", 120, DataGridViewContentAlignment.MiddleLeft);
             AddTextCol("Status", "Status", 100, DataGridViewContentAlignment.MiddleLeft);
@@ -496,7 +750,7 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
             dgvRapidos.AllowUserToAddRows = false;
             dgvRapidos.AllowUserToDeleteRows = false;
             dgvRapidos.AllowUserToResizeRows = false;
-           
+
 
             dgvRapidos.DefaultCellStyle.BackColor = Color.White;
             dgvRapidos.DefaultCellStyle.ForeColor = Color.FromArgb(20, 42, 60);
@@ -514,7 +768,7 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
             dgvRapidos.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dgvRapidos.ColumnHeadersHeight = 44;
             dgvRapidos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-         
+
             dgvRapidos.AllowUserToResizeColumns = false;
             dgvRapidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
 
@@ -615,7 +869,7 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
                 {
                     conexao.Open();
 
-                    // pegar LivroId e atualizar quantidade
+                    // pegar LivroId and atualizar quantidade
                     int livroId = -1;
                     using (var cmd = new SqlCeCommand("SELECT LivroId FROM EmprestimoRapido WHERE Id = @id", conexao))
                     {
@@ -778,10 +1032,7 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
                 using (Pen p = new Pen(Color.FromArgb(220, 220, 220)))
                     e.Graphics.DrawLine(p, e.Bounds.Left + 8, e.Bounds.Bottom - 1, e.Bounds.Right - 8, e.Bounds.Bottom - 1);
             }
-
-
         }
-
 
         private void ListBoxSugestao_MouseMove(object sender, MouseEventArgs e)
         {
@@ -816,7 +1067,7 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
         {
             if (!int.TryParse(numQuantidade.Text, out int valor) || valor < 1)
             {
-                
+
                 numQuantidade.SelectionStart = numQuantidade.Text.Length; // cursor no final
             }
         }

@@ -19,6 +19,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToggleSwitch;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace BibliotecaApp.Forms.Inicio
@@ -139,7 +140,7 @@ namespace BibliotecaApp.Forms.Inicio
 
         private void tamanho()
         {
-            this.Width = 1440; this.Height = 700;
+            this.Width = 1440; this.Height = 800;
         }
         private Size tamanhoOriginal;
         private Point localOriginal;
@@ -559,7 +560,14 @@ namespace BibliotecaApp.Forms.Inicio
         #region Control box
         private void picExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            const string msg = "Tem certeza de que quer fechar a Aplicação?";
+            const string box = "Confirmação de Encerramento";
+            var confirma = MessageBox.Show(msg, box, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirma == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+            
 
         }
 
@@ -570,11 +578,11 @@ namespace BibliotecaApp.Forms.Inicio
 
             if (maximizado == false)
             {
-                picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
+               picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
             }
             else
             {
-                picMax.BackgroundImage = Resources.icons8_verificar_todos_os_20;
+               picMax.BackgroundImage = Resources.icons8_verificar_todos_os_20;
             }
         }
         private void picMin_Click(object sender, EventArgs e)
@@ -635,11 +643,9 @@ namespace BibliotecaApp.Forms.Inicio
         //Locomoção do painel
         private void panelControl_MouseDown(object sender, MouseEventArgs e)
         {
-            if (maximizado == true)
-            {
-                AlternarMaximizado();
-                picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
-            }
+            maximizado = false;
+            picMax.BackgroundImage = Resources.icons8_quadrado_arredondado_20;
+            tamanho();
             ReleaseCapture();
             SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
         }
@@ -695,8 +701,7 @@ namespace BibliotecaApp.Forms.Inicio
 
 
 
-        #endregion
 
-        
+        #endregion
     }
 }

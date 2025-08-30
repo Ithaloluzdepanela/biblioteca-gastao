@@ -78,7 +78,7 @@
             // 
             this.lblErro.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblErro.ForeColor = System.Drawing.Color.Red;
-            this.lblErro.Location = new System.Drawing.Point(20, 140);
+            this.lblErro.Location = new System.Drawing.Point(20, 132);
             this.lblErro.Name = "lblErro";
             this.lblErro.Size = new System.Drawing.Size(360, 15);
             this.lblErro.TabIndex = 3;
@@ -106,6 +106,8 @@
             this.txtSenha.PlaceholderFont = new System.Drawing.Font("Segoe UI", 11.25F);
             this.txtSenha.PlaceholderMarginLeft = 12;
             this.txtSenha.PlaceholderText = "Digite sua senha...";
+            this.txtSenha.SelectedText = "";
+            this.txtSenha.SelectionLength = 0;
             this.txtSenha.SelectionStart = 0;
             this.txtSenha.Size = new System.Drawing.Size(360, 25);
             this.txtSenha.TabIndex = 64;

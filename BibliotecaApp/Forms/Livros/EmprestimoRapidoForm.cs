@@ -713,7 +713,7 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
             colDev.DefaultCellStyle.Format = "dd/MM HH:mm";
 
             AddTextCol("Bibliotecaria", "Bibliotecaria", 120, DataGridViewContentAlignment.MiddleLeft);
-            AddTextCol("Status", "Status", 100, DataGridViewContentAlignment.MiddleLeft);
+            AddTextCol("Status", "Status", 80, DataGridViewContentAlignment.MiddleLeft);
 
             var btnFinalizar = new DataGridViewButtonColumn
             {
@@ -721,7 +721,7 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
                 HeaderText = "",
                 Text = "",
                 UseColumnTextForButtonValue = true,
-                Width = 100,                   // largura fixa
+                Width = 90,                   // largura fixa
                 MinimumWidth = 70,            // impede encolher
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None, // impede crescer
                 FlatStyle = FlatStyle.Flat
@@ -1077,5 +1077,6 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
                 valor--;
             numQuantidade.Text = valor.ToString();
         }
+
     }
 }

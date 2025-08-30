@@ -29,8 +29,8 @@ namespace BibliotecaApp.Forms.Livros
             this.lstSugestoesTurma = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnMenos = new System.Windows.Forms.Button();
-            this.numQuantidade = new RoundedTextBox();
             this.btnMais = new System.Windows.Forms.Button();
+            this.numQuantidade = new RoundedTextBox();
             this.cbBibliotecaria = new RoundedComboBox();
             this.txtTurma = new RoundedTextBox();
             this.txtLivro = new RoundedTextBox();
@@ -138,7 +138,7 @@ namespace BibliotecaApp.Forms.Livros
             this.btnRegistrar.Location = new System.Drawing.Point(1000, 223);
             this.btnRegistrar.Name = "btnRegistrar";
             this.btnRegistrar.Size = new System.Drawing.Size(188, 68);
-            this.btnRegistrar.TabIndex = 6;
+            this.btnRegistrar.TabIndex = 9;
             this.btnRegistrar.Text = "REGISTRAR";
             this.btnRegistrar.UseVisualStyleBackColor = false;
             this.btnRegistrar.Click += new System.EventHandler(this.btnRegistrar_Click);
@@ -163,7 +163,7 @@ namespace BibliotecaApp.Forms.Livros
             this.lstSugestoesLivro.Location = new System.Drawing.Point(482, 182);
             this.lstSugestoesLivro.Name = "lstSugestoesLivro";
             this.lstSugestoesLivro.Size = new System.Drawing.Size(368, 109);
-            this.lstSugestoesLivro.TabIndex = 6;
+            this.lstSugestoesLivro.TabIndex = 4;
             this.lstSugestoesLivro.Visible = false;
             this.lstSugestoesLivro.Click += new System.EventHandler(this.lstSugestoesLivro_Click);
             // 
@@ -187,7 +187,7 @@ namespace BibliotecaApp.Forms.Livros
             this.lstSugestoesProfessor.Location = new System.Drawing.Point(69, 182);
             this.lstSugestoesProfessor.Name = "lstSugestoesProfessor";
             this.lstSugestoesProfessor.Size = new System.Drawing.Size(372, 109);
-            this.lstSugestoesProfessor.TabIndex = 3;
+            this.lstSugestoesProfessor.TabIndex = 2;
             this.lstSugestoesProfessor.Visible = false;
             this.lstSugestoesProfessor.Click += new System.EventHandler(this.lstSugestoesProfessor_Click);
             // 
@@ -198,7 +198,7 @@ namespace BibliotecaApp.Forms.Livros
             this.lstSugestoesTurma.Location = new System.Drawing.Point(69, 265);
             this.lstSugestoesTurma.Name = "lstSugestoesTurma";
             this.lstSugestoesTurma.Size = new System.Drawing.Size(372, 109);
-            this.lstSugestoesTurma.TabIndex = 9;
+            this.lstSugestoesTurma.TabIndex = 7;
             this.lstSugestoesTurma.Visible = false;
             this.lstSugestoesTurma.Click += new System.EventHandler(this.lstSugestoesTurma_Click);
             // 
@@ -231,6 +231,7 @@ namespace BibliotecaApp.Forms.Livros
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1280, 845);
             this.panel1.TabIndex = 0;
+           
             // 
             // btnMenos
             // 
@@ -244,6 +245,20 @@ namespace BibliotecaApp.Forms.Livros
             this.btnMenos.Text = "▼";
             this.btnMenos.UseVisualStyleBackColor = true;
             this.btnMenos.Click += new System.EventHandler(this.btnMenos_Click);
+            // 
+            // btnMais
+            // 
+            this.btnMais.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnMais.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
+            this.btnMais.Location = new System.Drawing.Point(945, 139);
+            this.btnMais.Margin = new System.Windows.Forms.Padding(0);
+            this.btnMais.Name = "btnMais";
+            this.btnMais.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.btnMais.Size = new System.Drawing.Size(18, 21);
+            this.btnMais.TabIndex = 96;
+            this.btnMais.Text = "▲";
+            this.btnMais.UseVisualStyleBackColor = true;
+            this.btnMais.Click += new System.EventHandler(this.btnMais_Click);
             // 
             // numQuantidade
             // 
@@ -266,26 +281,14 @@ namespace BibliotecaApp.Forms.Livros
             this.numQuantidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numQuantidade.PlaceholderMarginLeft = 12;
             this.numQuantidade.PlaceholderText = "";
+            this.numQuantidade.SelectedText = "";
+            this.numQuantidade.SelectionLength = 0;
             this.numQuantidade.SelectionStart = 0;
             this.numQuantidade.Size = new System.Drawing.Size(54, 40);
-            this.numQuantidade.TabIndex = 3;
+            this.numQuantidade.TabIndex = 5;
             this.numQuantidade.TextColor = System.Drawing.Color.Black;
             this.numQuantidade.UseSystemPasswordChar = false;
             this.numQuantidade.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numQuantidade_KeyPress);
-            // 
-            // btnMais
-            // 
-            this.btnMais.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnMais.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
-            this.btnMais.Location = new System.Drawing.Point(945, 139);
-            this.btnMais.Margin = new System.Windows.Forms.Padding(0);
-            this.btnMais.Name = "btnMais";
-            this.btnMais.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.btnMais.Size = new System.Drawing.Size(18, 21);
-            this.btnMais.TabIndex = 96;
-            this.btnMais.Text = "▲";
-            this.btnMais.UseVisualStyleBackColor = true;
-            this.btnMais.Click += new System.EventHandler(this.btnMais_Click);
             // 
             // cbBibliotecaria
             // 
@@ -307,7 +310,7 @@ namespace BibliotecaApp.Forms.Livros
             this.cbBibliotecaria.PlaceholderMargin = 10;
             this.cbBibliotecaria.PlaceholderText = "Selecione a bibliotecária ...";
             this.cbBibliotecaria.Size = new System.Drawing.Size(368, 34);
-            this.cbBibliotecaria.TabIndex = 5;
+            this.cbBibliotecaria.TabIndex = 8;
             // 
             // txtTurma
             // 
@@ -330,9 +333,11 @@ namespace BibliotecaApp.Forms.Livros
             this.txtTurma.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTurma.PlaceholderMarginLeft = 12;
             this.txtTurma.PlaceholderText = "Digite aqui a turma...";
+            this.txtTurma.SelectedText = "";
+            this.txtTurma.SelectionLength = 0;
             this.txtTurma.SelectionStart = 0;
             this.txtTurma.Size = new System.Drawing.Size(372, 40);
-            this.txtTurma.TabIndex = 4;
+            this.txtTurma.TabIndex = 6;
             this.txtTurma.TextColor = System.Drawing.Color.Black;
             this.txtTurma.UseSystemPasswordChar = false;
             this.txtTurma.TextChanged += new System.EventHandler(this.txtTurma_TextChanged);
@@ -358,9 +363,11 @@ namespace BibliotecaApp.Forms.Livros
             this.txtLivro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLivro.PlaceholderMarginLeft = 12;
             this.txtLivro.PlaceholderText = "Digite aqui o livro...";
+            this.txtLivro.SelectedText = "";
+            this.txtLivro.SelectionLength = 0;
             this.txtLivro.SelectionStart = 0;
             this.txtLivro.Size = new System.Drawing.Size(368, 40);
-            this.txtLivro.TabIndex = 2;
+            this.txtLivro.TabIndex = 3;
             this.txtLivro.TextColor = System.Drawing.Color.Black;
             this.txtLivro.UseSystemPasswordChar = false;
             this.txtLivro.TextChanged += new System.EventHandler(this.txtLivro_TextChanged);
@@ -386,6 +393,8 @@ namespace BibliotecaApp.Forms.Livros
             this.txtProfessor.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtProfessor.PlaceholderMarginLeft = 12;
             this.txtProfessor.PlaceholderText = "Digite aqui o professor...";
+            this.txtProfessor.SelectedText = "";
+            this.txtProfessor.SelectionLength = 0;
             this.txtProfessor.SelectionStart = 0;
             this.txtProfessor.Size = new System.Drawing.Size(372, 40);
             this.txtProfessor.TabIndex = 1;

@@ -118,8 +118,13 @@
 
 
 
+
+
+
             private void RelForm_Load(object sender, EventArgs e)
             {
+
+
 
                 EstilizarListBoxSugestao(lstSugestoesUsuario);
                 EstilizarListBoxSugestao(lstLivros);
@@ -339,92 +344,91 @@
                         // 1) Empréstimo (registro inicial)
                         if (!string.IsNullOrEmpty(tblEmprestimo))
                         {
-                            selects.Add($@"
-                                SELECT 
-                                    e.Id,
-                                    u.Nome AS NomeU,
-                                    l.Nome AS NomeL,
-                                    'Empréstimo' AS Acao,
-                                    e.DataEmprestimo AS DataAcao,
-                                    b.Nome AS Bibliotecaria
-                                FROM [{tblEmprestimo}] e
-                                LEFT JOIN [{tblUsuarios}] u ON e.Alocador = u.Id
-                                LEFT JOIN [{tblLivros}] l ON e.Livro = l.Id
-                                LEFT JOIN [{tblUsuarios}] b ON e.Responsavel = b.Id
-                                WHERE e.DataEmprestimo IS NOT NULL
-                            ");
-                        }
+                        selects.Add($@"
+        SELECT 
+            e.Id,
+            COALESCE(u.Nome, 'Excluído') AS NomeU,
+            l.Nome AS NomeL,
+            'Empréstimo' AS Acao,
+            e.DataEmprestimo AS DataAcao,
+            b.Nome AS Bibliotecaria
+        FROM [{tblEmprestimo}] e
+        LEFT JOIN [{tblUsuarios}] u ON e.Alocador = u.Id
+        LEFT JOIN [{tblLivros}] l ON e.Livro = l.Id
+        LEFT JOIN [{tblUsuarios}] b ON e.Responsavel = b.Id
+        WHERE e.DataEmprestimo IS NOT NULL
+    ");
+                    }
 
                         // 2) Devolução (quando DataRealDevolucao preenchida)
                         if (!string.IsNullOrEmpty(tblEmprestimo))
                         {
-                            selects.Add($@"
-                                SELECT 
-                                    e.Id,
-                                    u.Nome AS NomeU,
-                                    l.Nome AS NomeL,
-                                    'Devolução' AS Acao,
-                                    e.DataRealDevolucao AS DataAcao,
-                                    b.Nome AS Bibliotecaria
-                                FROM [{tblEmprestimo}] e
-                                LEFT JOIN [{tblUsuarios}] u ON e.Alocador = u.Id
-                                LEFT JOIN [{tblLivros}] l ON e.Livro = l.Id
-                                LEFT JOIN [{tblUsuarios}] b ON e.Responsavel = b.Id
-                                WHERE e.DataRealDevolucao IS NOT NULL
-                            ");
-                        }
+                        selects.Add($@"
+        SELECT 
+            e.Id,
+            COALESCE(u.Nome, 'Excluído') AS NomeU,
+            l.Nome AS NomeL,
+            'Devolução' AS Acao,
+            e.DataRealDevolucao AS DataAcao,
+            b.Nome AS Bibliotecaria
+        FROM [{tblEmprestimo}] e
+        LEFT JOIN [{tblUsuarios}] u ON e.Alocador = u.Id
+        LEFT JOIN [{tblLivros}] l ON e.Livro = l.Id
+        LEFT JOIN [{tblUsuarios}] b ON e.Responsavel = b.Id
+        WHERE e.DataRealDevolucao IS NOT NULL
+    ");
+                    }
 
                         // 3) Empréstimo Rápido
                         if (!string.IsNullOrEmpty(tblEmprestimoRapido))
                         {
-                            // Note: EmprestimoRapido armazena Bibliotecaria como texto e referencia ProfessorId e LivroId
-                            selects.Add($@"
-                                SELECT
-                                    r.Id,
-                                    u.Nome AS NomeU,
-                                    l.Nome AS NomeL,
-                                    'Empréstimo Rápido' AS Acao,
-                                    r.DataHoraEmprestimo AS DataAcao,
-                                    r.Bibliotecaria AS Bibliotecaria
-                                FROM [{tblEmprestimoRapido}] r
-                                LEFT JOIN [{tblUsuarios}] u ON r.ProfessorId = u.Id
-                                LEFT JOIN [{tblLivros}] l ON r.LivroId = l.Id
-                                WHERE r.DataHoraEmprestimo IS NOT NULL
-                            ");
-                            // também incluir devoluções de empr. rápido (se houver DataHoraDevolucaoReal)
-                            selects.Add($@"
-                                SELECT
-                                    r.Id,
-                                    u.Nome AS NomeU,
-                                    l.Nome AS NomeL,
-                                    'Devolução' AS Acao,
-                                    r.DataHoraDevolucaoReal AS DataAcao,
-                                    r.Bibliotecaria AS Bibliotecaria
-                                FROM [{tblEmprestimoRapido}] r
-                                LEFT JOIN [{tblUsuarios}] u ON r.ProfessorId = u.Id
-                                LEFT JOIN [{tblLivros}] l ON r.LivroId = l.Id
-                                WHERE r.DataHoraDevolucaoReal IS NOT NULL
-                            ");
-                        }
+                        selects.Add($@"
+        SELECT
+            r.Id,
+            COALESCE(u.Nome, 'Excluído') AS NomeU,
+            l.Nome AS NomeL,
+            'Empréstimo Rápido' AS Acao,
+            r.DataHoraEmprestimo AS DataAcao,
+            r.Bibliotecaria AS Bibliotecaria
+        FROM [{tblEmprestimoRapido}] r
+        LEFT JOIN [{tblUsuarios}] u ON r.ProfessorId = u.Id
+        LEFT JOIN [{tblLivros}] l ON r.LivroId = l.Id
+        WHERE r.DataHoraEmprestimo IS NOT NULL
+    ");
+
+                        selects.Add($@"
+        SELECT
+            r.Id,
+            COALESCE(u.Nome, 'Excluído') AS NomeU,
+            l.Nome AS NomeL,
+            'Devolução' AS Acao,
+            r.DataHoraDevolucaoReal AS DataAcao,
+            r.Bibliotecaria AS Bibliotecaria
+        FROM [{tblEmprestimoRapido}] r
+        LEFT JOIN [{tblUsuarios}] u ON r.ProfessorId = u.Id
+        LEFT JOIN [{tblLivros}] l ON r.LivroId = l.Id
+        WHERE r.DataHoraDevolucaoReal IS NOT NULL
+    ");
+                    }
 
                         // 4) Reservas
                         if (!string.IsNullOrEmpty(tblReservas))
                         {
-                            selects.Add($@"
-                                SELECT 
-                                    r.Id,
-                                    u.Nome AS NomeU,
-                                    l.Nome AS NomeL,
-                                    'Reserva' AS Acao,
-                                    r.DataReserva AS DataAcao,
-                                    b.Nome AS Bibliotecaria
-                                FROM [{tblReservas}] r
-                                LEFT JOIN [{tblUsuarios}] u ON r.UsuarioId = u.Id
-                                LEFT JOIN [{tblLivros}] l ON r.LivroId = l.Id
-                                LEFT JOIN [{tblUsuarios}] b ON r.BibliotecariaId = b.Id
-                                WHERE r.DataReserva IS NOT NULL
-                            ");
-                        }
+                        selects.Add($@"
+        SELECT 
+            r.Id,
+            COALESCE(u.Nome, 'Excluído') AS NomeU,
+            l.Nome AS NomeL,
+            'Reserva' AS Acao,
+            r.DataReserva AS DataAcao,
+            b.Nome AS Bibliotecaria
+        FROM [{tblReservas}] r
+        LEFT JOIN [{tblUsuarios}] u ON r.UsuarioId = u.Id
+        LEFT JOIN [{tblLivros}] l ON r.LivroId = l.Id
+        LEFT JOIN [{tblUsuarios}] b ON r.BibliotecariaId = b.Id
+        WHERE r.DataReserva IS NOT NULL
+    ");
+                    }
 
                         if (selects.Count == 0)
                         {
@@ -489,7 +493,8 @@
                             }
 
                             dgvHistorico.DataSource = tabela;
-                        }
+                        dgvHistorico.Refresh();
+                    }
                     }
                 }
                 catch (Exception ex)
@@ -577,11 +582,38 @@
                 );
 
                 dgvHistorico.ResumeLayout();
+
+            dgvHistorico.CellFormatting -= DgvHistorico_CellFormatting;
+            dgvHistorico.CellFormatting += DgvHistorico_CellFormatting;
+        }
+
+        private void DgvHistorico_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            // Verificar se é a coluna do nome do usuário
+            if (dgvHistorico.Columns[e.ColumnIndex].Name == "NomeU")
+            {
+                var cellValue = dgvHistorico.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
+
+                // Se o valor for "Excluído", aplicar formatação vermelha
+                if (cellValue == "Excluído")
+                {
+                    e.CellStyle.ForeColor = Color.Red;
+                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                }
+                else
+                {
+                    // Resetar para a formatação padrão
+                    e.CellStyle.ForeColor = dgvHistorico.DefaultCellStyle.ForeColor;
+                    e.CellStyle.Font = dgvHistorico.DefaultCellStyle.Font;
+                }
             }
+        }
 
 
-            #region estilizacao listbox
-            private int hoveredIndex = -1;
+        #region estilizacao listbox
+        private int hoveredIndex = -1;
 
             private void EstilizarListBoxSugestao(ListBox listBox)
             {
@@ -654,6 +686,8 @@
                 hoveredIndex = -1;
                 (sender as ListBox).Invalidate();
             }
-            #endregion
-        }
+        #endregion
+
+        
+    }
     }

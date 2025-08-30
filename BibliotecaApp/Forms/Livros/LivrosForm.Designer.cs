@@ -29,7 +29,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnProcurar = new System.Windows.Forms.Button();
             this.dgvLivros = new System.Windows.Forms.DataGridView();
             this.lblTotal = new System.Windows.Forms.Label();
@@ -45,7 +45,7 @@
             // btnProcurar
             // 
             this.btnProcurar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnProcurar.Location = new System.Drawing.Point(564, 66);
+            this.btnProcurar.Location = new System.Drawing.Point(484, 60);
             this.btnProcurar.Name = "btnProcurar";
             this.btnProcurar.Size = new System.Drawing.Size(108, 45);
             this.btnProcurar.TabIndex = 7;
@@ -60,14 +60,14 @@
             this.dgvLivros.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvLivros.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvLivros.BackgroundColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLivros.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLivros.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvLivros.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvLivros.Location = new System.Drawing.Point(18, 196);
             this.dgvLivros.Name = "dgvLivros";
@@ -75,7 +75,7 @@
             this.dgvLivros.RowHeadersWidth = 51;
             this.dgvLivros.RowTemplate.Height = 24;
             this.dgvLivros.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvLivros.Size = new System.Drawing.Size(738, 449);
+            this.dgvLivros.Size = new System.Drawing.Size(863, 449);
             this.dgvLivros.TabIndex = 3;
             this.dgvLivros.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvLivros_CellContentClick);
             this.dgvLivros.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Lista_CellFormatting);
@@ -100,10 +100,11 @@
             this.panel1.Controls.Add(this.btnProcurar);
             this.panel1.Controls.Add(this.cbFiltro);
             this.panel1.Controls.Add(this.lblTotal);
-            this.panel1.Location = new System.Drawing.Point(253, 0);
+            this.panel1.Location = new System.Drawing.Point(200, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(775, 845);
+            this.panel1.Size = new System.Drawing.Size(900, 845);
             this.panel1.TabIndex = 16;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // txtNome
             // 
@@ -117,7 +118,7 @@
             this.txtNome.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtNome.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNome.Location = new System.Drawing.Point(102, 66);
+            this.txtNome.Location = new System.Drawing.Point(22, 60);
             this.txtNome.Name = "txtNome";
             this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -145,7 +146,7 @@
             "Disponíveis",
             "Indisponíveis"});
             this.cbDisponibilidade.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbDisponibilidade.Location = new System.Drawing.Point(309, 119);
+            this.cbDisponibilidade.Location = new System.Drawing.Point(229, 113);
             this.cbDisponibilidade.Name = "cbDisponibilidade";
             this.cbDisponibilidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbDisponibilidade.PlaceholderMargin = 10;
@@ -168,7 +169,7 @@
             "Autor",
             "Gênero"});
             this.cbFiltro.ItemsFont = new System.Drawing.Font("Segoe UI", 10F);
-            this.cbFiltro.Location = new System.Drawing.Point(102, 119);
+            this.cbFiltro.Location = new System.Drawing.Point(22, 113);
             this.cbFiltro.Name = "cbFiltro";
             this.cbFiltro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbFiltro.PlaceholderMargin = 10;

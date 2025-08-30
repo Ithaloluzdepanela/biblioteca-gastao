@@ -73,6 +73,7 @@
             this.dgvHistorico.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgvHistorico.Size = new System.Drawing.Size(1054, 437);
             this.dgvHistorico.TabIndex = 23;
+           
             // 
             // NomeU
             // 
@@ -439,5 +440,8 @@
         private System.Windows.Forms.ListBox lstSugestoesUsuario;
         private System.Windows.Forms.ListBox lstLivros;
         public System.Windows.Forms.Label label1;
+      
+       
+
     }
 }

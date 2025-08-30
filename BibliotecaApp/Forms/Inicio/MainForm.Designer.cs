@@ -58,7 +58,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnEmprestimoRap = new System.Windows.Forms.Button();
             this.btnLivro = new System.Windows.Forms.Button();
             this.btnEmprestimo = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.panelUser = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.userLbl = new System.Windows.Forms.Label();
             this.livroTransition = new System.Windows.Forms.Timer(this.components);
@@ -76,7 +76,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.livroContainer.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.panelUser.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -338,6 +338,7 @@ namespace BibliotecaApp.Forms.Inicio
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.panelUser);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
@@ -348,7 +349,7 @@ namespace BibliotecaApp.Forms.Inicio
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = global::BibliotecaApp.Properties.Resources.Brasão_da_Gastão59x65;
-            this.pictureBox1.Location = new System.Drawing.Point(67, 1);
+            this.pictureBox1.Location = new System.Drawing.Point(3, 2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(59, 67);
             this.pictureBox1.TabIndex = 9;
@@ -477,24 +478,23 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnEmprestimo.UseVisualStyleBackColor = false;
             this.btnEmprestimo.Click += new System.EventHandler(this.btnEmprestimo_Click);
             // 
-            // panel2
+            // panelUser
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
-            this.panel2.CausesValidation = false;
-            this.panel2.Controls.Add(this.pictureBox2);
-            this.panel2.Controls.Add(this.userLbl);
-            this.panel2.Location = new System.Drawing.Point(7, 764);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(189, 36);
-            this.panel2.TabIndex = 12;
-            this.panel2.TabStop = true;
+            this.panelUser.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(87)))), ((int)(((byte)(174)))));
+            this.panelUser.CausesValidation = false;
+            this.panelUser.Controls.Add(this.pictureBox2);
+            this.panelUser.Controls.Add(this.userLbl);
+            this.panelUser.Location = new System.Drawing.Point(62, 3);
+            this.panelUser.Name = "panelUser";
+            this.panelUser.Size = new System.Drawing.Size(131, 64);
+            this.panelUser.TabIndex = 12;
+            this.panelUser.TabStop = true;
             // 
             // pictureBox2
             // 
             this.pictureBox2.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox2.Image = global::BibliotecaApp.Properties.Resources.icons8_usuário_30;
-            this.pictureBox2.Location = new System.Drawing.Point(2, 3);
+            this.pictureBox2.Location = new System.Drawing.Point(4, 3);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(30, 30);
             this.pictureBox2.TabIndex = 3;
@@ -503,14 +503,14 @@ namespace BibliotecaApp.Forms.Inicio
             // userLbl
             // 
             this.userLbl.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.userLbl.AutoSize = true;
             this.userLbl.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.userLbl.ForeColor = System.Drawing.Color.White;
-            this.userLbl.Location = new System.Drawing.Point(60, 6);
+            this.userLbl.Location = new System.Drawing.Point(3, 3);
             this.userLbl.Name = "userLbl";
-            this.userLbl.Size = new System.Drawing.Size(77, 25);
+            this.userLbl.Size = new System.Drawing.Size(122, 50);
             this.userLbl.TabIndex = 4;
             this.userLbl.Text = "Usuário";
+            this.userLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // livroTransition
             // 
@@ -530,7 +530,6 @@ namespace BibliotecaApp.Forms.Inicio
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ClientSize = new System.Drawing.Size(1440, 800);
-            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelControl);
             this.Controls.Add(this.menu);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -552,8 +551,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.livroContainer.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.panelUser.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
@@ -589,7 +587,7 @@ namespace BibliotecaApp.Forms.Inicio
         public System.Windows.Forms.Panel userContainer;
         public System.Windows.Forms.Button btnUser;
         public System.Windows.Forms.Button btnUserEdit;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panelUser;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label userLbl;
     }

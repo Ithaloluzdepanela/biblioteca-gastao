@@ -171,6 +171,9 @@
             this.txtAutor.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F);
             this.txtAutor.PlaceholderMarginLeft = 12;
             this.txtAutor.PlaceholderText = "Digite aqui a quantidade...";
+            this.txtAutor.SelectedText = "";
+            this.txtAutor.SelectionLength = 0;
+            this.txtAutor.SelectionStart = 0;
             this.txtAutor.Size = new System.Drawing.Size(617, 40);
             this.txtAutor.TabIndex = 101;
             this.txtAutor.TextColor = System.Drawing.Color.Black;
@@ -210,6 +213,9 @@
             this.txtQuantidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F);
             this.txtQuantidade.PlaceholderMarginLeft = 12;
             this.txtQuantidade.PlaceholderText = "Digite aqui a quantidade...";
+            this.txtQuantidade.SelectedText = "";
+            this.txtQuantidade.SelectionLength = 0;
+            this.txtQuantidade.SelectionStart = 0;
             this.txtQuantidade.Size = new System.Drawing.Size(617, 40);
             this.txtQuantidade.TabIndex = 99;
             this.txtQuantidade.TextColor = System.Drawing.Color.Black;
@@ -249,6 +255,9 @@
             this.txtGenero.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F);
             this.txtGenero.PlaceholderMarginLeft = 12;
             this.txtGenero.PlaceholderText = "Digite aqui o gênero...";
+            this.txtGenero.SelectedText = "";
+            this.txtGenero.SelectionLength = 0;
+            this.txtGenero.SelectionStart = 0;
             this.txtGenero.Size = new System.Drawing.Size(617, 40);
             this.txtGenero.TabIndex = 97;
             this.txtGenero.TextColor = System.Drawing.Color.Black;
@@ -288,6 +297,9 @@
             this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F);
             this.txtNome.PlaceholderMarginLeft = 12;
             this.txtNome.PlaceholderText = "Digite aqui o nome...";
+            this.txtNome.SelectedText = "";
+            this.txtNome.SelectionLength = 0;
+            this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(617, 40);
             this.txtNome.TabIndex = 95;
             this.txtNome.TextColor = System.Drawing.Color.Black;
@@ -322,6 +334,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
+            this.AutoScrollMargin = new System.Drawing.Size(2, 2);
             this.ClientSize = new System.Drawing.Size(1280, 845);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

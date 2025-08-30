@@ -35,6 +35,7 @@
             this.btnLimpar = new System.Windows.Forms.Button();
             this.dtpDataNasc = new System.Windows.Forms.DateTimePicker();
             this.lblUsuario = new System.Windows.Forms.Label();
+            this.txtNome = new RoundedTextBox();
             this.SenhaAst = new System.Windows.Forms.Label();
             this.lblDataNasc = new System.Windows.Forms.Label();
             this.ConfirmSenhaAst = new System.Windows.Forms.Label();
@@ -43,32 +44,33 @@
             this.lblTurma = new System.Windows.Forms.Label();
             this.lblCPF = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.txtConfirmSenha = new RoundedTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.NomeAst = new System.Windows.Forms.Label();
             this.lblTelefone = new System.Windows.Forms.Label();
             this.lblConfirmSenha = new System.Windows.Forms.Label();
             this.lblEmail = new System.Windows.Forms.Label();
-            this.TelefoneAst = new System.Windows.Forms.Label();
-            this.lblSenha = new System.Windows.Forms.Label();
-            this.TurmaAst = new System.Windows.Forms.Label();
-            this.Titulo = new System.Windows.Forms.Label();
-            this.lblNome = new System.Windows.Forms.Label();
-            this.DataNascAst = new System.Windows.Forms.Label();
-            this.lblAvisoEmail = new System.Windows.Forms.Label();
-            this.txtNome = new RoundedTextBox();
-            this.txtConfirmSenha = new RoundedTextBox();
             this.txtEmail = new RoundedTextBox();
             this.txtTurma = new RoundedTextBox();
             this.cbUsuario = new RoundedComboBox();
             this.txtSenha = new RoundedTextBox();
             this.mtxTelefone = new RoundedMaskedTextBox();
+            this.TelefoneAst = new System.Windows.Forms.Label();
+            this.lblSenha = new System.Windows.Forms.Label();
+            this.TurmaAst = new System.Windows.Forms.Label();
+            this.Titulo = new System.Windows.Forms.Label();
+            this.lblNome = new System.Windows.Forms.Label();
             this.mtxCPF = new RoundedMaskedTextBox();
+            this.DataNascAst = new System.Windows.Forms.Label();
+            this.lblAvisoEmail = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.panel1.AutoScroll = true;
+            this.panel1.AutoScrollMargin = new System.Drawing.Size(1, 1);
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.lstSugestoesTurma);
@@ -192,6 +194,35 @@
             this.lblUsuario.TabIndex = 84;
             this.lblUsuario.Text = "*";
             // 
+            // txtNome
+            // 
+            this.txtNome.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtNome.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtNome.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtNome.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtNome.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtNome.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtNome.BorderRadius = 10;
+            this.txtNome.BorderThickness = 1;
+            this.txtNome.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtNome.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtNome.Location = new System.Drawing.Point(79, 222);
+            this.txtNome.Name = "txtNome";
+            this.txtNome.Padding = new System.Windows.Forms.Padding(7);
+            this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNome.PlaceholderMarginLeft = 12;
+            this.txtNome.PlaceholderText = "Digite aqui o nome...";
+            this.txtNome.SelectedText = "";
+            this.txtNome.SelectionLength = 0;
+            this.txtNome.SelectionStart = 0;
+            this.txtNome.Size = new System.Drawing.Size(617, 40);
+            this.txtNome.TabIndex = 63;
+            this.txtNome.TextColor = System.Drawing.Color.Black;
+            this.txtNome.UseSystemPasswordChar = false;
+            // 
             // SenhaAst
             // 
             this.SenhaAst.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -294,6 +325,36 @@
             this.label2.TabIndex = 83;
             this.label2.Text = "Tipo usuário:";
             // 
+            // txtConfirmSenha
+            // 
+            this.txtConfirmSenha.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtConfirmSenha.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtConfirmSenha.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtConfirmSenha.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtConfirmSenha.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtConfirmSenha.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtConfirmSenha.BorderRadius = 10;
+            this.txtConfirmSenha.BorderThickness = 1;
+            this.txtConfirmSenha.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtConfirmSenha.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtConfirmSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtConfirmSenha.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtConfirmSenha.Location = new System.Drawing.Point(79, 839);
+            this.txtConfirmSenha.Name = "txtConfirmSenha";
+            this.txtConfirmSenha.Padding = new System.Windows.Forms.Padding(7);
+            this.txtConfirmSenha.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtConfirmSenha.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtConfirmSenha.PlaceholderMarginLeft = 12;
+            this.txtConfirmSenha.PlaceholderText = "Confirme a senha...";
+            this.txtConfirmSenha.SelectedText = "";
+            this.txtConfirmSenha.SelectionLength = 0;
+            this.txtConfirmSenha.SelectionStart = 0;
+            this.txtConfirmSenha.Size = new System.Drawing.Size(617, 40);
+            this.txtConfirmSenha.TabIndex = 71;
+            this.txtConfirmSenha.TextColor = System.Drawing.Color.Black;
+            this.txtConfirmSenha.UseSystemPasswordChar = true;
+            this.txtConfirmSenha.Visible = false;
+            // 
             // label3
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -356,6 +417,148 @@
             this.lblEmail.Size = new System.Drawing.Size(64, 25);
             this.lblEmail.TabIndex = 65;
             this.lblEmail.Text = "Email:";
+            // 
+            // txtEmail
+            // 
+            this.txtEmail.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtEmail.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtEmail.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtEmail.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtEmail.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtEmail.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtEmail.BorderRadius = 10;
+            this.txtEmail.BorderThickness = 1;
+            this.txtEmail.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtEmail.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtEmail.Location = new System.Drawing.Point(79, 307);
+            this.txtEmail.Name = "txtEmail";
+            this.txtEmail.Padding = new System.Windows.Forms.Padding(7);
+            this.txtEmail.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtEmail.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmail.PlaceholderMarginLeft = 12;
+            this.txtEmail.PlaceholderText = "Digite aqui o email...";
+            this.txtEmail.SelectedText = "";
+            this.txtEmail.SelectionLength = 0;
+            this.txtEmail.SelectionStart = 0;
+            this.txtEmail.Size = new System.Drawing.Size(617, 40);
+            this.txtEmail.TabIndex = 64;
+            this.txtEmail.TextColor = System.Drawing.Color.Black;
+            this.txtEmail.UseSystemPasswordChar = false;
+            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
+            // 
+            // txtTurma
+            // 
+            this.txtTurma.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtTurma.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtTurma.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtTurma.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtTurma.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtTurma.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtTurma.BorderRadius = 10;
+            this.txtTurma.BorderThickness = 1;
+            this.txtTurma.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtTurma.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTurma.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtTurma.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtTurma.Location = new System.Drawing.Point(79, 398);
+            this.txtTurma.Name = "txtTurma";
+            this.txtTurma.Padding = new System.Windows.Forms.Padding(7);
+            this.txtTurma.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtTurma.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTurma.PlaceholderMarginLeft = 12;
+            this.txtTurma.PlaceholderText = "Digite aqui a turma...";
+            this.txtTurma.SelectedText = "";
+            this.txtTurma.SelectionLength = 0;
+            this.txtTurma.SelectionStart = 0;
+            this.txtTurma.Size = new System.Drawing.Size(617, 40);
+            this.txtTurma.TabIndex = 66;
+            this.txtTurma.TextColor = System.Drawing.Color.Black;
+            this.txtTurma.UseSystemPasswordChar = false;
+            this.txtTurma.TextChanged += new System.EventHandler(this.txtTurma_TextChanged);
+            this.txtTurma.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtTurma_KeyDown);
+            this.txtTurma.Leave += new System.EventHandler(this.txtTurma_Leave);
+            // 
+            // cbUsuario
+            // 
+            this.cbUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cbUsuario.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cbUsuario.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.cbUsuario.BorderRadius = 8;
+            this.cbUsuario.BorderThickness = 1;
+            this.cbUsuario.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cbUsuario.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbUsuario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.cbUsuario.FormattingEnabled = true;
+            this.cbUsuario.Items.AddRange(new object[] {
+            "Aluno(a)",
+            "Bibliotecário(a)",
+            "Professor(a)",
+            "Outros"});
+            this.cbUsuario.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbUsuario.Location = new System.Drawing.Point(79, 143);
+            this.cbUsuario.Name = "cbUsuario";
+            this.cbUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbUsuario.PlaceholderMargin = 10;
+            this.cbUsuario.PlaceholderText = "Selecione o tipo de usuario...";
+            this.cbUsuario.Size = new System.Drawing.Size(329, 34);
+            this.cbUsuario.TabIndex = 61;
+            this.cbUsuario.SelectedIndexChanged += new System.EventHandler(this.cbUsuario_SelectedIndexChanged);
+            // 
+            // txtSenha
+            // 
+            this.txtSenha.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtSenha.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtSenha.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtSenha.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtSenha.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtSenha.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtSenha.BorderRadius = 10;
+            this.txtSenha.BorderThickness = 1;
+            this.txtSenha.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtSenha.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtSenha.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtSenha.Location = new System.Drawing.Point(79, 734);
+            this.txtSenha.Name = "txtSenha";
+            this.txtSenha.Padding = new System.Windows.Forms.Padding(7);
+            this.txtSenha.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtSenha.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSenha.PlaceholderMarginLeft = 12;
+            this.txtSenha.PlaceholderText = "Digite aqui uma senha...";
+            this.txtSenha.SelectedText = "";
+            this.txtSenha.SelectionLength = 0;
+            this.txtSenha.SelectionStart = 0;
+            this.txtSenha.Size = new System.Drawing.Size(617, 40);
+            this.txtSenha.TabIndex = 69;
+            this.txtSenha.TextColor = System.Drawing.Color.Black;
+            this.txtSenha.UseSystemPasswordChar = true;
+            this.txtSenha.Visible = false;
+            // 
+            // mtxTelefone
+            // 
+            this.mtxTelefone.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.mtxTelefone.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.mtxTelefone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.mtxTelefone.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.mtxTelefone.BorderRadius = 10;
+            this.mtxTelefone.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.mtxTelefone.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mtxTelefone.ForeColor = System.Drawing.Color.Gray;
+            this.mtxTelefone.HoverBackColor = System.Drawing.Color.LightGray;
+            this.mtxTelefone.HoverBorderColor = System.Drawing.Color.DarkGray;
+            this.mtxTelefone.LeftMargin = 0;
+            this.mtxTelefone.Location = new System.Drawing.Point(79, 484);
+            this.mtxTelefone.Mask = "(00)00000-0000";
+            this.mtxTelefone.MaskTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.mtxTelefone.Name = "mtxTelefone";
+            this.mtxTelefone.Padding = new System.Windows.Forms.Padding(13, 5, 5, 5);
+            this.mtxTelefone.Size = new System.Drawing.Size(329, 40);
+            this.mtxTelefone.TabIndex = 67;
+            this.mtxTelefone.Load += new System.EventHandler(this.mtxTelefone_Load);
             // 
             // TelefoneAst
             // 
@@ -421,6 +624,27 @@
             this.lblNome.TabIndex = 62;
             this.lblNome.Text = "Nome Completo:";
             // 
+            // mtxCPF
+            // 
+            this.mtxCPF.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.mtxCPF.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.mtxCPF.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.mtxCPF.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.mtxCPF.BorderRadius = 10;
+            this.mtxCPF.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.mtxCPF.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mtxCPF.ForeColor = System.Drawing.Color.Gray;
+            this.mtxCPF.HoverBackColor = System.Drawing.Color.LightGray;
+            this.mtxCPF.HoverBorderColor = System.Drawing.Color.DarkGray;
+            this.mtxCPF.LeftMargin = 0;
+            this.mtxCPF.Location = new System.Drawing.Point(79, 568);
+            this.mtxCPF.Mask = "000,000,000-00";
+            this.mtxCPF.MaskTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.mtxCPF.Name = "mtxCPF";
+            this.mtxCPF.Padding = new System.Windows.Forms.Padding(15, 5, 5, 5);
+            this.mtxCPF.Size = new System.Drawing.Size(329, 40);
+            this.mtxCPF.TabIndex = 68;
+            // 
             // DataNascAst
             // 
             this.DataNascAst.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -445,219 +669,6 @@
             this.lblAvisoEmail.Size = new System.Drawing.Size(301, 13);
             this.lblAvisoEmail.TabIndex = 100;
             this.lblAvisoEmail.Text = "*Caso não cadastrar um e-mail, não receberá notificações...";
-            // 
-            // txtNome
-            // 
-            this.txtNome.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtNome.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtNome.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtNome.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtNome.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtNome.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtNome.BorderRadius = 10;
-            this.txtNome.BorderThickness = 1;
-            this.txtNome.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtNome.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNome.Location = new System.Drawing.Point(79, 222);
-            this.txtNome.Name = "txtNome";
-            this.txtNome.Padding = new System.Windows.Forms.Padding(7);
-            this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNome.PlaceholderMarginLeft = 12;
-            this.txtNome.PlaceholderText = "Digite aqui o nome...";
-            this.txtNome.SelectionStart = 0;
-            this.txtNome.Size = new System.Drawing.Size(617, 40);
-            this.txtNome.TabIndex = 63;
-            this.txtNome.TextColor = System.Drawing.Color.Black;
-            this.txtNome.UseSystemPasswordChar = false;
-            // 
-            // txtConfirmSenha
-            // 
-            this.txtConfirmSenha.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtConfirmSenha.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtConfirmSenha.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtConfirmSenha.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtConfirmSenha.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtConfirmSenha.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtConfirmSenha.BorderRadius = 10;
-            this.txtConfirmSenha.BorderThickness = 1;
-            this.txtConfirmSenha.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtConfirmSenha.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtConfirmSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtConfirmSenha.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtConfirmSenha.Location = new System.Drawing.Point(79, 839);
-            this.txtConfirmSenha.Name = "txtConfirmSenha";
-            this.txtConfirmSenha.Padding = new System.Windows.Forms.Padding(7);
-            this.txtConfirmSenha.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtConfirmSenha.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtConfirmSenha.PlaceholderMarginLeft = 12;
-            this.txtConfirmSenha.PlaceholderText = "Confirme a senha...";
-            this.txtConfirmSenha.SelectionStart = 0;
-            this.txtConfirmSenha.Size = new System.Drawing.Size(617, 40);
-            this.txtConfirmSenha.TabIndex = 71;
-            this.txtConfirmSenha.TextColor = System.Drawing.Color.Black;
-            this.txtConfirmSenha.UseSystemPasswordChar = true;
-            this.txtConfirmSenha.Visible = false;
-            // 
-            // txtEmail
-            // 
-            this.txtEmail.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtEmail.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtEmail.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtEmail.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtEmail.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtEmail.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtEmail.BorderRadius = 10;
-            this.txtEmail.BorderThickness = 1;
-            this.txtEmail.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtEmail.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtEmail.Location = new System.Drawing.Point(79, 307);
-            this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Padding = new System.Windows.Forms.Padding(7);
-            this.txtEmail.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtEmail.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmail.PlaceholderMarginLeft = 12;
-            this.txtEmail.PlaceholderText = "Digite aqui o email...";
-            this.txtEmail.SelectionStart = 0;
-            this.txtEmail.Size = new System.Drawing.Size(617, 40);
-            this.txtEmail.TabIndex = 64;
-            this.txtEmail.TextColor = System.Drawing.Color.Black;
-            this.txtEmail.UseSystemPasswordChar = false;
-            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
-            // 
-            // txtTurma
-            // 
-            this.txtTurma.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtTurma.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtTurma.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtTurma.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtTurma.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtTurma.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtTurma.BorderRadius = 10;
-            this.txtTurma.BorderThickness = 1;
-            this.txtTurma.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtTurma.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTurma.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtTurma.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtTurma.Location = new System.Drawing.Point(79, 398);
-            this.txtTurma.Name = "txtTurma";
-            this.txtTurma.Padding = new System.Windows.Forms.Padding(7);
-            this.txtTurma.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtTurma.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTurma.PlaceholderMarginLeft = 12;
-            this.txtTurma.PlaceholderText = "Digite aqui a turma...";
-            this.txtTurma.SelectionStart = 0;
-            this.txtTurma.Size = new System.Drawing.Size(617, 40);
-            this.txtTurma.TabIndex = 66;
-            this.txtTurma.TextColor = System.Drawing.Color.Black;
-            this.txtTurma.UseSystemPasswordChar = false;
-            this.txtTurma.TextChanged += new System.EventHandler(this.txtTurma_TextChanged);
-            
-            this.txtTurma.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtTurma_KeyDown);
-            this.txtTurma.Leave += new System.EventHandler(this.txtTurma_Leave);
-            // 
-            // cbUsuario
-            // 
-            this.cbUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.cbUsuario.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.cbUsuario.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.cbUsuario.BorderRadius = 8;
-            this.cbUsuario.BorderThickness = 1;
-            this.cbUsuario.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cbUsuario.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbUsuario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.cbUsuario.FormattingEnabled = true;
-            this.cbUsuario.Items.AddRange(new object[] {
-            "Aluno(a)",
-            "Bibliotecário(a)",
-            "Professor(a)",
-            "Outros"});
-            this.cbUsuario.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbUsuario.Location = new System.Drawing.Point(79, 143);
-            this.cbUsuario.Name = "cbUsuario";
-            this.cbUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbUsuario.PlaceholderMargin = 10;
-            this.cbUsuario.PlaceholderText = "Selecione o tipo de usuario...";
-            this.cbUsuario.Size = new System.Drawing.Size(329, 34);
-            this.cbUsuario.TabIndex = 61;
-            this.cbUsuario.SelectedIndexChanged += new System.EventHandler(this.cbUsuario_SelectedIndexChanged);
-            // 
-            // txtSenha
-            // 
-            this.txtSenha.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtSenha.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtSenha.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtSenha.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtSenha.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtSenha.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtSenha.BorderRadius = 10;
-            this.txtSenha.BorderThickness = 1;
-            this.txtSenha.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtSenha.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtSenha.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtSenha.Location = new System.Drawing.Point(79, 734);
-            this.txtSenha.Name = "txtSenha";
-            this.txtSenha.Padding = new System.Windows.Forms.Padding(7);
-            this.txtSenha.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtSenha.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSenha.PlaceholderMarginLeft = 12;
-            this.txtSenha.PlaceholderText = "Digite aqui uma senha...";
-            this.txtSenha.SelectionStart = 0;
-            this.txtSenha.Size = new System.Drawing.Size(617, 40);
-            this.txtSenha.TabIndex = 69;
-            this.txtSenha.TextColor = System.Drawing.Color.Black;
-            this.txtSenha.UseSystemPasswordChar = true;
-            this.txtSenha.Visible = false;
-            // 
-            // mtxTelefone
-            // 
-            this.mtxTelefone.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.mtxTelefone.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.mtxTelefone.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.mtxTelefone.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.mtxTelefone.BorderRadius = 10;
-            this.mtxTelefone.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.mtxTelefone.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mtxTelefone.ForeColor = System.Drawing.Color.Gray;
-            this.mtxTelefone.HoverBackColor = System.Drawing.Color.LightGray;
-            this.mtxTelefone.HoverBorderColor = System.Drawing.Color.DarkGray;
-            this.mtxTelefone.LeftMargin = 0;
-            this.mtxTelefone.Location = new System.Drawing.Point(79, 484);
-            this.mtxTelefone.Mask = "(00)00000-0000";
-            this.mtxTelefone.MaskTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.mtxTelefone.Name = "mtxTelefone";
-            this.mtxTelefone.Padding = new System.Windows.Forms.Padding(13, 5, 5, 5);
-            this.mtxTelefone.Size = new System.Drawing.Size(329, 40);
-            this.mtxTelefone.TabIndex = 67;
-            this.mtxTelefone.Load += new System.EventHandler(this.mtxTelefone_Load);
-            // 
-            // mtxCPF
-            // 
-            this.mtxCPF.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.mtxCPF.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.mtxCPF.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.mtxCPF.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.mtxCPF.BorderRadius = 10;
-            this.mtxCPF.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.mtxCPF.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mtxCPF.ForeColor = System.Drawing.Color.Gray;
-            this.mtxCPF.HoverBackColor = System.Drawing.Color.LightGray;
-            this.mtxCPF.HoverBorderColor = System.Drawing.Color.DarkGray;
-            this.mtxCPF.LeftMargin = 0;
-            this.mtxCPF.Location = new System.Drawing.Point(79, 568);
-            this.mtxCPF.Mask = "000,000,000-00";
-            this.mtxCPF.MaskTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.mtxCPF.Name = "mtxCPF";
-            this.mtxCPF.Padding = new System.Windows.Forms.Padding(15, 5, 5, 5);
-            this.mtxCPF.Size = new System.Drawing.Size(329, 40);
-            this.mtxCPF.TabIndex = 68;
             // 
             // CadUsuario
             // 

@@ -85,14 +85,7 @@ namespace BibliotecaApp.Forms.Livros
             EstilizarListBoxSugestao(lstSugestoesTurma);
         }
 
-        private void InicializarTurmasPadrao()
-        {
-            todasTurmasPadrao = new List<string>();
-            foreach (var categoria in dicionarioTurmas.Values)
-            {
-                todasTurmasPadrao.AddRange(categoria);
-            }
-        }
+        
 
         private void EmprestimoRapidoForm_KeyDown(object sender, KeyEventArgs e)
         {
@@ -253,15 +246,39 @@ namespace BibliotecaApp.Forms.Livros
         }
 
         #region Métodos de Turma
+        private void InicializarTurmasPadrao()
+        {
+            todasTurmasPadrao = new List<string>();
+            foreach (var categoria in dicionarioTurmas.Values)
+            {
+                todasTurmasPadrao.AddRange(categoria);
+            }
+        }
+
         private string CorrigirTurma(string turmaDigitada)
         {
             if (string.IsNullOrWhiteSpace(turmaDigitada))
                 return turmaDigitada;
 
-            // Adicionar ° automaticamente se não tiver
+            // Adicionar ° automaticamente se não tiver e começar com número
             if (!turmaDigitada.Contains("°") && Regex.IsMatch(turmaDigitada, @"^\d+"))
             {
-                turmaDigitada = Regex.Replace(turmaDigitada, @"^(\d+)", "$1°");
+                // Encontrar onde termina o número
+                int i = 0;
+                while (i < turmaDigitada.Length && char.IsDigit(turmaDigitada[i]))
+                {
+                    i++;
+                }
+
+                // Inserir o símbolo de grau após o número
+                if (i < turmaDigitada.Length)
+                {
+                    turmaDigitada = turmaDigitada.Insert(i, "°");
+                }
+                else
+                {
+                    turmaDigitada = turmaDigitada + "°";
+                }
             }
 
             // Extrair número e tipo
@@ -274,16 +291,6 @@ namespace BibliotecaApp.Forms.Livros
             if (matchNumero.Success)
             {
                 numeroStr = matchNumero.Groups[1].Value;
-            }
-            else
-            {
-                // Se não encontrou o padrão com °, tentar sem °
-                matchNumero = Regex.Match(turmaDigitada, @"^(\d+)\s");
-                if (matchNumero.Success)
-                {
-                    numeroStr = matchNumero.Groups[1].Value;
-                    turmaDigitada = turmaDigitada.Replace(matchNumero.Value, matchNumero.Groups[1].Value + "° ");
-                }
             }
 
             // Determinar o tipo de turma
@@ -342,7 +349,6 @@ namespace BibliotecaApp.Forms.Livros
                 if (int.TryParse(numeroTurma, out numero))
                 {
                     if (numero < 1) numero = 1;
-                    // Não há limite máximo para o número da turma
                     numeroTurma = numero.ToString();
                 }
             }
@@ -367,25 +373,9 @@ namespace BibliotecaApp.Forms.Livros
         {
             string texto = txtTurma.Text.Trim();
 
-            // Aplicar máscara automática (número seguido de °)
-            if (!string.IsNullOrEmpty(texto) && char.IsDigit(texto[0]) && !texto.Contains("°"))
+            if (string.IsNullOrEmpty(texto))
             {
-                int i = 0;
-                while (i < texto.Length && char.IsDigit(texto[i]))
-                {
-                    i++;
-                }
-
-                if (i < texto.Length)
-                {
-                    txtTurma.Text = texto.Insert(i, "° ");
-                    txtTurma.SelectionStart = i + 2;
-                }
-                else
-                {
-                    txtTurma.Text = texto + "° ";
-                    txtTurma.SelectionStart = texto.Length + 2;
-                }
+                lstSugestoesTurma.Visible = false;
                 return;
             }
 

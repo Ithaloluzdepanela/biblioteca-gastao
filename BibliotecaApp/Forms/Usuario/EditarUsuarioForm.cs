@@ -157,7 +157,17 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            LimparCampos();
+            DialogResult result = MessageBox.Show(
+                "Tem certeza que deseja cancelar? Todas as alterações serão perdidas.",
+                "Confirmar cancelamento",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                LimparCampos();
+            }
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)
@@ -633,6 +643,7 @@ namespace BibliotecaApp.Forms.Usuario
             HabilitarCampos();
             txtTurma.Visible = false;
             lblTurma.Visible = false;
+            panel1.Location = new Point(68, 387);
         }
 
         private void ConfigurarEdicaoParaProfessor()
@@ -640,19 +651,22 @@ namespace BibliotecaApp.Forms.Usuario
             HabilitarCampos();
             txtTurma.Visible = false;
             lblTurma.Visible = false;
+            panel1.Location = new Point(68, 387);
         }
 
         private void ConfigurarEdicaoParaAluno()
         {
             HabilitarCampos();
+            panel1.Location = new Point(68, 468);
         }
 
         private void ConfigurarEdicaoParaOutros()
         {
             HabilitarCampos();
-            txtEmail.Visible = false;
+            panel1.Location = new Point(68, 387);
+            txtEmail.Visible = true;
             txtTurma.Visible = false;
-            lblTurma.Visible = false;
+            lblTurma.Visible = true;
             lblEmail.Visible = false;
         }
 
@@ -1179,5 +1193,35 @@ namespace BibliotecaApp.Forms.Usuario
             lstSugestoesTurma.Visible = false;
         }
         #endregion
+
+        private void dtpDataNasc_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblDataNasc_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblCPF_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblTelefone_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mtxTelefone_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mtxCPF_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

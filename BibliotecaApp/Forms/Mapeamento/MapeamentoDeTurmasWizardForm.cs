@@ -1,19 +1,21 @@
-﻿using System;
+﻿using BibliotecaApp.Forms.Usuario;
+using BibliotecaApp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlServerCe;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using BibliotecaApp.Models;
-using BibliotecaApp.Forms.Usuario;
 
 namespace BibliotecaApp.Forms.Usuario
 {
     public partial class MapeamentoDeTurmasWizardForm : Form
     {
+        #region Campos e Variáveis
         private readonly string _baseFolder;
         private MapeamentoAnualModel _model;
         private int _etapaAtual = 1;
@@ -23,11 +25,13 @@ namespace BibliotecaApp.Forms.Usuario
         private Dictionary<string, string[]> dicionarioTurmas = new Dictionary<string, string[]>
         {
             { "Ano", new[] { "6° Ano", "7° Ano", "8° Ano", "9° Ano" } },
-            { "Desenvolvimento", new[] { "1° Desenvolvimento", "2° Desenvolvimento", "3° Desenvolvimento", "1° Desenvolvimento 2", "2° Desenvolvimento 1", "2° Desenvolvimento 2", "3° Desenvolvimento 1", "3° Desenvolvimento 2" } },
-            { "Agronegócio", new[] { "1° Agronegócio", "2° Agronegócio", "3° Agronegócio" } },
-            { "Propedêutico", new[] { "1° Propedêutico", "2° Propedêutico", "3° Propedêutico" } }
+            { "Desenvolvimento", new[] { "1° Desenvolvimento", "2° Desenvolvimento", "3° Desenvolvimento", "1° Desenvolvimento 2", "2° Desenvolvimento ", "2° Desenvolvimento 2", "3° Desenvolvimento" } },
+            { "Agronegócio", new[] { "1° Agronegócio", "1° Agronegócio 2 ", "2° Agronegócio", "2° Agronegócio 2", "3° Agronegócio" } },
+            { "Propedêutico", new[] { "1° Propedêutico", "1° Propedêutico 2", "2° Propedêutico", "2° Propedêutico 2", "3° Propedêutico" } }
         };
+        #endregion
 
+        #region Construtor e Inicialização
         public MapeamentoDeTurmasWizardForm()
         {
             InitializeComponent();
@@ -55,27 +59,19 @@ namespace BibliotecaApp.Forms.Usuario
                 MessageBox.Show("Erro ao carregar o wizard: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
 
         #region Conexão com Banco
         public static class Conexao
         {
-            public static string CaminhoBanco
-            {
-                get
-                {
-                    var raiz = Application.StartupPath;
-                    return Path.Combine(raiz, "bibliotecaDB", "bibliotecaDB.sdf");
-                }
-            }
-
+            public static string CaminhoBanco => Path.Combine(Application.StartupPath, "bibliotecaDB", "bibliotecaDB.sdf");
             public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
 
             public static SqlCeConnection ObterConexao()
             {
                 if (!File.Exists(CaminhoBanco))
-                {
                     throw new FileNotFoundException("Arquivo .sdf não encontrado no caminho: " + CaminhoBanco);
-                }
+
                 return new SqlCeConnection(Conectar);
             }
         }
@@ -98,7 +94,7 @@ namespace BibliotecaApp.Forms.Usuario
                         var turmaAtual = r["Turma"]?.ToString() ?? "";
                         var sugestao = SugerirProximaTurma(turmaAtual);
 
-                        var reg = new MapeamentoRegistro
+                        _registrosOriginais.Add(new MapeamentoRegistro
                         {
                             UsuarioId = Convert.ToInt32(r["Id"]),
                             Nome = r["Nome"]?.ToString() ?? "",
@@ -106,23 +102,22 @@ namespace BibliotecaApp.Forms.Usuario
                             Sugestao = sugestao,
                             NovaTurma = sugestao,
                             Observacao = ""
-                        };
-                        _registrosOriginais.Add(reg);
+                        });
                     }
                 }
             }
 
             // Agrupar por turma para definir padrões
-            var turmasDistintas = _registrosOriginais.GroupBy(r => r.TurmaAtual)
-                                                   .Where(g => !string.IsNullOrWhiteSpace(g.Key))
-                                                   .Select(g => g.Key)
-                                                   .OrderBy(t => t)
-                                                   .ToList();
+            var turmasDistintas = _registrosOriginais
+                .Where(r => !string.IsNullOrWhiteSpace(r.TurmaAtual))
+                .GroupBy(r => r.TurmaAtual)
+                .Select(g => g.Key)
+                .OrderBy(t => t)
+                .ToList();
 
             foreach (var turma in turmasDistintas)
             {
-                var sugestaoPadrao = SugerirProximaTurma(turma);
-                _padroesTurma[turma] = sugestaoPadrao;
+                _padroesTurma[turma] = SugerirProximaTurma(turma);
             }
         }
 
@@ -131,24 +126,17 @@ namespace BibliotecaApp.Forms.Usuario
             if (string.IsNullOrEmpty(turmaAtual))
                 return "EGRESSO";
 
-            // número da turma (sufixo) e número da série (6°,1°,2°...)
-            var numeroTurma = ExtrairNumeroTurma(turmaAtual); // sufijo exemplo: "2" de "8° Ano 2"
-            var serieAtual = ExtrairNumeroSerie(turmaAtual);   // série: 8,9,1,2,3
+            var numeroTurma = ExtrairNumeroTurma(turmaAtual);
+            var serieAtual = ExtrairNumeroSerie(turmaAtual);
             var cursoAtual = ExtrairCurso(turmaAtual);
-            var turmaBase = RemoverNumeroTurma(turmaAtual);
 
             // REGRA: 9º ano -> sugerir 1° Propedêutico (sem número) como padrão
             if (cursoAtual == "Ano" && serieAtual == 9)
-            {
                 return "1° Propedêutico";
-            }
 
             // Se estiver em 3° de curso técnico, sugere EGRESSO
-            if ((cursoAtual == "Desenvolvimento" || cursoAtual == "Agronegócio" || cursoAtual == "Propedêutico")
-                && serieAtual == 3)
-            {
+            if ((cursoAtual == "Desenvolvimento" || cursoAtual == "Agronegócio" || cursoAtual == "Propedêutico") && serieAtual == 3)
                 return "EGRESSO";
-            }
 
             // Ensino técnico: manter número da turma se existir nos registros, senão sugerir sem número
             if (cursoAtual == "Desenvolvimento" || cursoAtual == "Agronegócio" || cursoAtual == "Propedêutico")
@@ -167,33 +155,30 @@ namespace BibliotecaApp.Forms.Usuario
                 if (serieAtual == 8) return numeroTurma > 0 ? $"9° Ano {numeroTurma}" : "9° Ano";
             }
 
-            // fallback seguro
             return "EGRESSO";
         }
 
         private int ExtrairNumeroTurma(string turma)
         {
             if (string.IsNullOrWhiteSpace(turma)) return 0;
+
             var partes = turma.Split(' ');
             if (partes.Length > 2 && int.TryParse(partes[partes.Length - 1], out int numero))
-            {
                 return numero;
-            }
+
             return 0;
         }
-
 
         private string RemoverNumeroTurma(string turma)
         {
             if (string.IsNullOrEmpty(turma)) return turma;
+
             var numero = ExtrairNumeroTurma(turma);
             if (numero > 0)
-            {
                 return turma.Substring(0, turma.LastIndexOf(" " + numero.ToString())).Trim();
-            }
+
             return turma;
         }
-
         #endregion
 
         #region Controle do Wizard
@@ -243,39 +228,32 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void BtnProximo_Click(object sender, EventArgs e)
         {
-            if (_etapaAtual == 1)
+            switch (_etapaAtual)
             {
-                if (ValidarEtapa1())
-                {
+                case 1 when ValidarEtapa1():
                     AplicarPadroesDefinidos();
                     MostrarEtapa(2);
-                }
-            }
-            else if (_etapaAtual == 2)
-            {
-                if (ValidarEtapa2())
-                {
+                    break;
+                case 2 when ValidarEtapa2():
                     MostrarEtapa(3);
-                }
-            }
-            else if (_etapaAtual == 3)
-            {
-                AplicarMapeamento();
+                    break;
+                case 3:
+                    AplicarMapeamento();
+                    break;
             }
         }
 
         private void BtnAnterior_Click(object sender, EventArgs e)
         {
             if (_etapaAtual > 1)
-            {
                 MostrarEtapa(_etapaAtual - 1);
-            }
         }
 
         private void BtnCancelar_Click(object sender, EventArgs e)
         {
             var result = MessageBox.Show("Deseja realmente cancelar o mapeamento? Todas as alterações serão perdidas.",
                                        "Confirmar Cancelamento", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
             if (result == DialogResult.Yes)
             {
                 this.DialogResult = DialogResult.Cancel;
@@ -313,7 +291,6 @@ namespace BibliotecaApp.Forms.Usuario
                 var rowIndex = dgvPadroes.Rows.Add(kvp.Key, qtdAlunos, kvp.Value);
 
                 ConfigurarOpcoesValidasPorTurma(rowIndex, kvp.Key);
-
                 dgvPadroes.Rows[rowIndex].Cells["NovoPadrao"].Value = kvp.Value;
             }
 
@@ -336,123 +313,110 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void ConfigurarOpcoesValidasPorTurma(int rowIndex, string turmaAtual)
         {
-            var colNovoPadrao = (DataGridViewComboBoxColumn)dgvPadroes.Columns["NovoPadrao"];
             var cell = (DataGridViewComboBoxCell)dgvPadroes.Rows[rowIndex].Cells["NovoPadrao"];
-
             var opcoesValidas = ObterOpcoesValidasParaTurma(turmaAtual);
+
             cell.Items.Clear();
-            cell.Items.AddRange(opcoesValidas.ToArray());
+
+            // Usar HashSet para evitar duplicatas
+            var itensUnicos = new HashSet<string>();
+            foreach (var opcao in opcoesValidas)
+            {
+                if (itensUnicos.Add(opcao))
+                    cell.Items.Add(opcao);
+            }
 
             var valorAtual = _padroesTurma.ContainsKey(turmaAtual) ? _padroesTurma[turmaAtual] : "";
-            if (!string.IsNullOrEmpty(valorAtual) && !cell.Items.Contains(valorAtual))
-            {
+
+            // Verificar se o valor atual já existe antes de adicionar
+            if (!string.IsNullOrEmpty(valorAtual) && itensUnicos.Add(valorAtual))
                 cell.Items.Add(valorAtual);
-            }
         }
 
         private List<string> ObterOpcoesValidasParaTurma(string turmaAtual)
         {
             var opcoes = new List<string>();
 
-            // status especiais: não são padrões (exceto quando origem já for especial)
+            // Status especiais
             if (turmaAtual == "EGRESSO" || turmaAtual == "TRANSFERIDO" || turmaAtual == "DESISTENTE")
             {
                 opcoes.Add(turmaAtual);
-                return opcoes;
+                return opcoes.Distinct().OrderBy(o => o).ToList();
             }
 
-            // coletar turmas reais cadastradas no sistema (podem ser "1° Propedêutico 2", etc)
+            // Coletar turmas reais cadastradas no sistema
             var turmasCadastradas = _registrosOriginais
-                                    .Select(r => r.TurmaAtual)
-                                    .Where(t => !string.IsNullOrWhiteSpace(t))
-                                    .Distinct()
-                                    .ToList();
+                .Select(r => r.TurmaAtual)
+                .Where(t => !string.IsNullOrWhiteSpace(t))
+                .Distinct()
+                .ToList();
 
             var numeroAtual = ExtrairNumeroSerie(turmaAtual);
             var cursoAtual = ExtrairCurso(turmaAtual);
 
-            // --- ENSINO FUNDAMENTAL: permitir apenas continuidade (mesmo curso "Ano", próxima série) ---
+            // Ensino Fundamental
             if (cursoAtual == "Ano")
             {
-                // 6 -> 7, 7 -> 8, 8 -> 9 (manter variações cadastradas do próximo ano)
                 if (numeroAtual >= 6 && numeroAtual <= 8)
                 {
-                    var proxPrefix = $"{numeroAtual + 1}° Ano"; // ex: "9° Ano"
+                    var proxPrefix = $"{numeroAtual + 1}° Ano";
                     var candidatos = turmasCadastradas
                         .Where(t => RemoverNumeroTurma(t).Equals(proxPrefix, StringComparison.OrdinalIgnoreCase))
                         .ToList();
 
-                    if (candidatos.Any()) opcoes.AddRange(candidatos);
-                    else opcoes.Add(proxPrefix); // fallback sem número caso nenhuma turma cadastrada
-
-                    return opcoes.Distinct().OrderBy(o => o).ToList();
+                    if (candidatos.Any())
+                        opcoes.AddRange(candidatos);
+                    else
+                        opcoes.Add(proxPrefix);
                 }
-
-                // 9º ano -> permitir escolha entre TODOS os 1° de cursos técnicos cadastrados
-                if (numeroAtual == 9)
+                else if (numeroAtual == 9)
                 {
                     var tecnicosPrefixes = new[] { "1° Propedêutico", "1° Desenvolvimento", "1° Agronegócio" };
                     foreach (var prefix in tecnicosPrefixes)
                     {
-                        // encontrar variações cadastradas (ex.: "1° Propedêutico 2")
                         var encontrados = turmasCadastradas
                             .Where(t => RemoverNumeroTurma(t).Equals(prefix, StringComparison.OrdinalIgnoreCase))
                             .ToList();
 
                         if (encontrados.Any())
-                        {
                             opcoes.AddRange(encontrados);
-                        }
                         else
-                        {
-                            // incluir a opção base sem número se não houver variações cadastradas
                             opcoes.Add(prefix);
-                        }
                     }
-
-                    // também incluir, se houver no banco, entradas que correspondam a "1° <curso> <numero>" 
-                    // mesmo quando RemoverNumeroTurma não bate exatamente (caso raro), garantindo cobertura.
-                    // (a linha abaixo é opcional; mantive comentário por transparência)
-
-                    return opcoes.Distinct().OrderBy(o => o).ToList();
                 }
             }
-
-            // --- CURSOS TÉCNICOS: permitir apenas continuidade NO MESMO CURSO (ex.: 1° Propedêutico -> 2° Propedêutico) ---
-            if (cursoAtual == "Desenvolvimento" || cursoAtual == "Agronegócio" || cursoAtual == "Propedêutico")
+            // Cursos Técnicos
+            else if (cursoAtual == "Desenvolvimento" || cursoAtual == "Agronegócio" || cursoAtual == "Propedêutico")
             {
                 if (numeroAtual >= 1 && numeroAtual <= 2)
                 {
-                    var proxPrefix = $"{numeroAtual + 1}° {cursoAtual}"; // ex: "2° Desenvolvimento"
+                    var proxPrefix = $"{numeroAtual + 1}° {cursoAtual}";
                     var candidatos = turmasCadastradas
                         .Where(t => RemoverNumeroTurma(t).Equals(proxPrefix, StringComparison.OrdinalIgnoreCase))
                         .ToList();
 
-                    if (candidatos.Any()) opcoes.AddRange(candidatos);
-                    else opcoes.Add(proxPrefix);
-
-                    return opcoes.Distinct().OrderBy(o => o).ToList();
+                    if (candidatos.Any())
+                        opcoes.AddRange(candidatos);
+                    else
+                        opcoes.Add(proxPrefix);
                 }
-
-                // 3° do curso técnico -> não faz sentido definir mudança de curso em massa; sugerir EGRESSO como opção
-                if (numeroAtual == 3)
+                else if (numeroAtual == 3)
                 {
                     opcoes.Add("EGRESSO");
-                    return opcoes;
                 }
             }
 
-            // fallback seguro: não sugerir trocas de curso em Etapa 1
-            opcoes.Add("EGRESSO");
+            // Fallback seguro
+            if (opcoes.Count == 0)
+                opcoes.Add("EGRESSO");
+
             return opcoes.Distinct().OrderBy(o => o).ToList();
         }
 
         private void DgvPadroes_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dgvPadroes.IsCurrentCellDirty)
-            {
                 dgvPadroes.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            }
         }
 
         private void DgvPadroes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -462,14 +426,12 @@ namespace BibliotecaApp.Forms.Usuario
                 var turmaAtual = dgvPadroes.Rows[e.RowIndex].Cells["TurmaAtual"].Value?.ToString();
                 var novaEscolha = dgvPadroes.Rows[e.RowIndex].Cells["NovoPadrao"].Value?.ToString();
 
-                if (!string.IsNullOrEmpty(turmaAtual) && !string.IsNullOrEmpty(novaEscolha))
+                if (!string.IsNullOrEmpty(turmaAtual) && !string.IsNullOrEmpty(novaEscolha) &&
+                    IsEscolhaInvalidaParaPadrao(turmaAtual, novaEscolha))
                 {
-                    if (IsEscolhaInvalidaParaPadrao(turmaAtual, novaEscolha))
-                    {
-                        MessageBox.Show($"Escolha inválida: {turmaAtual} não pode ir para {novaEscolha}",
-                                      "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        dgvPadroes.Rows[e.RowIndex].Cells["NovoPadrao"].Value = _padroesTurma[turmaAtual];
-                    }
+                    MessageBox.Show($"Escolha inválida: {turmaAtual} não pode ir para {novaEscolha}",
+                                  "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    dgvPadroes.Rows[e.RowIndex].Cells["NovoPadrao"].Value = _padroesTurma[turmaAtual];
                 }
             }
         }
@@ -478,15 +440,11 @@ namespace BibliotecaApp.Forms.Usuario
         {
             if ((turmaAtual == "EGRESSO" || turmaAtual == "TRANSFERIDO" || turmaAtual == "DESISTENTE") &&
                 novaEscolha != turmaAtual)
-            {
                 return true;
-            }
 
             if ((novaEscolha == "DESISTENTE" || novaEscolha == "TRANSFERIDO") &&
                 !(turmaAtual == "DESISTENTE" || turmaAtual == "TRANSFERIDO"))
-            {
                 return true;
-            }
 
             return IsProgressaoInvalida(turmaAtual, novaEscolha);
         }
@@ -498,15 +456,14 @@ namespace BibliotecaApp.Forms.Usuario
             cmbFiltroTurmaEtapa2.Items.Clear();
             cmbFiltroTurmaEtapa2.Items.Add("(Todas as Turmas)");
 
-            var turmasComAlunos = _registrosOriginais.GroupBy(r => r.TurmaAtual)
-                                                   .Where(g => !string.IsNullOrWhiteSpace(g.Key))
-                                                   .Select(g => g.Key)
-                                                   .OrderBy(t => t);
+            var turmasComAlunos = _registrosOriginais
+                .Where(r => !string.IsNullOrWhiteSpace(r.TurmaAtual))
+                .GroupBy(r => r.TurmaAtual)
+                .Select(g => g.Key)
+                .OrderBy(t => t);
 
             foreach (var turma in turmasComAlunos)
-            {
                 cmbFiltroTurmaEtapa2.Items.Add(turma);
-            }
 
             cmbFiltroTurmaEtapa2.SelectedIndex = 0;
             cmbFiltroTurmaEtapa2.SelectedIndexChanged += CmbFiltroTurmaEtapa2_SelectedIndexChanged;
@@ -514,7 +471,6 @@ namespace BibliotecaApp.Forms.Usuario
             ConfigurarDataGridEtapa2();
             AtualizarGridEtapa2();
             GarantirApenasComboEditavel(dgvAjustesIndividuais, new[] { "NovaEscolha", "Observacao" }, alturaLinhaFixa: 35);
-
         }
 
         private void ConfigurarDataGridEtapa2()
@@ -558,9 +514,7 @@ namespace BibliotecaApp.Forms.Usuario
         private void DgvAjustesIndividuais_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dgvAjustesIndividuais.IsCurrentCellDirty)
-            {
                 dgvAjustesIndividuais.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            }
         }
 
         private void DgvAjustesIndividuais_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -571,15 +525,13 @@ namespace BibliotecaApp.Forms.Usuario
                 var novaEscolha = dgvAjustesIndividuais.Rows[e.RowIndex].Cells["NovaEscolha"].Value?.ToString();
                 var nome = dgvAjustesIndividuais.Rows[e.RowIndex].Cells["Nome"].Value?.ToString();
 
-                if (!string.IsNullOrEmpty(turmaAtual) && !string.IsNullOrEmpty(novaEscolha))
+                if (!string.IsNullOrEmpty(turmaAtual) && !string.IsNullOrEmpty(novaEscolha) &&
+                    IsProgressaoInvalida(turmaAtual, novaEscolha))
                 {
-                    if (IsProgressaoInvalida(turmaAtual, novaEscolha))
-                    {
-                        MessageBox.Show($"Progressão inválida detectada para {nome}: {turmaAtual} → {novaEscolha}",
-                                      "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        dgvAjustesIndividuais.Rows[e.RowIndex].Cells["NovaEscolha"].Value =
-                            dgvAjustesIndividuais.Rows[e.RowIndex].Cells["PadraoDefinido"].Value;
-                    }
+                    MessageBox.Show($"Progressão inválida detectada para {nome}: {turmaAtual} → {novaEscolha}",
+                                  "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    dgvAjustesIndividuais.Rows[e.RowIndex].Cells["NovaEscolha"].Value =
+                        dgvAjustesIndividuais.Rows[e.RowIndex].Cells["PadraoDefinido"].Value;
                 }
             }
         }
@@ -592,9 +544,7 @@ namespace BibliotecaApp.Forms.Usuario
             var registrosFiltrados = _registrosOriginais.AsEnumerable();
 
             if (!string.IsNullOrEmpty(filtro) && filtro != "(Todas as Turmas)")
-            {
                 registrosFiltrados = registrosFiltrados.Where(r => r.TurmaAtual == filtro);
-            }
 
             foreach (var registro in registrosFiltrados.OrderBy(r => r.Nome))
             {
@@ -614,101 +564,130 @@ namespace BibliotecaApp.Forms.Usuario
         {
             var cell = (DataGridViewComboBoxCell)dgvAjustesIndividuais.Rows[rowIndex].Cells["NovaEscolha"];
 
-            // construir opções válidas com base nas turmas cadastradas e nas regras
-            var todasOpcoes = new List<string>();
-
-            // pegar turmas cadastradas + dicionarioTurmas (fallback)
-            var turmasCadastradas = _registrosOriginais
-                                    .Select(r => r.TurmaAtual)
-                                    .Where(t => !string.IsNullOrWhiteSpace(t))
-                                    .Distinct()
-                                    .ToList();
-
-            todasOpcoes.AddRange(turmasCadastradas);
-
-            // garantir que termos base do dicionario existam como fallback
-            foreach (var curso in dicionarioTurmas)
+            try
             {
-                todasOpcoes.AddRange(curso.Value);
+                // ✅ 1. Turmas do BANCO (prioridade máxima)
+                var turmasBanco = _registrosOriginais
+                    .Select(r => r.TurmaAtual)
+                    .Where(t => !string.IsNullOrWhiteSpace(t))
+                    .Distinct()
+                    .ToList();
+
+                // ✅ 2. Turmas do DICIONÁRIO (apenas as que não existem no banco)
+                var turmasDic = dicionarioTurmas.Values
+                    .SelectMany(x => x)
+                    .Where(td => !turmasBanco.Any(tb =>
+                        string.Equals(tb, td, StringComparison.OrdinalIgnoreCase)))
+                    .ToList();
+
+                // ✅ 3. Status especiais (sempre incluir)
+                var statusEspeciais = new[] { "EGRESSO", "DESISTENTE", "TRANSFERIDO" };
+
+                // ✅ 4. Combinar TUDO sem duplicatas
+                var todasOpcoes = turmasBanco
+                    .Concat(turmasDic)
+                    .Concat(statusEspeciais)
+                    .Distinct()
+                    .ToList();
+
+                // ✅ 5. Aplicar regras de filtragem
+                var opcoesValidas = FiltrarOpcoesValidasParaAluno(turmaAtual, todasOpcoes);
+
+                // ✅ 6. Remover duplicata com "Padrão Definido"
+                var padraoDefinido = dgvAjustesIndividuais.Rows[rowIndex].Cells["PadraoDefinido"].Value?.ToString();
+                if (!string.IsNullOrEmpty(padraoDefinido))
+                {
+                    opcoesValidas.RemoveAll(opcao => opcao == padraoDefinido);
+                }
+
+                // ✅ 7. Preencher o ComboBox
+                cell.Items.Clear();
+                foreach (var opcao in opcoesValidas.OrderBy(o => o))
+                {
+                    cell.Items.Add(opcao);
+                }
+
+                // ✅ 8. Garantir valor atual
+                var valorAtual = dgvAjustesIndividuais.Rows[rowIndex].Cells["NovaEscolha"].Value?.ToString();
+                if (!string.IsNullOrEmpty(valorAtual) && !cell.Items.Contains(valorAtual))
+                {
+                    cell.Items.Add(valorAtual);
+                }
             }
-
-            // adicionar status especiais
-            todasOpcoes.AddRange(new[] { "EGRESSO", "DESISTENTE", "TRANSFERIDO" });
-
-            // filtrar usando regras robustas (sem regressão)
-            var opcoesValidas = FiltrarOpcoesValidasParaAluno(turmaAtual, todasOpcoes.Distinct().ToList());
-
-            cell.Items.Clear();
-            cell.Items.AddRange(opcoesValidas.OrderBy(o => o).ToArray());
-
-            // garantir que o valor atual (padrao) esteja presente para evitar DataGridViewComboBoxCell inválido
-            var valorAtual = dgvAjustesIndividuais.Rows[rowIndex].Cells["NovaEscolha"].Value?.ToString();
-            if (!string.IsNullOrEmpty(valorAtual) && !cell.Items.Contains(valorAtual))
+            catch (Exception ex)
             {
-                cell.Items.Add(valorAtual);
+                Debug.WriteLine($"Erro ao configurar opções: {ex.Message}");
+                cell.Items.Clear();
             }
         }
 
 
         private List<string> FiltrarOpcoesValidasParaAluno(string turmaAtual, List<string> todasOpcoes)
         {
-            var opcoesValidas = new List<string>();
+            var opcoesValidas = new HashSet<string>();
 
             if (string.IsNullOrWhiteSpace(turmaAtual))
-            {
                 return todasOpcoes.Distinct().ToList();
-            }
 
             // Regra específica: SE já for EGRESSO => só pode permanecer EGRESSO
             if (turmaAtual == "EGRESSO")
-            {
                 return new List<string> { "EGRESSO" };
-            }
 
             // Se a origem já é TRANSFERIDO ou DESISTENTE, permitir apenas status especiais
             if (turmaAtual == "TRANSFERIDO" || turmaAtual == "DESISTENTE")
-            {
                 return new List<string> { "EGRESSO", "DESISTENTE", "TRANSFERIDO" };
-            }
 
             var opcoesDistintas = todasOpcoes.Distinct();
-
             var serieAtual = ExtrairNumeroSerie(turmaAtual);
             var cursoAtual = ExtrairCurso(turmaAtual);
+            var cursosTecnicos = new[] { "Propedêutico", "Desenvolvimento", "Agronegócio" };
 
             foreach (var opcao in opcoesDistintas)
             {
-                if (string.IsNullOrWhiteSpace(opcao)) continue;
+                // Não permitir a própria turma atual como opção
+                if (string.Equals(opcao, turmaAtual, StringComparison.OrdinalIgnoreCase))
+                    continue;
 
-                // sempre permitir DESISTENTE e TRANSFERIDO (exceto se origem for EGRESSO — já tratado)
+                if (string.IsNullOrWhiteSpace(opcao))
+                    continue;
+
+                var cursoOpcao = ExtrairCurso(opcao);
+                var serieOpcao = ExtrairNumeroSerie(opcao);
+
+                // MANTER A REGRA ORIGINAL de remover turmas terminadas em "1" para cursos técnicos
+                if (cursosTecnicos.Contains(cursoOpcao) && opcao.Trim().EndsWith(" 1"))
+                {
+                    // Verificar se existe uma versão sem o "1" antes de remover
+                    var opcaoSemNumero = opcao.Substring(0, opcao.LastIndexOf(" 1")).Trim();
+                    if (todasOpcoes.Contains(opcaoSemNumero))
+                    {
+                        // Se existir a versão sem número, pule a versão com "1"
+                        continue;
+                    }
+                }
+
+                // sempre permitir DESISTENTE e TRANSFERIDO
                 if (opcao == "DESISTENTE" || opcao == "TRANSFERIDO")
                 {
                     opcoesValidas.Add(opcao);
                     continue;
                 }
 
-                // permitir EGRESSO apenas quando aplicável (verificação abaixo)
+                // permitir EGRESSO apenas quando aplicável
                 if (opcao == "EGRESSO")
                 {
-                    if ((cursoAtual == "Desenvolvimento" || cursoAtual == "Agronegócio" || cursoAtual == "Propedêutico")
-                        && serieAtual == 3)
-                    {
+                    if (cursosTecnicos.Contains(cursoAtual) && serieAtual == 3)
                         opcoesValidas.Add(opcao);
-                    }
-                    // caso contrário não adiciona "EGRESSO"
+
                     continue;
                 }
 
-                var cursoOpcao = ExtrairCurso(opcao);
-                var serieOpcao = ExtrairNumeroSerie(opcao);
-
-                // caso especial: 9° Ano -> qualquer 1° (propedêutico/desenvolvimento/agronegócio) permitido
+                // caso especial: 9° Ano -> qualquer 1° técnico permitido
                 if (cursoAtual == "Ano" && serieAtual == 9)
                 {
                     if (serieOpcao == 1 && (cursoOpcao == "Propedêutico" || cursoOpcao == "Desenvolvimento" || cursoOpcao == "Agronegócio"))
-                    {
                         opcoesValidas.Add(opcao);
-                    }
+
                     continue;
                 }
 
@@ -717,8 +696,8 @@ namespace BibliotecaApp.Forms.Usuario
                 {
                     if (serieAtual > 0 && serieOpcao > 0)
                     {
-                        if (serieOpcao < serieAtual) continue; // sem regressão
-                        if ((serieOpcao - serieAtual) > 1) continue; // sem pulo > +1
+                        if (serieOpcao < serieAtual) continue;
+                        if ((serieOpcao - serieAtual) > 1) continue;
                         opcoesValidas.Add(opcao);
                     }
                     else
@@ -728,57 +707,44 @@ namespace BibliotecaApp.Forms.Usuario
                     continue;
                 }
 
-                // Cursos técnicos entre si (permitir mudança se série de destino >= série atual e pulo <= 1)
-                var tecnicos = new[] { "Propedêutico", "Desenvolvimento", "Agronegócio" };
-                if (tecnicos.Contains(cursoAtual) && tecnicos.Contains(cursoOpcao))
+                // Cursos técnicos entre si
+                if (cursosTecnicos.Contains(cursoAtual) && cursosTecnicos.Contains(cursoOpcao))
                 {
                     if (serieOpcao >= serieAtual && (serieOpcao - serieAtual) <= 1)
-                    {
                         opcoesValidas.Add(opcao);
-                    }
+
                     continue;
                 }
 
-                // movimento entre anos do Fundamental — só próximo ano
+                // movimento entre anos do Fundamental
                 if (cursoAtual == "Ano" && cursoOpcao == "Ano")
                 {
                     if (serieOpcao == serieAtual + 1)
-                    {
                         opcoesValidas.Add(opcao);
-                    }
+
                     continue;
                 }
-
-                // demais casos: não permitir
             }
 
-            return opcoesValidas.Distinct().OrderBy(o => o).ToList();
+            return opcoesValidas.OrderBy(o => o).ToList();
         }
-
-
-
 
         private bool IsProgressaoInvalida(string turmaAtual, string novaTurma)
         {
-            if (string.IsNullOrWhiteSpace(turmaAtual) || string.IsNullOrWhiteSpace(novaTurma)) return true;
+            if (string.IsNullOrWhiteSpace(turmaAtual) || string.IsNullOrWhiteSpace(novaTurma))
+                return true;
 
             // regra fundamental: se origem é EGRESSO, só pode permanecer EGRESSO
             if (turmaAtual == "EGRESSO")
-            {
                 return novaTurma != "EGRESSO";
-            }
 
             // se origem é TRANSFERIDO ou DESISTENTE: só aceitar status especiais
             if (turmaAtual == "TRANSFERIDO" || turmaAtual == "DESISTENTE")
-            {
                 return !(novaTurma == "EGRESSO" || novaTurma == "TRANSFERIDO" || novaTurma == "DESISTENTE");
-            }
 
             // permitir DESISTENTE e TRANSFERIDO sempre (ajuste individual)
             if (novaTurma == "DESISTENTE" || novaTurma == "TRANSFERIDO")
-            {
                 return false;
-            }
 
             var serieAtual = ExtrairNumeroSerie(turmaAtual);
             var serieNova = ExtrairNumeroSerie(novaTurma);
@@ -788,26 +754,22 @@ namespace BibliotecaApp.Forms.Usuario
             // permitir EGRESSO apenas para alunos que estão no 3° ano de curso técnico
             if (novaTurma == "EGRESSO")
             {
-                if ((cursoAtual == "Desenvolvimento" || cursoAtual == "Agronegócio" || cursoAtual == "Propedêutico")
-                    && serieAtual == 3)
-                {
-                    return false; // válido
-                }
-                return true; // inválido
+                if ((cursoAtual == "Desenvolvimento" || cursoAtual == "Agronegócio" || cursoAtual == "Propedêutico") && serieAtual == 3)
+                    return false;
+
+                return true;
             }
 
             // 9° Ano -> 1° de técnico é permitido
             if (cursoAtual == "Ano" && serieAtual == 9 && serieNova == 1 &&
                 (cursoNovo == "Propedêutico" || cursoNovo == "Desenvolvimento" || cursoNovo == "Agronegócio"))
-            {
                 return false;
-            }
 
             // mesmo curso e séries detectadas
             if (cursoAtual == cursoNovo && serieAtual > 0 && serieNova > 0)
             {
-                if (serieNova < serieAtual) return true; // regressão proibida
-                if ((serieNova - serieAtual) > 1) return true; // pulo > +1 proibido
+                if (serieNova < serieAtual) return true;
+                if ((serieNova - serieAtual) > 1) return true;
                 return false;
             }
 
@@ -815,20 +777,14 @@ namespace BibliotecaApp.Forms.Usuario
             var tecnicos = new[] { "Propedêutico", "Desenvolvimento", "Agronegócio" };
             if (tecnicos.Contains(cursoAtual) && tecnicos.Contains(cursoNovo))
             {
-                if (serieNova >= serieAtual && (serieNova - serieAtual) <= 1) return false;
+                if (serieNova >= serieAtual && (serieNova - serieAtual) <= 1)
+                    return false;
+
                 return true;
             }
 
-            // movimento entre "Ano" e outro curso que não seja 9->1 é inválido
             return true;
         }
-
-
-
-
-
-
-
         #endregion
 
         #region Etapa 3: Confirmação
@@ -844,14 +800,10 @@ namespace BibliotecaApp.Forms.Usuario
 
             txtResumoFinal.Text += "ALTERAÇÕES DETALHADAS:\n";
             foreach (var alt in alteracoes.Take(20))
-            {
                 txtResumoFinal.Text += $"• {alt.Nome}: {alt.TurmaAtual} → {alt.NovaTurma}\n";
-            }
 
             if (alteracoes.Count > 20)
-            {
                 txtResumoFinal.Text += $"... e mais {alteracoes.Count - 20} alterações.\n";
-            }
         }
 
         private void AplicarMapeamento()
@@ -859,9 +811,11 @@ namespace BibliotecaApp.Forms.Usuario
             var result = MessageBox.Show("Confirma a aplicação do mapeamento ao banco de dados? Esta ação não pode ser desfeita.",
                                        "Confirmar Aplicação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            if (result != DialogResult.Yes) return;
+            if (result != DialogResult.Yes)
+                return;
 
-            if (!SolicitarConfirmacaoSenha()) return;
+            if (!SolicitarConfirmacaoSenha())
+                return;
 
             try
             {
@@ -902,60 +856,44 @@ namespace BibliotecaApp.Forms.Usuario
 
         private bool SolicitarConfirmacaoSenha()
         {
-            string primeiraSenha = "";
-            string segundaSenha = "";
-
-            int tentativas = 0;
-            while (tentativas < 3)
+            for (int tentativas = 0; tentativas < 3; tentativas++)
             {
-                tentativas++;
+                string primeiraSenha, segundaSenha;
 
-                // First password entry
+                // Primeira entrada de senha
                 using (var pf = new PasswordForm())
                 {
                     pf.Titulo = "Confirmação de Aplicação";
-                    pf.Mensagem = $"Digite sua senha (tentativa {tentativas}/3):";
-                    var dr = pf.ShowDialog(this);
-
-                    if (dr != DialogResult.OK)
-                    {
+                    pf.Mensagem = $"Digite sua senha (tentativa {tentativas + 1}/3):";
+                    if (pf.ShowDialog(this) != DialogResult.OK)
                         return false;
-                    }
 
                     primeiraSenha = pf.SenhaDigitada;
                 }
 
-                // Second password entry for confirmation
+                // Segunda entrada de senha para confirmação
                 using (var pf = new PasswordForm())
                 {
                     pf.Titulo = "Confirmação de Aplicação";
-                    pf.Mensagem = $"Confirme sua senha (tentativa {tentativas}/3):";
-                    var dr = pf.ShowDialog(this);
-
-                    if (dr != DialogResult.OK)
-                    {
+                    pf.Mensagem = $"Confirme sua senha (tentativa {tentativas + 1}/3):";
+                    if (pf.ShowDialog(this) != DialogResult.OK)
                         return false;
-                    }
 
                     segundaSenha = pf.SenhaDigitada;
                 }
 
-                // Check if passwords match
+                // Verificar se as senhas coincidem
                 if (primeiraSenha != segundaSenha)
                 {
                     MessageBox.Show("As senhas não coincidem. Tente novamente.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     continue;
                 }
 
-                // Verify password against database
+                // Verificar senha no banco de dados
                 if (VerificarSenha(primeiraSenha))
-                {
                     return true;
-                }
-                else
-                {
-                    MessageBox.Show("Senha incorreta.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+
+                MessageBox.Show("Senha incorreta.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             MessageBox.Show("Falha na autenticação. Operação cancelada.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -965,7 +903,8 @@ namespace BibliotecaApp.Forms.Usuario
         private bool VerificarSenha(string senha)
         {
             var nome = Sessao.NomeBibliotecariaLogada;
-            if (string.IsNullOrWhiteSpace(nome)) return false;
+            if (string.IsNullOrWhiteSpace(nome))
+                return false;
 
             try
             {
@@ -996,13 +935,14 @@ namespace BibliotecaApp.Forms.Usuario
         }
         #endregion
 
-        #region Arquivo JSON
+        #region Arquivo de Mapeamento
         private string MappingFilePath(int ano) => Path.Combine(_baseFolder, $"mapeamento_{ano}.txt");
 
         private MapeamentoAnualModel LoadMapping(int ano)
         {
             var path = MappingFilePath(ano);
-            if (!File.Exists(path)) return null;
+            if (!File.Exists(path))
+                return null;
 
             try
             {
@@ -1012,9 +952,12 @@ namespace BibliotecaApp.Forms.Usuario
 
                 foreach (var line in lines)
                 {
-                    if (line.StartsWith("ANO=")) model.Ano = int.Parse(line.Substring(4));
-                    else if (line.StartsWith("STATUS=")) model.Status = line.Substring(7);
-                    else if (line.StartsWith("GERADO_EM=")) model.GeradoEm = DateTime.Parse(line.Substring(10));
+                    if (line.StartsWith("ANO="))
+                        model.Ano = int.Parse(line.Substring(4));
+                    else if (line.StartsWith("STATUS="))
+                        model.Status = line.Substring(7);
+                    else if (line.StartsWith("GERADO_EM="))
+                        model.GeradoEm = DateTime.Parse(line.Substring(10));
                 }
 
                 return model;
@@ -1037,9 +980,7 @@ namespace BibliotecaApp.Forms.Usuario
                 content += "REGISTROS_START\n";
 
                 foreach (var reg in model.Registros)
-                {
                     content += $"{reg.UsuarioId}|{reg.Nome}|{reg.TurmaAtual}|{reg.NovaTurma}|{reg.Observacao}\n";
-                }
 
                 content += "REGISTROS_END\n";
 
@@ -1053,7 +994,7 @@ namespace BibliotecaApp.Forms.Usuario
         }
         #endregion
 
-        #region Estilização
+        #region Utilitários e Métodos Auxiliares
         private void EstilizarDataGrid(DataGridView dgv)
         {
             dgv.AutoGenerateColumns = false;
@@ -1082,9 +1023,6 @@ namespace BibliotecaApp.Forms.Usuario
             dgv.BackgroundColor = Color.White;
             dgv.BorderStyle = BorderStyle.None;
         }
-        #endregion
-
-        #region Métodos de Validação e Utilitários
 
         private bool ValidarEtapa1()
         {
@@ -1106,15 +1044,13 @@ namespace BibliotecaApp.Forms.Usuario
                 var turmaAtual = row.Cells["TurmaAtual"].Value?.ToString();
                 var novaEscolha = row.Cells["NovaEscolha"].Value?.ToString();
 
-                if (!string.IsNullOrEmpty(turmaAtual) && !string.IsNullOrEmpty(novaEscolha))
+                if (!string.IsNullOrEmpty(turmaAtual) && !string.IsNullOrEmpty(novaEscolha) &&
+                    IsProgressaoInvalida(turmaAtual, novaEscolha))
                 {
-                    if (IsProgressaoInvalida(turmaAtual, novaEscolha))
-                    {
-                        var nome = row.Cells["Nome"].Value?.ToString();
-                        MessageBox.Show($"Progressão inválida detectada para {nome}: {turmaAtual} → {novaEscolha}",
-                                      "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return false;
-                    }
+                    var nome = row.Cells["Nome"].Value?.ToString();
+                    MessageBox.Show($"Progressão inválida detectada para {nome}: {turmaAtual} → {novaEscolha}",
+                                  "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
                 }
             }
             return true;
@@ -1130,9 +1066,7 @@ namespace BibliotecaApp.Forms.Usuario
                 if (!string.IsNullOrEmpty(turmaAtual) && !string.IsNullOrEmpty(novoPadrao))
                 {
                     foreach (var registro in _registrosOriginais.Where(r => r.TurmaAtual == turmaAtual))
-                    {
                         registro.NovaTurma = novoPadrao;
-                    }
 
                     _padroesTurma[turmaAtual] = novoPadrao;
                 }
@@ -1141,19 +1075,20 @@ namespace BibliotecaApp.Forms.Usuario
 
         private int ExtrairNumeroSerie(string turma)
         {
-            if (string.IsNullOrWhiteSpace(turma)) return 0;
+            if (string.IsNullOrWhiteSpace(turma))
+                return 0;
 
             var match = Regex.Match(turma, @"(\d+)°");
             if (match.Success && int.TryParse(match.Groups[1].Value, out int numero))
-            {
                 return numero;
-            }
+
             return 0;
         }
 
         private string ExtrairCurso(string turma)
         {
-            if (string.IsNullOrWhiteSpace(turma)) return "";
+            if (string.IsNullOrWhiteSpace(turma))
+                return "";
 
             turma = turma.ToLower();
 
@@ -1171,67 +1106,45 @@ namespace BibliotecaApp.Forms.Usuario
             GarantirApenasComboEditavel(dgvAjustesIndividuais, new[] { "NovaEscolha", "Observacao" }, alturaLinhaFixa: 35);
         }
 
-
-        /// <summary>
-        /// Configura o DataGridView para que apenas as colunas informadas sejam editáveis (tipicamente os ComboBoxes),
-        /// e bloqueia redimensionamento de colunas/linhas e edição das demais células.
-        /// Deve ser chamado **depois** de criar/registrar as colunas e **depois** de preencher as linhas (para fixar altura de cada row).
-        /// </summary>
         private void GarantirApenasComboEditavel(DataGridView dgv, string[] colunasComboEditaveis, int alturaLinhaFixa = 35)
         {
-            // Segurança: se dgv nulo, sair
             if (dgv == null) return;
 
-            // Desabilitar alterações de layout pelo usuário
+            // Configurações básicas
             dgv.AllowUserToResizeColumns = false;
             dgv.AllowUserToResizeRows = false;
             dgv.AllowUserToOrderColumns = false;
             dgv.AllowUserToAddRows = false;
             dgv.AllowUserToDeleteRows = false;
-
-            // Cabeçalhos não redimensionáveis
             dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgv.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
 
-            // Tornar não ordenável e não redimensionável cada coluna; por enquanto marcar todas como ReadOnly
             var setEditaveis = new HashSet<string>(colunasComboEditaveis ?? new string[0], StringComparer.OrdinalIgnoreCase);
 
             foreach (DataGridViewColumn col in dgv.Columns)
             {
                 col.SortMode = DataGridViewColumnSortMode.NotSortable;
-                col.Resizable = DataGridViewTriState.False; // não permite redimensionar por coluna
-                                                            // marcar ReadOnly true por padrão; se for coluna editável, set false
+                col.Resizable = DataGridViewTriState.False;
                 col.ReadOnly = !setEditaveis.Contains(col.Name);
             }
 
-            // importante: o DataGridView.ReadOnly deve ficar false para que colunas específicas possam ser editadas
             dgv.ReadOnly = false;
-
-            // Aparência: evitar que usuário pense que pode editar outra coisa
             dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(231, 238, 247);
             dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
 
-            // Fixar altura da linha padrão
             if (alturaLinhaFixa > 0)
-            {
                 dgv.RowTemplate.Height = alturaLinhaFixa;
-            }
 
-            // Aplicar a altura fixa e bloquear redimensionamento em todas as linhas já existentes
             foreach (DataGridViewRow row in dgv.Rows)
             {
                 row.Resizable = DataGridViewTriState.False;
                 row.Height = alturaLinhaFixa;
             }
 
-            // Garantir que o header de linha também não permita resize pelo usuário
             dgv.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-
-            // Opcional: evitar que o usuário entre em modo de edição em células que não sejam das colunas permitidas
             dgv.CellBeginEdit -= Dgv_CellBeginEdit_BlockNonCombo;
             dgv.CellBeginEdit += Dgv_CellBeginEdit_BlockNonCombo;
 
-            // Local handler para bloquear edição manual em colunas que não sejam combo permitidos
             void Dgv_CellBeginEdit_BlockNonCombo(object sender, DataGridViewCellCancelEventArgs ev)
             {
                 try
@@ -1240,19 +1153,14 @@ namespace BibliotecaApp.Forms.Usuario
                     if (dv == null) return;
                     var colName = dv.Columns[ev.ColumnIndex].Name;
                     if (!setEditaveis.Contains(colName))
-                    {
-                        ev.Cancel = true; // cancela edição
-                    }
+                        ev.Cancel = true;
                 }
                 catch
                 {
-                    // não propagar erro
+                    // Não propagar erro
                 }
             }
         }
-
         #endregion
-
-       
     }
 }

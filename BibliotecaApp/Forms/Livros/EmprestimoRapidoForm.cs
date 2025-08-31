@@ -260,25 +260,10 @@ namespace BibliotecaApp.Forms.Livros
             if (string.IsNullOrWhiteSpace(turmaDigitada))
                 return turmaDigitada;
 
-            // Adicionar ° automaticamente se não tiver e começar com número
+            // Adicionar ° automaticamente se não tiver
             if (!turmaDigitada.Contains("°") && Regex.IsMatch(turmaDigitada, @"^\d+"))
             {
-                // Encontrar onde termina o número
-                int i = 0;
-                while (i < turmaDigitada.Length && char.IsDigit(turmaDigitada[i]))
-                {
-                    i++;
-                }
-
-                // Inserir o símbolo de grau após o número
-                if (i < turmaDigitada.Length)
-                {
-                    turmaDigitada = turmaDigitada.Insert(i, "°");
-                }
-                else
-                {
-                    turmaDigitada = turmaDigitada + "°";
-                }
+                turmaDigitada = Regex.Replace(turmaDigitada, @"^(\d+)", "$1°");
             }
 
             // Extrair número e tipo
@@ -292,20 +277,30 @@ namespace BibliotecaApp.Forms.Livros
             {
                 numeroStr = matchNumero.Groups[1].Value;
             }
+            else
+            {
+                // Se não encontrou o padrão com °, tentar sem °
+                matchNumero = Regex.Match(turmaDigitada, @"^(\d+)\s");
+                if (matchNumero.Success)
+                {
+                    numeroStr = matchNumero.Groups[1].Value;
+                    turmaDigitada = turmaDigitada.Replace(matchNumero.Value, matchNumero.Groups[1].Value + "° ");
+                }
+            }
 
             // Determinar o tipo de turma
             string turmaLower = turmaDigitada.ToLower();
-            if (turmaLower.Contains("d"))
+            if (turmaLower.Contains("p"))
+            {
+                tipo = "Propedêutico";
+            }
+            else if (turmaLower.Contains("d"))
             {
                 tipo = "Desenvolvimento";
             }
             else if (turmaLower.Contains("ag"))
             {
                 tipo = "Agronegócio";
-            }
-            else if (turmaLower.Contains("p"))
-            {
-                tipo = "Propedêutico";
             }
             else if (turmaLower.Contains("an"))
             {
@@ -349,8 +344,16 @@ namespace BibliotecaApp.Forms.Livros
                 if (int.TryParse(numeroTurma, out numero))
                 {
                     if (numero < 1) numero = 1;
+                    // Não há limite máximo para o número da turma
                     numeroTurma = numero.ToString();
                 }
+            }
+
+            // NOVA LÓGICA: Remover apenas o número "1" no final para cursos técnicos
+            if (!string.IsNullOrEmpty(tipo) && tipo != "Ano" && !string.IsNullOrEmpty(numeroTurma) && numeroTurma == "1")
+            {
+                // Para cursos técnicos, remover apenas o número "1" da turma (final)
+                numeroTurma = "";
             }
 
             // Montar turma corrigida

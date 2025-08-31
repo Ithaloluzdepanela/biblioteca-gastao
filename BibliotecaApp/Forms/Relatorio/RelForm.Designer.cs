@@ -46,9 +46,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
             this.lstLivros = new System.Windows.Forms.ListBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.cbBibliotecaria = new RoundedComboBox();
             this.txtLivro = new RoundedTextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.cmbAcao = new RoundedComboBox();
             this.txtUsuario = new RoundedTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistorico)).BeginInit();
@@ -67,13 +67,12 @@
             this.Acao,
             this.Bibliotecaria,
             this.DataAcao});
-            this.dgvHistorico.Location = new System.Drawing.Point(113, 380);
+            this.dgvHistorico.Location = new System.Drawing.Point(113, 357);
             this.dgvHistorico.Name = "dgvHistorico";
             this.dgvHistorico.ReadOnly = true;
             this.dgvHistorico.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgvHistorico.Size = new System.Drawing.Size(1054, 437);
             this.dgvHistorico.TabIndex = 23;
-           
             // 
             // NomeU
             // 
@@ -280,19 +279,6 @@
             this.lstLivros.TabIndex = 127;
             this.lstLivros.Visible = false;
             // 
-            // label6
-            // 
-            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label6.Location = new System.Drawing.Point(457, 225);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(213, 25);
-            this.label6.TabIndex = 124;
-            this.label6.Text = "Bliotecária responsável:";
-            // 
             // cbBibliotecaria
             // 
             this.cbBibliotecaria.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -335,11 +321,26 @@
             this.txtLivro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLivro.PlaceholderMarginLeft = 12;
             this.txtLivro.PlaceholderText = "Digite aqui o nome do livro...";
+            this.txtLivro.SelectedText = "";
+            this.txtLivro.SelectionLength = 0;
             this.txtLivro.SelectionStart = 0;
             this.txtLivro.Size = new System.Drawing.Size(429, 40);
             this.txtLivro.TabIndex = 91;
             this.txtLivro.TextColor = System.Drawing.Color.Black;
             this.txtLivro.UseSystemPasswordChar = false;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label6.Location = new System.Drawing.Point(457, 225);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(213, 25);
+            this.label6.TabIndex = 124;
+            this.label6.Text = "Bliotecária responsável:";
             // 
             // cmbAcao
             // 
@@ -391,6 +392,8 @@
             this.txtUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUsuario.PlaceholderMarginLeft = 12;
             this.txtUsuario.PlaceholderText = "Digite aqui o nome do usuário...";
+            this.txtUsuario.SelectedText = "";
+            this.txtUsuario.SelectionLength = 0;
             this.txtUsuario.SelectionStart = 0;
             this.txtUsuario.Size = new System.Drawing.Size(331, 40);
             this.txtUsuario.TabIndex = 89;

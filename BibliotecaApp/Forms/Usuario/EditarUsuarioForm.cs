@@ -983,17 +983,17 @@ namespace BibliotecaApp.Forms.Usuario
 
             // Determinar o tipo de turma
             string turmaLower = turmaDigitada.ToLower();
-            if (turmaLower.Contains("d"))
+            if (turmaLower.Contains("p"))
+            {
+                tipo = "Propedêutico";
+            }
+            else if (turmaLower.Contains("d"))
             {
                 tipo = "Desenvolvimento";
             }
             else if (turmaLower.Contains("ag"))
             {
                 tipo = "Agronegócio";
-            }
-            else if (turmaLower.Contains("p"))
-            {
-                tipo = "Propedêutico";
             }
             else if (turmaLower.Contains("an"))
             {
@@ -1040,6 +1040,13 @@ namespace BibliotecaApp.Forms.Usuario
                     // Não há limite máximo para o número da turma
                     numeroTurma = numero.ToString();
                 }
+            }
+
+            // NOVA LÓGICA: Remover apenas o número "1" no final para cursos técnicos
+            if (!string.IsNullOrEmpty(tipo) && tipo != "Ano" && !string.IsNullOrEmpty(numeroTurma) && numeroTurma == "1")
+            {
+                // Para cursos técnicos, remover apenas o número "1" da turma (final)
+                numeroTurma = "";
             }
 
             // Montar turma corrigida

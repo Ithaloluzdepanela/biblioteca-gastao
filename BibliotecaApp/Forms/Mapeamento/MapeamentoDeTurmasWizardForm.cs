@@ -11,6 +11,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
+
+
+//Para Acessar o form de mapeamento altere o arquivo txt em AppData para um ano anterior ao ano atual
+    
+
 namespace BibliotecaApp.Forms.Usuario
 {
     public partial class MapeamentoDeTurmasWizardForm : Form

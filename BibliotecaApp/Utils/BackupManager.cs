@@ -134,7 +134,7 @@ namespace BibliotecaApp.Services
             }
         }
 
-        public static void ExcluirAntigos(DriveService svc, string folderId, int dias = 90, int manterMinimo = 10)
+        public static void ExcluirAntigos(DriveService svc, string folderId, int dias = 30, int manterMinimo = 10)
         {
             var list = svc.Files.List();
             list.Q = $"'{folderId}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed = false";
@@ -178,7 +178,7 @@ namespace BibliotecaApp.Services
 
                 RegistroBackup.GravarHoje(registroBackupPath);
 
-                DriveHelper.ExcluirAntigos(svc, folderId, dias: 90, manterMinimo: 10);
+                DriveHelper.ExcluirAntigos(svc, folderId, dias: 30, manterMinimo: 10);
 
                 try { File.Delete(zipPath); } catch { /* manter se preferir */ }
             }
@@ -215,7 +215,7 @@ namespace BibliotecaApp.Services
                     }
                 }
 
-                DriveHelper.ExcluirAntigos(svc, folderId, dias: 90, manterMinimo: 10);
+                DriveHelper.ExcluirAntigos(svc, folderId, dias: 30, manterMinimo: 10);
             }
             catch { /* log se quiser */ }
         }

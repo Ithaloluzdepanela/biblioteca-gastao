@@ -58,11 +58,11 @@
             // lblOla
             // 
             this.lblOla.AutoSize = true;
-            this.lblOla.Font = new System.Drawing.Font("Segoe UI Semibold", 22F, System.Drawing.FontStyle.Bold);
+            this.lblOla.Font = new System.Drawing.Font("Segoe UI Semibold", 20F, System.Drawing.FontStyle.Bold);
             this.lblOla.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.lblOla.Location = new System.Drawing.Point(19, 23);
+            this.lblOla.Location = new System.Drawing.Point(19, 26);
             this.lblOla.Name = "lblOla";
-            this.lblOla.Size = new System.Drawing.Size(278, 41);
+            this.lblOla.Size = new System.Drawing.Size(249, 37);
             this.lblOla.TabIndex = 1;
             this.lblOla.Text = "Olá, NomeUsuário!";
             // 

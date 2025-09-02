@@ -2,6 +2,7 @@
 using BibliotecaApp.Forms.Login;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,8 +27,33 @@ namespace BibliotecaApp
                 {
                     if (login.ShowDialog() == DialogResult.OK)
                     {
+
+                        // ---- Backup diario desativado / ative na versao final juntamente com o relatorio para secretaria //
+
+                        //try
+                        //{
+                        //    var appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "BibliotecaApp");
+                        //    Directory.CreateDirectory(appData);
+
+                        //    var caminhoSdf = Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
+                        //    var registroPath = Path.Combine(appData, "ultimo_backup.txt");
+                        //    var backuplocais = Path.Combine(appData, "BackupsPendentes");
+                        //    Directory.CreateDirectory(backuplocais);
+                        //    var credentials = Path.Combine(Application.StartupPath, "credentials.json");
+
+                        //    // Reenvia backups pendentes e executa backup de hoje (bloqueante)
+                        //    BibliotecaApp.Services.BackupDiario.ReenviarPendentes(appData, backuplocais, credentials);
+                        //    BibliotecaApp.Services.BackupDiario.Executar(caminhoSdf, registroPath, appData, backuplocais, credentials);
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    MessageBox.Show("Erro ao tentar realizar backup automático:\n" + ex.Message,
+                        //        "Backup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        //}
+
                         Application.Run(new MainForm());
                     }
+
                     else
                     {
                         break;

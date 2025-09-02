@@ -185,6 +185,7 @@
       <DependentUpon>MapeamentoDeTurmasWizardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\MapeamentoModel.cs" />
+    <Compile Include="Utils\AppPaths.cs" />
     <Compile Include="Utils\BackupManager.cs" />
     <Compile Include="Utils\EmailService.cs" />
     <Compile Include="Utils\frmProgresso.cs">

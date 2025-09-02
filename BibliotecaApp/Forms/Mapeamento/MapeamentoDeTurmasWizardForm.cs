@@ -10,11 +10,12 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using BibliotecaApp.Utils;
 
 
 
 //Para Acessar o form de mapeamento altere o arquivo txt em AppData para um ano anterior ao ano atual
-    
+
 
 namespace BibliotecaApp.Forms.Usuario
 {
@@ -40,8 +41,8 @@ namespace BibliotecaApp.Forms.Usuario
         public MapeamentoDeTurmasWizardForm()
         {
             InitializeComponent();
-            _baseFolder = Path.Combine(Application.StartupPath, "AppData", "mapeamentoanual");
-            Directory.CreateDirectory(_baseFolder);
+            AppPaths.EnsureFolders();
+            _baseFolder = AppPaths.MappingFolder;
 
             this.Load += MapeamentoDeTurmasWizardForm_Load;
             btnProximo.Click += BtnProximo_Click;

@@ -102,7 +102,7 @@ namespace BibliotecaApp.Forms.Livros
         private void txtLivro_Load(object sender, EventArgs e) { }
         private void txtBarcode_Load(object sender, EventArgs e) { }
         private void txtBarcode_KeyDown(object sender, KeyEventArgs e) { }
-        private void dtpDataEmprestimo_ValueChanged(object sender, EventArgs e) { }
+        
         private void label4_Click(object sender, EventArgs e) { }
         private void cbBibliotecaria_SelectedIndexChanged(object sender, EventArgs e)
 
@@ -121,6 +121,11 @@ namespace BibliotecaApp.Forms.Livros
             string nomeUsuario = txtNomeUsuario.Text.Trim();
             string nomeLivro = txtLivro.Text.Trim();
             string nomeBibliotecaria = cbBibliotecaria.SelectedItem?.ToString();
+
+            if (!ValidarDatas())
+            {
+                return;
+            }
 
             // Valida se todos os campos foram preenchidos
             if (string.IsNullOrEmpty(nomeUsuario) || string.IsNullOrEmpty(nomeLivro) || string.IsNullOrEmpty(nomeBibliotecaria))
@@ -962,6 +967,38 @@ namespace BibliotecaApp.Forms.Livros
         }
         #endregion
 
-        
+
+
+        private bool ValidarDatas()
+        {
+            if (dtpDataDevolucao.Value < dtpDataEmprestimo.Value)
+            {
+                MessageBox.Show("A data de devolução não pode ser anterior à data de empréstimo.",
+                              "Data Inválida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpDataDevolucao.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        private void dtpDataDevolucao_ValueChanged(object sender, EventArgs e)
+        {
+            if (dtpDataDevolucao.Value < dtpDataEmprestimo.Value)
+            {
+                MessageBox.Show("A data de devolução não pode ser anterior à data de empréstimo.",
+                              "Data Inválida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpDataDevolucao.Value = dtpDataEmprestimo.Value.AddDays(7);
+            }
+        }
+
+        private void dtpDataEmprestimo_ValueChanged(object sender, EventArgs e)
+        {
+            if (dtpDataDevolucao.Value < dtpDataEmprestimo.Value)
+            {
+                // Ajusta automaticamente a data de devolução
+                dtpDataDevolucao.Value = dtpDataEmprestimo.Value.AddDays(7);
+            }
+        }
+
     }
 }

@@ -9,7 +9,7 @@ namespace BibliotecaApp.Services
     public static class EmailService
     {
         private static readonly string remetente = "biblioteca.gastaovalle@gmail.com"; // coloque o seu
-        private static readonly string senha = "azwo xvrr ljar sttj"; // senha de app do Gmail
+        private static readonly string senha = "kbvv piip qtrs wpmm"; // senha de app do Gmail
 
 
         public static void Enviar(string destinatario, string assunto, string mensagem, string caminhoAnexo = null)

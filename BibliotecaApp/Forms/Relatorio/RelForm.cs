@@ -129,7 +129,13 @@
                 EstilizarListBoxSugestao(lstSugestoesUsuario);
                 EstilizarListBoxSugestao(lstLivros);
 
-                var caminho = Conexao.CaminhoBanco;
+            dtpInicio.Value = DateTime.Today.AddDays(-30);
+            dtpFim.Value = DateTime.Today;
+
+            dtpFim.MinDate = dtpInicio.Value;
+
+
+            var caminho = Conexao.CaminhoBanco;
                 if (!File.Exists(caminho))
                 {
                     MessageBox.Show("Arquivo .sdf NÃO encontrado em: " + caminho +
@@ -328,7 +334,13 @@
 
             private void btnFiltrar_Click(object sender, EventArgs e)
             {
-                CarregarLog();
+
+            if (!ValidarDatasPeriodo())
+            {
+                return;
+            }
+
+            CarregarLog();
             }
 
             private void CarregarLog()
@@ -688,6 +700,38 @@
             }
         #endregion
 
-        
+        private bool ValidarDatasPeriodo()
+        {
+            if (dtpFim.Value < dtpInicio.Value)
+            {
+                MessageBox.Show("A data final não pode ser anterior à data inicial.",
+                              "Período Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpFim.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        private void dtpInicio_ValueChanged(object sender, EventArgs e)
+        {
+            // Ajusta automaticamente a data final se for anterior à data inicial
+            if (dtpFim.Value < dtpInicio.Value)
+            {
+                dtpFim.Value = dtpInicio.Value;
+            }
+
+            // Define a data mínima permitida para a data final
+            dtpFim.MinDate = dtpInicio.Value;
+        }
+
+        private void dtpFim_ValueChanged(object sender, EventArgs e)
+        {
+            if (dtpFim.Value < dtpInicio.Value)
+            {
+                MessageBox.Show("A data final não pode ser anterior à data inicial.",
+                              "Período Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpFim.Value = dtpInicio.Value;
+            }
+        }
     }
     }

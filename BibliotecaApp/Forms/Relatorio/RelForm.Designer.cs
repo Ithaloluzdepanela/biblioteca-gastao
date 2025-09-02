@@ -133,6 +133,7 @@
             this.dtpFim.Name = "dtpFim";
             this.dtpFim.Size = new System.Drawing.Size(122, 33);
             this.dtpFim.TabIndex = 113;
+            this.dtpFim.ValueChanged += new System.EventHandler(this.dtpFim_ValueChanged);
             // 
             // dtpInicio
             // 
@@ -144,6 +145,7 @@
             this.dtpInicio.Name = "dtpInicio";
             this.dtpInicio.Size = new System.Drawing.Size(122, 33);
             this.dtpInicio.TabIndex = 114;
+            this.dtpInicio.ValueChanged += new System.EventHandler(this.dtpInicio_ValueChanged);
             // 
             // lblUsuario
             // 

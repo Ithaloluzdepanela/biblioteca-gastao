@@ -5,6 +5,8 @@ using BibliotecaApp.Forms.Usuario;
 using BibliotecaApp.Froms.Usuario;
 using BibliotecaApp.Models;
 using BibliotecaApp.Properties;
+using BibliotecaApp.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,8 +40,8 @@ namespace BibliotecaApp.Forms.Inicio
         {
             try
             {
-                string pasta = Path.Combine(Application.StartupPath, "AppData", "mapeamentoanual");
-                Directory.CreateDirectory(pasta);
+                AppPaths.EnsureFolders();
+                string pasta = AppPaths.MappingFolder;
                 string arquivoMap = Path.Combine(pasta, $"mapeamento_{DateTime.Now.Year}.txt");
                 string marcador = Path.Combine(pasta, "app_instalado_em.txt");
 
@@ -88,7 +90,7 @@ namespace BibliotecaApp.Forms.Inicio
                         var msg = $"É necessário realizar o mapeamento de turmas para o ano {anoAtual}.\nDeseja executar agora (Sim) ou mais tarde (Não)?";
                         var resp = MessageBox.Show(msg, "Mapeamento Obrigatório", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                         if (resp == DialogResult.Yes)
-                        {
+                        {   
                             AbrirMapeamentoModal();
                         }
                         // se escolher "Não", aparecerá novamente no próximo startup
@@ -635,7 +637,7 @@ namespace BibliotecaApp.Forms.Inicio
             {
                 AlternarMaximizado();
             }
-            userLbl.Text = Sessao.NomeBibliotecariaLogada;
+           
 
             ChecarMapeamentoPendenteAoInicializar();
         }
@@ -703,5 +705,7 @@ namespace BibliotecaApp.Forms.Inicio
 
 
         #endregion
+
+        
     }
 }

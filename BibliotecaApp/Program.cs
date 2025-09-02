@@ -1,11 +1,13 @@
 ﻿using BibliotecaApp.Forms.Inicio;
 using BibliotecaApp.Forms.Login;
+using BibliotecaApp.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BibliotecaApp.Utils;
 
 namespace BibliotecaApp
 {
@@ -32,18 +34,16 @@ namespace BibliotecaApp
 
                         //try
                         //{
-                        //    var appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "BibliotecaApp");
-                        //    Directory.CreateDirectory(appData);
+                        //    AppPaths.EnsureFolders();
 
-                        //    var caminhoSdf = Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-                        //    var registroPath = Path.Combine(appData, "ultimo_backup.txt");
-                        //    var backuplocais = Path.Combine(appData, "BackupsPendentes");
-                        //    Directory.CreateDirectory(backuplocais);
-                        //    var credentials = Path.Combine(Application.StartupPath, "credentials.json");
+                        //var caminhoSdf = Path.Combine(Application.StartupPath, "bibliotecaDB", "bibliotecaDB.sdf"); // não movemos o DB
+                        //var registroPath = AppPaths.RegistroBackupFile;
+                        //var backuplocais = AppPaths.BackupCacheFolder;
+                        //var credentials = Path.Combine(Application.StartupPath, "credentials.json"); // onde vc guarda credenciais
 
-                        //    // Reenvia backups pendentes e executa backup de hoje (bloqueante)
-                        //    BibliotecaApp.Services.BackupDiario.ReenviarPendentes(appData, backuplocais, credentials);
-                        //    BibliotecaApp.Services.BackupDiario.Executar(caminhoSdf, registroPath, appData, backuplocais, credentials);
+                        //// Reenvia backups pendentes e executa backup de hoje (bloqueante)
+                        //BibliotecaApp.Services.BackupDiario.ReenviarPendentes(AppPaths.AppDataFolder, backuplocais, credentials);
+                        //BibliotecaApp.Services.BackupDiario.Executar(caminhoSdf, registroPath, AppPaths.AppDataFolder, backuplocais, credentials);
                         //}
                         //catch (Exception ex)
                         //{

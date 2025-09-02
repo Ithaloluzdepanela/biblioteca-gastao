@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using BibliotecaApp.Utils;
 
 namespace BibliotecaApp.Forms.Livros
 {
@@ -47,6 +48,8 @@ namespace BibliotecaApp.Forms.Livros
 
         private void EmprestimoRapidoForm_Load(object sender, EventArgs e)
         {
+            AppPaths.EnsureFolders();
+
             // Inicializar lista de todas as turmas padrão
             InicializarTurmasPadrao();
 
@@ -111,13 +114,8 @@ namespace BibliotecaApp.Forms.Livros
             try
             {
                 // Caminho para a pasta AppData dentro do diretório do programa
-                string pastaAppData = Path.Combine(Application.StartupPath, "AppData");
-
-                // Cria a pasta se não existir
-                if (!Directory.Exists(pastaAppData))
-                    Directory.CreateDirectory(pastaAppData);
-
-                string arquivoControle = Path.Combine(pastaAppData, "limpeza.txt");
+                AppPaths.EnsureFolders();
+                string arquivoControle = Path.Combine(AppPaths.AppDataFolder, "limpeza.txt");
 
                 DateTime ultimaLimpeza = DateTime.MinValue;
                 if (File.Exists(arquivoControle))

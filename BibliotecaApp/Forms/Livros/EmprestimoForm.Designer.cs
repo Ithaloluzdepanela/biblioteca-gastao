@@ -127,10 +127,12 @@
             this.dtpDataDevolucao.Size = new System.Drawing.Size(329, 33);
             this.dtpDataDevolucao.TabIndex = 105;
             this.dtpDataDevolucao.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
+            this.dtpDataDevolucao.ValueChanged += new System.EventHandler(this.dtpDataDevolucao_ValueChanged);
             // 
             // dtpDataEmprestimo
             // 
             this.dtpDataEmprestimo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dtpDataEmprestimo.Enabled = false;
             this.dtpDataEmprestimo.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
             this.dtpDataEmprestimo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpDataEmprestimo.Location = new System.Drawing.Point(79, 579);
@@ -139,6 +141,7 @@
             this.dtpDataEmprestimo.Size = new System.Drawing.Size(329, 33);
             this.dtpDataEmprestimo.TabIndex = 104;
             this.dtpDataEmprestimo.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
+            
             this.dtpDataEmprestimo.ValueChanged += new System.EventHandler(this.dtpDataEmprestimo_ValueChanged);
             // 
             // cbBibliotecaria
@@ -185,6 +188,8 @@
             this.txtBarcode.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBarcode.PlaceholderMarginLeft = 12;
             this.txtBarcode.PlaceholderText = "Clique e Escaneei para buscar informacoes...";
+            this.txtBarcode.SelectedText = "";
+            this.txtBarcode.SelectionLength = 0;
             this.txtBarcode.SelectionStart = 0;
             this.txtBarcode.Size = new System.Drawing.Size(617, 40);
             this.txtBarcode.TabIndex = 101;
@@ -244,6 +249,8 @@
             this.txtLivro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLivro.PlaceholderMarginLeft = 12;
             this.txtLivro.PlaceholderText = "Busque aqui o livro...";
+            this.txtLivro.SelectedText = "";
+            this.txtLivro.SelectionLength = 0;
             this.txtLivro.SelectionStart = 0;
             this.txtLivro.Size = new System.Drawing.Size(616, 40);
             this.txtLivro.TabIndex = 95;
@@ -274,6 +281,8 @@
             this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNomeUsuario.PlaceholderMarginLeft = 12;
             this.txtNomeUsuario.PlaceholderText = "Busque aqui o Nome do Usuario ...";
+            this.txtNomeUsuario.SelectedText = "";
+            this.txtNomeUsuario.SelectionLength = 0;
             this.txtNomeUsuario.SelectionStart = 0;
             this.txtNomeUsuario.Size = new System.Drawing.Size(617, 40);
             this.txtNomeUsuario.TabIndex = 94;

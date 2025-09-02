@@ -13,6 +13,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
 using System.Windows.Forms;
+using BibliotecaApp.Utils;
 
 namespace BibliotecaApp.Forms.Login
 {
@@ -34,7 +35,10 @@ namespace BibliotecaApp.Forms.Login
         //Fecharo form se o login for cancelado externamente
         private void LoginForm_Load(object sender, EventArgs e)
         {
+            AppPaths.EnsureFolders();
             if (cancelar == true) { this.Close(); }
+
+            
         }
         #endregion
 
@@ -658,7 +662,8 @@ namespace BibliotecaApp.Forms.Login
         #region ControleSemanal (TXT)
         public static class ControleSemanal
         {
-            private static readonly string txtPath = Path.Combine(Application.StartupPath, "EnvioRelatorioSemanal.txt");
+            private static readonly string txtPath = Path.Combine(AppPaths.AppDataFolder, "EnvioRelatorioSemanal.txt");
+
 
             public static bool JaEnviadoEstaSemana()
             {

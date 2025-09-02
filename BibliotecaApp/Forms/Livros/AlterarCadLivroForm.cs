@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlServerCe;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static BibliotecaApp.Forms.Livros.LivrosForm;
+using BibliotecaApp.Utils;
 
 namespace BibliotecaApp
 {
@@ -29,18 +22,10 @@ namespace BibliotecaApp
         }
         #endregion
 
-        #region Eventos do Formulário
-        private void AlterarCadLivroForm_Load(object sender, EventArgs e)
-        {
-            // Método de carregamento do formulário
-        }
-        #endregion
-
         #region Métodos Públicos
-        /// <summary>
-        /// Preenche os campos do formulário com os dados do livro selecionado
-        /// </summary>
-        /// <param name="livro">Objeto livro com os dados a serem preenchidos</param>
+
+        // Preenche os campos do formulário com os dados do livro selecionado
+
         public void PreencherLivro(Livro livro)
         {
             livroId = livro.Id; // Armazena o ID internamente
@@ -54,9 +39,9 @@ namespace BibliotecaApp
         #endregion
 
         #region Eventos de Botões
-        /// <summary>
-        /// Evento do botão Salvar - Atualiza os dados do livro no banco de dados
-        /// </summary>
+
+        // Evento do botão Salvar - Atualiza os dados do livro no banco de dados
+
         private void btnSalvar_Click(object sender, EventArgs e)
         {
             try
@@ -107,9 +92,9 @@ namespace BibliotecaApp
             }
         }
 
-        /// <summary>
-        /// Evento do botão Excluir - Remove o livro do banco de dados
-        /// </summary>
+
+        // Evento do botão Excluir - Remove o livro do banco de dados
+
         private void btnExcluir_Click(object sender, EventArgs e)
         {
             var confirm = MessageBox.Show("Tem certeza que deseja excluir este livro?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -149,6 +134,13 @@ namespace BibliotecaApp
                 }
             }
         }
+
+        // Evento do botão Cancelar - Volta ao Form principal
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
         #endregion
+
     }
 }

@@ -1,13 +1,10 @@
 ﻿using BibliotecaApp.Services;
 using BibliotecaApp.Utils;
 using System;
-using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Net.Mail;
 using System.Security.Cryptography;
-using System.Security.Policy;
-using System.Text;
 using System.Windows.Forms;
 
 namespace BibliotecaApp.Forms.Login
@@ -206,7 +203,7 @@ namespace BibliotecaApp.Forms.Login
                         }
                     }
                 }
-            
+
             }
             catch (Exception ex)
             {

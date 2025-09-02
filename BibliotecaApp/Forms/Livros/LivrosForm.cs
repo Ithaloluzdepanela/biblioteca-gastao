@@ -1,33 +1,19 @@
-﻿using BibliotecaApp.Forms.Inicio;
-using BibliotecaApp.Forms.Usuario;
+﻿using BibliotecaApp.Utils;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlServerCe;
-using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace BibliotecaApp.Forms.Livros
 {
-    /// <summary>
-    /// Formulário principal para gerenciamento de livros da biblioteca
-    /// </summary>
+
     public partial class LivrosForm : Form
     {
         #region Construtor e Inicialização
 
-        /// <summary>
-        /// Inicializa uma nova instância do formulário LivrosForm
-        /// </summary>
+        // Inicializa uma nova instância do formulário LivrosForm
         public LivrosForm()
         {
             InitializeComponent();
@@ -35,50 +21,102 @@ namespace BibliotecaApp.Forms.Livros
 
         #endregion
 
-        #region Classes Auxiliares
-
-        /// <summary>
-        /// Classe estática para gerenciar conexões com o banco de dados
-        /// </summary>
-        public static class Conexao
-        {
-            /// <summary>
-            /// Caminho para o arquivo do banco de dados
-            /// </summary>
-            public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-
-            /// <summary>
-            /// String de conexão com o banco de dados
-            /// </summary>
-            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
-
-            /// <summary>
-            /// Obtém uma nova conexão com o banco de dados
-            /// </summary>
-            /// <returns>Conexão SqlCeConnection configurada</returns>
-            public static SqlCeConnection ObterConexao()
-            {
-                return new SqlCeConnection(Conectar);
-            }
-        }
-
-        #endregion
-
         #region Métodos Utilitários
 
         /// <summary>
-        /// Remove acentos e converte texto para minúsculas para facilitar buscas
+        /// Configura aparência e colunas do DataGridView de livros
         /// </summary>
-        /// <param name="texto">Texto a ser normalizado</param>
-        /// <returns>Texto normalizado sem acentos e em minúsculas</returns>
-        private string NormalizarTexto(string texto)
+        private void ConfigurarGridLivros()
         {
-            string semAcento = new string(
-                texto.Normalize(NormalizationForm.FormD)
-                     .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                     .ToArray()
+            dgvLivros.SuspendLayout();
+
+            dgvLivros.AutoGenerateColumns = false;
+            dgvLivros.Columns.Clear();
+            dgvLivros.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+
+            DataGridViewTextBoxColumn AddTextCol(string dataProp, string header, float fillWeight, DataGridViewContentAlignment align, int minWidth = 60)
+            {
+                var col = new DataGridViewTextBoxColumn
+                {
+                    DataPropertyName = dataProp,
+                    Name = dataProp,
+                    HeaderText = header,
+                    ReadOnly = true,
+                    FillWeight = fillWeight,
+                    MinimumWidth = minWidth,
+                    DefaultCellStyle = new DataGridViewCellStyle { Alignment = align, WrapMode = DataGridViewTriState.False }
+                };
+                dgvLivros.Columns.Add(col);
+                return col;
+            }
+
+            AddTextCol("Id", "ID", 50, DataGridViewContentAlignment.MiddleCenter, 40);
+            AddTextCol("Nome", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120);
+            AddTextCol("Autor", "Autor", 160, DataGridViewContentAlignment.MiddleLeft, 100);
+            AddTextCol("Genero", "Gênero", 140, DataGridViewContentAlignment.MiddleLeft, 100);
+            AddTextCol("Quantidade", "Qtd", 80, DataGridViewContentAlignment.MiddleCenter, 60);
+            AddTextCol("CodigoBarras", "Código de Barras", 160, DataGridViewContentAlignment.MiddleLeft, 120);
+            //AddTextCol("Disponibilidade", "Disponivel", 160, DataGridViewContentAlignment.MiddleLeft, 120); Verificar Mudança de Disponibilidade do livro
+
+            // Botão Editar
+            var btnEditar = new DataGridViewButtonColumn
+            {
+                Name = "Editar",
+                HeaderText = "",
+                Text = "Editar",
+                UseColumnTextForButtonValue = true,
+                Width = 80,
+                FillWeight = 60,
+                FlatStyle = FlatStyle.Flat
+            };
+            dgvLivros.Columns.Add(btnEditar);
+
+            dgvLivros.BackgroundColor = Color.White;
+            dgvLivros.BorderStyle = BorderStyle.None;
+            dgvLivros.GridColor = Color.FromArgb(235, 239, 244);
+            dgvLivros.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvLivros.RowHeadersVisible = false;
+            dgvLivros.ReadOnly = true;
+            dgvLivros.MultiSelect = false;
+            dgvLivros.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvLivros.AllowUserToAddRows = false;
+            dgvLivros.AllowUserToDeleteRows = false;
+            dgvLivros.AllowUserToResizeRows = false;
+
+            dgvLivros.DefaultCellStyle.BackColor = Color.White;
+            dgvLivros.DefaultCellStyle.ForeColor = Color.FromArgb(20, 42, 60);
+            dgvLivros.DefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
+            dgvLivros.DefaultCellStyle.SelectionBackColor = Color.FromArgb(231, 238, 247);
+            dgvLivros.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvLivros.RowTemplate.Height = 40;
+            dgvLivros.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
+
+            dgvLivros.EnableHeadersVisualStyles = false;
+            dgvLivros.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgvLivros.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 61, 88);
+            dgvLivros.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvLivros.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 10.5f, FontStyle.Bold);
+            dgvLivros.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvLivros.ColumnHeadersHeight = 44;
+            dgvLivros.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+
+            dgvLivros.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            foreach (DataGridViewColumn col in dgvLivros.Columns)
+            {
+                col.SortMode = DataGridViewColumnSortMode.Automatic;
+                col.Resizable = DataGridViewTriState.False;
+            }
+
+            typeof(DataGridView).InvokeMember(
+                "DoubleBuffered",
+                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
+                null,
+                dgvLivros,
+                new object[] { true }
             );
-            return semAcento.ToLower();
+
+            dgvLivros.ResumeLayout();
         }
 
         /// <summary>
@@ -106,55 +144,10 @@ namespace BibliotecaApp.Forms.Livros
 
         #endregion
 
-        #region Navegação entre Formulários
-
-        /// <summary>
-        /// Abre o formulário de cadastro de livros
-        /// </summary>
-        private void Pic_Cadastrar_Click(object sender, EventArgs e)
-        {
-            CadastroLivroForm popup = new CadastroLivroForm();
-            Location = popup.Location;
-            popup.ShowDialog();
-        }
-
-        /// <summary>
-        /// Abre o formulário de devolução de livros
-        /// </summary>
-        private void btnDevolução_Click(object sender, EventArgs e)
-        {
-            DevoluçãoForm poup = new DevoluçãoForm();
-            Location = poup.Location;
-            poup.ShowDialog();
-        }
-
-        /// <summary>
-        /// Abre o formulário de empréstimo de livros
-        /// </summary>
-        private void picEmprestimo_Click(object sender, EventArgs e)
-        {
-            EmprestimoForm popup = new EmprestimoForm();
-            Location = popup.Location;
-            popup.ShowDialog();
-        }
-
-        /// <summary>
-        /// Abre o formulário de reservas de livros
-        /// </summary>
-        private void picReserva_Click(object sender, EventArgs e)
-        {
-            ReservaForm popup = new ReservaForm();
-            Location = popup.Location;
-            popup.ShowDialog();
-        }
-
-        #endregion
-
         #region Funcionalidades de Busca e Filtros
 
-        /// <summary>
-        /// Executa busca de livros com filtros dinâmicos
-        /// </summary>
+        // Executa busca de livros com filtros dinâmicos
+
         private void btnProcurar_Click(object sender, EventArgs e)
         {
             using (SqlCeConnection conexao = Conexao.ObterConexao())
@@ -226,12 +219,7 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-        /// <summary>
-        /// Carrega lista de livros com filtros opcionais
-        /// </summary>
-        /// <param name="nomeFiltro">Filtro por nome do livro</param>
-        /// <param name="generoFiltro">Filtro por gênero</param>
-        /// <param name="disponibilidadeFiltro">Filtro por disponibilidade</param>
+        // Carrega lista de livros com filtros opcionais
         private void CarregarLivros(string nomeFiltro = "", string generoFiltro = "Todos", string disponibilidadeFiltro = "Todos")
         {
             try
@@ -311,104 +299,9 @@ namespace BibliotecaApp.Forms.Livros
 
         #region Configuração e Estilização do DataGridView
 
-        /// <summary>
-        /// Configura aparência e colunas do DataGridView de livros
-        /// </summary>
-        private void ConfigurarGridLivros()
-        {
-            dgvLivros.SuspendLayout();
 
-            dgvLivros.AutoGenerateColumns = false;
-            dgvLivros.Columns.Clear();
-            dgvLivros.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
-            DataGridViewTextBoxColumn AddTextCol(string dataProp, string header, float fillWeight, DataGridViewContentAlignment align, int minWidth = 60)
-            {
-                var col = new DataGridViewTextBoxColumn
-                {
-                    DataPropertyName = dataProp,
-                    Name = dataProp,
-                    HeaderText = header,
-                    ReadOnly = true,
-                    FillWeight = fillWeight,
-                    MinimumWidth = minWidth,
-                    DefaultCellStyle = new DataGridViewCellStyle { Alignment = align, WrapMode = DataGridViewTriState.False }
-                };
-                dgvLivros.Columns.Add(col);
-                return col;
-            }
-
-            AddTextCol("Id", "ID", 50, DataGridViewContentAlignment.MiddleCenter, 40);
-            AddTextCol("Nome", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120);
-            AddTextCol("Autor", "Autor", 160, DataGridViewContentAlignment.MiddleLeft, 100);
-            AddTextCol("Genero", "Gênero", 140, DataGridViewContentAlignment.MiddleLeft, 100);
-            AddTextCol("Quantidade", "Qtd", 80, DataGridViewContentAlignment.MiddleCenter, 60);
-            AddTextCol("CodigoBarras", "Código de Barras", 160, DataGridViewContentAlignment.MiddleLeft, 120);
-
-            // Botão Editar
-            var btnEditar = new DataGridViewButtonColumn
-            {
-                Name = "Editar",
-                HeaderText = "",
-                Text = "Editar",
-                UseColumnTextForButtonValue = true,
-                Width = 80,
-                FillWeight = 60,
-                FlatStyle = FlatStyle.Flat
-            };
-            dgvLivros.Columns.Add(btnEditar);
-
-            dgvLivros.BackgroundColor = Color.White;
-            dgvLivros.BorderStyle = BorderStyle.None;
-            dgvLivros.GridColor = Color.FromArgb(235, 239, 244);
-            dgvLivros.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dgvLivros.RowHeadersVisible = false;
-            dgvLivros.ReadOnly = true;
-            dgvLivros.MultiSelect = false;
-            dgvLivros.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvLivros.AllowUserToAddRows = false;
-            dgvLivros.AllowUserToDeleteRows = false;
-            dgvLivros.AllowUserToResizeRows = false;
-
-            dgvLivros.DefaultCellStyle.BackColor = Color.White;
-            dgvLivros.DefaultCellStyle.ForeColor = Color.FromArgb(20, 42, 60);
-            dgvLivros.DefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
-            dgvLivros.DefaultCellStyle.SelectionBackColor = Color.FromArgb(231, 238, 247);
-            dgvLivros.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvLivros.RowTemplate.Height = 40;
-            dgvLivros.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
-
-            dgvLivros.EnableHeadersVisualStyles = false;
-            dgvLivros.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dgvLivros.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 61, 88);
-            dgvLivros.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvLivros.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 10.5f, FontStyle.Bold);
-            dgvLivros.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dgvLivros.ColumnHeadersHeight = 44;
-            dgvLivros.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-
-            dgvLivros.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-            foreach (DataGridViewColumn col in dgvLivros.Columns)
-            {
-                col.SortMode = DataGridViewColumnSortMode.Automatic;
-                col.Resizable = DataGridViewTriState.False;
-            }
-
-            typeof(DataGridView).InvokeMember(
-                "DoubleBuffered",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
-                null,
-                dgvLivros,
-                new object[] { true }
-            );
-
-            dgvLivros.ResumeLayout();
-        }
-
-        /// <summary>
-        /// Formata células baseado na disponibilidade do livro
-        /// </summary>
+        // Formata células baseado na disponibilidade do livro
         private void Lista_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (dgvLivros.Columns[e.ColumnIndex].Name == "disponibilidade" && e.Value != null)
@@ -431,9 +324,9 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-        /// <summary>
-        /// Desenha botões personalizados no DataGridView
-        /// </summary>
+
+        // Desenha botões personalizados no DataGridView
+
         private void dgvLivros_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvLivros.Columns[e.ColumnIndex].Name == "Editar")
@@ -478,9 +371,7 @@ namespace BibliotecaApp.Forms.Livros
 
         #region Eventos do DataGridView
 
-        /// <summary>
-        /// Manipula cliques em células do DataGridView
-        /// </summary>
+        // Manipula cliques em células do DataGridView
         private void dgvLivros_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvLivros.Columns[e.ColumnIndex].Name == "Editar")
@@ -500,7 +391,8 @@ namespace BibliotecaApp.Forms.Livros
                         Autor = row.Cells["Autor"].Value?.ToString(),
                         Genero = row.Cells["Genero"].Value?.ToString(),
                         Quantidade = Convert.ToInt32(row.Cells["Quantidade"].Value),
-                        CodigoDeBarras = row.Cells["CodigoBarras"].Value?.ToString()
+                        CodigoDeBarras = row.Cells["CodigoBarras"].Value?.ToString(),
+
                     });
 
                     // Conecta o evento para atualizar o grid após edição
@@ -516,160 +408,5 @@ namespace BibliotecaApp.Forms.Livros
 
         #endregion
 
-        #region Métodos de Criação de Tabelas (Desabilitados)
-
-        /// <summary>
-        /// Método para criar tabela de livros (desabilitado - tabela já existe)
-        /// </summary>
-        private void btnCriarTablea_Click(object sender, EventArgs e)
-        {
-            // Essa região está comentada porque a tabela já foi criada
-            // Caso precise criar novamente, descomente e execute
-
-            /*
-            SqlCeConnection conexao = Conexao.ObterConexao();
-
-            try
-            {
-                conexao.Open();
-
-                SqlCeCommand comando = new SqlCeCommand();
-                comando.Connection = conexao;
-
-                comando.CommandText =
-        @"CREATE TABLE Livros (
-                    Id INT IDENTITY(1,1) PRIMARY KEY,
-                    Nome NVARCHAR(80) NOT NULL,
-                    Autor NVARCHAR(80) NOT NULL,
-                    Genero NVARCHAR(30) NOT NULL,
-                    Quantidade INT NOT NULL DEFAULT 0,
-                    CodigoBarras NVARCHAR(13) NOT NULL UNIQUE,
-                    Disponibilidade BIT NOT NULL DEFAULT 1
-                );";
-
-                comando.ExecuteNonQuery();
-                lblTeste.Text = "Tabela criada com sucesso!";
-            }
-            catch (Exception ex)
-            {
-                lblTeste.Text = $"Erro: {ex.Message}";
-            }
-            finally
-            {
-                conexao.Close();
-            }
-            */
-        }
-
-        #endregion
-
-        #region Métodos Comentados para Referência
-
-        /*
-        /// <summary>
-        /// Método para criar tabela de empréstimos (desabilitado)
-        /// </summary>
-        private void btnCriarEmprestimo_Click(object sender, EventArgs e)
-        {
-            using (SqlCeConnection conexao = Conexao.ObterConexao())
-            {
-                try
-                {
-                    conexao.Open();
-
-                    string sql = @"
-            CREATE TABLE Emprestimo (
-                Id INT IDENTITY(1,1) PRIMARY KEY,
-                Alocador INT NOT NULL,
-                Livro INT NOT NULL,
-                Responsavel INT NOT NULL,
-                DataEmprestimo DATETIME NOT NULL,
-                DataDevolucao DATETIME NOT NULL,
-                DataProrrogacao DATETIME NULL,
-                DataRealDevolucao DATETIME NULL,
-                Status NVARCHAR(15) NOT NULL
-            );";
-
-                    SqlCeCommand comando = new SqlCeCommand(sql, conexao);
-                    comando.ExecuteNonQuery();
-
-                    MessageBox.Show("Tabela 'Emprestimo' criada com sucesso!");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao criar tabela: " + ex.Message);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Método para atualizar estrutura da tabela usuários (desabilitado)
-        /// </summary>
-        private void AtualizarEstruturaUsuarios()
-        {
-            using (var conexao = Conexao.ObterConexao())
-            {
-                try
-                {
-                    conexao.Open();
-
-                    // Verifica e adiciona senha_hash se não existir
-                    using (var checkCmd = new SqlCeCommand(
-                        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'usuarios' AND COLUMN_NAME = 'Senha_hash'", conexao))
-                    {
-                        var exists = checkCmd.ExecuteScalar();
-                        if (exists == null)
-                        {
-                            var cmdHash = new SqlCeCommand("ALTER TABLE usuarios ADD Senha_hash NVARCHAR(64) NULL;", conexao);
-                            cmdHash.ExecuteNonQuery();
-                        }
-                    }
-
-                    // Verifica e adiciona senha_salt se não existir
-                    using (var checkCmd = new SqlCeCommand(
-                        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'usuarios' AND COLUMN_NAME = 'Senha_salt'", conexao))
-                    {
-                        var exists = checkCmd.ExecuteScalar();
-                        if (exists == null)
-                        {
-                            var cmdSalt = new SqlCeCommand("ALTER TABLE usuarios ADD Senha_salt NVARCHAR(32) NULL;", conexao);
-                            cmdSalt.ExecuteNonQuery();
-                        }
-                    }
-
-                    // Verifica e remove a coluna senha se existir
-                    using (var checkCmd = new SqlCeCommand(
-                        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'usuarios' AND COLUMN_NAME = 'Senha'", conexao))
-                    {
-                        var exists = checkCmd.ExecuteScalar();
-                        if (exists != null)
-                        {
-                            var dropCmd = new SqlCeCommand("ALTER TABLE usuarios DROP COLUMN Senha;", conexao);
-                            dropCmd.ExecuteNonQuery();
-                        }
-                    }
-
-                    MessageBox.Show("Estrutura da tabela 'usuarios' atualizada com sucesso!", "Sucesso",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao atualizar tabela 'usuarios': " + ex.Message, "Erro",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    conexao.Close();
-                }
-            }
-        }
-        */
-
-        #endregion
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }

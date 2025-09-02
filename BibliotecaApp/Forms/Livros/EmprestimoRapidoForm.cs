@@ -113,27 +113,37 @@ namespace BibliotecaApp.Forms.Livros
         {
             try
             {
-                // Caminho para a pasta AppData dentro do diretório do programa
                 AppPaths.EnsureFolders();
                 string arquivoControle = Path.Combine(AppPaths.AppDataFolder, "limpeza.txt");
 
                 DateTime ultimaLimpeza = DateTime.MinValue;
                 if (File.Exists(arquivoControle))
                 {
-                    DateTime.TryParse(File.ReadAllText(arquivoControle), out ultimaLimpeza);
+                    string conteudo = File.ReadAllText(arquivoControle);
+                    if (DateTime.TryParseExact(conteudo, "yyyy-MM-dd",
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out ultimaLimpeza))
+                    {
+                        // Data lida com sucesso
+                    }
+                    else
+                    {
+                        ultimaLimpeza = DateTime.MinValue;
+                    }
                 }
 
-                // Obtem a data da segunda-feira desta semana
-                DateTime segundaDaSemana = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek + (int)DayOfWeek.Monday);
+                // Calcular o número da semana do ano para a data atual e última limpeza
+                int semanaAtual = ObterNumeroSemana(DateTime.Now);
+                int semanaUltimaLimpeza = ObterNumeroSemana(ultimaLimpeza);
 
-                // Só limpa se a última limpeza não foi nesta semana
-                if (ultimaLimpeza < segundaDaSemana)
+                // Se for um ano diferente ou semana diferente, faz a limpeza
+                if (DateTime.Now.Year != ultimaLimpeza.Year || semanaAtual != semanaUltimaLimpeza)
                 {
                     using (var conexao = Conexao.ObterConexao())
                     {
                         conexao.Open();
 
-                        // Apaga todos os registros
                         using (var cmd = new SqlCeCommand("DELETE FROM EmprestimoRapido", conexao))
                         {
                             cmd.ExecuteNonQuery();
@@ -158,6 +168,15 @@ namespace BibliotecaApp.Forms.Livros
             {
                 MessageBox.Show("Erro ao limpar empréstimos rápidos: " + ex.Message);
             }
+        }
+
+        // Método auxiliar para obter o número da semana no ano
+        private int ObterNumeroSemana(DateTime data)
+        {
+            System.Globalization.CultureInfo cultura = System.Globalization.CultureInfo.CurrentCulture;
+            return cultura.Calendar.GetWeekOfYear(data,
+                System.Globalization.CalendarWeekRule.FirstFourDayWeek,
+                DayOfWeek.Monday);
         }
 
         private void CarregarSugestoesECombo()

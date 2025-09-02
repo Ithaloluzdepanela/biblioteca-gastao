@@ -7,13 +7,14 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;  
+using System.Xml.Linq;
 
 namespace BibliotecaApp.Forms.Inicio
 {
@@ -53,12 +54,15 @@ namespace BibliotecaApp.Forms.Inicio
             AppPaths.EnsureFolders();
 
             // relógio e saudação
-            timerRelogio.Interval = 1000;
+            timerRelogio.Interval = 100; // Atualiza a cada 100ms para uma animação mais suave
             timerRelogio.Tick += timerRelogio_Tick;
             timerRelogio.Start();
             AtualizarRelogio();
 
             lblOla.Text = $"Olá, {Sessao.NomeBibliotecariaLogada}!";
+
+            // Ajuste o tamanho do painel superior para acomodar o relógio maior
+            panelTop.Height = 100;
 
             // construir dashboard
             ConstruirDashboardUI();
@@ -144,12 +148,85 @@ namespace BibliotecaApp.Forms.Inicio
             };
             panel1.Controls.Add(lblStatusSmall);
 
-            // DataGrid estilizado (top atrasos)
-            dgvTopAtrasos = new DataGridView
+
+            // TabControl moderno e minimalista
+            TabControl tabEstatisticas = new TabControl
             {
+                Name = "tabEstatisticas",
                 Location = new Point(30, btnAtualizar.Bottom + 18),
-                Size = new Size(panel1.Width - 60, panel1.Height - (btnAtualizar.Bottom + 40)),
+                Size = new Size(panel1.Width - 60, Math.Max(200, panel1.Height - (btnAtualizar.Bottom + 40))),
                 Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
+                Appearance = TabAppearance.Normal,
+                ItemSize = new Size(120, 32),
+                SizeMode = TabSizeMode.Fixed,
+                DrawMode = TabDrawMode.OwnerDrawFixed
+            };
+
+            // Estilização moderna das abas
+            tabEstatisticas.DrawItem += (sender, e) =>
+            {
+                var tabControl = (TabControl)sender;
+                var tabPage = tabControl.TabPages[e.Index];
+                var rect = e.Bounds;
+                var isSelected = tabControl.SelectedIndex == e.Index;
+
+                // Cores modernas
+                var backColor = isSelected ? Color.White : Color.FromArgb(240, 240, 240);
+                var textColor = isSelected ? Color.FromArgb(30, 61, 88) : Color.FromArgb(120, 120, 120);
+                var borderColor = Color.FromArgb(220, 220, 220);
+
+                using (var brush = new SolidBrush(backColor))
+                {
+                    e.Graphics.FillRectangle(brush, rect);
+                }
+
+                // Borda sutil
+                using (var pen = new Pen(borderColor))
+                {
+                    e.Graphics.DrawRectangle(pen, rect);
+                }
+
+                // Texto estilizado
+                TextRenderer.DrawText(e.Graphics, tabPage.Text,
+                    new Font("Segoe UI", 9, isSelected ? FontStyle.Bold : FontStyle.Regular),
+                    rect, textColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            };
+
+            // Aba 1: Principais Devedores - Estilizada
+            TabPage tabDevedores = new TabPage("Devedores")
+            {
+                BackColor = Color.White,
+                BorderStyle = BorderStyle.None,
+                Padding = new Padding(0) // remove 1px padding que podia parecer sombra
+            };
+
+            // Aba 2: Estatísticas de Empréstimos - Estilizada
+            TabPage tabEstatisticasEmprestimos = new TabPage("Empréstimos")
+            {
+                BackColor = Color.White,
+                BorderStyle = BorderStyle.None,
+                Padding = new Padding(0)
+            };
+
+            // Aba 3: Livros Populares - Estilizada
+            TabPage tabLivrosPopulares = new TabPage("Livros Populares")
+            {
+                BackColor = Color.White,
+                BorderStyle = BorderStyle.None,
+                Padding = new Padding(0)
+            };
+
+            tabEstatisticas.TabPages.Add(tabDevedores);
+            tabEstatisticas.TabPages.Add(tabEstatisticasEmprestimos);
+            tabEstatisticas.TabPages.Add(tabLivrosPopulares);
+
+            panel1.Controls.Add(tabEstatisticas);
+
+            // DataGridView para devedores - com estilo aprimorado
+            DataGridView dgvDevedores = new DataGridView
+            {
+                Name = "dgvDevedores",
+                Dock = DockStyle.Fill,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 AllowUserToResizeRows = false,
@@ -160,83 +237,236 @@ namespace BibliotecaApp.Forms.Inicio
                 EnableHeadersVisualStyles = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 MultiSelect = false,
-                RowHeadersVisible = false
+                RowHeadersVisible = false,
+                AutoGenerateColumns = false,
+                GridColor = Color.White, // deixar clean
+                CellBorderStyle = DataGridViewCellBorderStyle.None, // tira linhas internas
+                Margin = new Padding(0)
             };
 
-            // definir colunas
-            dgvTopAtrasos.Columns.Clear();
-            var colNome = new DataGridViewTextBoxColumn
+            // Aplicar estilo personalizado
+            AplicarEstiloDataGridView(dgvDevedores);
+
+            // Adicionar efeito de destaque para a linha selecionada
+            dgvDevedores.DefaultCellStyle.SelectionBackColor = Color.FromArgb(231, 238, 247);
+            dgvDevedores.DefaultCellStyle.SelectionForeColor = Color.FromArgb(20, 42, 60);
+
+            // Configurar colunas para devedores
+            var colPosicao = new DataGridViewTextBoxColumn
+            {
+                Name = "Posicao",
+                HeaderText = "#",
+                DataPropertyName = "Posicao", // <-- corrigido: agora preenche a posição
+                Width = 40,
+                DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 10f, FontStyle.Bold) }
+            };
+
+            var colNomeDevedor = new DataGridViewTextBoxColumn
             {
                 Name = "Nome",
                 HeaderText = "Nome",
                 DataPropertyName = "Nome",
-                ReadOnly = true,
-                MinimumWidth = 200,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleLeft }
             };
-            dgvTopAtrasos.Columns.Add(colNome);
 
-            var colTurma = new DataGridViewTextBoxColumn
+            var colTurmaDevedor = new DataGridViewTextBoxColumn
             {
                 Name = "Turma",
                 HeaderText = "Turma",
                 DataPropertyName = "Turma",
-                ReadOnly = true,
-                MinimumWidth = 120,
-                Width = 140,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                Width = 120,
                 DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleLeft }
             };
-            dgvTopAtrasos.Columns.Add(colTurma);
 
-            var colQtd = new DataGridViewTextBoxColumn
+            var colAtrasos = new DataGridViewTextBoxColumn
             {
-                Name = "Qtd",
+                Name = "Atrasos",
                 HeaderText = "Atrasos",
-                DataPropertyName = "Qtd",
-                ReadOnly = true,
-                MinimumWidth = 80,
+                DataPropertyName = "Atrasos",
                 Width = 80,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI Semibold", 9f, FontStyle.Bold) }
+            };
+
+            var colDiasAtrasoMedio = new DataGridViewTextBoxColumn
+            {
+                Name = "DiasAtrasoMedio",
+                HeaderText = "Dias de Atraso (Médio)",
+                DataPropertyName = "DiasAtrasoMedio",
+                Width = 120,
                 DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
             };
-            dgvTopAtrasos.Columns.Add(colQtd);
 
-            // estilo visual (igual EmprestimoRapidoForm)
-            dgvTopAtrasos.GridColor = Color.FromArgb(235, 239, 244);
-            dgvTopAtrasos.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvDevedores.Columns.AddRange(new DataGridViewColumn[] { colPosicao, colNomeDevedor, colTurmaDevedor, colAtrasos, colDiasAtrasoMedio });
 
-            dgvTopAtrasos.DefaultCellStyle.BackColor = Color.White;
-            dgvTopAtrasos.DefaultCellStyle.ForeColor = Color.FromArgb(20, 42, 60);
-            dgvTopAtrasos.DefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
-            dgvTopAtrasos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(231, 238, 247);
-            dgvTopAtrasos.DefaultCellStyle.SelectionForeColor = Color.Black;
+            AplicarEstiloDataGridView(dgvDevedores);
+            tabDevedores.Controls.Add(dgvDevedores);
 
-            dgvTopAtrasos.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
+            // DataGridView para estatísticas de empréstimos
+            DataGridView dgvEstatisticasEmprestimos = new DataGridView
+            {
+                Name = "dgvEstatisticasEmprestimos",
+                Dock = DockStyle.Fill,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToResizeRows = false,
+                RowTemplate = { Height = 40 },
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.None,
+                ColumnHeadersHeight = 44,
+                EnableHeadersVisualStyles = false,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                MultiSelect = false,
+                RowHeadersVisible = false,
+                AutoGenerateColumns = false,
+                GridColor = Color.FromArgb(240, 240, 240),
+                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
+            };
 
-            dgvTopAtrasos.EnableHeadersVisualStyles = false;
-            dgvTopAtrasos.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            dgvTopAtrasos.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 61, 88);
-            dgvTopAtrasos.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvTopAtrasos.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 10.5F, FontStyle.Bold);
-            dgvTopAtrasos.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dgvTopAtrasos.ColumnHeadersHeight = 44;
-            dgvTopAtrasos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            AplicarEstiloDataGridView(dgvEstatisticasEmprestimos);
 
-            dgvTopAtrasos.AllowUserToResizeColumns = false;
-            dgvTopAtrasos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            dgvEstatisticasEmprestimos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(231, 238, 247);
+            dgvEstatisticasEmprestimos.DefaultCellStyle.SelectionForeColor = Color.FromArgb(20, 42, 60);
 
-            // double buffered
-            typeof(DataGridView).InvokeMember("DoubleBuffered",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
-                null, dgvTopAtrasos, new object[] { true });
+            // Configurar colunas para estatísticas
+            var colCategoria = new DataGridViewTextBoxColumn
+            {
+                Name = "Categoria",
+                HeaderText = "Categoria",
+                DataPropertyName = "Categoria",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleLeft,
+                    Font = new Font("Segoe UI Semibold", 9f, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(30, 61, 88)
+                }
+            };
 
-            dgvTopAtrasos.CellFormatting -= DgvTopAtrasos_CellFormatting;
-            dgvTopAtrasos.CellFormatting += DgvTopAtrasos_CellFormatting;
+            var colValor = new DataGridViewTextBoxColumn
+            {
+                Name = "Valor",
+                HeaderText = "Valor",
+                DataPropertyName = "Valor",
+                Width = 100,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    Font = new Font("Segoe UI Semibold", 9f, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(9, 74, 158)
+                }
+            };
 
-            panel1.Controls.Add(dgvTopAtrasos);
-            dgvTopAtrasos.BringToFront();
+            var colDetalhes = new DataGridViewTextBoxColumn
+            {
+                Name = "Detalhes",
+                HeaderText = "Detalhes",
+                DataPropertyName = "Detalhes",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleLeft,
+                    ForeColor = Color.Gray,
+                    Font = new Font("Segoe UI", 9f)
+                }
+            };
+
+            dgvEstatisticasEmprestimos.Columns.Add(colCategoria);
+            dgvEstatisticasEmprestimos.Columns.Add(colValor);
+            dgvEstatisticasEmprestimos.Columns.Add(colDetalhes);
+
+            AplicarEstiloDataGridView(dgvEstatisticasEmprestimos);
+            tabEstatisticasEmprestimos.Controls.Add(dgvEstatisticasEmprestimos);
+
+            // DataGridView para livros populares
+            DataGridView dgvLivrosPopulares = new DataGridView
+            {
+                Name = "dgvLivrosPopulares",
+                Dock = DockStyle.Fill,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToResizeRows = false,
+                RowTemplate = { Height = 36 },
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.None,
+                ColumnHeadersHeight = 40,
+                EnableHeadersVisualStyles = false,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                MultiSelect = false,
+                RowHeadersVisible = false,
+                AutoGenerateColumns = false, // Isso evita colunas duplicadas
+                CellBorderStyle = DataGridViewCellBorderStyle.None,
+                GridColor = Color.White,
+                Margin = new Padding(0)
+            };
+
+            AplicarEstiloDataGridView(dgvLivrosPopulares);
+            dgvLivrosPopulares.DefaultCellStyle.SelectionBackColor = Color.FromArgb(231, 238, 247);
+            dgvLivrosPopulares.DefaultCellStyle.SelectionForeColor = Color.FromArgb(20, 42, 60);
+
+            // Configurar colunas para livros populares
+            var colPosicaoLivro = new DataGridViewTextBoxColumn
+            {
+                Name = "Posicao",
+                HeaderText = "#",
+                DataPropertyName = "Posicao",
+                Width = 40,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    Font = new Font("Segoe UI Semibold", 9f, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(100, 100, 100)
+                }
+            };
+
+            var colTituloLivro = new DataGridViewTextBoxColumn
+            {
+                Name = "Titulo",
+                HeaderText = "Título",
+                DataPropertyName = "Titulo",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                MinimumWidth = 200,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleLeft,
+                    Padding = new Padding(10, 0, 0, 0)
+                }
+            };
+
+            var colEmprestimos = new DataGridViewTextBoxColumn
+            {
+                Name = "Emprestimos",
+                HeaderText = "Empréstimos",
+                DataPropertyName = "Emprestimos",
+                Width = 100,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    Font = new Font("Segoe UI Semibold", 9f, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(30, 61, 88)
+                }
+            };
+
+            var colDisponibilidade = new DataGridViewTextBoxColumn
+            {
+                Name = "Disponibilidade",
+                HeaderText = "Status",
+                DataPropertyName = "Disponibilidade",
+                Width = 100,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    Font = new Font("Segoe UI", 9f)
+                }
+            };
+
+            dgvLivrosPopulares.Columns.AddRange(new DataGridViewColumn[] {
+    colPosicaoLivro, colTituloLivro, colEmprestimos, colDisponibilidade
+});
+
+            AplicarEstiloDataGridView(dgvLivrosPopulares);
+            tabLivrosPopulares.Controls.Add(dgvLivrosPopulares);
+
         }
 
         private Panel CriarCard(string key, string title, string subtitle, Color headerColor)
@@ -297,11 +527,63 @@ namespace BibliotecaApp.Forms.Inicio
             return card;
         }
 
+        private void AplicarEstiloDataGridView(DataGridView dgv)
+        {
+            dgv.BorderStyle = BorderStyle.None;
+            dgv.BackgroundColor = Color.White;
+            dgv.GridColor = Color.White; // clean
+
+            // Estilo das células
+            dgv.DefaultCellStyle.BackColor = Color.White;
+            dgv.DefaultCellStyle.ForeColor = Color.FromArgb(60, 60, 60);
+            dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9f);
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(240, 240, 240);
+            dgv.DefaultCellStyle.SelectionForeColor = Color.FromArgb(30, 61, 88);
+            dgv.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgv.DefaultCellStyle.Padding = new Padding(8, 6, 8, 6);
+
+            // Linhas alternadas
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 248, 248);
+            dgv.AlternatingRowsDefaultCellStyle.ForeColor = Color.FromArgb(60, 60, 60);
+
+            // Cabeçalhos das colunas
+            dgv.EnableHeadersVisualStyles = false;
+            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 61, 88);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 9.5f, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgv.ColumnHeadersDefaultCellStyle.Padding = new Padding(10, 0, 0, 0);
+            dgv.ColumnHeadersHeight = 40;
+            dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+
+            dgv.RowHeadersVisible = false;
+            dgv.AllowUserToResizeColumns = false;
+            dgv.AllowUserToResizeRows = false;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // Removido handler de CellPainting que desenhava linhas em condições estranhas
+
+            // Double buffering para performance
+            try
+            {
+                typeof(DataGridView).InvokeMember("DoubleBuffered",
+                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
+                    null, dgv, new object[] { true });
+            }
+            catch { /* ignore em ambientes onde não é possível */ }
+        }
+
         private void AtualizarRelogio()
         {
-            lblRelogio.Text = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(
-                DateTime.Now.ToString("dddd, dd 'de' MMMM 'de' yyyy - HH:mm:ss")
-            );
+            DateTime agora = DateTime.Now;
+            string diaSemana = agora.ToString("dddd");
+            string data = agora.ToString("dd 'de' MMMM 'de' yyyy");
+            string hora = agora.ToString("HH:mm:ss");
+
+            lblRelogio.Text = $"{diaSemana}, {data} - {hora}";
+            lblRelogio.Font = new Font("Segoe UI", 18, FontStyle.Bold);
+            lblRelogio.ForeColor = Color.FromArgb(30, 61, 88);
         }
 
         private void timerRelogio_Tick(object sender, EventArgs e) => AtualizarRelogio();
@@ -320,12 +602,46 @@ namespace BibliotecaApp.Forms.Inicio
                     BeginInvoke(new Action(() => AtualizarCards(stats)));
                 }
 
-                var top = await Task.Run(() => ObterTopAtrasos(10));
+                // Carregar dados para as abas
+                var topDevedores = await Task.Run(() => ObterTopDevedores(10));
+                var estatisticasEmprestimos = await Task.Run(() => ObterEstatisticasEmprestimos());
+                var livrosPopulares = await Task.Run(() => ObterLivrosPopulares(10));
+
                 if (this.IsHandleCreated && !this.IsDisposed)
                 {
                     BeginInvoke(new Action(() =>
                     {
-                        dgvTopAtrasos.DataSource = top;
+                        // Encontrar os DataGridViews pelo TabControl
+                        TabControl tabControl = panel1.Controls.Find("tabEstatisticas", true).FirstOrDefault() as TabControl;
+                        if (tabControl != null && tabControl.TabPages.Count >= 3)
+                        {
+                            DataGridView dgvDevedores = tabControl.TabPages[0].Controls.Find("dgvDevedores", true).FirstOrDefault() as DataGridView;
+                            DataGridView dgvEstatisticas = tabControl.TabPages[1].Controls.Find("dgvEstatisticasEmprestimos", true).FirstOrDefault() as DataGridView;
+                            DataGridView dgvLivros = tabControl.TabPages[2].Controls.Find("dgvLivrosPopulares", true).FirstOrDefault() as DataGridView;
+
+                            if (dgvDevedores != null)
+                            {
+                                dgvDevedores.DataSource = null; // garantir refresh
+                                dgvDevedores.DataSource = topDevedores;
+                                dgvDevedores.ClearSelection();
+                                dgvDevedores.Refresh();
+                            }
+                            if (dgvEstatisticas != null)
+                            {
+                                dgvEstatisticas.DataSource = null;
+                                dgvEstatisticas.DataSource = estatisticasEmprestimos;
+                                dgvEstatisticas.ClearSelection();
+                                dgvEstatisticas.Refresh();
+                            }
+                            if (dgvLivros != null)
+                            {
+                                dgvLivros.DataSource = null;
+                                dgvLivros.DataSource = livrosPopulares;
+                                dgvLivros.ClearSelection();
+                                dgvLivros.Refresh();
+                            }
+                        }
+
                         SetStatus($"Última atualização: {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
                     }));
                 }
@@ -334,6 +650,232 @@ namespace BibliotecaApp.Forms.Inicio
             {
                 BeginInvoke(new Action(() => SetStatus($"Erro ao carregar: {ex.Message}")));
             }
+        }
+
+        private List<DevedorInfo> ObterTopDevedores(int topN)
+        {
+            var lista = new List<DevedorInfo>();
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+
+                    // Consulta simplificada e mais resiliente
+                    string sql = $@"
+                SELECT TOP (@topN)
+       u.Nome,
+       u.Turma,
+       COUNT(*) AS QtdAtrasos,
+       AVG(DATEDIFF(day, e.DataDevolucao, e.DataRealDevolucao)) AS DiasAtrasoMedio
+FROM Emprestimos e
+INNER JOIN Usuarios u ON e.Alocador = u.Id
+WHERE e.Status = 'Atrasado'
+GROUP BY u.Nome, u.Turma
+ORDER BY QtdAtrasos DESC, DiasAtrasoMedio DESC";
+
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        int posicao = 1;
+                        while (reader.Read())
+                        {
+                            var nome = reader.IsDBNull(0) ? "" : reader.GetString(0);
+                            var turma = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                            int qtdAtrasos = 0;
+                            double diasAtrasoMedio = 0;
+
+                            try { qtdAtrasos = reader.GetInt32(2); } catch { }
+                            try { diasAtrasoMedio = reader.IsDBNull(3) ? 0 : Convert.ToDouble(reader.GetValue(3)); } catch { }
+
+                            lista.Add(new DevedorInfo
+                            {
+                                Posicao = posicao++,
+                                Nome = nome,
+                                Turma = turma,
+                                Atrasos = qtdAtrasos,
+                                DiasAtrasoMedio = Math.Round(diasAtrasoMedio, 1)
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log para auxiliar debugging - cria um arquivo simples no diretório de logs
+                try
+                {
+                    var logDir = Path.Combine(Application.StartupPath, "logs");
+                    Directory.CreateDirectory(logDir);
+                    File.AppendAllText(Path.Combine(logDir, "inicio_obter_devedores.log"), DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
+                }
+                catch { }
+            }
+
+            return lista;
+        }
+
+        private List<EstatisticaEmprestimo> ObterEstatisticasEmprestimos()
+        {
+            var lista = new List<EstatisticaEmprestimo>();
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+
+                    // Empréstimos totais
+                    using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM Emprestimo", conexao))
+                    {
+                        int total = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                        lista.Add(new EstatisticaEmprestimo
+                        {
+                            Categoria = "Empréstimos Totais",
+                            Valor = total,
+                            Detalhes = "Desde o início do sistema"
+                        });
+                    }
+
+                    // Empréstimos ativos
+                    using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM Emprestimo WHERE Status <> 'Devolvido'", conexao))
+                    {
+                        int ativos = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                        lista.Add(new EstatisticaEmprestimo
+                        {
+                            Categoria = "Empréstimos Ativos",
+                            Valor = ativos,
+                            Detalhes = "Aguardando devolução"
+                        });
+                    }
+
+                    // Empréstimos atrasados
+                    using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM Emprestimo WHERE Status = 'Atrasado'", conexao))
+                    {
+                        int atrasados = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                        lista.Add(new EstatisticaEmprestimo
+                        {
+                            Categoria = "Empréstimos Atrasados",
+                            Valor = atrasados,
+                            Detalhes = "Fora do prazo de devolução"
+                        });
+                    }
+
+                    // Taxa de devolução no prazo
+                    using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM Emprestimo WHERE Status = 'Devolvido' AND DataDevolucaoReal <= DataDevolucaoPrevista", conexao))
+                    {
+                        int noPrazo = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                        int totalDevolvidos = 0;
+
+                        using (var cmd2 = new SqlCeCommand("SELECT COUNT(*) FROM Emprestimo WHERE Status = 'Devolvido'", conexao))
+                        {
+                            totalDevolvidos = Convert.ToInt32(cmd2.ExecuteScalar() ?? 0);
+                        }
+
+                        double taxa = totalDevolvidos > 0 ? (noPrazo * 100.0 / totalDevolvidos) : 0;
+
+                        lista.Add(new EstatisticaEmprestimo
+                        {
+                            Categoria = "Devolução no Prazo",
+                            Valor = Math.Round(taxa, 1),
+                            Detalhes = $"{noPrazo} de {totalDevolvidos} empréstimos devolvidos"
+                        });
+                    }
+                }
+            }
+            catch { /*silent*/ }
+
+            return lista;
+        }
+
+        private List<LivroPopular> ObterLivrosPopulares(int topN)
+        {
+            var lista = new List<LivroPopular>();
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+
+                    string sql = $@"
+                SELECT TOP (@topN)
+       l.Nome,
+       l.Autor,
+       COUNT(e.Id) AS TotalEmprestimos,
+       l.Quantidade
+FROM Livros l
+LEFT JOIN Emprestimos e ON l.Id = e.Livro
+GROUP BY l.Id, l.Nome, l.Autor, l.Quantidade
+ORDER BY TotalEmprestimos DESC, l.Nome";
+
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        int posicao = 1;
+                        while (reader.Read())
+                        {
+                            var nome = reader.IsDBNull(0) ? "" : reader.GetString(0);
+                            var autor = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                            int emprestimos = 0;
+                            int quantidade = 0;
+
+                            try { emprestimos = reader.GetInt32(2); } catch { }
+                            try { quantidade = reader.GetInt32(3); } catch { }
+
+                            string disponibilidade = quantidade > 0 ? "Disponível" : "Indisponível";
+                            if (quantidade > 0 && quantidade < 5) disponibilidade = "Poucas unidades";
+
+                            lista.Add(new LivroPopular
+                            {
+                                Posicao = posicao++,
+                                Titulo = nome,
+                                Autor = autor,
+                                Emprestimos = emprestimos,
+                                Disponibilidade = disponibilidade
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    var logDir = Path.Combine(Application.StartupPath, "logs");
+                    Directory.CreateDirectory(logDir);
+                    File.AppendAllText(Path.Combine(logDir, "inicio_obter_livros.log"), DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
+                }
+                catch { }
+            }
+
+            return lista;
+        }
+
+        public class DevedorInfo
+        {
+            public int Posicao { get; set; }
+            public string Nome { get; set; }
+            public string Turma { get; set; }
+            public int Atrasos { get; set; }
+            public double DiasAtrasoMedio { get; set; }
+        }
+
+        public class EstatisticaEmprestimo
+        {
+            public string Categoria { get; set; }
+            public double Valor { get; set; }
+            public string Detalhes { get; set; }
+        }
+
+        public class LivroPopular
+        {
+            public int Posicao { get; set; }
+            public string Titulo { get; set; }
+            public string Autor { get; set; }
+            public int Emprestimos { get; set; }
+            public string Disponibilidade { get; set; }
         }
 
         private void SetStatus(string texto)
@@ -396,46 +938,6 @@ namespace BibliotecaApp.Forms.Inicio
             return dict;
         }
 
-        private List<TopAtrasoItem> ObterTopAtrasos(int topN)
-        {
-            var lista = new List<TopAtrasoItem>();
-
-            try
-            {
-                using (var conexao = Conexao.ObterConexao())
-                {
-                    conexao.Open();
-
-                    string sql = $@"
-                        SELECT TOP {topN} u.Nome, u.Turma, COUNT(*) AS Qtd
-                        FROM Emprestimo e
-                        INNER JOIN Usuarios u ON e.Alocador = u.Id
-                        WHERE e.Status = 'Atrasado'
-                        GROUP BY u.Nome, u.Turma
-                        ORDER BY Qtd DESC";
-
-                    using (var cmd = new SqlCeCommand(sql, conexao))
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var nome = reader.IsDBNull(0) ? "" : reader.GetString(0);
-                            var turma = reader.IsDBNull(1) ? "" : reader.GetString(1);
-                            int qtd = 0;
-                            try { qtd = reader.GetInt32(2); }
-                            catch { try { qtd = Convert.ToInt32(reader.GetDecimal(2)); } catch { qtd = 0; } }
-                            lista.Add(new TopAtrasoItem { Nome = nome, Turma = turma, Qtd = qtd });
-                        }
-                    }
-                }
-            }
-            catch { /*silent*/ }
-
-            return lista;
-        }
-
-        class TopAtrasoItem { public string Nome { get; set; } public string Turma { get; set; } public int Qtd { get; set; } }
-
         private void AtualizarCards(Dictionary<string, int> stats)
         {
             if (stats == null) return;
@@ -451,6 +953,8 @@ namespace BibliotecaApp.Forms.Inicio
                     }
                 }
             }
+
+            // Forçar uma atualização visual do DataGridView
         }
 
         #endregion
@@ -502,96 +1006,50 @@ namespace BibliotecaApp.Forms.Inicio
         {
             try
             {
-                // find main form (top-level window that contém este control)
-                Form main = this.FindForm();
-                if (main == null) main = this.MdiParent; // fallback
-
-                if (main == null)
-                {
-                    MessageBox.Show("Não foi possível identificar a janela principal (MainForm).", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // se já existe emprestimoRap aberto, traz para frente
+                // Se já existe emprestimoRap aberto, traz para frente
                 if (emprestimoRap != null && !emprestimoRap.IsDisposed)
                 {
                     emprestimoRap.BringToFront();
                     return;
                 }
 
-                // nomes dos botões que você citou (sem duplicatas)
+                // Obter o MainForm (MDI container)
+                Form mainForm = this.MdiParent;
+                if (mainForm == null)
+                {
+                    MessageBox.Show("Não foi possível identificar a janela principal (MainForm).", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Salvar estados originais dos botões do MainForm
                 string[] btnNames = new string[]
                 {
-                    "btnEmprestimoRap","btnRel","btnEmprestimo","btnLivros","btnInicio","btnDev",
-                    "btnLivroCad","btnUser","btnUserCad","btnUserEdit"
+            "btnEmprestimoRap","btnRel","btnEmprestimo","btnLivros","btnInicio","btnDev",
+            "btnLivroCad","btnUser","btnUserCad","btnUserEdit"
                 };
 
-                // salvar estados originais e aplicar novos estados
                 mainButtonsOriginalState.Clear();
                 foreach (var name in btnNames)
                 {
-                    var ctrl = FindControlOnForm(main, name);
+                    var ctrl = FindControlOnForm(mainForm, name);
                     if (ctrl != null)
                     {
                         mainButtonsOriginalState[name] = ctrl.Enabled;
                     }
                 }
 
-                // aplicar o comportamento que você pediu:
-                // btnEmprestimoRap.Enabled = false;
-                // os demais true
-                SetButtonEnabledOnForm(main, "btnEmprestimoRap", false);
+                // Aplicar comportamento desejado nos botões
+                SetButtonEnabledOnForm(mainForm, "btnEmprestimoRap", false);
                 foreach (var name in btnNames.Where(n => !string.Equals(n, "btnEmprestimoRap", StringComparison.OrdinalIgnoreCase)))
-                    SetButtonEnabledOnForm(main, name, true);
+                    SetButtonEnabledOnForm(mainForm, name, true);
 
-                // criar e abrir EmprestimoRapido como MDI child
+                // Criar e abrir EmprestimoRapido como MDI child
                 emprestimoRap = new EmprestimoRapidoForm();
                 emprestimoRap.FormClosed += EmprestimoRap_FormClosed;
-           emprestimoRap.MdiParent = this.MdiParent;
+                emprestimoRap.MdiParent = mainForm;
+                emprestimoRap.Dock = DockStyle.Fill;
+                emprestimoRap.Show();
 
-                
-                // define MdiParent = main (se main for MdiContainer) senão atribui null
-                try
-                {
-                    var mdiMain = main;
-                    // se main não for MdiContainer podemos setar mesmo assim — o WinForms exige IsMdiContainer = true no main.
-                    // então verificamos:
-                    var mainType = main.GetType();
-                    var prop = mainType.GetProperty("IsMdiContainer", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    bool isMdiContainer = false;
-                    if (prop != null) isMdiContainer = (bool)prop.GetValue(main);
-
-                    if (isMdiContainer)
-                    {
-                        emprestimoRap.MdiParent = main;
-                        emprestimoRap.Dock = DockStyle.Fill;
-                        emprestimoRap.Show();
-                    }
-                    else
-                    {
-                        // Se main não for container MDI, abre como Form filho dentro de um Panel — tentaremos adicionar ao painel central se houver.
-                        // Tenta localizar um panel chamado "panelContainer" ou "panel1" no MainForm; se não encontrar, abre normal com Show()
-                        Control container = FindControlOnForm(main, "panelContainer") ?? FindControlOnForm(main, "panelCentral") ?? FindControlOnForm(main, "panel1") as Control;
-                        if (container != null)
-                        {
-                            emprestimoRap.TopLevel = false;
-                            emprestimoRap.FormBorderStyle = FormBorderStyle.None;
-                            emprestimoRap.Dock = DockStyle.Fill;
-                            container.Controls.Add(emprestimoRap);
-                            emprestimoRap.Show();
-                        }
-                        else
-                        {
-                            // fallback: apenas Show() (não modal)
-                            emprestimoRap.Show();
-                        }
-                    }
-                }
-                catch
-                {
-                    // fallback simples
-                    emprestimoRap.Show();
-                }
             }
             catch (Exception ex)
             {
@@ -679,21 +1137,10 @@ namespace BibliotecaApp.Forms.Inicio
 
         #endregion
 
-        
-
-
-       
-
-        
-
-
         private void lblResultado_Click(object sender, EventArgs e)
         {
 
         }
 
-        
-
-       
     }
 }

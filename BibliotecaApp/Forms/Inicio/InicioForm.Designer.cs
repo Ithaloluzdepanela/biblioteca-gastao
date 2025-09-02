@@ -47,11 +47,11 @@
             // 
             this.lblRelogio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblRelogio.AutoSize = true;
-            this.lblRelogio.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblRelogio.ForeColor = System.Drawing.Color.Gray;
-            this.lblRelogio.Location = new System.Drawing.Point(1660, 28);
+            this.lblRelogio.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRelogio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.lblRelogio.Location = new System.Drawing.Point(333, 28);
             this.lblRelogio.Name = "lblRelogio";
-            this.lblRelogio.Size = new System.Drawing.Size(264, 19);
+            this.lblRelogio.Size = new System.Drawing.Size(481, 32);
             this.lblRelogio.TabIndex = 2;
             this.lblRelogio.Text = "Quarta, 01 de Janeiro de 2025 - 00:00:00";
             // 

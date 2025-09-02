@@ -105,7 +105,7 @@
             this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.lstLivros.FormattingEnabled = true;
             this.lstLivros.ItemHeight = 25;
-            this.lstLivros.Location = new System.Drawing.Point(80, 375);
+            this.lstLivros.Location = new System.Drawing.Point(80, 294);
             this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
             this.lstLivros.Name = "lstLivros";
             this.lstLivros.ScrollAlwaysVisible = true;
@@ -141,7 +141,6 @@
             this.dtpDataEmprestimo.Size = new System.Drawing.Size(329, 33);
             this.dtpDataEmprestimo.TabIndex = 104;
             this.dtpDataEmprestimo.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
-            
             this.dtpDataEmprestimo.ValueChanged += new System.EventHandler(this.dtpDataEmprestimo_ValueChanged);
             // 
             // cbBibliotecaria
@@ -382,7 +381,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(401, 46);
             this.label1.TabIndex = 16;
-            this.label1.Text = "EMPRESTIMO DE LIVRO";
+            this.label1.Text = "EMPRÉSTIMO DE LIVRO";
             // 
             // EmprestimoForm
             // 

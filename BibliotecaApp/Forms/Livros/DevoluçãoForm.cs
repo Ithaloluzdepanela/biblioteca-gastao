@@ -25,6 +25,7 @@ namespace BibliotecaApp.Forms.Livros
         {
             BuscarEmprestimos();
             ConfigurarGridEmprestimos();
+            cbFiltroEmprestimo.SelectedIndex = 0;
         }
 
         private void btnBuscarEmprestimo_Click(object sender, EventArgs e)
@@ -423,5 +424,7 @@ namespace BibliotecaApp.Forms.Livros
         }
 
         #endregion
+
+        
     }
 }

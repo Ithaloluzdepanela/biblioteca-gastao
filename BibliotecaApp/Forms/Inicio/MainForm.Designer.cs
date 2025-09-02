@@ -170,6 +170,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnSair.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.btnSair.Size = new System.Drawing.Size(223, 60);
             this.btnSair.TabIndex = 3;
+            this.btnSair.TabStop = false;
             this.btnSair.Text = "Sair";
             this.btnSair.UseVisualStyleBackColor = false;
             this.btnSair.Click += new System.EventHandler(this.btnSair_Click);
@@ -198,6 +199,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnRel.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.btnRel.Size = new System.Drawing.Size(223, 60);
             this.btnRel.TabIndex = 3;
+            this.btnRel.TabStop = false;
             this.btnRel.Text = "Relatório";
             this.btnRel.UseVisualStyleBackColor = false;
             this.btnRel.Click += new System.EventHandler(this.btnRel_Click);
@@ -229,6 +231,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnUser.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.btnUser.Size = new System.Drawing.Size(200, 60);
             this.btnUser.TabIndex = 15;
+            this.btnUser.TabStop = false;
             this.btnUser.Text = "Pessoas";
             this.btnUser.UseVisualStyleBackColor = false;
             this.btnUser.Click += new System.EventHandler(this.btnUser_Click);
@@ -247,6 +250,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnUserCad.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.btnUserCad.Size = new System.Drawing.Size(200, 60);
             this.btnUserCad.TabIndex = 13;
+            this.btnUserCad.TabStop = false;
             this.btnUserCad.Text = "Cadastrar";
             this.btnUserCad.UseVisualStyleBackColor = false;
             this.btnUserCad.Click += new System.EventHandler(this.btnUserCad_Click);
@@ -265,6 +269,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnUsuario.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.btnUsuario.Size = new System.Drawing.Size(223, 60);
             this.btnUsuario.TabIndex = 3;
+            this.btnUsuario.TabStop = false;
             this.btnUsuario.Text = "Usuários";
             this.btnUsuario.UseVisualStyleBackColor = false;
             this.btnUsuario.Click += new System.EventHandler(this.btnUsuario_Click);
@@ -283,6 +288,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnUserEdit.Padding = new System.Windows.Forms.Padding(6, 0, 0, 2);
             this.btnUserEdit.Size = new System.Drawing.Size(200, 60);
             this.btnUserEdit.TabIndex = 14;
+            this.btnUserEdit.TabStop = false;
             this.btnUserEdit.Text = "Editar";
             this.btnUserEdit.UseVisualStyleBackColor = false;
             this.btnUserEdit.Click += new System.EventHandler(this.btnUserEdit_Click);
@@ -311,6 +317,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnInicio.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.btnInicio.Size = new System.Drawing.Size(223, 60);
             this.btnInicio.TabIndex = 3;
+            this.btnInicio.TabStop = false;
             this.btnInicio.Text = "Início";
             this.btnInicio.UseVisualStyleBackColor = false;
             this.btnInicio.Click += new System.EventHandler(this.btnInicio_Click);
@@ -378,6 +385,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnDev.Padding = new System.Windows.Forms.Padding(10, 0, 0, 2);
             this.btnDev.Size = new System.Drawing.Size(200, 60);
             this.btnDev.TabIndex = 7;
+            this.btnDev.TabStop = false;
             this.btnDev.Text = "Devolução";
             this.btnDev.UseVisualStyleBackColor = false;
             this.btnDev.Click += new System.EventHandler(this.btnDev_Click);
@@ -396,6 +404,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnLivros.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.btnLivros.Size = new System.Drawing.Size(200, 60);
             this.btnLivros.TabIndex = 9;
+            this.btnLivros.TabStop = false;
             this.btnLivros.Text = "Biblioteca";
             this.btnLivros.UseVisualStyleBackColor = false;
             this.btnLivros.Click += new System.EventHandler(this.btnLivros_Click);
@@ -414,6 +423,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnLivroCad.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.btnLivroCad.Size = new System.Drawing.Size(200, 60);
             this.btnLivroCad.TabIndex = 6;
+            this.btnLivroCad.TabStop = false;
             this.btnLivroCad.Text = "   Cadastrar Livro";
             this.btnLivroCad.UseVisualStyleBackColor = false;
             this.btnLivroCad.Click += new System.EventHandler(this.btnLivroCad_Click);
@@ -432,6 +442,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnEmprestimoRap.Padding = new System.Windows.Forms.Padding(6, 0, 0, 2);
             this.btnEmprestimoRap.Size = new System.Drawing.Size(200, 60);
             this.btnEmprestimoRap.TabIndex = 5;
+            this.btnEmprestimoRap.TabStop = false;
             this.btnEmprestimoRap.Text = "      Empréstimo rápido";
             this.btnEmprestimoRap.UseVisualStyleBackColor = false;
             this.btnEmprestimoRap.Click += new System.EventHandler(this.btnEmprestimoRap_Click);
@@ -450,6 +461,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnLivro.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.btnLivro.Size = new System.Drawing.Size(223, 60);
             this.btnLivro.TabIndex = 3;
+            this.btnLivro.TabStop = false;
             this.btnLivro.Text = "Livros";
             this.btnLivro.UseVisualStyleBackColor = false;
             this.btnLivro.Click += new System.EventHandler(this.btnLivro_Click);
@@ -468,6 +480,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnEmprestimo.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.btnEmprestimo.Size = new System.Drawing.Size(200, 60);
             this.btnEmprestimo.TabIndex = 4;
+            this.btnEmprestimo.TabStop = false;
             this.btnEmprestimo.Text = "Empréstimo";
             this.btnEmprestimo.UseVisualStyleBackColor = false;
             this.btnEmprestimo.Click += new System.EventHandler(this.btnEmprestimo_Click);

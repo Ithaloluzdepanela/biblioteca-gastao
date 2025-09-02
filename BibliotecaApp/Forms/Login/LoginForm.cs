@@ -1,17 +1,15 @@
-﻿using BibliotecaApp.Forms.Livros;
-using BibliotecaApp.Forms.Utils;
+﻿using BibliotecaApp.Forms.Utils;
 using BibliotecaApp.Models;
-using BibliotecaApp.Services;
 using BibliotecaApp.Utils;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using System.IO;
 using System.Windows.Forms;
 
 namespace BibliotecaApp.Forms.Login
@@ -52,20 +50,6 @@ namespace BibliotecaApp.Forms.Login
         private void picExit_MouseLeave(object sender, EventArgs e)
         {
             picExit.BackColor = Color.Transparent;
-        }
-        #endregion
-
-        #region Classe Conexao
-        // Classe estática para conectar ao banco .sdf
-        public static class Conexao
-        {
-            public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
-
-            public static SqlCeConnection ObterConexao()
-            {
-                return new SqlCeConnection(Conectar);
-            }
         }
         #endregion
 
@@ -190,52 +174,52 @@ namespace BibliotecaApp.Forms.Login
 
                     if (!ControleSemanal.JaEnviadoEstaSemana())
                     {
-//                        try
-//                        {
-//                            progressForm.AtualizarProgresso(90, "Gerando relatório semanal...");
+                        //                        try
+                        //                        {
+                        //                            progressForm.AtualizarProgresso(90, "Gerando relatório semanal...");
 
-//                            using (var conexao = Conexao.ObterConexao())
-//                            {
-//                                conexao.Open();
-//                                string pdfPath = GerarRelatorioAtrasados(conexao);
+                        //                            using (var conexao = Conexao.ObterConexao())
+                        //                            {
+                        //                                conexao.Open();
+                        //                                string pdfPath = GerarRelatorioAtrasados(conexao);
 
-//                                progressForm.AtualizarProgresso(95, "Enviando relatório para secretaria...");
+                        //                                progressForm.AtualizarProgresso(95, "Enviando relatório para secretaria...");
 
-//                                string assunto = $"📑 Relatório semanal de alunos não aptos - {DateTime.Now:dd/MM/yyyy}";
-//                                string corpo = $@"
-//<html>
-//<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
-//    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
-//        <h2 style='color: #2c3e50;'>📚 Biblioteca Monteiro Lobato</h2>
-//        <p>Prezada secretaria,</p>
-//        <p>Segue em anexo o relatório semanal de alunos que <strong>não estão aptos</strong> a retirar documentos,
-//           devido a <span style='color:#d35400; font-weight:bold;'>empréstimos em atraso</span>.</p>
-//        <p style='font-size: 16px;'><strong>📅 Data do relatório:</strong> {DateTime.Now:dd/MM/yyyy}</p>
-//        <p>O PDF anexo contém a lista de alunos e suas respectivas turmas.</p>
-//        <p style='margin-top:20px;'>Atenciosamente,<br/><strong>Sistema da Biblioteca</strong></p>
-//        <hr />
-//        <p style='font-size: 13px; color: #888;'>Este é um e-mail automático. Não responda a esta mensagem.</p>
-//    </div>
-//</body>
-//</html>";
+                        //                                string assunto = $"📑 Relatório semanal de alunos não aptos - {DateTime.Now:dd/MM/yyyy}";
+                        //                                string corpo = $@"
+                        //<html>
+                        //<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+                        //    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+                        //        <h2 style='color: #2c3e50;'>📚 Biblioteca Monteiro Lobato</h2>
+                        //        <p>Prezada secretaria,</p>
+                        //        <p>Segue em anexo o relatório semanal de alunos que <strong>não estão aptos</strong> a retirar documentos,
+                        //           devido a <span style='color:#d35400; font-weight:bold;'>empréstimos em atraso</span>.</p>
+                        //        <p style='font-size: 16px;'><strong>📅 Data do relatório:</strong> {DateTime.Now:dd/MM/yyyy}</p>
+                        //        <p>O PDF anexo contém a lista de alunos e suas respectivas turmas.</p>
+                        //        <p style='margin-top:20px;'>Atenciosamente,<br/><strong>Sistema da Biblioteca</strong></p>
+                        //        <hr />
+                        //        <p style='font-size: 13px; color: #888;'>Este é um e-mail automático. Não responda a esta mensagem.</p>
+                        //    </div>
+                        //</body>
+                        //</html>";
 
-//                                EmailService.Enviar(
-//                                    "secretaria.79448@gmail.com", 
-//                                    assunto,
-//                                    corpo,
-//                                    pdfPath
-//                                );
+                        //                                EmailService.Enviar(
+                        //                                    "secretaria.79448@gmail.com", 
+                        //                                    assunto,
+                        //                                    corpo,
+                        //                                    pdfPath
+                        //                                );
 
-//                                // Registra envio no TXT
-//                                ControleSemanal.RegistrarEnvio();
+                        //                                // Registra envio no TXT
+                        //                                ControleSemanal.RegistrarEnvio();
 
-//                                progressForm.AtualizarProgresso(100, "Relatório semanal enviado com sucesso!");
-//                            }
-//                        }
-//                        catch
-//                        {
-//                            progressForm.AtualizarProgresso(100, "Falha ao enviar relatório.");
-//                        }
+                        //                                progressForm.AtualizarProgresso(100, "Relatório semanal enviado com sucesso!");
+                        //                            }
+                        //                        }
+                        //                        catch
+                        //                        {
+                        //                            progressForm.AtualizarProgresso(100, "Falha ao enviar relatório.");
+                        //                        }
                     }
                 });
             }
@@ -652,7 +636,6 @@ namespace BibliotecaApp.Forms.Login
             // Implementação alternativa do paint do gradientPanel
         }
         #endregion
-
 
 
         #region ControleSemanal (TXT)

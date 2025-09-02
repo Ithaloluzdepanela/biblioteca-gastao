@@ -51,7 +51,7 @@
             this.Titulo.AutoSize = true;
             this.Titulo.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
             this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.Titulo.Location = new System.Drawing.Point(198, 121);
+            this.Titulo.Location = new System.Drawing.Point(451, 37);
             this.Titulo.Name = "Titulo";
             this.Titulo.Size = new System.Drawing.Size(379, 46);
             this.Titulo.TabIndex = 93;
@@ -65,7 +65,7 @@
             this.lblNome.BackColor = System.Drawing.Color.Transparent;
             this.lblNome.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblNome.Location = new System.Drawing.Point(82, 250);
+            this.lblNome.Location = new System.Drawing.Point(335, 173);
             this.lblNome.Name = "lblNome";
             this.lblNome.Size = new System.Drawing.Size(142, 25);
             this.lblNome.TabIndex = 94;
@@ -78,7 +78,7 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(82, 332);
+            this.label1.Location = new System.Drawing.Point(335, 255);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(74, 25);
             this.label1.TabIndex = 96;
@@ -91,7 +91,7 @@
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label2.Location = new System.Drawing.Point(82, 413);
+            this.label2.Location = new System.Drawing.Point(335, 336);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(112, 25);
             this.label2.TabIndex = 98;
@@ -104,7 +104,7 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(82, 497);
+            this.label3.Location = new System.Drawing.Point(335, 420);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(61, 25);
             this.label3.TabIndex = 100;
@@ -117,7 +117,7 @@
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label4.Location = new System.Drawing.Point(82, 584);
+            this.label4.Location = new System.Drawing.Point(335, 507);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(157, 25);
             this.label4.TabIndex = 103;
@@ -125,11 +125,11 @@
             // 
             // btnLimpar
             // 
-            this.btnLimpar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnLimpar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnLimpar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.btnLimpar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnLimpar.ForeColor = System.Drawing.Color.White;
-            this.btnLimpar.Location = new System.Drawing.Point(79, 757);
+            this.btnLimpar.Location = new System.Drawing.Point(332, 693);
             this.btnLimpar.Name = "btnLimpar";
             this.btnLimpar.Size = new System.Drawing.Size(150, 60);
             this.btnLimpar.TabIndex = 104;
@@ -139,11 +139,11 @@
             // 
             // btnCadastrar
             // 
-            this.btnCadastrar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnCadastrar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnCadastrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.btnCadastrar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnCadastrar.ForeColor = System.Drawing.Color.White;
-            this.btnCadastrar.Location = new System.Drawing.Point(546, 757);
+            this.btnCadastrar.Location = new System.Drawing.Point(799, 693);
             this.btnCadastrar.Name = "btnCadastrar";
             this.btnCadastrar.Size = new System.Drawing.Size(150, 60);
             this.btnCadastrar.TabIndex = 105;
@@ -153,7 +153,6 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.btnCadastrar);
@@ -169,11 +168,12 @@
             this.panel1.Controls.Add(this.txtNome);
             this.panel1.Controls.Add(this.lblNome);
             this.panel1.Controls.Add(this.Titulo);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.panel1.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.panel1.Location = new System.Drawing.Point(253, 0);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(775, 845);
+            this.panel1.Size = new System.Drawing.Size(1280, 845);
             this.panel1.TabIndex = 93;
             // 
             // mtxCodigoBarras
@@ -189,7 +189,7 @@
             this.mtxCodigoBarras.HoverBackColor = System.Drawing.Color.LightGray;
             this.mtxCodigoBarras.HoverBorderColor = System.Drawing.Color.DarkGray;
             this.mtxCodigoBarras.LeftMargin = 0;
-            this.mtxCodigoBarras.Location = new System.Drawing.Point(79, 612);
+            this.mtxCodigoBarras.Location = new System.Drawing.Point(332, 535);
             this.mtxCodigoBarras.Mask = "0 000000 000000";
             this.mtxCodigoBarras.MaskTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.mtxCodigoBarras.Name = "mtxCodigoBarras";
@@ -211,13 +211,16 @@
             this.txtAutor.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtAutor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtAutor.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtAutor.Location = new System.Drawing.Point(79, 525);
+            this.txtAutor.Location = new System.Drawing.Point(332, 448);
             this.txtAutor.Name = "txtAutor";
             this.txtAutor.Padding = new System.Windows.Forms.Padding(7);
             this.txtAutor.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtAutor.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F);
             this.txtAutor.PlaceholderMarginLeft = 12;
             this.txtAutor.PlaceholderText = "Digite aqui a quantidade...";
+            this.txtAutor.SelectedText = "";
+            this.txtAutor.SelectionLength = 0;
+            this.txtAutor.SelectionStart = 0;
             this.txtAutor.Size = new System.Drawing.Size(617, 40);
             this.txtAutor.TabIndex = 101;
             this.txtAutor.TextColor = System.Drawing.Color.Black;
@@ -237,13 +240,16 @@
             this.txtQuantidade.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtQuantidade.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtQuantidade.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtQuantidade.Location = new System.Drawing.Point(79, 441);
+            this.txtQuantidade.Location = new System.Drawing.Point(332, 364);
             this.txtQuantidade.Name = "txtQuantidade";
             this.txtQuantidade.Padding = new System.Windows.Forms.Padding(7);
             this.txtQuantidade.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtQuantidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F);
             this.txtQuantidade.PlaceholderMarginLeft = 12;
             this.txtQuantidade.PlaceholderText = "Digite aqui a quantidade...";
+            this.txtQuantidade.SelectedText = "";
+            this.txtQuantidade.SelectionLength = 0;
+            this.txtQuantidade.SelectionStart = 0;
             this.txtQuantidade.Size = new System.Drawing.Size(617, 40);
             this.txtQuantidade.TabIndex = 99;
             this.txtQuantidade.TextColor = System.Drawing.Color.Black;
@@ -263,13 +269,16 @@
             this.txtGenero.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtGenero.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtGenero.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtGenero.Location = new System.Drawing.Point(79, 360);
+            this.txtGenero.Location = new System.Drawing.Point(332, 283);
             this.txtGenero.Name = "txtGenero";
             this.txtGenero.Padding = new System.Windows.Forms.Padding(7);
             this.txtGenero.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtGenero.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F);
             this.txtGenero.PlaceholderMarginLeft = 12;
             this.txtGenero.PlaceholderText = "Digite aqui o gênero...";
+            this.txtGenero.SelectedText = "";
+            this.txtGenero.SelectionLength = 0;
+            this.txtGenero.SelectionStart = 0;
             this.txtGenero.Size = new System.Drawing.Size(617, 40);
             this.txtGenero.TabIndex = 97;
             this.txtGenero.TextColor = System.Drawing.Color.Black;
@@ -289,13 +298,16 @@
             this.txtNome.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNome.Location = new System.Drawing.Point(79, 278);
+            this.txtNome.Location = new System.Drawing.Point(332, 201);
             this.txtNome.Name = "txtNome";
             this.txtNome.Padding = new System.Windows.Forms.Padding(7);
             this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
             this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F);
             this.txtNome.PlaceholderMarginLeft = 12;
             this.txtNome.PlaceholderText = "Digite aqui o nome...";
+            this.txtNome.SelectedText = "";
+            this.txtNome.SelectionLength = 0;
+            this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(617, 40);
             this.txtNome.TabIndex = 95;
             this.txtNome.TextColor = System.Drawing.Color.Black;

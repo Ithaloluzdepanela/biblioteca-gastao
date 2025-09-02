@@ -105,7 +105,7 @@
             this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.lstLivros.FormattingEnabled = true;
             this.lstLivros.ItemHeight = 25;
-            this.lstLivros.Location = new System.Drawing.Point(80, 294);
+            this.lstLivros.Location = new System.Drawing.Point(80, 375);
             this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
             this.lstLivros.Name = "lstLivros";
             this.lstLivros.ScrollAlwaysVisible = true;
@@ -160,7 +160,7 @@
             this.cbBibliotecaria.Name = "cbBibliotecaria";
             this.cbBibliotecaria.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F);
             this.cbBibliotecaria.PlaceholderMargin = 10;
-            this.cbBibliotecaria.PlaceholderText = "Selecione a Bliotecária...";
+            this.cbBibliotecaria.PlaceholderText = "Selecione a Bibliotecária...";
             this.cbBibliotecaria.Size = new System.Drawing.Size(617, 34);
             this.cbBibliotecaria.TabIndex = 103;
             this.cbBibliotecaria.SelectedIndexChanged += new System.EventHandler(this.cbBibliotecaria_SelectedIndexChanged);

@@ -324,7 +324,7 @@ namespace BibliotecaApp.Froms.Usuario
         private void ConfigurarParaOutros()
         {
             HabilitarCampos(true);
-            txtEmail.Enabled = false;
+            
             txtTurma.Enabled = false;
             txtSenha.Enabled = false;
             txtConfirmSenha.Enabled = false;
@@ -341,22 +341,23 @@ namespace BibliotecaApp.Froms.Usuario
             SetLabelColors(enabled: true);
             lblSenha.ForeColor = Color.LightGray;
             lblConfirmSenha.ForeColor = Color.LightGray;
-            lblEmail.ForeColor = Color.LightGray;
+          
             lblTurma.ForeColor = Color.LightGray;
             txtTurma.Text = "";
             txtSenha.Text = "";
             txtConfirmSenha.Text = "";
+            txtEmail.Text = "";
 
             SetAsteriscoVisibility(true);
             TurmaAst.ForeColor = Color.Transparent;
             SenhaAst.ForeColor = Color.Transparent;
             ConfirmSenhaAst.ForeColor = Color.Transparent;
             EmailAst.ForeColor = Color.Transparent;
-            lblAvisoEmail.Visible = false;
+          
 
             ConfigurarApparence(
                 txtTurmaEnabled: false,
-                txtEmailEnabled: false,
+                txtEmailEnabled: true,
                 txtSenhaEnabled: false
             );
 

@@ -105,7 +105,7 @@
             this.Titulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Titulo.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
             this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.Titulo.Location = new System.Drawing.Point(448, 26);
+            this.Titulo.Location = new System.Drawing.Point(448, 57);
             this.Titulo.Name = "Titulo";
             this.Titulo.Size = new System.Drawing.Size(384, 46);
             this.Titulo.TabIndex = 106;

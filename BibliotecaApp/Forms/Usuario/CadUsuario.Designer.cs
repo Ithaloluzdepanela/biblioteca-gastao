@@ -127,7 +127,6 @@
             this.lstSugestoesTurma.TabIndex = 131;
             this.lstSugestoesTurma.Visible = false;
             this.lstSugestoesTurma.Click += new System.EventHandler(this.lstSugestoesTurma_Click);
-            
             this.lstSugestoesTurma.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstSugestoesTurma_KeyDown);
             this.lstSugestoesTurma.Leave += new System.EventHandler(this.lstSugestoesTurma_Leave);
             // 
@@ -153,7 +152,7 @@
             this.btnCadastrar.Location = new System.Drawing.Point(551, 739);
             this.btnCadastrar.Name = "btnCadastrar";
             this.btnCadastrar.Size = new System.Drawing.Size(149, 57);
-            this.btnCadastrar.TabIndex = 90;
+            this.btnCadastrar.TabIndex = 10;
             this.btnCadastrar.Text = "CADASTRAR";
             this.btnCadastrar.UseVisualStyleBackColor = false;
             this.btnCadastrar.Click += new System.EventHandler(this.btnCadastrar_Click);
@@ -180,7 +179,7 @@
             this.dtpDataNasc.Location = new System.Drawing.Point(79, 653);
             this.dtpDataNasc.Name = "dtpDataNasc";
             this.dtpDataNasc.Size = new System.Drawing.Size(329, 33);
-            this.dtpDataNasc.TabIndex = 88;
+            this.dtpDataNasc.TabIndex = 7;
             // 
             // lblUsuario
             // 
@@ -220,7 +219,7 @@
             this.txtNome.SelectionLength = 0;
             this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(617, 40);
-            this.txtNome.TabIndex = 63;
+            this.txtNome.TabIndex = 2;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
             // 
@@ -351,7 +350,7 @@
             this.txtConfirmSenha.SelectionLength = 0;
             this.txtConfirmSenha.SelectionStart = 0;
             this.txtConfirmSenha.Size = new System.Drawing.Size(617, 40);
-            this.txtConfirmSenha.TabIndex = 71;
+            this.txtConfirmSenha.TabIndex = 9;
             this.txtConfirmSenha.TextColor = System.Drawing.Color.Black;
             this.txtConfirmSenha.UseSystemPasswordChar = true;
             this.txtConfirmSenha.Visible = false;
@@ -444,7 +443,7 @@
             this.txtEmail.SelectionLength = 0;
             this.txtEmail.SelectionStart = 0;
             this.txtEmail.Size = new System.Drawing.Size(617, 40);
-            this.txtEmail.TabIndex = 64;
+            this.txtEmail.TabIndex = 3;
             this.txtEmail.TextColor = System.Drawing.Color.Black;
             this.txtEmail.UseSystemPasswordChar = false;
             this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
@@ -474,7 +473,7 @@
             this.txtTurma.SelectionLength = 0;
             this.txtTurma.SelectionStart = 0;
             this.txtTurma.Size = new System.Drawing.Size(617, 40);
-            this.txtTurma.TabIndex = 66;
+            this.txtTurma.TabIndex = 4;
             this.txtTurma.TextColor = System.Drawing.Color.Black;
             this.txtTurma.UseSystemPasswordChar = false;
             this.txtTurma.TextChanged += new System.EventHandler(this.txtTurma_TextChanged);
@@ -506,7 +505,7 @@
             this.cbUsuario.PlaceholderMargin = 10;
             this.cbUsuario.PlaceholderText = "Selecione o tipo de usuario...";
             this.cbUsuario.Size = new System.Drawing.Size(329, 34);
-            this.cbUsuario.TabIndex = 61;
+            this.cbUsuario.TabIndex = 1;
             this.cbUsuario.SelectedIndexChanged += new System.EventHandler(this.cbUsuario_SelectedIndexChanged);
             // 
             // txtSenha
@@ -534,7 +533,7 @@
             this.txtSenha.SelectionLength = 0;
             this.txtSenha.SelectionStart = 0;
             this.txtSenha.Size = new System.Drawing.Size(617, 40);
-            this.txtSenha.TabIndex = 69;
+            this.txtSenha.TabIndex = 8;
             this.txtSenha.TextColor = System.Drawing.Color.Black;
             this.txtSenha.UseSystemPasswordChar = true;
             this.txtSenha.Visible = false;
@@ -558,7 +557,7 @@
             this.mtxTelefone.Name = "mtxTelefone";
             this.mtxTelefone.Padding = new System.Windows.Forms.Padding(13, 5, 5, 5);
             this.mtxTelefone.Size = new System.Drawing.Size(329, 40);
-            this.mtxTelefone.TabIndex = 67;
+            this.mtxTelefone.TabIndex = 5;
             this.mtxTelefone.Load += new System.EventHandler(this.mtxTelefone_Load);
             // 
             // TelefoneAst
@@ -644,7 +643,7 @@
             this.mtxCPF.Name = "mtxCPF";
             this.mtxCPF.Padding = new System.Windows.Forms.Padding(15, 5, 5, 5);
             this.mtxCPF.Size = new System.Drawing.Size(329, 40);
-            this.mtxCPF.TabIndex = 68;
+            this.mtxCPF.TabIndex = 6;
             // 
             // DataNascAst
             // 

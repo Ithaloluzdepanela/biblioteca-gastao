@@ -173,7 +173,7 @@
             this.panel1.Location = new System.Drawing.Point(253, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(794, 845);
-            this.panel1.TabIndex = 93;
+            this.panel1.TabIndex = 6;
             // 
             // mtxCodigoBarras
             // 
@@ -194,7 +194,7 @@
             this.mtxCodigoBarras.Name = "mtxCodigoBarras";
             this.mtxCodigoBarras.Padding = new System.Windows.Forms.Padding(10, 2, 7, 6);
             this.mtxCodigoBarras.Size = new System.Drawing.Size(617, 40);
-            this.mtxCodigoBarras.TabIndex = 102;
+            this.mtxCodigoBarras.TabIndex = 5;
             // 
             // txtAutor
             // 
@@ -221,7 +221,7 @@
             this.txtAutor.SelectionLength = 0;
             this.txtAutor.SelectionStart = 0;
             this.txtAutor.Size = new System.Drawing.Size(617, 40);
-            this.txtAutor.TabIndex = 101;
+            this.txtAutor.TabIndex = 4;
             this.txtAutor.TextColor = System.Drawing.Color.Black;
             this.txtAutor.UseSystemPasswordChar = false;
             // 
@@ -250,7 +250,7 @@
             this.txtQuantidade.SelectionLength = 0;
             this.txtQuantidade.SelectionStart = 0;
             this.txtQuantidade.Size = new System.Drawing.Size(617, 40);
-            this.txtQuantidade.TabIndex = 99;
+            this.txtQuantidade.TabIndex = 3;
             this.txtQuantidade.TextColor = System.Drawing.Color.Black;
             this.txtQuantidade.UseSystemPasswordChar = false;
             // 
@@ -279,7 +279,7 @@
             this.txtGenero.SelectionLength = 0;
             this.txtGenero.SelectionStart = 0;
             this.txtGenero.Size = new System.Drawing.Size(617, 40);
-            this.txtGenero.TabIndex = 97;
+            this.txtGenero.TabIndex = 2;
             this.txtGenero.TextColor = System.Drawing.Color.Black;
             this.txtGenero.UseSystemPasswordChar = false;
             // 
@@ -308,7 +308,7 @@
             this.txtNome.SelectionLength = 0;
             this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(617, 40);
-            this.txtNome.TabIndex = 95;
+            this.txtNome.TabIndex = 1;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
             // 
@@ -326,6 +326,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CadastroLivroForm";
+            this.Load += new System.EventHandler(this.CadastroLivroForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

@@ -19,6 +19,7 @@ namespace BibliotecaApp.Forms.Livros
         {
             InitializeComponent();                 // Inicializa os controles visuais
             this.StartPosition = FormStartPosition.CenterScreen; // Abre no centro da tela
+            
         }
 
         #endregion
@@ -151,6 +152,21 @@ namespace BibliotecaApp.Forms.Livros
 
         }
         #endregion
+
+        private void CadastroLivroForm_Load(object sender, EventArgs e)
+        {
+            this.KeyPreview = true;
+            this.KeyDown += Form_KeyDown;
+        }
+
+        private void Form_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                this.SelectNextControl(this.ActiveControl, true, true, true, true);
+            }
+        }
 
     }
 }

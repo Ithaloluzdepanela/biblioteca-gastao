@@ -117,11 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblTutorialTexto.Text" xml:space="preserve">
-    <value>Nesta etapa você define as **turmas padrão**.
-➡ Cada turma atual do sistema terá uma sugestão automática do próximo ano ou curso técnico.
-💡 Dica: revise as sugestões e ajuste apenas se necessário para evitar inconsistências.
-✅ O sistema aplicará automaticamente essas escolhas na Etapa 2.
-</value>
-  </data>
 </root>

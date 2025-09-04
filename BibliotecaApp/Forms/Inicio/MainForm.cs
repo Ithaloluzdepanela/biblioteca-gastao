@@ -28,11 +28,13 @@ namespace BibliotecaApp.Forms.Inicio
 {
     public partial class MainForm : Form
     {
+
+        private bool menuAnimating = false;
         public MainForm()
         {
             InitializeComponent();
             mdiProp();
-            btnIn();
+            
         }
 
         #region Componentes de inicialização
@@ -227,29 +229,35 @@ namespace BibliotecaApp.Forms.Inicio
         //Form Inicio
         public void btnIn()
         {
-            inicio = new InicioForm();
-            inicio.FormClosed += Inicio_FormClosed;
-            inicio.MdiParent = this;
-            inicio.Dock = DockStyle.Fill;
+            // evita criar múltiplas instâncias do Inicio
+            if (inicio == null || inicio.IsDisposed)
+            {
+                inicio = new InicioForm();
+                inicio.FormClosed += Inicio_FormClosed;
+            }
 
+            OpenChild(inicio, keepPreviousHidden: false);
             btnInicio.Enabled = false;
-
-            inicio.Show();
         }
+
         private void Inicio_FormClosed(object sender, FormClosedEventArgs e)
         {
             inicio = null;
+            if (activeChild == null) activeChild = null;
         }
 
         #region Form do Usuários
 
+        
         //Form usuário
         private async void btnUsuario_Click(object sender, EventArgs e)
         {
 
-            btnUsuario.Enabled = false; // Desabilita o botão
-            btnLivro.Enabled = false;
-           
+            if (menuAnimating) return;      // já estamos animando -> ignora
+            menuAnimating = true;
+            btnUsuario.Enabled = false;
+            btnLivro.Enabled = true;
+
             if (livroContainer.Height > 60)
             {
                 livroTransition.Start();
@@ -259,9 +267,11 @@ namespace BibliotecaApp.Forms.Inicio
             userTransition.Start();
 
             await Task.Delay(400);
+            menuAnimating = false;
+            btnUsuario.Enabled = true;
+            // após a animação, garanta que o menu receba foco para não ativar outro MDI child
+            menu.Focus();
 
-            btnUsuario.Enabled = true; // Reabilita o botão
-            btnLivro.Enabled = true;
 
         }
 
@@ -280,11 +290,13 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserCad.Enabled = true;
             btnUserEdit.Enabled = true;
 
-            usuario = new UsuarioForm();
-            usuario.FormClosed += Usuario_FormClosed;
-            usuario.MdiParent = this;
-            usuario.Dock = DockStyle.Fill;
-            usuario.Show();
+            if (usuario == null || usuario.IsDisposed)
+            {
+                usuario = new UsuarioForm();
+                usuario.FormClosed += Usuario_FormClosed;
+            }
+            OpenChild(usuario, keepPreviousHidden: true); // keepPreviousHidden se quiser manter estado do anterior (opcional)
+
         }
 
         //Botão de cadastro do usuário
@@ -302,11 +314,13 @@ namespace BibliotecaApp.Forms.Inicio
             btnUser.Enabled = true;
             btnUserEdit.Enabled = true;
 
-            usuarioCad = new CadUsuario();
-            usuarioCad.FormClosed += UsuarioCad_FormClosed;
-            usuarioCad.MdiParent = this;
-            usuarioCad.Dock = DockStyle.Fill;
-            usuarioCad.Show();
+            if (usuarioCad == null || usuarioCad.IsDisposed)
+            {
+                usuarioCad = new CadUsuario();
+                usuarioCad.FormClosed += UsuarioCad_FormClosed;
+            }
+            OpenChild(usuarioCad, keepPreviousHidden: true);
+
         }
 
         private void UsuarioCad_FormClosed(object sender, FormClosedEventArgs e)
@@ -329,11 +343,12 @@ namespace BibliotecaApp.Forms.Inicio
             btnUser.Enabled = true;
             btnUserCad.Enabled = true;
 
-            usuarioEdit = new EditarUsuarioForm();
-            usuarioEdit.FormClosed += UsuarioEdit_FormClosed;
-            usuarioEdit.MdiParent = this;
-            usuarioEdit.Dock = DockStyle.Fill;
-            usuarioEdit.Show();
+            if (usuarioEdit == null || usuarioEdit.IsDisposed)
+            {
+                usuarioEdit = new EditarUsuarioForm();
+                usuarioEdit.FormClosed += UsuarioEdit_FormClosed;
+            }
+            OpenChild(usuarioEdit, keepPreviousHidden: true);
         }
 
         private void UsuarioEdit_FormClosed(object sender, FormClosedEventArgs e)
@@ -352,25 +367,26 @@ namespace BibliotecaApp.Forms.Inicio
 
         #region Form dos Livros
         //Botão Expansão do Livro
-        private async void btnLivro_Click(object sender, EventArgs e)
+        public async void btnLivro_Click(object sender, EventArgs e)
         {
-            btnLivro.Enabled = false; // Desabilita o botão
-            btnUsuario.Enabled = false;
+            if (menuAnimating) return;
+            btnLivro.Enabled = false;
+            menuAnimating = true;
             
+            btnUsuario.Enabled = true;
+
             if (userContainer.Height > 60)
             {
                 userTransition.Start();
                 await Task.Delay(400);
-                
             }
 
             livroTransition.Start();
-
             await Task.Delay(500);
-
-            btnLivro.Enabled = true; // Reabilita o botão
-            btnUsuario.Enabled = true;
             
+            menuAnimating = false;
+            btnLivro.Enabled = true;
+            menu.Focus();
         }
 
         //Botão Livro(Bilbioteca)
@@ -388,11 +404,12 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserCad.Enabled = true;
             btnUserEdit.Enabled = true;
 
-            livros = new LivrosForm();
-            livros.FormClosed += Livros_FormClosed;
-            livros.MdiParent = this;
-            livros.Dock = DockStyle.Fill;
-            livros.Show();
+            if (livros == null || livros.IsDisposed)
+            {
+                livros = new LivrosForm();
+                livros.FormClosed += Livros_FormClosed;
+            }
+            OpenChild(livros, keepPreviousHidden: true);
         }
         private void Livros_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -413,11 +430,12 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserCad.Enabled = true;
             btnUserEdit.Enabled = true;
 
-            emprestimo = new EmprestimoForm();
-            emprestimo.FormClosed += Emprestimo_FormClosed;
-            emprestimo.MdiParent = this;
-            emprestimo.Dock = DockStyle.Fill;
-            emprestimo.Show();
+            if (emprestimo == null || emprestimo.IsDisposed)
+            {
+                emprestimo = new EmprestimoForm();
+                emprestimo.FormClosed += Emprestimo_FormClosed;
+            }
+            OpenChild(emprestimo, keepPreviousHidden: true);
         }
 
         private void Emprestimo_FormClosed(object sender, FormClosedEventArgs e)
@@ -426,7 +444,7 @@ namespace BibliotecaApp.Forms.Inicio
         }
 
         //Botão Empréstimo Rápido
-        private void btnEmprestimoRap_Click(object sender, EventArgs e)
+        public void btnEmprestimoRap_Click(object sender, EventArgs e)
         {
             btnEmprestimoRap.Enabled = false;
             btnRel.Enabled = true;
@@ -440,11 +458,13 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserCad.Enabled = true;
             btnUserEdit.Enabled = true;
 
-            emprestimoRap = new EmprestimoRapidoForm();
-            emprestimoRap.FormClosed += EmprestimoRap_FormClosed;
-            emprestimoRap.MdiParent = this;
-            emprestimoRap.Dock = DockStyle.Fill;
-            emprestimoRap.Show();
+            if (emprestimoRap == null || emprestimoRap.IsDisposed)
+            {
+                emprestimoRap = new EmprestimoRapidoForm();
+                emprestimoRap.FormClosed += EmprestimoRap_FormClosed;
+            }
+            OpenChild(emprestimoRap, keepPreviousHidden: true);
+
 
         }
 
@@ -467,11 +487,13 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserCad.Enabled = true;
             btnUserEdit.Enabled = true;
 
-            cadastroLivro = new CadastroLivroForm();
-            cadastroLivro.FormClosed += CadastroLivro_FormClosed;
-            cadastroLivro.MdiParent = this;
-            cadastroLivro.Dock = DockStyle.Fill;
-            cadastroLivro.Show();
+            if (cadastroLivro == null || cadastroLivro.IsDisposed)
+            {
+                cadastroLivro = new CadastroLivroForm();
+                cadastroLivro.FormClosed += CadastroLivro_FormClosed;
+            }
+            OpenChild(cadastroLivro, keepPreviousHidden: true);
+
 
         }
 
@@ -495,11 +517,12 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserCad.Enabled = true;
             btnUserEdit.Enabled = true;
 
-            devolução = new DevoluçãoForm();
-            devolução.FormClosed += Devolução_FormClosed;
-            devolução.MdiParent = this;
-            devolução.Dock = DockStyle.Fill;
-            devolução.Show();
+            if (devolução == null || devolução.IsDisposed)
+            {
+                devolução = new DevoluçãoForm();
+                devolução.FormClosed += Devolução_FormClosed;
+            }
+            OpenChild(devolução, keepPreviousHidden: true);
         }
 
         private void Devolução_FormClosed(object sender, FormClosedEventArgs e)
@@ -525,11 +548,13 @@ namespace BibliotecaApp.Forms.Inicio
             btnUserCad.Enabled = true;
             btnUserEdit.Enabled = true;
 
-            rel = new RelForm();
-            rel.FormClosed += Relatorios_FormClosed;
-            rel.MdiParent = this;
-            rel.Dock = DockStyle.Fill;
-            rel.Show();
+            if (rel == null || rel.IsDisposed)
+            {
+                rel = new RelForm();
+                rel.FormClosed += Relatorios_FormClosed;
+            }
+            OpenChild(rel, keepPreviousHidden: true);
+
         }
 
         private void Relatorios_FormClosed(object sender, FormClosedEventArgs e)
@@ -622,6 +647,8 @@ namespace BibliotecaApp.Forms.Inicio
         //Load para fechar o Login
         private void MainForm_Load(object sender, EventArgs e)
         {
+            btnIn();
+
             if (LoginForm.cancelar == false)
             {
                 Application.Exit();
@@ -694,8 +721,30 @@ namespace BibliotecaApp.Forms.Inicio
             }
         }
 
+
+
+
+        private Form activeChild = null;
+
+        /// <summary>
+        /// Mostra o form child como único MDI child visível (esconde o anterior),
+        /// garante Dock, MdiParent, BringToFront e Activate.
+        /// </summary>
+        public void OpenChild(Form child, bool keepPreviousHidden = false)
+        {
+            if (child == null) return;
+
+            try
+            {
+                // Se já existe um filho ativo diferente, esconde/fecha ele
+                if (activeChild != null && activeChild != child && !activeChild.IsDisposed)
+                {
+                    if (keepPreviousHidden) activeChild.Hide();
+                    else activeChild.Close(); // fecha para liberar recursos (troque por Hide se preferir manter estado)
+                }
+
         #endregion
 
-        
+
     }
 }

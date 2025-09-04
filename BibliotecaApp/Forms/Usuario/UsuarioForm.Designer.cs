@@ -44,7 +44,6 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.lblEmprestimo);
             this.panel1.Controls.Add(this.cmbEmprestimo);
@@ -55,6 +54,7 @@
             this.panel1.Controls.Add(this.Titulo);
             this.panel1.Controls.Add(this.txtNome);
             this.panel1.Controls.Add(this.dgvUsuarios);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -207,6 +207,9 @@
             this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNome.PlaceholderMarginLeft = 12;
             this.txtNome.PlaceholderText = "Digite aqui o nome...";
+            this.txtNome.SelectedText = "";
+            this.txtNome.SelectionLength = 0;
+            this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(442, 40);
             this.txtNome.TabIndex = 85;
             this.txtNome.TextColor = System.Drawing.Color.Black;

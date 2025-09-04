@@ -1,7 +1,4 @@
 ﻿using BibliotecaApp.Forms.Inicio;
-using BibliotecaApp.Forms.Livros;
-using BibliotecaApp.Forms.Relatorio;
-using BibliotecaApp.Forms.Usuario;
 using System;
 using System.Data;
 using System.Data.SqlServerCe;
@@ -439,5 +436,6 @@ namespace BibliotecaApp.Forms.Usuario
                 }
             }
         }
+
     }
 }

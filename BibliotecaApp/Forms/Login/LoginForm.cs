@@ -43,7 +43,13 @@ namespace BibliotecaApp.Forms.Login
         #region Eventos de Saída
         private void picExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            const string msg = "Tem certeza de que quer fechar a Aplicação?";
+            const string box = "Confirmação de Encerramento";
+            var confirma = MessageBox.Show(msg, box, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirma == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
         }
 
         private void picExit_MouseEnter(object sender, EventArgs e)
@@ -678,6 +684,30 @@ namespace BibliotecaApp.Forms.Login
             }
 
             this.Show(); // Reexibe o formulário anterior após o fechamento do modal
+        }
+
+        
+
+        private void lblVersion_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+
+            using (AboutForm popup = new AboutForm())
+            {
+                popup.ShowDialog(); // Abre como modal
+            }
+
+            this.Show();
+        }
+
+        private void lblVersion_MouseEnter(object sender, EventArgs e)
+        {
+            lblVersion.ForeColor = Color.SkyBlue;
+        }
+
+        private void lblVersion_MouseLeave(object sender, EventArgs e)
+        {lblVersion.ForeColor = Color.White;
+
         }
     }
 }

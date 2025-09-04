@@ -29,8 +29,8 @@ namespace BibliotecaApp.Forms.Livros
             this.lstSugestoesTurma = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnMenos = new System.Windows.Forms.Button();
-            this.btnMais = new System.Windows.Forms.Button();
             this.numQuantidade = new RoundedTextBox();
+            this.btnMais = new System.Windows.Forms.Button();
             this.cbBibliotecaria = new RoundedComboBox();
             this.txtTurma = new RoundedTextBox();
             this.txtLivro = new RoundedTextBox();
@@ -204,7 +204,6 @@ namespace BibliotecaApp.Forms.Livros
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.btnMenos);
             this.panel1.Controls.Add(this.numQuantidade);
@@ -226,12 +225,12 @@ namespace BibliotecaApp.Forms.Livros
             this.panel1.Controls.Add(this.txtProfessor);
             this.panel1.Controls.Add(this.labelTitle);
             this.panel1.Controls.Add(this.dgvRapidos);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1280, 845);
             this.panel1.TabIndex = 0;
-           
             // 
             // btnMenos
             // 
@@ -245,20 +244,6 @@ namespace BibliotecaApp.Forms.Livros
             this.btnMenos.Text = "▼";
             this.btnMenos.UseVisualStyleBackColor = true;
             this.btnMenos.Click += new System.EventHandler(this.btnMenos_Click);
-            // 
-            // btnMais
-            // 
-            this.btnMais.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnMais.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
-            this.btnMais.Location = new System.Drawing.Point(945, 139);
-            this.btnMais.Margin = new System.Windows.Forms.Padding(0);
-            this.btnMais.Name = "btnMais";
-            this.btnMais.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.btnMais.Size = new System.Drawing.Size(18, 21);
-            this.btnMais.TabIndex = 96;
-            this.btnMais.Text = "▲";
-            this.btnMais.UseVisualStyleBackColor = true;
-            this.btnMais.Click += new System.EventHandler(this.btnMais_Click);
             // 
             // numQuantidade
             // 
@@ -289,6 +274,20 @@ namespace BibliotecaApp.Forms.Livros
             this.numQuantidade.TextColor = System.Drawing.Color.Black;
             this.numQuantidade.UseSystemPasswordChar = false;
             this.numQuantidade.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numQuantidade_KeyPress);
+            // 
+            // btnMais
+            // 
+            this.btnMais.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnMais.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
+            this.btnMais.Location = new System.Drawing.Point(945, 139);
+            this.btnMais.Margin = new System.Windows.Forms.Padding(0);
+            this.btnMais.Name = "btnMais";
+            this.btnMais.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.btnMais.Size = new System.Drawing.Size(18, 21);
+            this.btnMais.TabIndex = 96;
+            this.btnMais.Text = "▲";
+            this.btnMais.UseVisualStyleBackColor = true;
+            this.btnMais.Click += new System.EventHandler(this.btnMais_Click);
             // 
             // cbBibliotecaria
             // 

@@ -222,6 +222,8 @@ namespace BibliotecaApp.Froms.Usuario
         #region Métodos Privados
         private void HabilitarCampos(bool ativo)
         {
+            
+            
             txtNome.Enabled = ativo;
             txtEmail.Enabled = ativo;
             txtTurma.Enabled = ativo;
@@ -251,29 +253,31 @@ namespace BibliotecaApp.Froms.Usuario
         {
             HabilitarCampos(true);
             txtTurma.Enabled = false;
-
+            txtTurma.Visible = false;
+            TurmaAst.Visible = false;
+            lblTurma.Visible = false;
+            lblTurma.Enabled = false;
             txtSenha.Visible = true;
             txtConfirmSenha.Visible = true;
             lblSenha.Visible = true;
             lblConfirmSenha.Visible = true;
             chkMostrarSenha.Visible = true;
-            btnCadastrar.Location = new Point(541, 932);
-            btnLimpar.Location = new Point(73, 932);
-            CentralizarBotoes();
+            panel2.Location = new Point(288,353);
+            btnCadastrar.Location = new Point(491, 485);
+            btnLimpar.Location = new Point(23, 485);
+            panel2.Anchor = AnchorStyles.Top;
+
 
             SetLabelColors(enabled: true);
-            lblTurma.ForeColor = Color.LightGray;
+           
 
             SetAsteriscoVisibility(true);
             TurmaAst.ForeColor = Color.Transparent;
+            
 
-            txtTurma.Text = "";
+         
 
-            ConfigurarApparence(
-                txtTurmaEnabled: false,
-                txtEmailEnabled: true,
-                txtSenhaEnabled: true
-            );
+           
 
             txtSenha.PlaceholderText = "Digite aqui uma senha...";
             txtConfirmSenha.PlaceholderText = "Confirme a senha...";
@@ -287,34 +291,34 @@ namespace BibliotecaApp.Froms.Usuario
         {
             HabilitarCampos(true);
             txtTurma.Enabled = false;
-
+            txtTurma.Visible = false;
+            TurmaAst.Visible = false;
+            lblTurma.Visible = false;
+            lblTurma.Enabled=false;
             txtSenha.Visible = false;
             txtConfirmSenha.Visible = false;
             lblSenha.Visible = false;
             lblConfirmSenha.Visible = false;
             chkMostrarSenha.Visible = false;
-            btnCadastrar.Location = new Point(541, 788);
-            btnLimpar.Location = new Point(73, 788);
-            CentralizarBotoes();
+            btnCadastrar.Location = new Point(491, 304);
+            btnLimpar.Location = new Point(23, 304);
+            panel2.Location = new Point(288,353);
+            panel2.Anchor = AnchorStyles.Top;
 
             SetLabelColors(enabled: true);
 
-            lblTurma.ForeColor = Color.LightGray;
+            
 
             SetAsteriscoVisibility(true);
             TurmaAst.ForeColor = Color.Transparent;
             SenhaAst.ForeColor = Color.Transparent;
             ConfirmSenhaAst.ForeColor = Color.Transparent;
             EmailAst.ForeColor = Color.Transparent;
-            txtTurma.Text = "";
+          
             txtSenha.Text = "";
             txtConfirmSenha.Text = "";
 
-            ConfigurarApparence(
-                txtTurmaEnabled: false,
-                txtEmailEnabled: true,
-                txtSenhaEnabled: false
-            );
+            
 
             txtEmail.PlaceholderText = "Digite aqui o email...";
             chkMostrarSenha.ForeColor = Color.LightGray;
@@ -326,6 +330,8 @@ namespace BibliotecaApp.Froms.Usuario
             HabilitarCampos(true);
             
             txtTurma.Enabled = false;
+            txtTurma.Visible = false;
+            TurmaAst.Visible = false;
             txtSenha.Enabled = false;
             txtConfirmSenha.Enabled = false;
 
@@ -334,15 +340,16 @@ namespace BibliotecaApp.Froms.Usuario
             lblSenha.Visible = false;
             lblConfirmSenha.Visible = false;
             chkMostrarSenha.Visible = false;
-            btnCadastrar.Location = new Point(541, 788);
-            btnLimpar.Location = new Point(73, 788);
-            CentralizarBotoes();
+            btnCadastrar.Location = new Point(491, 304);
+            btnLimpar.Location = new Point(23, 304);
+            panel2.Location = new Point(288, 353);
+            panel2.Anchor = AnchorStyles.Top;
 
             SetLabelColors(enabled: true);
-            lblSenha.ForeColor = Color.LightGray;
-            lblConfirmSenha.ForeColor = Color.LightGray;
-          
-            lblTurma.ForeColor = Color.LightGray;
+           
+
+            lblTurma.Visible = false;
+
             txtTurma.Text = "";
             txtSenha.Text = "";
             txtConfirmSenha.Text = "";
@@ -355,11 +362,7 @@ namespace BibliotecaApp.Froms.Usuario
             EmailAst.ForeColor = Color.Transparent;
           
 
-            ConfigurarApparence(
-                txtTurmaEnabled: false,
-                txtEmailEnabled: true,
-                txtSenhaEnabled: false
-            );
+           
 
             chkMostrarSenha.ForeColor = Color.LightGray;
             chkMostrarSenha.Enabled = false;
@@ -371,7 +374,11 @@ namespace BibliotecaApp.Froms.Usuario
             HabilitarCampos(true);
             txtSenha.Enabled = false;
             txtConfirmSenha.Enabled = false;
-
+            txtTurma.Visible = true;
+            txtTurma.Enabled = true;
+            lblTurma.Enabled = true;
+            lblTurma.Visible=true;
+            TurmaAst.Visible = true;
             SetLabelColors(enabled: true);
             lblSenha.ForeColor = Color.LightGray;
             lblConfirmSenha.ForeColor = Color.LightGray;
@@ -383,20 +390,19 @@ namespace BibliotecaApp.Froms.Usuario
             lblSenha.Visible = false;
             lblConfirmSenha.Visible = false;
             chkMostrarSenha.Visible = false;
-            btnCadastrar.Location = new Point(541, 788);
-            btnLimpar.Location = new Point(73, 788);
-            CentralizarBotoes();
+            btnCadastrar.Location = new Point(491, 304);
+            btnLimpar.Location = new Point(23, 304);
+            panel2.Location = new Point(288, 430);
+            panel2.Anchor = AnchorStyles.Top;
+
+
 
             SetAsteriscoVisibility(true);
             SenhaAst.ForeColor = Color.Transparent;
             ConfirmSenhaAst.ForeColor = Color.Transparent;
             EmailAst.ForeColor = Color.Transparent;
 
-            ConfigurarApparence(
-                txtTurmaEnabled: true,
-                txtEmailEnabled: true,
-                txtSenhaEnabled: false
-            );
+           
 
             txtTurma.PlaceholderText = "Digite aqui a turma...";
             txtEmail.PlaceholderText = "Digite aqui o email...";
@@ -405,36 +411,11 @@ namespace BibliotecaApp.Froms.Usuario
             chkMostrarSenha.Enabled = false;
         }
 
-        private void ConfigurarApparence(bool txtTurmaEnabled, bool txtEmailEnabled, bool txtSenhaEnabled)
-        {
-            txtNome.BackColor = Color.WhiteSmoke;
-            txtNome.BorderColor = Color.FromArgb(204, 204, 204);
-
-            mtxCPF.BackColor = Color.WhiteSmoke;
-            mtxCPF.BorderColor = Color.FromArgb(204, 204, 204);
-
-            mtxTelefone.BackColor = Color.WhiteSmoke;
-            mtxTelefone.BorderColor = Color.FromArgb(204, 204, 204);
-
-            dtpDataNasc.BackColor = Color.WhiteSmoke;
-
-            txtEmail.BackColor = txtEmailEnabled ? Color.WhiteSmoke : Color.White;
-            txtEmail.BorderColor = txtEmailEnabled ? Color.LightGray : Color.WhiteSmoke;
-
-            txtTurma.BackColor = txtTurmaEnabled ? Color.WhiteSmoke : Color.White;
-            txtTurma.BorderColor = txtTurmaEnabled ? Color.LightGray : Color.WhiteSmoke;
-
-            txtSenha.BackColor = txtSenhaEnabled ? Color.WhiteSmoke : Color.White;
-            txtSenha.BorderColor = txtSenhaEnabled ? Color.LightGray : Color.WhiteSmoke;
-
-            txtConfirmSenha.BackColor = txtSenhaEnabled ? Color.WhiteSmoke : Color.White;
-            txtConfirmSenha.BorderColor = txtSenhaEnabled ? Color.LightGray : Color.WhiteSmoke;
-        }
-
+       
         private void SetLabelColors(bool enabled)
         {
             Color color = enabled ? Color.FromArgb(20, 41, 60) : Color.LightGray;
-
+           
             lblNome.ForeColor = color;
             lblSenha.ForeColor = color;
             lblConfirmSenha.ForeColor = color;
@@ -991,13 +972,17 @@ VALUES
             hoveredIndex = -1;
             (sender as ListBox).Invalidate();
         }
+
         #endregion
 
-        private void mtxTelefone_Load(object sender, EventArgs e)
+        private void lstSugestoesTurma_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Não é necessário implementação adicional
+
         }
 
-        
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

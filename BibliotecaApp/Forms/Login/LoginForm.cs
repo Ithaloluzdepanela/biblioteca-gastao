@@ -679,5 +679,29 @@ namespace BibliotecaApp.Forms.Login
 
             this.Show(); // Reexibe o formulário anterior após o fechamento do modal
         }
+
+        
+
+        private void lblVersion_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+
+            using (AboutForm popup = new AboutForm())
+            {
+                popup.ShowDialog(); // Abre como modal
+            }
+
+            this.Show();
+        }
+
+        private void lblVersion_MouseEnter(object sender, EventArgs e)
+        {
+            lblVersion.ForeColor = Color.SkyBlue;
+        }
+
+        private void lblVersion_MouseLeave(object sender, EventArgs e)
+        {lblVersion.ForeColor = Color.White;
+
+        }
     }
 }

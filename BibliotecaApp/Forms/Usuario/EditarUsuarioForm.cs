@@ -643,7 +643,8 @@ namespace BibliotecaApp.Forms.Usuario
             HabilitarCampos();
             txtTurma.Visible = false;
             lblTurma.Visible = false;
-            panel1.Location = new Point(68, 387);
+            panel1.Location = new Point(538, 387);
+            panel1.Anchor = AnchorStyles.Top;
         }
 
         private void ConfigurarEdicaoParaProfessor()
@@ -651,19 +652,22 @@ namespace BibliotecaApp.Forms.Usuario
             HabilitarCampos();
             txtTurma.Visible = false;
             lblTurma.Visible = false;
-            panel1.Location = new Point(68, 387);
+            panel1.Location = new Point(538, 387);
+            panel1.Anchor = AnchorStyles.Top;
         }
 
         private void ConfigurarEdicaoParaAluno()
         {
             HabilitarCampos();
-            panel1.Location = new Point(68, 468);
+            panel1.Location = new Point(538, 468);
+            panel1.Anchor = AnchorStyles.Top;
         }
 
         private void ConfigurarEdicaoParaOutros()
         {
             HabilitarCampos();
-            panel1.Location = new Point(68, 387);
+            panel1.Location = new Point(538, 387);
+            panel1.Anchor = AnchorStyles.Top;
             txtEmail.Visible = true;
             txtTurma.Visible = false;
             lblTurma.Visible = true;
@@ -1201,34 +1205,6 @@ namespace BibliotecaApp.Forms.Usuario
         }
         #endregion
 
-        private void dtpDataNasc_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblDataNasc_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblCPF_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblTelefone_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void mtxTelefone_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void mtxCPF_Load(object sender, EventArgs e)
-        {
-
-        }
+       
     }
 }

@@ -56,7 +56,52 @@ namespace BibliotecaApp.Forms.Login
             btnTeste.Location = new Point(-200, -200);
             pnSenha.Location = new Point(-200, -200);
             btnTrocarSenha.Location = new Point(-200, -200);
+
+            txtNovaSenha.KeyDown += txtNovaSenha_KeyDown;
+            txtConfirmarSenha.KeyDown += txtConfirmarSenha_KeyDown;
+            txtEmail.KeyDown += txtEmail_KeyDown;
+            txtTeste.KeyDown += txtTeste_KeyDown;
         }
+
+        private void txtEmail_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+               btnEnviar.PerformClick();
+            }
+        }
+
+
+        private void txtTeste_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                btnTeste.PerformClick();
+            }
+        }
+
+
+
+        private void txtNovaSenha_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                txtConfirmarSenha.Focus();
+            }
+        }
+
+        private void txtConfirmarSenha_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                btnTrocarSenha.PerformClick();
+            }
+        }
+
 
         private void picExit_Click(object sender, EventArgs e)
         {
@@ -240,8 +285,8 @@ namespace BibliotecaApp.Forms.Login
         #region UI Transition Methods
         private void TransicionarParaVerificacaoCodigo()
         {
-            lblTop.Text = "Digite o Código de Verificação";
-            lblTop.Location = new Point(96, 9);
+            lblTop.Text = "Digite o Código enviado";
+            lblTop.Location = new Point(548, 90);
 
             txtEmail.Visible = false;
             txtEmail.Enabled = false;
@@ -259,8 +304,8 @@ namespace BibliotecaApp.Forms.Login
 
         private void TransicionarParaNovaSenha()
         {
-            lblTop.Text = "Digite sua nova senha";
-            lblTop.Location = new Point(25, 9);
+            lblTop.Text = "Digite uma nova senha";
+            lblTop.Location = new Point(555, 90);
 
             txtTeste.Visible = false;
             pnBarra2.Visible = false;
@@ -268,7 +313,7 @@ namespace BibliotecaApp.Forms.Login
             btnTeste.Visible = false;
             lblReenviar.Visible = false;
 
-            pnSenha.Location = lblDigite.Location;
+            pnSenha.Location = new Point(561, 244);
             btnTrocarSenha.Location = btnTeste.Location;
 
             txtNovaSenha.Focus();
@@ -392,7 +437,7 @@ namespace BibliotecaApp.Forms.Login
   <body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;'>
     <div style='max-width: 600px; margin: auto; background-color: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);'>
       <h2 style='color: #2c3e50;'>Olá, {Html(nome)} 👋</h2>
-      <p>Recebemos uma solicitação para verificação de e-mail no sistema da biblioteca.</p>
+      <p>Recebemos uma solicitação de redifinição de senha no sistema da biblioteca.</p>
       <p style='font-size: 18px;'><strong>🔐 Seu código de verificação:</strong></p>
       <div style='font-size: 32px; font-weight: bold; color: #27ae60; margin: 20px 0;'>{_codigoAtual}</div>
       <p>Use este código para concluir sua verificação. Ele expira em 10 minutos.</p>
@@ -539,5 +584,10 @@ namespace BibliotecaApp.Forms.Login
             }
         }
         #endregion
+
+        private void txtEmail_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

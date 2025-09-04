@@ -54,7 +54,7 @@ namespace BibliotecaApp.Forms.Livros
             AddTextCol("Nome", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120);
             AddTextCol("Autor", "Autor", 160, DataGridViewContentAlignment.MiddleLeft, 100);
             AddTextCol("Genero", "Gênero", 140, DataGridViewContentAlignment.MiddleLeft, 100);
-            AddTextCol("Quantidade", "Qtd", 80, DataGridViewContentAlignment.MiddleLeft, 60);
+            AddTextCol("Quantidade", "Quantidade", 160, DataGridViewContentAlignment.MiddleLeft, 100);
             AddTextCol("CodigoBarras", "Código de Barras", 160, DataGridViewContentAlignment.MiddleLeft, 120);
           /*  AddTextCol("Disponibilidade", "Disponivel", 160, DataGridViewContentAlignment.MiddleLeft, 120);*/ /*Verificar Mudança de Disponibilidade do livro*/
 
@@ -412,9 +412,6 @@ namespace BibliotecaApp.Forms.Livros
 
         #endregion
 
-        private void lblTotal_Click(object sender, EventArgs e)
-        {
 
-        }
     }
 }

@@ -15,6 +15,7 @@ namespace BibliotecaApp.Forms.Livros
         public DevoluçãoForm()
         {
             InitializeComponent();
+            
         }
 
         #endregion
@@ -26,6 +27,7 @@ namespace BibliotecaApp.Forms.Livros
             BuscarEmprestimos();
             ConfigurarGridEmprestimos();
             cbFiltroEmprestimo.SelectedIndex = 0;
+            VerificarAtrasos();
         }
 
         private void btnBuscarEmprestimo_Click(object sender, EventArgs e)
@@ -423,8 +425,39 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
+        private void VerificarAtrasos()
+        {
+            using (SqlCeConnection conexao = Conexao.ObterConexao())
+            {
+                conexao.Open();
+
+                string query = @"UPDATE Emprestimo
+                         SET Status = 'Atrasado'
+                         WHERE Status = 'Ativo'
+                         AND (
+                             (DataProrrogacao IS NOT NULL AND DataProrrogacao < @Hoje)
+                             OR
+                             (DataProrrogacao IS NULL AND DataDevolucao < @Hoje)
+                         )";
+
+                using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
+                {
+                    comando.Parameters.AddWithValue("@Hoje", DateTime.Now);
+                    int afetados = comando.ExecuteNonQuery();
+
+                    if (afetados > 0)
+                    {
+                        MessageBox.Show($"{afetados} empréstimo(s) foram marcados como atrasados.",
+                                        "Verificação de Atrasos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+        }
+
+
+
         #endregion
 
-        
+
     }
 }

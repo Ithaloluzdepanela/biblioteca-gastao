@@ -35,21 +35,21 @@
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnExcluir = new System.Windows.Forms.Button();
             this.btnSalvar = new System.Windows.Forms.Button();
+            this.txtNomeUsuario = new RoundedTextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.dtpDataNasc = new System.Windows.Forms.DateTimePicker();
-            this.lblDataNasc = new System.Windows.Forms.Label();
+            this.txtNome = new RoundedTextBox();
             this.lblTurma = new System.Windows.Forms.Label();
-            this.lblCPF = new System.Windows.Forms.Label();
-            this.lblTelefone = new System.Windows.Forms.Label();
             this.lblEmail = new System.Windows.Forms.Label();
+            this.txtEmail = new RoundedTextBox();
+            this.txtTurma = new RoundedTextBox();
             this.lblNome = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.mtxCPF = new RoundedMaskedTextBox();
             this.mtxTelefone = new RoundedMaskedTextBox();
-            this.txtNomeUsuario = new RoundedTextBox();
-            this.txtNome = new RoundedTextBox();
-            this.txtEmail = new RoundedTextBox();
-            this.txtTurma = new RoundedTextBox();
+            this.lblTelefone = new System.Windows.Forms.Label();
+            this.lblCPF = new System.Windows.Forms.Label();
+            this.lblDataNasc = new System.Windows.Forms.Label();
+            this.dtpDataNasc = new System.Windows.Forms.DateTimePicker();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -76,7 +76,7 @@
             this.panel2.Controls.Add(this.panel1);
             this.panel2.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.panel2.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.panel2.Location = new System.Drawing.Point(350, 0);
+            this.panel2.Location = new System.Drawing.Point(253, 0);
             this.panel2.MaximumSize = new System.Drawing.Size(775, 2000);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(775, 845);
@@ -84,11 +84,10 @@
             // 
             // lstSugestoesTurma
             // 
-            this.lstSugestoesTurma.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lstSugestoesTurma.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.lstSugestoesTurma.FormattingEnabled = true;
             this.lstSugestoesTurma.ItemHeight = 25;
-            this.lstSugestoesTurma.Location = new System.Drawing.Point(82, 465);
+            this.lstSugestoesTurma.Location = new System.Drawing.Point(76, 468);
             this.lstSugestoesTurma.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lstSugestoesTurma.Name = "lstSugestoesTurma";
             this.lstSugestoesTurma.ScrollAlwaysVisible = true;
@@ -98,11 +97,10 @@
             // 
             // lstSugestoesUsuario
             // 
-            this.lstSugestoesUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.lstSugestoesUsuario.FormattingEnabled = true;
             this.lstSugestoesUsuario.ItemHeight = 25;
-            this.lstSugestoesUsuario.Location = new System.Drawing.Point(82, 182);
+            this.lstSugestoesUsuario.Location = new System.Drawing.Point(81, 183);
             this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
             this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
@@ -114,7 +112,6 @@
             // 
             // lblTipoUsuario
             // 
-            this.lblTipoUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTipoUsuario.AutoSize = true;
             this.lblTipoUsuario.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblTipoUsuario.Location = new System.Drawing.Point(78, 188);
@@ -140,7 +137,7 @@
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnCancelar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnCancelar.BackColor = System.Drawing.Color.DimGray;
             this.btnCancelar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnCancelar.ForeColor = System.Drawing.Color.White;
@@ -155,7 +152,7 @@
             // 
             // btnExcluir
             // 
-            this.btnExcluir.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnExcluir.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnExcluir.BackColor = System.Drawing.Color.DarkRed;
             this.btnExcluir.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnExcluir.ForeColor = System.Drawing.Color.White;
@@ -170,7 +167,7 @@
             // 
             // btnSalvar
             // 
-            this.btnSalvar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnSalvar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnSalvar.BackColor = System.Drawing.Color.DarkGreen;
             this.btnSalvar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSalvar.ForeColor = System.Drawing.Color.White;
@@ -183,9 +180,38 @@
             this.btnSalvar.UseVisualStyleBackColor = false;
             this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
             // 
+            // txtNomeUsuario
+            // 
+            this.txtNomeUsuario.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtNomeUsuario.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtNomeUsuario.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtNomeUsuario.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtNomeUsuario.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtNomeUsuario.BorderRadius = 10;
+            this.txtNomeUsuario.BorderThickness = 1;
+            this.txtNomeUsuario.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtNomeUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNomeUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtNomeUsuario.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtNomeUsuario.Location = new System.Drawing.Point(82, 142);
+            this.txtNomeUsuario.Margin = new System.Windows.Forms.Padding(5);
+            this.txtNomeUsuario.Name = "txtNomeUsuario";
+            this.txtNomeUsuario.Padding = new System.Windows.Forms.Padding(9, 12, 9, 12);
+            this.txtNomeUsuario.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNomeUsuario.PlaceholderMarginLeft = 12;
+            this.txtNomeUsuario.PlaceholderText = "Busque aqui o Nome do Usuário ...";
+            this.txtNomeUsuario.SelectedText = "";
+            this.txtNomeUsuario.SelectionLength = 0;
+            this.txtNomeUsuario.SelectionStart = 0;
+            this.txtNomeUsuario.Size = new System.Drawing.Size(617, 40);
+            this.txtNomeUsuario.TabIndex = 1;
+            this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
+            this.txtNomeUsuario.UseSystemPasswordChar = false;
+            this.txtNomeUsuario.TextChanged += new System.EventHandler(this.txtNomeUsuario_TextChanged);
+            // 
             // label1
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
@@ -196,36 +222,38 @@
             this.label1.TabIndex = 107;
             this.label1.Text = "Nome do Usuário:";
             // 
-            // dtpDataNasc
+            // txtNome
             // 
-            this.dtpDataNasc.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dtpDataNasc.Enabled = false;
-            this.dtpDataNasc.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.dtpDataNasc.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDataNasc.Location = new System.Drawing.Point(14, 203);
-            this.dtpDataNasc.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.dtpDataNasc.Name = "dtpDataNasc";
-            this.dtpDataNasc.Size = new System.Drawing.Size(329, 33);
-            this.dtpDataNasc.TabIndex = 7;
-            this.dtpDataNasc.ValueChanged += new System.EventHandler(this.dtpDataNasc_ValueChanged);
-            // 
-            // lblDataNasc
-            // 
-            this.lblDataNasc.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblDataNasc.AutoSize = true;
-            this.lblDataNasc.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDataNasc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblDataNasc.Location = new System.Drawing.Point(8, 175);
-            this.lblDataNasc.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblDataNasc.Name = "lblDataNasc";
-            this.lblDataNasc.Size = new System.Drawing.Size(192, 25);
-            this.lblDataNasc.TabIndex = 98;
-            this.lblDataNasc.Text = "Data de Nascimento:";
-            this.lblDataNasc.Click += new System.EventHandler(this.lblDataNasc_Click);
+            this.txtNome.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtNome.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtNome.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtNome.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtNome.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtNome.BorderRadius = 10;
+            this.txtNome.BorderThickness = 1;
+            this.txtNome.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtNome.Enabled = false;
+            this.txtNome.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtNome.Location = new System.Drawing.Point(82, 260);
+            this.txtNome.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txtNome.Name = "txtNome";
+            this.txtNome.Padding = new System.Windows.Forms.Padding(8);
+            this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNome.PlaceholderMarginLeft = 12;
+            this.txtNome.PlaceholderText = "";
+            this.txtNome.SelectedText = "";
+            this.txtNome.SelectionLength = 0;
+            this.txtNome.SelectionStart = 0;
+            this.txtNome.Size = new System.Drawing.Size(617, 40);
+            this.txtNome.TabIndex = 2;
+            this.txtNome.TextColor = System.Drawing.Color.Black;
+            this.txtNome.UseSystemPasswordChar = false;
             // 
             // lblTurma
             // 
-            this.lblTurma.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTurma.AutoSize = true;
             this.lblTurma.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTurma.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
@@ -236,37 +264,8 @@
             this.lblTurma.TabIndex = 99;
             this.lblTurma.Text = "Turma:";
             // 
-            // lblCPF
-            // 
-            this.lblCPF.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblCPF.AutoSize = true;
-            this.lblCPF.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCPF.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblCPF.Location = new System.Drawing.Point(9, 93);
-            this.lblCPF.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblCPF.Name = "lblCPF";
-            this.lblCPF.Size = new System.Drawing.Size(50, 25);
-            this.lblCPF.TabIndex = 97;
-            this.lblCPF.Text = "CPF:";
-            this.lblCPF.Click += new System.EventHandler(this.lblCPF_Click);
-            // 
-            // lblTelefone
-            // 
-            this.lblTelefone.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblTelefone.AutoSize = true;
-            this.lblTelefone.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTelefone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblTelefone.Location = new System.Drawing.Point(8, 10);
-            this.lblTelefone.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblTelefone.Name = "lblTelefone";
-            this.lblTelefone.Size = new System.Drawing.Size(89, 25);
-            this.lblTelefone.TabIndex = 100;
-            this.lblTelefone.Text = "Telefone:";
-            this.lblTelefone.Click += new System.EventHandler(this.lblTelefone_Click);
-            // 
             // lblEmail
             // 
-            this.lblEmail.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblEmail.AutoSize = true;
             this.lblEmail.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEmail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
@@ -277,9 +276,69 @@
             this.lblEmail.TabIndex = 93;
             this.lblEmail.Text = "Email:";
             // 
+            // txtEmail
+            // 
+            this.txtEmail.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtEmail.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtEmail.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtEmail.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtEmail.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtEmail.BorderRadius = 10;
+            this.txtEmail.BorderThickness = 1;
+            this.txtEmail.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtEmail.Enabled = false;
+            this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtEmail.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtEmail.Location = new System.Drawing.Point(82, 343);
+            this.txtEmail.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txtEmail.Name = "txtEmail";
+            this.txtEmail.Padding = new System.Windows.Forms.Padding(8);
+            this.txtEmail.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtEmail.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmail.PlaceholderMarginLeft = 12;
+            this.txtEmail.PlaceholderText = "";
+            this.txtEmail.SelectedText = "";
+            this.txtEmail.SelectionLength = 0;
+            this.txtEmail.SelectionStart = 0;
+            this.txtEmail.Size = new System.Drawing.Size(617, 40);
+            this.txtEmail.TabIndex = 3;
+            this.txtEmail.TextColor = System.Drawing.Color.Black;
+            this.txtEmail.UseSystemPasswordChar = false;
+            // 
+            // txtTurma
+            // 
+            this.txtTurma.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtTurma.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtTurma.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtTurma.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtTurma.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtTurma.BorderRadius = 10;
+            this.txtTurma.BorderThickness = 1;
+            this.txtTurma.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtTurma.Enabled = false;
+            this.txtTurma.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTurma.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtTurma.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtTurma.Location = new System.Drawing.Point(82, 425);
+            this.txtTurma.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txtTurma.Name = "txtTurma";
+            this.txtTurma.Padding = new System.Windows.Forms.Padding(8);
+            this.txtTurma.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtTurma.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTurma.PlaceholderMarginLeft = 12;
+            this.txtTurma.PlaceholderText = "";
+            this.txtTurma.SelectedText = "";
+            this.txtTurma.SelectionLength = 0;
+            this.txtTurma.SelectionStart = 0;
+            this.txtTurma.Size = new System.Drawing.Size(617, 40);
+            this.txtTurma.TabIndex = 4;
+            this.txtTurma.TextColor = System.Drawing.Color.Black;
+            this.txtTurma.UseSystemPasswordChar = false;
+            this.txtTurma.TextChanged += new System.EventHandler(this.txtTurma_TextChanged);
+            // 
             // lblNome
             // 
-            this.lblNome.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblNome.AutoSize = true;
             this.lblNome.BackColor = System.Drawing.Color.Transparent;
             this.lblNome.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -300,7 +359,7 @@
             this.panel1.Controls.Add(this.lblCPF);
             this.panel1.Controls.Add(this.lblDataNasc);
             this.panel1.Controls.Add(this.dtpDataNasc);
-            this.panel1.Location = new System.Drawing.Point(68, 468);
+            this.panel1.Location = new System.Drawing.Point(68, 481);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(364, 251);
             this.panel1.TabIndex = 133;
@@ -353,134 +412,65 @@
             this.mtxTelefone.TabIndex = 5;
             this.mtxTelefone.Load += new System.EventHandler(this.mtxTelefone_Load);
             // 
-            // txtNomeUsuario
+            // lblTelefone
             // 
-            this.txtNomeUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtNomeUsuario.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtNomeUsuario.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtNomeUsuario.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtNomeUsuario.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtNomeUsuario.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtNomeUsuario.BorderRadius = 10;
-            this.txtNomeUsuario.BorderThickness = 1;
-            this.txtNomeUsuario.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtNomeUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNomeUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtNomeUsuario.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNomeUsuario.Location = new System.Drawing.Point(82, 142);
-            this.txtNomeUsuario.Margin = new System.Windows.Forms.Padding(5);
-            this.txtNomeUsuario.Name = "txtNomeUsuario";
-            this.txtNomeUsuario.Padding = new System.Windows.Forms.Padding(9, 12, 9, 12);
-            this.txtNomeUsuario.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtNomeUsuario.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNomeUsuario.PlaceholderMarginLeft = 12;
-            this.txtNomeUsuario.PlaceholderText = "Busque aqui o Nome do Usuário ...";
-            this.txtNomeUsuario.SelectedText = "";
-            this.txtNomeUsuario.SelectionLength = 0;
-            this.txtNomeUsuario.SelectionStart = 0;
-            this.txtNomeUsuario.Size = new System.Drawing.Size(617, 40);
-            this.txtNomeUsuario.TabIndex = 1;
-            this.txtNomeUsuario.TextColor = System.Drawing.Color.Black;
-            this.txtNomeUsuario.UseSystemPasswordChar = false;
-            this.txtNomeUsuario.TextChanged += new System.EventHandler(this.txtNomeUsuario_TextChanged);
+            this.lblTelefone.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblTelefone.AutoSize = true;
+            this.lblTelefone.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTelefone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.lblTelefone.Location = new System.Drawing.Point(8, 10);
+            this.lblTelefone.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTelefone.Name = "lblTelefone";
+            this.lblTelefone.Size = new System.Drawing.Size(89, 25);
+            this.lblTelefone.TabIndex = 100;
+            this.lblTelefone.Text = "Telefone:";
+            this.lblTelefone.Click += new System.EventHandler(this.lblTelefone_Click);
             // 
-            // txtNome
+            // lblCPF
             // 
-            this.txtNome.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtNome.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtNome.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtNome.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtNome.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtNome.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtNome.BorderRadius = 10;
-            this.txtNome.BorderThickness = 1;
-            this.txtNome.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtNome.Enabled = false;
-            this.txtNome.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNome.Location = new System.Drawing.Point(82, 260);
-            this.txtNome.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.txtNome.Name = "txtNome";
-            this.txtNome.Padding = new System.Windows.Forms.Padding(8);
-            this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtNome.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNome.PlaceholderMarginLeft = 12;
-            this.txtNome.PlaceholderText = "";
-            this.txtNome.SelectedText = "";
-            this.txtNome.SelectionLength = 0;
-            this.txtNome.SelectionStart = 0;
-            this.txtNome.Size = new System.Drawing.Size(617, 40);
-            this.txtNome.TabIndex = 2;
-            this.txtNome.TextColor = System.Drawing.Color.Black;
-            this.txtNome.UseSystemPasswordChar = false;
+            this.lblCPF.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblCPF.AutoSize = true;
+            this.lblCPF.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCPF.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.lblCPF.Location = new System.Drawing.Point(9, 93);
+            this.lblCPF.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblCPF.Name = "lblCPF";
+            this.lblCPF.Size = new System.Drawing.Size(50, 25);
+            this.lblCPF.TabIndex = 97;
+            this.lblCPF.Text = "CPF:";
+            this.lblCPF.Click += new System.EventHandler(this.lblCPF_Click);
             // 
-            // txtEmail
+            // lblDataNasc
             // 
-            this.txtEmail.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtEmail.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtEmail.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtEmail.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtEmail.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtEmail.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtEmail.BorderRadius = 10;
-            this.txtEmail.BorderThickness = 1;
-            this.txtEmail.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtEmail.Enabled = false;
-            this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtEmail.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtEmail.Location = new System.Drawing.Point(82, 343);
-            this.txtEmail.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Padding = new System.Windows.Forms.Padding(8);
-            this.txtEmail.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtEmail.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmail.PlaceholderMarginLeft = 12;
-            this.txtEmail.PlaceholderText = "";
-            this.txtEmail.SelectedText = "";
-            this.txtEmail.SelectionLength = 0;
-            this.txtEmail.SelectionStart = 0;
-            this.txtEmail.Size = new System.Drawing.Size(617, 40);
-            this.txtEmail.TabIndex = 3;
-            this.txtEmail.TextColor = System.Drawing.Color.Black;
-            this.txtEmail.UseSystemPasswordChar = false;
+            this.lblDataNasc.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblDataNasc.AutoSize = true;
+            this.lblDataNasc.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDataNasc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.lblDataNasc.Location = new System.Drawing.Point(8, 175);
+            this.lblDataNasc.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblDataNasc.Name = "lblDataNasc";
+            this.lblDataNasc.Size = new System.Drawing.Size(192, 25);
+            this.lblDataNasc.TabIndex = 98;
+            this.lblDataNasc.Text = "Data de Nascimento:";
+            this.lblDataNasc.Click += new System.EventHandler(this.lblDataNasc_Click);
             // 
-            // txtTurma
+            // dtpDataNasc
             // 
-            this.txtTurma.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtTurma.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtTurma.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtTurma.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtTurma.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtTurma.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtTurma.BorderRadius = 10;
-            this.txtTurma.BorderThickness = 1;
-            this.txtTurma.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtTurma.Enabled = false;
-            this.txtTurma.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTurma.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtTurma.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtTurma.Location = new System.Drawing.Point(82, 425);
-            this.txtTurma.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.txtTurma.Name = "txtTurma";
-            this.txtTurma.Padding = new System.Windows.Forms.Padding(8);
-            this.txtTurma.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtTurma.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTurma.PlaceholderMarginLeft = 12;
-            this.txtTurma.PlaceholderText = "";
-            this.txtTurma.SelectedText = "";
-            this.txtTurma.SelectionLength = 0;
-            this.txtTurma.SelectionStart = 0;
-            this.txtTurma.Size = new System.Drawing.Size(617, 40);
-            this.txtTurma.TabIndex = 4;
-            this.txtTurma.TextColor = System.Drawing.Color.Black;
-            this.txtTurma.UseSystemPasswordChar = false;
-            this.txtTurma.TextChanged += new System.EventHandler(this.txtTurma_TextChanged);
+            this.dtpDataNasc.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dtpDataNasc.Enabled = false;
+            this.dtpDataNasc.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.dtpDataNasc.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDataNasc.Location = new System.Drawing.Point(14, 203);
+            this.dtpDataNasc.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.dtpDataNasc.Name = "dtpDataNasc";
+            this.dtpDataNasc.Size = new System.Drawing.Size(329, 33);
+            this.dtpDataNasc.TabIndex = 7;
+            this.dtpDataNasc.ValueChanged += new System.EventHandler(this.dtpDataNasc_ValueChanged);
             // 
             // EditarUsuarioForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1280, 845);
             this.Controls.Add(this.panel2);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);

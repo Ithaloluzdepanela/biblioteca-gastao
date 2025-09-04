@@ -15,8 +15,11 @@
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapeamentoDeTurmasWizardForm));
             this.panelPrincipal = new System.Windows.Forms.Panel();
-            this.lblTituloEtapa = new System.Windows.Forms.Label();
+            this.pnlTutorial = new System.Windows.Forms.Panel();
+            this.lblTutorialTexto = new System.Windows.Forms.Label();
+            this.lblTutorialTitulo = new System.Windows.Forms.Label();
             this.progressBarWizard = new System.Windows.Forms.ProgressBar();
             this.lblProgressoWizard = new System.Windows.Forms.Label();
             this.panelEtapa1 = new System.Windows.Forms.Panel();
@@ -35,6 +38,7 @@
             this.btnProximo = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.panelPrincipal.SuspendLayout();
+            this.pnlTutorial.SuspendLayout();
             this.panelEtapa1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPadroes)).BeginInit();
             this.panelEtapa2.SuspendLayout();
@@ -46,7 +50,7 @@
             // panelPrincipal
             // 
             this.panelPrincipal.BackColor = System.Drawing.Color.White;
-            this.panelPrincipal.Controls.Add(this.lblTituloEtapa);
+            this.panelPrincipal.Controls.Add(this.pnlTutorial);
             this.panelPrincipal.Controls.Add(this.progressBarWizard);
             this.panelPrincipal.Controls.Add(this.lblProgressoWizard);
             this.panelPrincipal.Controls.Add(this.panelEtapa1);
@@ -54,29 +58,54 @@
             this.panelPrincipal.Controls.Add(this.panelEtapa3);
             this.panelPrincipal.Controls.Add(this.panelBotoes);
             this.panelPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelPrincipal.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panelPrincipal.Location = new System.Drawing.Point(0, 0);
             this.panelPrincipal.Name = "panelPrincipal";
             this.panelPrincipal.Size = new System.Drawing.Size(1200, 800);
             this.panelPrincipal.TabIndex = 0;
             // 
-            // lblTituloEtapa
+            // pnlTutorial
             // 
-            this.lblTituloEtapa.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblTituloEtapa.AutoSize = true;
-            this.lblTituloEtapa.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
-            this.lblTituloEtapa.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.lblTituloEtapa.Location = new System.Drawing.Point(332, 20);
-            this.lblTituloEtapa.Name = "lblTituloEtapa";
-            this.lblTituloEtapa.Size = new System.Drawing.Size(536, 37);
-            this.lblTituloEtapa.TabIndex = 0;
-            this.lblTituloEtapa.Text = "ETAPA 1: DEFINIR PADRÕES POR TURMA";
-            this.lblTituloEtapa.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.pnlTutorial.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.pnlTutorial.BackColor = System.Drawing.Color.White;
+            this.pnlTutorial.Controls.Add(this.lblTutorialTexto);
+            this.pnlTutorial.Controls.Add(this.lblTutorialTitulo);
+            this.pnlTutorial.Location = new System.Drawing.Point(0, 0);
+            this.pnlTutorial.Name = "pnlTutorial";
+            this.pnlTutorial.Size = new System.Drawing.Size(1200, 82);
+            this.pnlTutorial.TabIndex = 7;
+            // 
+            // lblTutorialTexto
+            // 
+            this.lblTutorialTexto.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblTutorialTexto.AutoSize = true;
+            this.lblTutorialTexto.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblTutorialTexto.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.lblTutorialTexto.Location = new System.Drawing.Point(621, 8);
+            this.lblTutorialTexto.Name = "lblTutorialTexto";
+            this.lblTutorialTexto.Size = new System.Drawing.Size(535, 60);
+            this.lblTutorialTexto.TabIndex = 9;
+            this.lblTutorialTexto.Text = resources.GetString("lblTutorialTexto.Text");
+            this.lblTutorialTexto.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblTutorialTitulo
+            // 
+            this.lblTutorialTitulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblTutorialTitulo.AutoSize = true;
+            this.lblTutorialTitulo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblTutorialTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.lblTutorialTitulo.Location = new System.Drawing.Point(60, 23);
+            this.lblTutorialTitulo.Name = "lblTutorialTitulo";
+            this.lblTutorialTitulo.Size = new System.Drawing.Size(424, 30);
+            this.lblTutorialTitulo.TabIndex = 8;
+            this.lblTutorialTitulo.Text = "📘 ETAPA 1: DEFINIR TURMAS PADRÃO";
+            this.lblTutorialTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // progressBarWizard
             // 
             this.progressBarWizard.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.progressBarWizard.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.progressBarWizard.Location = new System.Drawing.Point(50, 75);
+            this.progressBarWizard.Location = new System.Drawing.Point(50, 95);
             this.progressBarWizard.Name = "progressBarWizard";
             this.progressBarWizard.Size = new System.Drawing.Size(950, 12);
             this.progressBarWizard.TabIndex = 1;
@@ -87,7 +116,7 @@
             this.lblProgressoWizard.AutoSize = true;
             this.lblProgressoWizard.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblProgressoWizard.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblProgressoWizard.Location = new System.Drawing.Point(1020, 73);
+            this.lblProgressoWizard.Location = new System.Drawing.Point(1020, 93);
             this.lblProgressoWizard.Name = "lblProgressoWizard";
             this.lblProgressoWizard.Size = new System.Drawing.Size(86, 19);
             this.lblProgressoWizard.TabIndex = 2;
@@ -237,6 +266,7 @@
             this.btnAnterior.TabIndex = 0;
             this.btnAnterior.Text = "← Anterior";
             this.btnAnterior.UseVisualStyleBackColor = false;
+            this.btnAnterior.Click += new System.EventHandler(this.BtnAnterior_Click);
             // 
             // btnProximo
             // 
@@ -250,6 +280,7 @@
             this.btnProximo.TabIndex = 1;
             this.btnProximo.Text = "Avançar →";
             this.btnProximo.UseVisualStyleBackColor = false;
+            this.btnProximo.Click += new System.EventHandler(this.BtnProximo_Click);
             // 
             // btnCancelar
             // 
@@ -263,13 +294,15 @@
             this.btnCancelar.TabIndex = 2;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = false;
+            this.btnCancelar.Click += new System.EventHandler(this.BtnCancelar_Click);
             // 
             // MapeamentoDeTurmasWizardForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.ClientSize = new System.Drawing.Size(1200, 800);
             this.Controls.Add(this.panelPrincipal);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MapeamentoDeTurmasWizardForm";
@@ -278,6 +311,8 @@
             this.Text = "Mapeamento de Turmas - Wizard";
             this.panelPrincipal.ResumeLayout(false);
             this.panelPrincipal.PerformLayout();
+            this.pnlTutorial.ResumeLayout(false);
+            this.pnlTutorial.PerformLayout();
             this.panelEtapa1.ResumeLayout(false);
             this.panelEtapa1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPadroes)).EndInit();
@@ -292,7 +327,6 @@
         }
 
         private System.Windows.Forms.Panel panelPrincipal;
-        private System.Windows.Forms.Label lblTituloEtapa;
         private System.Windows.Forms.ProgressBar progressBarWizard;
         private System.Windows.Forms.Label lblProgressoWizard;
 
@@ -318,5 +352,8 @@
         private System.Windows.Forms.Button btnAnterior;
         private System.Windows.Forms.Button btnProximo;
         private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.Panel pnlTutorial;
+        private System.Windows.Forms.Label lblTutorialTexto;
+        private System.Windows.Forms.Label lblTutorialTitulo;
     }
 }

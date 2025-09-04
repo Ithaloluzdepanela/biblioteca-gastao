@@ -52,6 +52,8 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void MapeamentoDeTurmasWizardForm_Load(object sender, EventArgs e)
         {
+            MostrarTutorialEtapa(1);
+
             try
             {
                 int ano = DateTime.Now.Year;
@@ -202,21 +204,21 @@ namespace BibliotecaApp.Forms.Usuario
             {
                 case 1:
                     panelEtapa1.Visible = true;
-                    lblTituloEtapa.Text = "ETAPA 1: DEFINIR PADRÕES POR TURMA";
+                    
                     btnAnterior.Enabled = false;
                     btnProximo.Text = "Avançar";
                     ConfigurarEtapa1();
                     break;
                 case 2:
                     panelEtapa2.Visible = true;
-                    lblTituloEtapa.Text = "ETAPA 2: AJUSTES INDIVIDUAIS";
+                    
                     btnAnterior.Enabled = true;
                     btnProximo.Text = "Avançar";
                     ConfigurarEtapa2();
                     break;
                 case 3:
                     panelEtapa3.Visible = true;
-                    lblTituloEtapa.Text = "ETAPA 3: CONFIRMAÇÃO E APLICAÇÃO";
+                   
                     btnAnterior.Enabled = true;
                     btnProximo.Text = "Aplicar";
                     ConfigurarEtapa3();
@@ -239,9 +241,11 @@ namespace BibliotecaApp.Forms.Usuario
                 case 1 when ValidarEtapa1():
                     AplicarPadroesDefinidos();
                     MostrarEtapa(2);
+                    MostrarTutorialEtapa(2);
                     break;
                 case 2 when ValidarEtapa2():
                     MostrarEtapa(3);
+                    MostrarTutorialEtapa(3);
                     break;
                 case 3:
                     AplicarMapeamento();
@@ -249,10 +253,50 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
+
+
+        private void MostrarTutorialEtapa(int etapa)
+        {
+            switch (etapa)
+            {
+                case 1:
+                    lblTutorialTitulo.Text = "📘 ETAPA 1: DEFINIR TURMAS PADRÃO";
+                    lblTutorialTexto.Text =
+                        "Nesta etapa você define as **turmas padrão**.\n" +
+                        "➡ Cada turma atual do sistema terá uma sugestão automática do próximo ano ou curso técnico.\n" +
+                        "💡 Dica: revise as sugestões e ajuste apenas se necessário para evitar inconsistências.\n" +
+                        "✅ O sistema aplicará automaticamente essas escolhas na Etapa 2.";
+                    break;
+
+                case 2:
+                    lblTutorialTitulo.Text = "📝 ETAPA 2: AJUSTES INDIVIDUAIS";
+                    lblTutorialTexto.Text =
+                        "Aqui você pode **ajustar cada aluno individualmente**.\n" +
+                        "➡ Alunos destacados possuem progressão ou status especial (EGRESSO, TRANSFERIDO, DESISTENTE).\n" +
+                        "💡 Dica: selecione apenas opções válidas no combo para garantir a progressão correta.\n" +
+                        "🔎 Use o filtro de turma para facilitar a revisão.";
+                    break;
+
+                case 3:
+                    lblTutorialTitulo.Text = "✅ ETAPA 3: CONFIRMAÇÃO E APLICAÇÃO";
+                    lblTutorialTexto.Text =
+                        "Revise o **resumo final do mapeamento** antes de aplicar.\n" +
+                        "➡ Confirme que todas as alterações estão corretas.\n" +
+                        "💡 Dica: o sistema salvará um registro de mapeamento para histórico e futuras consultas.\n" +
+                        "🔒 Será necessário confirmar sua senha para aplicar as alterações.";
+                    break;
+            }
+        }
+
+
         private void BtnAnterior_Click(object sender, EventArgs e)
         {
             if (_etapaAtual > 1)
-                MostrarEtapa(_etapaAtual - 1);
+            {
+                _etapaAtual--; // Atualiza a etapa atual
+                MostrarEtapa(_etapaAtual); // Mostra a etapa correspondente
+                MostrarTutorialEtapa(_etapaAtual); // Mostra o tutorial correspondente
+            }
         }
 
         private void BtnCancelar_Click(object sender, EventArgs e)
@@ -1168,5 +1212,19 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
         #endregion
+
+        private void picExit_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Deseja realmente cancelar o mapeamento? Todas as alterações serão perdidas.",
+                                       "Confirmar Cancelamento", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                this.DialogResult = DialogResult.Cancel;
+                this.Close();
+            }
+        }
+
+        
     }
 }

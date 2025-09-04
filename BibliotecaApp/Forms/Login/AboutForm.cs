@@ -19,19 +19,12 @@ namespace BibliotecaApp.Forms.Login
 
         private void picExit_Click(object sender, EventArgs e)
         {
-            Form loginForm = Application.OpenForms["LoginForm"];
-
-            if (loginForm != null)
+            const string msg = "Tem certeza de que quer fechar a Aplicação?";
+            const string box = "Confirmação de Encerramento";
+            var confirma = MessageBox.Show(msg, box, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirma == DialogResult.Yes)
             {
-                this.Hide();
-                loginForm.Show();
-                loginForm.BringToFront();
-            }
-            else
-            {
-                this.Hide();
-                LoginForm novoLogin = new LoginForm();
-                novoLogin.Show();
+                Application.Exit();
             }
         }
 

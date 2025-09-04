@@ -53,6 +53,7 @@
             this.bemVindo = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.btnVoltar = new System.Windows.Forms.Button();
             this.pnSenha.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gradientPanel1.SuspendLayout();
@@ -65,7 +66,7 @@
             this.lblReenviar.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblReenviar.AutoSize = true;
             this.lblReenviar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblReenviar.Location = new System.Drawing.Point(642, 523);
+            this.lblReenviar.Location = new System.Drawing.Point(648, 488);
             this.lblReenviar.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblReenviar.Name = "lblReenviar";
             this.lblReenviar.Size = new System.Drawing.Size(60, 17);
@@ -81,7 +82,7 @@
             this.btnEnviar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEnviar.Font = new System.Drawing.Font("Segoe UI", 16.2F);
             this.btnEnviar.ForeColor = System.Drawing.Color.White;
-            this.btnEnviar.Location = new System.Drawing.Point(593, 460);
+            this.btnEnviar.Location = new System.Drawing.Point(593, 428);
             this.btnEnviar.Margin = new System.Windows.Forms.Padding(2);
             this.btnEnviar.Name = "btnEnviar";
             this.btnEnviar.Size = new System.Drawing.Size(220, 52);
@@ -108,7 +109,7 @@
             this.btnTeste.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTeste.Font = new System.Drawing.Font("Segoe UI", 16.2F);
             this.btnTeste.ForeColor = System.Drawing.Color.White;
-            this.btnTeste.Location = new System.Drawing.Point(593, 359);
+            this.btnTeste.Location = new System.Drawing.Point(801, 432);
             this.btnTeste.Margin = new System.Windows.Forms.Padding(2);
             this.btnTeste.Name = "btnTeste";
             this.btnTeste.Size = new System.Drawing.Size(220, 52);
@@ -150,7 +151,6 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(271, 19);
             this.txtEmail.TabIndex = 1;
-            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
             // 
             // lblTop
             // 
@@ -270,7 +270,7 @@
             this.btnTrocarSenha.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTrocarSenha.Font = new System.Drawing.Font("Segoe UI", 16.2F);
             this.btnTrocarSenha.ForeColor = System.Drawing.Color.White;
-            this.btnTrocarSenha.Location = new System.Drawing.Point(593, 409);
+            this.btnTrocarSenha.Location = new System.Drawing.Point(801, 482);
             this.btnTrocarSenha.Margin = new System.Windows.Forms.Padding(2);
             this.btnTrocarSenha.Name = "btnTrocarSenha";
             this.btnTrocarSenha.Size = new System.Drawing.Size(220, 52);
@@ -289,7 +289,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(20, 20);
             this.pictureBox1.TabIndex = 16;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.pictureBox1.Click += new System.EventHandler(this.picExit_Click);
             // 
             // gradientPanel1
             // 
@@ -365,12 +365,29 @@
             this.pictureBox3.TabIndex = 0;
             this.pictureBox3.TabStop = false;
             // 
+            // btnVoltar
+            // 
+            this.btnVoltar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnVoltar.BackColor = System.Drawing.Color.LightGray;
+            this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnVoltar.Font = new System.Drawing.Font("Segoe UI", 14.2F);
+            this.btnVoltar.ForeColor = System.Drawing.Color.White;
+            this.btnVoltar.Location = new System.Drawing.Point(636, 500);
+            this.btnVoltar.Margin = new System.Windows.Forms.Padding(2);
+            this.btnVoltar.Name = "btnVoltar";
+            this.btnVoltar.Size = new System.Drawing.Size(135, 38);
+            this.btnVoltar.TabIndex = 30;
+            this.btnVoltar.Text = "Voltar";
+            this.btnVoltar.UseVisualStyleBackColor = false;
+            this.btnVoltar.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
             // EsqueceuSenhaForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(900, 600);
+            this.Controls.Add(this.btnVoltar);
             this.Controls.Add(this.gradientPanel1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnTrocarSenha);
@@ -429,5 +446,6 @@
         private System.Windows.Forms.Label bemVindo;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Button btnVoltar;
     }
 }

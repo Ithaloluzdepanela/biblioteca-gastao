@@ -2,8 +2,10 @@
 // Presume-se que seu Designer já tem: panelTop, panel1, lblRelogio, lblOla, timerRelogio, etc.
 
 using BibliotecaApp.Forms.Livros;
+using BibliotecaApp.Forms.Relatorio;
 using BibliotecaApp.Models;
 using BibliotecaApp.Utils;
+using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -937,51 +939,33 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
             AbrirEmprestimoRapido();
         }
 
-        private void AbrirEmprestimoRapido()
+        private async void AbrirEmprestimoRapido()
         {
             try
             {
-                if (emprestimoRap != null && !emprestimoRap.IsDisposed)
-                {
-                    emprestimoRap.BringToFront();
-                    return;
-                }
-
-                Form mainForm = this.MdiParent;
+                MainForm mainForm = this.MdiParent as MainForm;
                 if (mainForm == null)
                 {
-                    MessageBox.Show("Não foi possível identificar a janela principal (MainForm).", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Não foi possível identificar a janela principal (MainForm).",
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                string[] btnNames = new string[]
-                {
-                    "btnEmprestimoRap","btnRel","btnEmprestimo","btnLivros","btnInicio","btnDev",
-                    "btnLivroCad","btnUser","btnUserCad","btnUserEdit"
-                };
+                // 🔥 chama a animação e clique
+                mainForm.btnLivro_Click(null, EventArgs.Empty);
+                mainForm.btnEmprestimoRap_Click(null, EventArgs.Empty);
 
-                mainButtonsOriginalState.Clear();
-                foreach (var name in btnNames)
-                {
-                    var ctrl = FindControlOnForm(mainForm, name);
-                    if (ctrl != null) mainButtonsOriginalState[name] = ctrl.Enabled;
-                }
-
-                SetButtonEnabledOnForm(mainForm, "btnEmprestimoRap", false);
-                foreach (var name in btnNames.Where(n => !string.Equals(n, "btnEmprestimoRap", StringComparison.OrdinalIgnoreCase)))
-                    SetButtonEnabledOnForm(mainForm, name, true);
-
-                emprestimoRap = new EmprestimoRapidoForm();
-                emprestimoRap.FormClosed += EmprestimoRap_FormClosed;
-                emprestimoRap.MdiParent = mainForm;
-                emprestimoRap.Dock = DockStyle.Fill;
-                emprestimoRap.Show();
+                
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao abrir Empréstimo Rápido: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erro ao abrir Empréstimo Rápido: " + ex.Message, "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
 
         private void EmprestimoRap_FormClosed(object sender, FormClosedEventArgs e)
         {

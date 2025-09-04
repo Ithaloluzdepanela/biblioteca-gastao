@@ -43,7 +43,13 @@ namespace BibliotecaApp.Forms.Login
         #region Eventos de Saída
         private void picExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            const string msg = "Tem certeza de que quer fechar a Aplicação?";
+            const string box = "Confirmação de Encerramento";
+            var confirma = MessageBox.Show(msg, box, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirma == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
         }
 
         private void picExit_MouseEnter(object sender, EventArgs e)

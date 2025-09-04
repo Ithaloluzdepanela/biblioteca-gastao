@@ -237,9 +237,9 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(96, 383);
+            this.label1.Location = new System.Drawing.Point(93, 383);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(278, 169);
+            this.label1.Size = new System.Drawing.Size(284, 169);
             this.label1.TabIndex = 2;
             this.label1.Text = "Seja bem-vindo ao sistema de gerenciamento da Biblioteca Monteiro Lobato! Aqui vo" +
     "cê pode consultar o acervo, registrar empréstimos, devoluções e organizar sua le" +

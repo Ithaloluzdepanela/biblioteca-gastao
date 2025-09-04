@@ -323,12 +323,13 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(96, 383);
+            this.label3.Location = new System.Drawing.Point(93, 383);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(278, 169);
+            this.label3.Size = new System.Drawing.Size(284, 169);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Seja bem-vindo ao app da Biblioteca Monteiro Lobato! Aqui você pode consultar o a" +
-    "cervo, registrar empréstimos, devoluções e organizar sua leitura.";
+            this.label3.Text = "Seja bem-vindo ao sistema de gerenciamento da Biblioteca Monteiro Lobato! Aqui vo" +
+    "cê pode consultar o acervo, registrar empréstimos, devoluções e organizar sua le" +
+    "itura.";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // bemVindo
@@ -341,7 +342,7 @@
             this.bemVindo.Name = "bemVindo";
             this.bemVindo.Size = new System.Drawing.Size(147, 37);
             this.bemVindo.TabIndex = 1;
-            this.bemVindo.Text = "Bem Vindo";
+            this.bemVindo.Text = "Bem-vindo";
             // 
             // pictureBox2
             // 

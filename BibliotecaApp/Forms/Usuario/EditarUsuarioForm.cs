@@ -31,6 +31,7 @@ namespace BibliotecaApp.Forms.Usuario
         };
 
         private List<string> todasTurmasPadrao;
+        public event EventHandler UsuarioAtualizado;
 
         public EditarUsuarioForm()
         {
@@ -219,6 +220,7 @@ namespace BibliotecaApp.Forms.Usuario
                         cmd.Parameters.AddWithValue("@id", _usuarioSelecionado.Id);
 
                         cmd.ExecuteNonQuery();
+
                     }
                 }
 
@@ -236,6 +238,7 @@ namespace BibliotecaApp.Forms.Usuario
                 }
 
                 MessageBox.Show("Usuário atualizado com sucesso!");
+                UsuarioAtualizado?.Invoke(this, EventArgs.Empty);
                 LimparCampos();
             }
             catch (Exception ex)
@@ -1203,6 +1206,7 @@ namespace BibliotecaApp.Forms.Usuario
         {
             lstSugestoesTurma.Visible = false;
         }
+
         #endregion
 
        

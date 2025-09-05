@@ -68,7 +68,7 @@ namespace BibliotecaApp.Forms.Inicio
         CadastroLivroForm cadastroLivro;
         DevoluçãoForm devolução;
         CadUsuario usuarioCad; 
-        EditarUsuarioForm usuarioEdit;
+        public EditarUsuarioForm usuarioEdit;
 
         //Proporção dos Forms
         private void mdiProp()
@@ -317,15 +317,35 @@ namespace BibliotecaApp.Forms.Inicio
             if (usuarioCad == null || usuarioCad.IsDisposed)
             {
                 usuarioCad = new CadUsuario();
+
+                // evitar múltiplos +=
+                usuarioCad.UsuarioCriado -= UsuarioCad_UsuarioCriado;
+                usuarioCad.UsuarioCriado += UsuarioCad_UsuarioCriado;
+
                 usuarioCad.FormClosed += UsuarioCad_FormClosed;
             }
-            OpenChild(usuarioCad, keepPreviousHidden: true);
 
+            OpenChild(usuarioCad, keepPreviousHidden: true);
         }
 
         private void UsuarioCad_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (usuarioCad != null)
+            {
+                usuarioCad.UsuarioCriado -= UsuarioCad_UsuarioCriado;
+            }
             usuarioCad = null;
+        }
+
+        private void UsuarioCad_UsuarioCriado(object sender, EventArgs e)
+        {
+            // Procura se o UsuarioForm já está aberto como MDI child
+            var usuarioForm = this.MdiChildren.OfType<BibliotecaApp.Forms.Usuario.UsuarioForm>().FirstOrDefault();
+            if (usuarioForm != null)
+            {
+                // chama método público para recarregar a grid
+                usuarioForm.RefreshGrid();
+            }
         }
 
         //Botão de edição do usuário
@@ -352,6 +372,12 @@ namespace BibliotecaApp.Forms.Inicio
         }
 
         private void UsuarioEdit_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            ResetarUsuarioEdit();
+        }
+
+
+        public void ResetarUsuarioEdit()
         {
             usuarioEdit = null;
         }
@@ -724,13 +750,13 @@ namespace BibliotecaApp.Forms.Inicio
 
 
 
-        private Form activeChild = null;
+        Form activeChild = null;
 
         /// <summary>
         /// Mostra o form child como único MDI child visível (esconde o anterior),
         /// garante Dock, MdiParent, BringToFront e Activate.
         /// </summary>
-        public void OpenChild(Form child, bool keepPreviousHidden = false)
+        private void OpenChild(Form child, bool keepPreviousHidden = false)
         {
             if (child == null) return;
 
@@ -742,6 +768,22 @@ namespace BibliotecaApp.Forms.Inicio
                     if (keepPreviousHidden) activeChild.Hide();
                     else activeChild.Close(); // fecha para liberar recursos (troque por Hide se preferir manter estado)
                 }
+
+                // se a instância atual do child foi descartada, tente recriar? (faça fora se necessário)
+                child.MdiParent = this;
+                child.Dock = DockStyle.Fill;
+
+                // Se o form já está criado mas escondido, apenas BringToFront
+                if (!child.Visible)
+                    child.Show();
+
+                child.BringToFront();
+                child.Activate();
+
+                activeChild = child;
+            }
+            catch { /*silent para não quebrar UI*/ }
+        }
 
         #endregion
 

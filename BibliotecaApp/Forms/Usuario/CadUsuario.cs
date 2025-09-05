@@ -14,6 +14,7 @@ namespace BibliotecaApp.Froms.Usuario
         #region Construtores e Variáveis
         private List<string> turmasCadastradas = new List<string>();
 
+
         // Dicionário de turmas padrão
         private Dictionary<string, string[]> dicionarioTurmas = new Dictionary<string, string[]>
         {
@@ -24,6 +25,8 @@ namespace BibliotecaApp.Froms.Usuario
         };
 
         private List<string> todasTurmasPadrao;
+        public event EventHandler UsuarioCriado;
+
 
         public CadUsuario(List<Usuarios> usuarios)
         {
@@ -560,21 +563,13 @@ VALUES
             }
 
             MessageBox.Show("Cadastro concluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            UsuarioCriado?.Invoke(this, EventArgs.Empty);
             this.DialogResult = DialogResult.OK;
             AdicionarTurmaSeNova(txtTurma.Text.Trim());
             LimparCampos();
         }
 
-        private void CentralizarBotoes()
-        {
-            int espacoEntre = 330;
-            int larguraTotal = btnCadastrar.Width + btnLimpar.Width + espacoEntre;
-            int xInicial = (panel1.Width - larguraTotal) / 2;
-            int y = btnCadastrar.Location.Y;
-
-            btnLimpar.Location = new Point(xInicial, y);
-            btnCadastrar.Location = new Point(xInicial + btnLimpar.Width + espacoEntre, y);
-        }
+        
         #endregion
 
         #region Métodos de Turma

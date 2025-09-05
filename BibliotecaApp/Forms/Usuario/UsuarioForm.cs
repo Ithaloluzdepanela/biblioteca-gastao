@@ -1,4 +1,5 @@
 ﻿using BibliotecaApp.Forms.Inicio;
+using BibliotecaApp.Forms.Livros;
 using System;
 using System.Data;
 using System.Data.SqlServerCe;
@@ -394,46 +395,132 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
+        // dentro da classe UsuarioForm
+        private EditarUsuarioForm usuarioEdit;
+
+
+        private void UsuarioEdit_UsuarioAtualizado(object sender, EventArgs e)
+        {
+            // Recarrega a grid com os dados mais recentes
+            CarregarUsuarios();
+        }
+
+        private void CadUsuario_UsuarioCriado(object sender, EventArgs e)
+        {
+            CarregarUsuarios();
+        }
 
         private void dgvUsuarios_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             // Verifica se clicou na coluna de botão "Editar" e se não é header
-            if (e.RowIndex >= 0 && dgvUsuarios.Columns[e.ColumnIndex].Name == "Editar")
+            if (e.RowIndex < 0 || dgvUsuarios.Columns[e.ColumnIndex].Name != "Editar")
+                return;
+
+            var row = dgvUsuarios.Rows[e.RowIndex];
+            var nome = row.Cells["Nome"].Value?.ToString();
+
+            var confirm = MessageBox.Show($"Deseja editar o usuário \"{nome}\"?", "Editar Usuário", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes)
+                return;
+
+            // Reutiliza a instância de campo (não criar uma local!)
+            // Reutiliza a instância de campo
+            if (usuarioEdit == null || usuarioEdit.IsDisposed)
             {
-                var row = dgvUsuarios.Rows[e.RowIndex];
-                var nome = row.Cells["Nome"].Value?.ToString();
+                usuarioEdit = new EditarUsuarioForm();
+                usuarioEdit.FormClosed += UsuarioEdit_FormClosed;
+                // assinaturas de evento...
+                usuarioEdit.UsuarioAtualizado -= UsuarioEdit_UsuarioAtualizado;
+                usuarioEdit.UsuarioAtualizado += UsuarioEdit_UsuarioAtualizado;
+            }
 
-                var confirm = MessageBox.Show($"Deseja editar o usuário \"{nome}\"?", "Editar Usuário", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (confirm == DialogResult.Yes)
+            // Ajusta botões no MainForm (se MdiParent existir)
+            var main = this.MdiParent as MainForm;
+            if (main != null)
+            {
+                main.btnUserEdit.Enabled = false;
+                main.btnUser.Enabled = true;
+            }
+
+            // Abre o editor primeiro (assim OnLoad/Shown já executam)
+            OpenChild(usuarioEdit, keepPreviousHidden: true);
+
+            // Preenche o formulário APÓS o form ser exibido
+            usuarioEdit.BeginInvoke(new Action(() =>
+            {
+                usuarioEdit.PreencherUsuario(new Usuarios
                 {
-                    // Cria o formulário de edição
-                    var usuarioEdit = new EditarUsuarioForm();
+                    Id = Convert.ToInt32(row.Cells["Id"].Value),
+                    Nome = row.Cells["Nome"].Value?.ToString(),
+                    Email = row.Cells["Email"].Value?.ToString(),
+                    TipoUsuario = row.Cells["TipoUsuario"].Value?.ToString(),
+                    CPF = row.Cells["CPF"].Value?.ToString(),
+                    Telefone = row.Cells["Telefone"].Value?.ToString(),
+                    Turma = row.Cells["Turma"].Value?.ToString(),
+                    DataNascimento = row.Cells["DataNascimento"].Value != DBNull.Value
+                        ? Convert.ToDateTime(row.Cells["DataNascimento"].Value)
+                        : DateTime.MinValue
+                });
+            }));
+        }
 
-                    // Preenche os campos do formulário com os dados do usuário selecionado
-                    usuarioEdit.PreencherUsuario(new Usuarios
-                    {
-                        Id = Convert.ToInt32(row.Cells["Id"].Value),
-                        Nome = row.Cells["Nome"].Value?.ToString(),
-                        Email = row.Cells["Email"].Value?.ToString(),
-                        TipoUsuario = row.Cells["TipoUsuario"].Value?.ToString(),
-                        CPF = row.Cells["CPF"].Value?.ToString(),
-                        Telefone = row.Cells["Telefone"].Value?.ToString(),
-                        Turma = row.Cells["Turma"].Value?.ToString(),
-                        DataNascimento = row.Cells["DataNascimento"].Value != DBNull.Value
-                            ? Convert.ToDateTime(row.Cells["DataNascimento"].Value)
-                            : DateTime.MinValue
-                    });
 
-                    //abre o form de ediçao
 
-                    ((MainForm)this.MdiParent).btnUserEdit.Enabled = false;
-                    ((MainForm)this.MdiParent).btnUser.Enabled = true;
-                   
-                    usuarioEdit.MdiParent = this.MdiParent;
-                    usuarioEdit.Dock = DockStyle.Fill;
-                    usuarioEdit.FormClosed += (s, args) => { usuarioEdit.Dispose(); };
-                    usuarioEdit.Show();
+        private void UsuarioEdit_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (usuarioEdit != null)
+            {
+                usuarioEdit.UsuarioAtualizado -= UsuarioEdit_UsuarioAtualizado;
+            }
+
+            var main = this.MdiParent as MainForm;
+            if (main != null)
+                main.ResetarUsuarioEdit();
+
+            usuarioEdit = null;
+        }
+
+        public void RefreshGrid()
+        {
+            // chama o método que já existe; se quiser, pode passar filtros padrão
+            CarregarUsuarios();
+        }
+
+
+
+        Form activeChild = null;
+
+        /// <summary>
+        /// Mostra o form child como único MDI child visível (esconde o anterior),
+        /// garante Dock, MdiParent, BringToFront e Activate.
+        /// </summary>
+        private void OpenChild(Form child, bool keepPreviousHidden = false)
+        {
+            if (child == null) return;
+
+            try
+            {
+                if (activeChild != null && activeChild != child && !activeChild.IsDisposed)
+                {
+                    if (keepPreviousHidden) activeChild.Hide();
+                    else activeChild.Close();
                 }
+
+                // IMPORTANTE: definir o MdiParent para o mesmo MDI container (MainForm)
+                child.MdiParent = this.MdiParent;
+                child.Dock = DockStyle.Fill;
+
+                if (!child.Visible)
+                    child.Show();
+
+                child.BringToFront();
+                child.Activate();
+
+                activeChild = child;
+            }
+            catch (Exception ex)
+            {
+                // opcional: Debug.WriteLine(ex);
             }
         }
 

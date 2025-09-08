@@ -1,10 +1,12 @@
-﻿using System;
+﻿using BibliotecaApp.Utils;
+using System;
 using System.Data;
+using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
-using BibliotecaApp.Utils;
+using static Usuarios;
 
 namespace BibliotecaApp.Forms.Livros
 {
@@ -15,7 +17,6 @@ namespace BibliotecaApp.Forms.Livros
         public DevoluçãoForm()
         {
             InitializeComponent();
-            
         }
 
         #endregion
@@ -24,10 +25,7 @@ namespace BibliotecaApp.Forms.Livros
 
         private void DevoluçãoForm_Load(object sender, EventArgs e)
         {
-            BuscarEmprestimos();
-            ConfigurarGridEmprestimos();
-            cbFiltroEmprestimo.SelectedIndex = 0;
-            VerificarAtrasos();
+            InicializarFormulario();
         }
 
         private void btnBuscarEmprestimo_Click(object sender, EventArgs e)
@@ -45,9 +43,44 @@ namespace BibliotecaApp.Forms.Livros
             DevolverEmprestimo();
         }
 
+        private void btnAtualizar_Click(object sender, EventArgs e)
+        {
+            BuscarEmprestimos();
+        }
+
         private void dgvEmprestimos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            FormatarCelulaStatus(e);
+            if (dgvEmprestimos.Columns[e.ColumnIndex].Name != "Status" || e.Value == null)
+                return;
+
+            string status = e.Value.ToString().Trim();
+            Color cor = ObterCorStatus(status);
+            FontStyle estilo = ObterEstiloStatus(status);
+
+            e.CellStyle.ForeColor = cor;
+            e.CellStyle.Font = new Font(e.CellStyle.Font, estilo);
+        }
+
+        private void dgvEmprestimos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            ProcessarCliqueBotaoFicha(e);
+        }
+
+        private void dgvEmprestimos_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            DesenharBotaoFicha(e);
+        }
+
+        #endregion
+
+        #region Inicialização
+
+        private void InicializarFormulario()
+        {
+            BuscarEmprestimos();
+            ConfigurarGridEmprestimos();
+            cbFiltroEmprestimo.SelectedIndex = 0;
+            VerificarAtrasos();
         }
 
         #endregion
@@ -64,71 +97,61 @@ namespace BibliotecaApp.Forms.Livros
 
             if (resultado == DialogResult.Yes)
             {
-                LimparTabela();
+                LimparCampos();
             }
         }
 
-        private void LimparTabela()
+        private void LimparCampos()
         {
             txtNome.Text = "";
             mtxCodigoBarras.Text = "";
             txtNome.Focus();
         }
 
-        private void FormatarCelulaStatus(DataGridViewCellFormattingEventArgs e)
+        private Color ObterCorStatus(string status)
         {
-            if (dgvEmprestimos.Columns[e.ColumnIndex].Name == "Status" && e.Value != null)
+            switch (status)
             {
-                string status = e.Value.ToString().Trim();
+                case "Ativo":
+                    return Color.Green;
+                case "Atrasado":
+                    return Color.Red;
+                case "Devolvido":
+                    return Color.DimGray;
+                default:
+                    return Color.Black;
+            }
+        }
 
-                switch (status)
-                {
-                    case "Ativo":
-                        e.CellStyle.ForeColor = Color.Green;
-                        e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
-                        break;
-
-                    case "Atrasado":
-                        e.CellStyle.ForeColor = Color.Red;
-                        e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
-                        break;
-
-                    case "Devolvido":
-                        e.CellStyle.ForeColor = Color.DimGray;
-                        e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Regular);
-                        break;
-                }
+        private FontStyle ObterEstiloStatus(string status)
+        {
+            switch (status)
+            {
+                case "Ativo":
+                case "Atrasado":
+                    return FontStyle.Bold;
+                case "Devolvido":
+                default:
+                    return FontStyle.Regular;
             }
         }
 
         #endregion
 
-        #region Métodos de Busca e Dados
+        #region Busca e Consulta de Dados
 
         private void BuscarEmprestimos()
         {
-            string nomeLivro = txtNome.Text.Trim();
-            string codigoBarras = mtxCodigoBarras.Text.Trim();
-            string statusFiltro = cbFiltroEmprestimo.SelectedItem?.ToString();
-
-            bool filtrarCodigo = !string.IsNullOrEmpty(codigoBarras);
-            bool filtrarStatus = statusFiltro != "Todos" && !string.IsNullOrEmpty(statusFiltro);
+            var filtros = ObterFiltrosBusca();
 
             using (SqlCeConnection conexao = Conexao.ObterConexao())
             {
                 conexao.Open();
-
-                string query = ConstruirQueryBusca(filtrarCodigo, filtrarStatus);
+                string query = ConstruirQueryBusca(filtros);
 
                 using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
                 {
-                    comando.Parameters.AddWithValue("@NomeLivro", "%" + nomeLivro + "%");
-
-                    if (filtrarCodigo)
-                        comando.Parameters.AddWithValue("@CodigoBarras", "%" + codigoBarras + "%");
-
-                    if (filtrarStatus)
-                        comando.Parameters.AddWithValue("@Status", statusFiltro);
+                    AdicionarParametrosBusca(comando, filtros);
 
                     SqlCeDataAdapter adaptador = new SqlCeDataAdapter(comando);
                     DataTable tabela = new DataTable();
@@ -139,48 +162,67 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-
-
-        private string ConstruirQueryBusca(bool filtrarCodigoBarras, bool filtrarStatus)
+        private FiltrosBusca ObterFiltrosBusca()
         {
-            string query = @"
-        SELECT 
-            e.Id AS [ID do Empréstimo],
-            uAlocador.Nome AS [Alocador],
-            uResponsavel.Nome AS [Responsável],
-            l.Nome AS [Livro],
-            l.CodigoBarras AS [Código De Barras],
-            e.DataEmprestimo AS [Data do Empréstimo],
-            e.DataDevolucao AS [Data de Devolução],
-            e.Status AS [Status]
-        FROM Emprestimo e
-        JOIN Usuarios uAlocador ON e.Alocador = uAlocador.Id
-        JOIN Usuarios uResponsavel ON e.Responsavel = uResponsavel.Id
-        JOIN Livros l ON e.Livro = l.Id
-        WHERE l.Nome LIKE @NomeLivro";
-
-            if (filtrarCodigoBarras)
-                query += " AND l.CodigoBarras LIKE @CodigoBarras";
-
-            if (filtrarStatus)
-                query += " AND e.Status = @Status";
-
-            query += @"
-        ORDER BY 
-            CASE e.Status
-                WHEN 'Atrasado' THEN 1
-                WHEN 'Ativo' THEN 2
-                WHEN 'Devolvido' THEN 3
-                ELSE 4
-            END";
-
-            return query;
+            return new FiltrosBusca
+            {
+                NomeLivro = txtNome.Text.Trim(),
+                CodigoBarras = mtxCodigoBarras.Text.Trim(),
+                StatusFiltro = cbFiltroEmprestimo.SelectedItem?.ToString()
+            };
         }
 
+        private string ConstruirQueryBusca(FiltrosBusca filtros)
+        {
+            string queryBase = @"
+                SELECT 
+                    e.Id AS [ID do Empréstimo],
+                    uAlocador.Nome AS [Alocador],
+                    uResponsavel.Nome AS [Responsável],
+                    e.Alocador AS [IdResponsavel],
+                    l.Nome AS [Livro],
+                    l.CodigoBarras AS [Código De Barras],
+                    e.DataEmprestimo AS [Data do Empréstimo],
+                    e.DataDevolucao AS [Data de Devolução],
+                    e.Status AS [Status]
+                FROM Emprestimo e
+                JOIN Usuarios uAlocador ON e.Alocador = uAlocador.Id
+                JOIN Usuarios uResponsavel ON e.Responsavel = uResponsavel.Id
+                JOIN Livros l ON e.Livro = l.Id
+                WHERE l.Nome LIKE @NomeLivro";
+
+            if (filtros.FiltrarCodigoBarras)
+                queryBase += " AND l.CodigoBarras LIKE @CodigoBarras";
+
+            if (filtros.FiltrarStatus)
+                queryBase += " AND e.Status = @Status";
+
+            queryBase += @"
+                ORDER BY 
+                    CASE e.Status
+                        WHEN 'Atrasado' THEN 1
+                        WHEN 'Ativo' THEN 2
+                        WHEN 'Devolvido' THEN 3
+                        ELSE 4
+                    END";
+
+            return queryBase;
+        }
+
+        private void AdicionarParametrosBusca(SqlCeCommand comando, FiltrosBusca filtros)
+        {
+            comando.Parameters.AddWithValue("@NomeLivro", "%" + filtros.NomeLivro + "%");
+
+            if (filtros.FiltrarCodigoBarras)
+                comando.Parameters.AddWithValue("@CodigoBarras", "%" + filtros.CodigoBarras + "%");
+
+            if (filtros.FiltrarStatus)
+                comando.Parameters.AddWithValue("@Status", filtros.StatusFiltro);
+        }
 
         #endregion
 
-        #region Configuração do Grid
+        #region Configuração do DataGridView
 
         private void ConfigurarGridEmprestimos()
         {
@@ -189,6 +231,7 @@ namespace BibliotecaApp.Forms.Livros
             ConfigurarColunasGrid();
             ConfigurarEstiloGrid();
             ConfigurarEventosGrid();
+            AdicionarBotaoFicha();
 
             dgvEmprestimos.ResumeLayout();
         }
@@ -199,41 +242,63 @@ namespace BibliotecaApp.Forms.Livros
             dgvEmprestimos.Columns.Clear();
             dgvEmprestimos.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 
-            AdicionarColuna("ID do Empréstimo", "ID", 50, DataGridViewContentAlignment.MiddleCenter, 40);
-            AdicionarColuna("Alocador", "Alocador", 160, DataGridViewContentAlignment.MiddleLeft, 100);
-            AdicionarColuna("Responsável", "Responsável", 160, DataGridViewContentAlignment.MiddleLeft, 100);
-            AdicionarColuna("Livro", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120);
-            AdicionarColuna("Código De Barras", "Código de Barras", 160, DataGridViewContentAlignment.MiddleLeft, 120);
-            AdicionarColuna("Data do Empréstimo", "Data de Empréstimo", 150, DataGridViewContentAlignment.MiddleCenter, 110);
-            AdicionarColuna("Data de Devolução", "Data de Devolução", 140, DataGridViewContentAlignment.MiddleCenter, 100);
-            AdicionarColuna("Status", "Status", 100, DataGridViewContentAlignment.MiddleCenter, 80);
+            var colunas = ObterDefinicoesColunas();
+            foreach (var coluna in colunas)
+            {
+                AdicionarColuna(coluna);
+            }
+
+            dgvEmprestimos.Columns["IdResponsavel"].Visible = false;
         }
-        private void AdicionarColuna(string dataProp, string header, float fillWeight, DataGridViewContentAlignment align, int minWidth)
+
+        private DefinicaoColuna[] ObterDefinicoesColunas()
+        {
+            return new[]
+            {
+                new DefinicaoColuna("ID do Empréstimo", "ID", 50, DataGridViewContentAlignment.MiddleCenter, 40),
+                new DefinicaoColuna("Alocador", "Alocador", 160, DataGridViewContentAlignment.MiddleLeft, 100),
+                new DefinicaoColuna("Responsável", "Responsável", 160, DataGridViewContentAlignment.MiddleLeft, 100),
+                new DefinicaoColuna("Livro", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120),
+                new DefinicaoColuna("Código De Barras", "Código de Barras", 160, DataGridViewContentAlignment.MiddleLeft, 120),
+                new DefinicaoColuna("Data do Empréstimo", "Data de Empréstimo", 150, DataGridViewContentAlignment.MiddleCenter, 110),
+                new DefinicaoColuna("Data de Devolução", "Data de Devolução", 140, DataGridViewContentAlignment.MiddleCenter, 100),
+                new DefinicaoColuna("Status", "Status", 100, DataGridViewContentAlignment.MiddleCenter, 80),
+                new DefinicaoColuna("IdResponsavel", "IdResponsavel", 50, DataGridViewContentAlignment.MiddleCenter, 40)
+            };
+        }
+
+        private void AdicionarColuna(DefinicaoColuna def)
         {
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = dataProp,
-                Name = dataProp,
-                HeaderText = header,
+                DataPropertyName = def.DataProperty,
+                Name = def.DataProperty,
+                HeaderText = def.Header,
                 ReadOnly = true,
-                FillWeight = fillWeight,
-                MinimumWidth = minWidth,
+                FillWeight = def.FillWeight,
+                MinimumWidth = def.MinWidth,
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
-                    Alignment = align,
+                    Alignment = def.Alignment,
                     WrapMode = DataGridViewTriState.False,
-                    SelectionBackColor = Color.FromArgb(16, 87, 174), // azul escuro
-                    SelectionForeColor = Color.White                 // texto branco
+                    SelectionBackColor = Color.FromArgb(16, 87, 174),
+                    SelectionForeColor = Color.White
                 }
             };
             dgvEmprestimos.Columns.Add(col);
         }
 
-
-
         private void ConfigurarEstiloGrid()
         {
-            // Configurações básicas
+            ConfigurarEstilosBasicos();
+            ConfigurarEstiloCelulas();
+            ConfigurarEstiloCabecalho();
+            ConfigurarColunas();
+            HabilitarDoubleBuffering();
+        }
+
+        private void ConfigurarEstilosBasicos()
+        {
             dgvEmprestimos.BackgroundColor = Color.White;
             dgvEmprestimos.BorderStyle = BorderStyle.None;
             dgvEmprestimos.GridColor = Color.FromArgb(235, 239, 244);
@@ -246,11 +311,6 @@ namespace BibliotecaApp.Forms.Livros
             dgvEmprestimos.AllowUserToDeleteRows = false;
             dgvEmprestimos.AllowUserToResizeRows = false;
             dgvEmprestimos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-            ConfigurarEstiloCelulas();
-            ConfigurarEstiloCabecalho();
-            ConfigurarColunas();
-            HabilitarDoubleBuffering();
         }
 
         private void ConfigurarEstiloCelulas()
@@ -258,12 +318,11 @@ namespace BibliotecaApp.Forms.Livros
             dgvEmprestimos.DefaultCellStyle.BackColor = Color.White;
             dgvEmprestimos.DefaultCellStyle.ForeColor = Color.FromArgb(20, 42, 60);
             dgvEmprestimos.DefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
-            dgvEmprestimos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(16, 87, 174); // azul escuro
-            dgvEmprestimos.DefaultCellStyle.SelectionForeColor = Color.White;                // texto branco
+            dgvEmprestimos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(16, 87, 174);
+            dgvEmprestimos.DefaultCellStyle.SelectionForeColor = Color.White;
             dgvEmprestimos.RowTemplate.Height = 40;
             dgvEmprestimos.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
         }
-
 
         private void ConfigurarEstiloCabecalho()
         {
@@ -311,42 +370,167 @@ namespace BibliotecaApp.Forms.Livros
         private void AplicarCorStatus(DataGridViewRow row)
         {
             var status = row.Cells["Status"].Value?.ToString()?.Trim();
+            Color foreColor = ObterCorForegroundStatus(status);
+            Color selectionColor = ObterCorSelectionStatus(status);
 
+            row.Cells["Status"].Style.ForeColor = foreColor;
+            row.Cells["Status"].Style.SelectionForeColor = selectionColor;
+        }
+
+        private Color ObterCorForegroundStatus(string status)
+        {
             switch (status)
             {
                 case "Atrasado":
-                    row.Cells["Status"].Style.ForeColor = Color.Red;
-                    row.Cells["Status"].Style.SelectionForeColor = Color.Red;
-                    break;
+                    return Color.Red;
                 case "Ativo":
-                    row.Cells["Status"].Style.ForeColor = Color.Green;
-                    row.Cells["Status"].Style.SelectionForeColor = Color.Green;
-                    break;
+                    return Color.Green;
                 case "Finalizado":
-                    row.Cells["Status"].Style.ForeColor = Color.DimGray;
-                    row.Cells["Status"].Style.SelectionForeColor = Color.DimGray;
-                    break;
+                    return Color.DimGray;
+                default:
+                    return Color.Black;
+            }
+        }
+
+        private Color ObterCorSelectionStatus(string status)
+        {
+            switch (status)
+            {
+                case "Atrasado":
+                    return Color.Red;
+                case "Ativo":
+                    return Color.Green;
+                case "Finalizado":
+                    return Color.DimGray;
+                default:
+                    return Color.Black;
             }
         }
 
         #endregion
 
-        #region Métodos de Devolução
+        #region Botão Ficha do Aluno
+
+        private void AdicionarBotaoFicha()
+        {
+            var btnFicha = new DataGridViewButtonColumn
+            {
+                Name = "Ficha",
+                HeaderText = "Ficha",
+                Text = "Abrir",
+                UseColumnTextForButtonValue = true,
+                Width = 80,
+                FlatStyle = FlatStyle.Flat,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    BackColor = Color.White,
+                    ForeColor = Color.FromArgb(16, 87, 174),
+                    SelectionBackColor = Color.FromArgb(16, 87, 174),
+                    SelectionForeColor = Color.White
+                }
+            };
+
+            dgvEmprestimos.Columns.Add(btnFicha);
+        }
+
+        private void ProcessarCliqueBotaoFicha(DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || dgvEmprestimos.Columns[e.ColumnIndex].Name != "Ficha")
+                return;
+
+            var idObj = dgvEmprestimos.Rows[e.RowIndex].Cells["IdResponsavel"].Value;
+            if (idObj != null && int.TryParse(idObj.ToString(), out int idUsuario))
+            {
+                AbrirFichaAluno(idUsuario);
+            }
+        }
+
+        private void AbrirFichaAluno(int idUsuario)
+        {
+            var aluno = BuscarAlunoPorId(idUsuario);
+
+            if (aluno != null)
+            {
+                var fichaForm = new FichaAlunoForm();
+                fichaForm.PreencherAluno(aluno);
+                fichaForm.MdiParent = this.MdiParent;
+                fichaForm.Dock = DockStyle.Fill;
+                fichaForm.Show();
+            }
+            else
+            {
+                MessageBox.Show("Aluno não encontrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void DesenharBotaoFicha(DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex < 0 || dgvEmprestimos.Columns[e.ColumnIndex].Name != "Ficha")
+                return;
+
+            e.PaintBackground(e.CellBounds, true);
+
+            Color corFundo = Color.FromArgb(30, 61, 88);
+            Color corTexto = Color.White;
+            int borderRadius = 8;
+
+            Rectangle rect = new Rectangle(
+                e.CellBounds.X + 6,
+                e.CellBounds.Y + 6,
+                e.CellBounds.Width - 12,
+                e.CellBounds.Height - 12);
+
+            DesenharBotaoArredondado(e.Graphics, rect, corFundo, corTexto, borderRadius);
+            e.Handled = true;
+        }
+
+        private void DesenharBotaoArredondado(Graphics graphics, Rectangle rect, Color corFundo, Color corTexto, int borderRadius)
+        {
+            using (SolidBrush brush = new SolidBrush(corFundo))
+            using (Pen pen = new Pen(corFundo, 1))
+            {
+                var path = CriarCaminhoArredondado(rect, borderRadius);
+                graphics.FillPath(brush, path);
+                graphics.DrawPath(pen, path);
+            }
+
+            TextRenderer.DrawText(graphics, "Ficha",
+                new Font("Segoe UI Semibold", 9F),
+                rect,
+                corTexto,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+        }
+
+        private System.Drawing.Drawing2D.GraphicsPath CriarCaminhoArredondado(Rectangle rect, int borderRadius)
+        {
+            var path = new System.Drawing.Drawing2D.GraphicsPath();
+            path.AddArc(rect.X, rect.Y, borderRadius, borderRadius, 180, 90);
+            path.AddArc(rect.Right - borderRadius, rect.Y, borderRadius, borderRadius, 270, 90);
+            path.AddArc(rect.Right - borderRadius, rect.Bottom - borderRadius, borderRadius, borderRadius, 0, 90);
+            path.AddArc(rect.X, rect.Bottom - borderRadius, borderRadius, borderRadius, 90, 90);
+            path.CloseFigure();
+            return path;
+        }
+
+        #endregion
+
+        #region Operações de Devolução
 
         private void DevolverEmprestimo()
         {
-            if (!ValidarSelecaoEmprestimo()) return;
+            if (!ValidarSelecaoEmprestimo())
+                return;
 
-            int idEmprestimo = ObterIdEmprestimoSelecionado();
-            string statusAtual = ObterStatusEmprestimoSelecionado();
+            var emprestimoInfo = ObterInformacoesEmprestimoSelecionado();
 
-            if (statusAtual == "Devolvido")
+            if (emprestimoInfo.Status == "Devolvido")
             {
                 MessageBox.Show("Este empréstimo já foi devolvido.");
                 return;
             }
 
-            ProcessarDevolucaoNoBanco(idEmprestimo);
+            ProcessarDevolucaoNoBanco(emprestimoInfo.Id);
             MessageBox.Show("Livro devolvido com sucesso.");
             BuscarEmprestimos();
         }
@@ -361,14 +545,14 @@ namespace BibliotecaApp.Forms.Livros
             return true;
         }
 
-        private int ObterIdEmprestimoSelecionado()
+        private EmprestimoInfo ObterInformacoesEmprestimoSelecionado()
         {
-            return Convert.ToInt32(dgvEmprestimos.SelectedRows[0].Cells["ID do Empréstimo"].Value);
-        }
-
-        private string ObterStatusEmprestimoSelecionado()
-        {
-            return dgvEmprestimos.SelectedRows[0].Cells["Status"].Value?.ToString();
+            var row = dgvEmprestimos.SelectedRows[0];
+            return new EmprestimoInfo
+            {
+                Id = Convert.ToInt32(row.Cells["ID do Empréstimo"].Value),
+                Status = row.Cells["Status"].Value?.ToString()
+            };
         }
 
         private void ProcessarDevolucaoNoBanco(int idEmprestimo)
@@ -376,54 +560,69 @@ namespace BibliotecaApp.Forms.Livros
             using (SqlCeConnection conexao = Conexao.ObterConexao())
             {
                 conexao.Open();
+                using (var transacao = conexao.BeginTransaction())
+                {
+                    try
+                    {
+                        int idLivro = ObterIdLivroDoEmprestimo(conexao, idEmprestimo, transacao);
+                        AtualizarStatusEmprestimo(conexao, idEmprestimo, transacao);
+                        AtualizarDisponibilidadeLivro(conexao, idLivro, transacao);
 
-                int idLivro = ObterIdLivroDoEmprestimo(conexao, idEmprestimo);
-                AtualizarStatusEmprestimo(conexao, idEmprestimo);
-                AtualizarDisponibilidadeLivro(conexao, idLivro);
+                        transacao.Commit();
+                    }
+                    catch
+                    {
+                        transacao.Rollback();
+                        throw;
+                    }
+                }
             }
         }
 
-        private int ObterIdLivroDoEmprestimo(SqlCeConnection conexao, int idEmprestimo)
+        private int ObterIdLivroDoEmprestimo(SqlCeConnection conexao, int idEmprestimo, SqlCeTransaction transacao)
         {
-            string queryLivro = "SELECT Livro FROM Emprestimo WHERE Id = @Id";
-            using (SqlCeCommand cmdLivro = new SqlCeCommand(queryLivro, conexao))
+            string query = "SELECT Livro FROM Emprestimo WHERE Id = @Id";
+            using (SqlCeCommand cmd = new SqlCeCommand(query, conexao, transacao))
             {
-                cmdLivro.Parameters.AddWithValue("@Id", idEmprestimo);
-                object result = cmdLivro.ExecuteScalar();
+                cmd.Parameters.AddWithValue("@Id", idEmprestimo);
+                object result = cmd.ExecuteScalar();
                 return result != null ? Convert.ToInt32(result) : 0;
             }
         }
 
-        private void AtualizarStatusEmprestimo(SqlCeConnection conexao, int idEmprestimo)
+        private void AtualizarStatusEmprestimo(SqlCeConnection conexao, int idEmprestimo, SqlCeTransaction transacao)
         {
-            string queryEmprestimo = @"
+            string query = @"
                 UPDATE Emprestimo 
                 SET Status = @Status, DataRealDevolucao = @DataDevolucao 
                 WHERE Id = @Id";
 
-            using (SqlCeCommand cmdEmprestimo = new SqlCeCommand(queryEmprestimo, conexao))
+            using (SqlCeCommand cmd = new SqlCeCommand(query, conexao, transacao))
             {
-                cmdEmprestimo.Parameters.AddWithValue("@Status", "Devolvido");
-                cmdEmprestimo.Parameters.AddWithValue("@DataDevolucao", DateTime.Now);
-                cmdEmprestimo.Parameters.AddWithValue("@Id", idEmprestimo);
-                cmdEmprestimo.ExecuteNonQuery();
+                cmd.Parameters.AddWithValue("@Status", "Devolvido");
+                cmd.Parameters.AddWithValue("@DataDevolucao", DateTime.Now);
+                cmd.Parameters.AddWithValue("@Id", idEmprestimo);
+                cmd.ExecuteNonQuery();
             }
         }
 
-        private void AtualizarDisponibilidadeLivro(SqlCeConnection conexao, int idLivro)
+        private void AtualizarDisponibilidadeLivro(SqlCeConnection conexao, int idLivro, SqlCeTransaction transacao)
         {
-            string queryLivroUpdate = @"
+            string query = @"
                 UPDATE Livros 
-                SET Quantidade = Quantidade + 1,
-                Disponibilidade = 1
+                SET Quantidade = Quantidade + 1, Disponibilidade = 1
                 WHERE Id = @IdLivro";
 
-            using (SqlCeCommand cmdUpdateLivro = new SqlCeCommand(queryLivroUpdate, conexao))
+            using (SqlCeCommand cmd = new SqlCeCommand(query, conexao, transacao))
             {
-                cmdUpdateLivro.Parameters.AddWithValue("@IdLivro", idLivro);
-                cmdUpdateLivro.ExecuteNonQuery();
+                cmd.Parameters.AddWithValue("@IdLivro", idLivro);
+                cmd.ExecuteNonQuery();
             }
         }
+
+        #endregion
+
+        #region Verificação de Atrasos
 
         private void VerificarAtrasos()
         {
@@ -431,14 +630,15 @@ namespace BibliotecaApp.Forms.Livros
             {
                 conexao.Open();
 
-                string query = @"UPDATE Emprestimo
-                         SET Status = 'Atrasado'
-                         WHERE Status = 'Ativo'
-                         AND (
-                             (DataProrrogacao IS NOT NULL AND DataProrrogacao < @Hoje)
-                             OR
-                             (DataProrrogacao IS NULL AND DataDevolucao < @Hoje)
-                         )";
+                string query = @"
+                    UPDATE Emprestimo
+                    SET Status = 'Atrasado'
+                    WHERE Status = 'Ativo'
+                    AND (
+                        (DataProrrogacao IS NOT NULL AND DataProrrogacao < @Hoje)
+                        OR
+                        (DataProrrogacao IS NULL AND DataDevolucao < @Hoje)
+                    )";
 
                 using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
                 {
@@ -454,10 +654,87 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-
-
         #endregion
 
+        #region Consulta de Alunos
 
+        public Aluno BuscarAlunoPorId(int id)
+        {
+            using (SqlCeConnection conexao = Conexao.ObterConexao())
+            {
+                conexao.Open();
+
+                string query = @"
+                    SELECT Nome, Email, Turma, Telefone, Cpf, DataNascimento 
+                    FROM Usuarios WHERE Id = @Id";
+
+                using (SqlCeCommand cmd = new SqlCeCommand(query, conexao))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    using (SqlCeDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Aluno
+                            {
+                                Nome = reader["Nome"].ToString(),
+                                Email = reader["Email"].ToString(),
+                                Turma = reader["Turma"].ToString(),
+                                Telefone = reader["Telefone"].ToString(),
+                                CPF = reader["Cpf"].ToString(),
+                                DataNascimento = reader["DataNascimento"] != DBNull.Value
+                                    ? Convert.ToDateTime(reader["DataNascimento"])
+                                    : DateTime.MinValue
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        #endregion
     }
+
+    #region Classes Auxiliares
+
+    public class FiltrosBusca
+    {
+        public string NomeLivro { get; set; } = "";
+        public string CodigoBarras { get; set; } = "";
+        public string StatusFiltro { get; set; } = "";
+
+        public bool FiltrarCodigoBarras => !string.IsNullOrEmpty(CodigoBarras);
+        public bool FiltrarStatus => StatusFiltro != "Todos" && !string.IsNullOrEmpty(StatusFiltro);
+    }
+
+    public class DefinicaoColuna
+    {
+        public string DataProperty { get; }
+        public string Header { get; }
+        public float FillWeight { get; }
+        public DataGridViewContentAlignment Alignment { get; }
+        public int MinWidth { get; }
+
+        public DefinicaoColuna(string dataProperty, string header, float fillWeight,
+                              DataGridViewContentAlignment alignment, int minWidth)
+        {
+            DataProperty = dataProperty;
+            Header = header;
+            FillWeight = fillWeight;
+            Alignment = alignment;
+            MinWidth = minWidth;
+        }
+    }
+
+    public class EmprestimoInfo
+    {
+        public int Id { get; set; }
+        public string Status { get; set; }
+    }
+
+
+    #endregion
 }

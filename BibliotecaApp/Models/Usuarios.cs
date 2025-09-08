@@ -53,4 +53,17 @@ public class Usuarios
     {
         return $"{Nome} - {Turma}";
     }
+
+    // Para Manipulação de dados SOMENTE dos Alunos 
+    public class Aluno
+    {
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string Turma { get; set; }
+        public string Telefone { get; set; }
+        public string CPF { get; set; }
+        public DateTime DataNascimento { get; set; }
+    }
+
+
 }

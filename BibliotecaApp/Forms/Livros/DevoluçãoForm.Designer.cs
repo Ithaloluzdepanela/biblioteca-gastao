@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnConfirmarDevolucao = new System.Windows.Forms.Button();
             this.btnLimpar = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
@@ -83,7 +83,7 @@
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.label4.Location = new System.Drawing.Point(436, 165);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(162, 25);
+            this.label4.Size = new System.Drawing.Size(206, 32);
             this.label4.TabIndex = 116;
             this.label4.Text = "Código de barras:";
             // 
@@ -96,7 +96,7 @@
             this.lblNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.lblNome.Location = new System.Drawing.Point(151, 162);
             this.lblNome.Name = "lblNome";
-            this.lblNome.Size = new System.Drawing.Size(140, 25);
+            this.lblNome.Size = new System.Drawing.Size(175, 32);
             this.lblNome.TabIndex = 107;
             this.lblNome.Text = "Nome do livro:";
             // 
@@ -116,14 +116,14 @@
             this.dgvEmprestimos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.dgvEmprestimos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvEmprestimos.BackgroundColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvEmprestimos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvEmprestimos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvEmprestimos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvEmprestimos.Location = new System.Drawing.Point(27, 290);
             this.dgvEmprestimos.Name = "dgvEmprestimos";
@@ -133,7 +133,9 @@
             this.dgvEmprestimos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvEmprestimos.Size = new System.Drawing.Size(1226, 407);
             this.dgvEmprestimos.TabIndex = 119;
+            this.dgvEmprestimos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEmprestimos_CellContentClick);
             this.dgvEmprestimos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvEmprestimos_CellFormatting);
+            this.dgvEmprestimos.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvEmprestimos_CellPainting);
             // 
             // lblDadosLivro
             // 
@@ -141,7 +143,7 @@
             this.lblDadosLivro.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDadosLivro.Location = new System.Drawing.Point(22, 321);
             this.lblDadosLivro.Name = "lblDadosLivro";
-            this.lblDadosLivro.Size = new System.Drawing.Size(0, 19);
+            this.lblDadosLivro.Size = new System.Drawing.Size(0, 23);
             this.lblDadosLivro.TabIndex = 121;
             // 
             // btnBuscarEmprestimo
@@ -202,7 +204,7 @@
             this.cbFiltroEmprestimo.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F);
             this.cbFiltroEmprestimo.PlaceholderMargin = 10;
             this.cbFiltroEmprestimo.PlaceholderText = "Selecione uma situação...";
-            this.cbFiltroEmprestimo.Size = new System.Drawing.Size(259, 34);
+            this.cbFiltroEmprestimo.Size = new System.Drawing.Size(259, 40);
             this.cbFiltroEmprestimo.TabIndex = 125;
             // 
             // label6
@@ -214,7 +216,7 @@
             this.label6.Location = new System.Drawing.Point(655, 165);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(90, 25);
+            this.label6.Size = new System.Drawing.Size(113, 32);
             this.label6.TabIndex = 124;
             this.label6.Text = "Situação:";
             // 

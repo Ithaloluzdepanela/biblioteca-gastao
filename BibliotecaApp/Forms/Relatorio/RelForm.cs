@@ -748,6 +748,7 @@ namespace BibliotecaApp.Forms.Relatorio
 
         private void btnExportar_Click(object sender, EventArgs e)
         {
+            CarregarLog(); // garante dados atualizados
             if (dgvHistorico.Rows.Count == 0)
             {
                 MessageBox.Show("Não há dados para exportar.", "Exportação", MessageBoxButtons.OK, MessageBoxIcon.Information);

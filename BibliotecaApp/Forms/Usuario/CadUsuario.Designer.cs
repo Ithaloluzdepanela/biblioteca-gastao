@@ -55,11 +55,11 @@
             this.EmailAst = new System.Windows.Forms.Label();
             this.lstSugestoesTurma = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.txtNome = new RoundedTextBox();
             this.txtEmail = new RoundedTextBox();
             this.txtTurma = new RoundedTextBox();
             this.cbUsuario = new RoundedComboBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.txtConfirmSenha = new RoundedTextBox();
             this.mtxCPF = new RoundedMaskedTextBox();
             this.mtxTelefone = new RoundedMaskedTextBox();
@@ -393,7 +393,7 @@
             this.lstSugestoesTurma.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.lstSugestoesTurma.FormattingEnabled = true;
             this.lstSugestoesTurma.ItemHeight = 25;
-            this.lstSugestoesTurma.Location = new System.Drawing.Point(311, 438);
+            this.lstSugestoesTurma.Location = new System.Drawing.Point(489, 284);
             this.lstSugestoesTurma.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lstSugestoesTurma.Name = "lstSugestoesTurma";
             this.lstSugestoesTurma.ScrollAlwaysVisible = true;
@@ -435,32 +435,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1280, 980);
             this.panel1.TabIndex = 0;
-            // 
-            // panel2
-            // 
-            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.panel2.Controls.Add(this.txtConfirmSenha);
-            this.panel2.Controls.Add(this.DataNascAst);
-            this.panel2.Controls.Add(this.btnLimpar);
-            this.panel2.Controls.Add(this.btnCadastrar);
-            this.panel2.Controls.Add(this.mtxCPF);
-            this.panel2.Controls.Add(this.lblSenha);
-            this.panel2.Controls.Add(this.dtpDataNasc);
-            this.panel2.Controls.Add(this.mtxTelefone);
-            this.panel2.Controls.Add(this.txtSenha);
-            this.panel2.Controls.Add(this.lblConfirmSenha);
-            this.panel2.Controls.Add(this.SenhaAst);
-            this.panel2.Controls.Add(this.lblTelefone);
-            this.panel2.Controls.Add(this.lblDataNasc);
-            this.panel2.Controls.Add(this.lblCPF);
-            this.panel2.Controls.Add(this.ConfirmSenhaAst);
-            this.panel2.Controls.Add(this.chkMostrarSenha);
-            this.panel2.Controls.Add(this.TelefoneAst);
-            this.panel2.Location = new System.Drawing.Point(288, 430);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(657, 541);
-            this.panel2.TabIndex = 132;
-            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // txtNome
             // 
@@ -580,6 +554,32 @@
             this.cbUsuario.Size = new System.Drawing.Size(329, 34);
             this.cbUsuario.TabIndex = 1;
             this.cbUsuario.SelectedIndexChanged += new System.EventHandler(this.cbUsuario_SelectedIndexChanged);
+            // 
+            // panel2
+            // 
+            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.panel2.Controls.Add(this.txtConfirmSenha);
+            this.panel2.Controls.Add(this.DataNascAst);
+            this.panel2.Controls.Add(this.btnLimpar);
+            this.panel2.Controls.Add(this.btnCadastrar);
+            this.panel2.Controls.Add(this.mtxCPF);
+            this.panel2.Controls.Add(this.lblSenha);
+            this.panel2.Controls.Add(this.dtpDataNasc);
+            this.panel2.Controls.Add(this.mtxTelefone);
+            this.panel2.Controls.Add(this.txtSenha);
+            this.panel2.Controls.Add(this.lblConfirmSenha);
+            this.panel2.Controls.Add(this.SenhaAst);
+            this.panel2.Controls.Add(this.lblTelefone);
+            this.panel2.Controls.Add(this.lblDataNasc);
+            this.panel2.Controls.Add(this.lblCPF);
+            this.panel2.Controls.Add(this.ConfirmSenhaAst);
+            this.panel2.Controls.Add(this.chkMostrarSenha);
+            this.panel2.Controls.Add(this.TelefoneAst);
+            this.panel2.Location = new System.Drawing.Point(288, 430);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(657, 541);
+            this.panel2.TabIndex = 132;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // txtConfirmSenha
             // 

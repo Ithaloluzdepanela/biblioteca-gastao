@@ -151,6 +151,7 @@
             // lblEsqueceuSenha
             // 
             this.lblEsqueceuSenha.AutoSize = true;
+            this.lblEsqueceuSenha.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblEsqueceuSenha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(154)))), ((int)(((byte)(245)))));
             this.lblEsqueceuSenha.Location = new System.Drawing.Point(225, 365);
             this.lblEsqueceuSenha.Name = "lblEsqueceuSenha";
@@ -176,7 +177,7 @@
             // BtnEntrar
             // 
             this.BtnEntrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(74)))), ((int)(((byte)(158)))));
-            this.BtnEntrar.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BtnEntrar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BtnEntrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnEntrar.Font = new System.Drawing.Font("Segoe UI", 16.2F);
             this.BtnEntrar.ForeColor = System.Drawing.Color.White;

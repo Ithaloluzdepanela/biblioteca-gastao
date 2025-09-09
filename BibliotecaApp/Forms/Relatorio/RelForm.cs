@@ -10,8 +10,10 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows.Forms;
+using ClosedXML.Excel;
 
-    namespace BibliotecaApp.Forms.Relatorio
+
+namespace BibliotecaApp.Forms.Relatorio
     {
         public partial class RelForm : Form
         {
@@ -731,6 +733,95 @@
                 MessageBox.Show("A data final não pode ser anterior à data inicial.",
                               "Período Inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 dtpFim.Value = dtpInicio.Value;
+            }
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void txtUsuario_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnExportar_Click(object sender, EventArgs e)
+        {
+            if (dgvHistorico.Rows.Count == 0)
+            {
+                MessageBox.Show("Não há dados para exportar.", "Exportação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            string pastaDownloads = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            string nomeArquivo = $"Relatorio_Biblioteca_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            string caminhoCompleto = Path.Combine(pastaDownloads, nomeArquivo);
+
+            try
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("Relatório");
+
+                    // Cabeçalhos
+                    int colIndex = 1;
+                    foreach (DataGridViewColumn col in dgvHistorico.Columns)
+                    {
+                        if (col.Visible && !(col is DataGridViewButtonColumn))
+                        {
+                            ws.Cell(1, colIndex).Value = col.HeaderText;
+                            ws.Cell(1, colIndex).Style.Font.Bold = true;
+                            ws.Cell(1, colIndex).Style.Font.FontSize = 13;
+                            ws.Cell(1, colIndex).Style.Fill.BackgroundColor = XLColor.FromArgb(30, 61, 88);
+                            ws.Cell(1, colIndex).Style.Font.FontColor = XLColor.White;
+                            ws.Cell(1, colIndex).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                            ws.Cell(1, colIndex).Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
+                            ws.Column(colIndex).Width = 30;
+                            colIndex++;
+                        }
+                    }
+
+                    // Dados
+                    for (int r = 0; r < dgvHistorico.Rows.Count; r++)
+                    {
+                        if (dgvHistorico.Rows[r].IsNewRow) continue;
+                        int cIndex = 1;
+                        foreach (DataGridViewColumn col in dgvHistorico.Columns)
+                        {
+                            if (col.Visible && !(col is DataGridViewButtonColumn))
+                            {
+                                var valor = dgvHistorico.Rows[r].Cells[col.Name].Value;
+                                var cell = ws.Cell(r + 2, cIndex);
+                                if (valor == null || valor == DBNull.Value)
+                                    cell.Value = "";
+                                else if (col.HeaderText.ToLower().Contains("data") && valor is DateTime dt)
+                                    cell.Value = dt;
+                                else
+                                    cell.Value = valor.ToString();
+                                cell.Style.Font.FontSize = 12;
+                                cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                                cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                                if (col.HeaderText.ToLower().Contains("data") && valor is DateTime)
+                                {
+                                    cell.Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                                }
+                                cIndex++;
+                            }
+                        }
+                    }
+
+                    ws.RangeUsed().Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                    ws.RangeUsed().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                    wb.SaveAs(caminhoCompleto);
+                }
+
+                MessageBox.Show($"Exportação concluída!\nArquivo salvo em:\n{caminhoCompleto}", "Exportação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{caminhoCompleto}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao exportar: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

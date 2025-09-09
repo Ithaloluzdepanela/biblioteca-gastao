@@ -67,9 +67,9 @@ namespace BibliotecaApp.Forms.Inicio
             // tooltip
             formToolTip = new ToolTip { AutoPopDelay = 6000, InitialDelay = 300, ReshowDelay = 150, IsBalloon = false };
 
-            // auto-refresh: 60s (ajustável)
+            // auto-refresh:
             timerAutoRefresh = new System.Windows.Forms.Timer();
-            timerAutoRefresh.Interval = 60000; // 60000 ms = 60s
+            timerAutoRefresh.Interval = 20000; // 
             timerAutoRefresh.Tick += (s, ev) => { _ = CarregarEstatisticasAsync(); };
             timerAutoRefresh.Start();
 
@@ -601,8 +601,9 @@ namespace BibliotecaApp.Forms.Inicio
             string saudacao = ObterSaudacao(agora);
             try
             {
-                string nome = Sessao.NomeBibliotecariaLogada ?? "";
-                lblOla.Text = $"{saudacao}, {nome}!";
+                string nomeCompleto = Sessao.NomeBibliotecariaLogada ?? "";
+                string primeiroNome = nomeCompleto.Split(' ').FirstOrDefault() ?? "";
+                lblOla.Text = $"{saudacao}, {primeiroNome}!";
                 lblOla.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
                 lblOla.ForeColor = Color.FromArgb(30, 61, 88);
             }

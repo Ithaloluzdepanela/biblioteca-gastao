@@ -79,6 +79,7 @@
             // 
             this.btnEnviar.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnEnviar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(74)))), ((int)(((byte)(158)))));
+            this.btnEnviar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnEnviar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEnviar.Font = new System.Drawing.Font("Segoe UI", 16.2F);
             this.btnEnviar.ForeColor = System.Drawing.Color.White;
@@ -106,6 +107,7 @@
             // 
             this.btnTeste.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnTeste.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(74)))), ((int)(((byte)(158)))));
+            this.btnTeste.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTeste.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTeste.Font = new System.Drawing.Font("Segoe UI", 16.2F);
             this.btnTeste.ForeColor = System.Drawing.Color.White;
@@ -267,6 +269,7 @@
             // 
             this.btnTrocarSenha.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnTrocarSenha.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(74)))), ((int)(((byte)(158)))));
+            this.btnTrocarSenha.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTrocarSenha.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTrocarSenha.Font = new System.Drawing.Font("Segoe UI", 16.2F);
             this.btnTrocarSenha.ForeColor = System.Drawing.Color.White;
@@ -368,7 +371,8 @@
             // btnVoltar
             // 
             this.btnVoltar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnVoltar.BackColor = System.Drawing.Color.LightGray;
+            this.btnVoltar.BackColor = System.Drawing.Color.Silver;
+            this.btnVoltar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnVoltar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnVoltar.Font = new System.Drawing.Font("Segoe UI", 14.2F);
             this.btnVoltar.ForeColor = System.Drawing.Color.White;

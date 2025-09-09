@@ -393,7 +393,7 @@
             this.lstSugestoesTurma.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.lstSugestoesTurma.FormattingEnabled = true;
             this.lstSugestoesTurma.ItemHeight = 25;
-            this.lstSugestoesTurma.Location = new System.Drawing.Point(489, 284);
+            this.lstSugestoesTurma.Location = new System.Drawing.Point(23, 8);
             this.lstSugestoesTurma.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lstSugestoesTurma.Name = "lstSugestoesTurma";
             this.lstSugestoesTurma.ScrollAlwaysVisible = true;
@@ -412,7 +412,6 @@
             this.panel1.AutoScrollMargin = new System.Drawing.Size(1, 1);
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.lstSugestoesTurma);
             this.panel1.Controls.Add(this.EmailAst);
             this.panel1.Controls.Add(this.lblUsuario);
             this.panel1.Controls.Add(this.txtNome);
@@ -558,6 +557,7 @@
             // panel2
             // 
             this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.panel2.Controls.Add(this.lstSugestoesTurma);
             this.panel2.Controls.Add(this.txtConfirmSenha);
             this.panel2.Controls.Add(this.DataNascAst);
             this.panel2.Controls.Add(this.btnLimpar);

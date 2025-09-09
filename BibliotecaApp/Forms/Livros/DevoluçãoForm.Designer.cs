@@ -52,7 +52,7 @@
             this.btnConfirmarDevolucao.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.btnConfirmarDevolucao.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnConfirmarDevolucao.ForeColor = System.Drawing.Color.White;
-            this.btnConfirmarDevolucao.Location = new System.Drawing.Point(743, 735);
+            this.btnConfirmarDevolucao.Location = new System.Drawing.Point(720, 735);
             this.btnConfirmarDevolucao.Name = "btnConfirmarDevolucao";
             this.btnConfirmarDevolucao.Size = new System.Drawing.Size(150, 60);
             this.btnConfirmarDevolucao.TabIndex = 118;
@@ -83,7 +83,7 @@
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.label4.Location = new System.Drawing.Point(436, 165);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(206, 32);
+            this.label4.Size = new System.Drawing.Size(162, 25);
             this.label4.TabIndex = 116;
             this.label4.Text = "Código de barras:";
             // 
@@ -96,7 +96,7 @@
             this.lblNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.lblNome.Location = new System.Drawing.Point(151, 162);
             this.lblNome.Name = "lblNome";
-            this.lblNome.Size = new System.Drawing.Size(175, 32);
+            this.lblNome.Size = new System.Drawing.Size(140, 25);
             this.lblNome.TabIndex = 107;
             this.lblNome.Text = "Nome do livro:";
             // 
@@ -143,7 +143,7 @@
             this.lblDadosLivro.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDadosLivro.Location = new System.Drawing.Point(22, 321);
             this.lblDadosLivro.Name = "lblDadosLivro";
-            this.lblDadosLivro.Size = new System.Drawing.Size(0, 23);
+            this.lblDadosLivro.Size = new System.Drawing.Size(0, 19);
             this.lblDadosLivro.TabIndex = 121;
             // 
             // btnBuscarEmprestimo
@@ -204,7 +204,7 @@
             this.cbFiltroEmprestimo.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F);
             this.cbFiltroEmprestimo.PlaceholderMargin = 10;
             this.cbFiltroEmprestimo.PlaceholderText = "Selecione uma situação...";
-            this.cbFiltroEmprestimo.Size = new System.Drawing.Size(259, 40);
+            this.cbFiltroEmprestimo.Size = new System.Drawing.Size(259, 34);
             this.cbFiltroEmprestimo.TabIndex = 125;
             // 
             // label6
@@ -216,7 +216,7 @@
             this.label6.Location = new System.Drawing.Point(655, 165);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(113, 32);
+            this.label6.Size = new System.Drawing.Size(90, 25);
             this.label6.TabIndex = 124;
             this.label6.Text = "Situação:";
             // 
@@ -285,6 +285,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Devolução";
+            this.Activated += new System.EventHandler(this.DevoluçãoForm_Activated);
             this.Load += new System.EventHandler(this.DevoluçãoForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprestimos)).EndInit();
             this.panel1.ResumeLayout(false);

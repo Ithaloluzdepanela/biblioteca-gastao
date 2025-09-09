@@ -255,6 +255,8 @@ namespace BibliotecaApp.Froms.Usuario
         private void ConfigurarParaBibliotecario()
         {
             HabilitarCampos(true);
+            lblTelefone.Text = "Telefone:";
+            TelefoneAst.Location = new Point(105, 17);
             txtTurma.Enabled = false;
             txtTurma.Visible = false;
             TurmaAst.Visible = false;
@@ -293,6 +295,8 @@ namespace BibliotecaApp.Froms.Usuario
         private void ConfigurarParaProfessor()
         {
             HabilitarCampos(true);
+            lblTelefone.Text = "Telefone:";
+            TelefoneAst.Location = new Point(105, 17);
             txtTurma.Enabled = false;
             txtTurma.Visible = false;
             TurmaAst.Visible = false;
@@ -331,7 +335,8 @@ namespace BibliotecaApp.Froms.Usuario
         private void ConfigurarParaOutros()
         {
             HabilitarCampos(true);
-            
+            lblTelefone.Text = "Telefone:";
+            TelefoneAst.Location = new Point(105, 17);
             txtTurma.Enabled = false;
             txtTurma.Visible = false;
             TurmaAst.Visible = false;
@@ -375,6 +380,8 @@ namespace BibliotecaApp.Froms.Usuario
         private void ConfigurarParaAluno()
         {
             HabilitarCampos(true);
+            lblTelefone.Text = "Telefone do Aluno / Responsável:";
+            TelefoneAst.Location = new Point(311, 17);
             txtSenha.Enabled = false;
             txtConfirmSenha.Enabled = false;
             txtTurma.Visible = true;

@@ -17,6 +17,7 @@ namespace BibliotecaApp.Forms.Livros
         public DevoluçãoForm()
         {
             InitializeComponent();
+            
         }
 
         #endregion
@@ -26,6 +27,8 @@ namespace BibliotecaApp.Forms.Livros
         private void DevoluçãoForm_Load(object sender, EventArgs e)
         {
             InicializarFormulario();
+            VerificarAtrasos(); // Atualiza status de atrasos antes de buscar
+            BuscarEmprestimos(); // Exibe todos os empréstimos atualizados no grid
         }
 
         private void btnBuscarEmprestimo_Click(object sender, EventArgs e)
@@ -530,6 +533,26 @@ namespace BibliotecaApp.Forms.Livros
                 return;
             }
 
+            // Obter dados adicionais da linha selecionada
+            var row = dgvEmprestimos.SelectedRows[0];
+            string livro = row.Cells["Livro"].Value?.ToString();
+            string alocador = row.Cells["Alocador"].Value?.ToString();
+           
+            string dataEmprestimo = row.Cells["Data do Empréstimo"].Value != null
+                ? Convert.ToDateTime(row.Cells["Data do Empréstimo"].Value).ToString("dd/MM/yyyy")
+                : "";
+ 
+
+            string msg = $"Confirma a devolução deste empréstimo?\n\n" +
+                         $"Livro: {livro}\n" +
+                         $"Alocador: {alocador}\n" +
+                         $"Data do Empréstimo: {dataEmprestimo}\n";
+                         
+
+            var confirm = MessageBox.Show(msg, "Confirmação de Devolução", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes)
+                return;
+
             ProcessarDevolucaoNoBanco(emprestimoInfo.Id);
             MessageBox.Show("Livro devolvido com sucesso.");
             BuscarEmprestimos();
@@ -696,6 +719,12 @@ namespace BibliotecaApp.Forms.Livros
         }
 
         #endregion
+
+        private void DevoluçãoForm_Activated(object sender, EventArgs e)
+        {
+           BuscarEmprestimos();
+            VerificarAtrasos();
+        }
     }
 
     #region Classes Auxiliares

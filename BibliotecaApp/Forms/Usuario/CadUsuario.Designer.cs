@@ -393,7 +393,7 @@
             this.lstSugestoesTurma.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.lstSugestoesTurma.FormattingEnabled = true;
             this.lstSugestoesTurma.ItemHeight = 25;
-            this.lstSugestoesTurma.Location = new System.Drawing.Point(23, 8);
+            this.lstSugestoesTurma.Location = new System.Drawing.Point(310, 438);
             this.lstSugestoesTurma.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.lstSugestoesTurma.Name = "lstSugestoesTurma";
             this.lstSugestoesTurma.ScrollAlwaysVisible = true;
@@ -401,7 +401,6 @@
             this.lstSugestoesTurma.TabIndex = 131;
             this.lstSugestoesTurma.Visible = false;
             this.lstSugestoesTurma.Click += new System.EventHandler(this.lstSugestoesTurma_Click);
-            this.lstSugestoesTurma.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesTurma_SelectedIndexChanged);
             this.lstSugestoesTurma.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstSugestoesTurma_KeyDown);
             this.lstSugestoesTurma.Leave += new System.EventHandler(this.lstSugestoesTurma_Leave);
             // 
@@ -412,6 +411,7 @@
             this.panel1.AutoScrollMargin = new System.Drawing.Size(1, 1);
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.lstSugestoesTurma);
             this.panel1.Controls.Add(this.EmailAst);
             this.panel1.Controls.Add(this.lblUsuario);
             this.panel1.Controls.Add(this.txtNome);
@@ -557,7 +557,6 @@
             // panel2
             // 
             this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.panel2.Controls.Add(this.lstSugestoesTurma);
             this.panel2.Controls.Add(this.txtConfirmSenha);
             this.panel2.Controls.Add(this.DataNascAst);
             this.panel2.Controls.Add(this.btnLimpar);
@@ -579,7 +578,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(657, 541);
             this.panel2.TabIndex = 132;
-            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // txtConfirmSenha
             // 

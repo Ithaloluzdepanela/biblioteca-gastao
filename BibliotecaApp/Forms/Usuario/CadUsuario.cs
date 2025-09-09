@@ -192,6 +192,17 @@ namespace BibliotecaApp.Froms.Usuario
             if (!ValidarDadosUsuario())
                 return;
 
+            // Validar turma permitida
+            if (txtTurma.Enabled && !string.IsNullOrWhiteSpace(txtTurma.Text))
+            {
+                var turma = txtTurma.Text.Trim();
+                if (!BibliotecaApp.Utils.TurmasUtil.TurmasPermitidas.Contains(turma))
+                {
+                    MessageBox.Show("Selecione uma turma válida da lista de turmas permitidas.", "Turma inválida", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
             CadastrarNovoUsuario();
         }
 
@@ -572,7 +583,7 @@ VALUES
             MessageBox.Show("Cadastro concluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UsuarioCriado?.Invoke(this, EventArgs.Empty);
             this.DialogResult = DialogResult.OK;
-            AdicionarTurmaSeNova(txtTurma.Text.Trim());
+           
             LimparCampos();
         }
 
@@ -762,21 +773,14 @@ VALUES
         {
             string texto = txtTurma.Text.Trim();
 
-            // Não aplicar correções automáticas durante a digitação para não atrapalhar o usuário
-            // Apenas mostrar sugestões baseadas nas turmas já cadastradas
-
             if (string.IsNullOrEmpty(texto))
             {
                 lstSugestoesTurma.Visible = false;
                 return;
             }
 
-            // Buscar sugestões apenas nas turmas já cadastradas
-            var sugestoes = turmasCadastradas
-                .Where(t => t.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
-                .Distinct()
-                .OrderBy(t => t)
-                .ToList();
+            // Buscar sugestões apenas nas turmas permitidas
+            var sugestoes = BibliotecaApp.Utils.TurmasUtil.BuscarSugestoes(texto);
 
             lstSugestoesTurma.Items.Clear();
 
@@ -801,41 +805,25 @@ VALUES
 
         private void txtTurma_Leave(object sender, EventArgs e)
         {
+
             BeginInvoke(new Action(() =>
             {
                 if (!lstSugestoesTurma.Focused)
                 {
                     lstSugestoesTurma.Visible = false;
-
-                    string texto = txtTurma.Text.Trim();
-                    if (!string.IsNullOrEmpty(texto))
+                    // Impede sair do campo se não for uma turma permitida
+                    var turma = txtTurma.Text.Trim();
+                    if (!string.IsNullOrEmpty(turma) && !BibliotecaApp.Utils.TurmasUtil.TurmasPermitidas.Contains(turma))
                     {
-                        // Corrigir automaticamente a formatação ao sair do campo
-                        string turmaCorrigida = CorrigirTurma(texto);
-                        if (turmaCorrigida != texto)
-                        {
-                            txtTurma.Text = turmaCorrigida;
-                        }
+                        MessageBox.Show("Selecione uma turma válida da lista de turmas permitidas.", "Turma inválida", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        txtTurma.Text = "";
+                        txtTurma.Focus();
                     }
                 }
             }));
         }
 
-        private void AdicionarTurmaSeNova(string turma)
-        {
-            turma = CorrigirTurma(turma);
-            if (string.IsNullOrEmpty(turma)) return;
-
-            // Verificar se já existe (case insensitive)
-            bool existe = turmasCadastradas.Any(t =>
-                string.Equals(t, turma, StringComparison.OrdinalIgnoreCase));
-
-            if (!existe)
-            {
-                turmasCadastradas.Add(turma);
-                turmasCadastradas.Sort();
-            }
-        }
+        
 
         private void lstSugestoesTurma_Click(object sender, EventArgs e)
         {
@@ -977,14 +965,6 @@ VALUES
 
         #endregion
 
-        private void lstSugestoesTurma_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        
     }
 }

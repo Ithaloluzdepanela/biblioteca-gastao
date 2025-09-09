@@ -502,11 +502,9 @@ namespace BibliotecaApp.Forms.Usuario
             {
                 if (activeChild != null && activeChild != child && !activeChild.IsDisposed)
                 {
-                    if (keepPreviousHidden) activeChild.Hide();
-                    else activeChild.Close();
+                    activeChild.Close(); // sempre fecha o anterior
                 }
 
-                // IMPORTANTE: definir o MdiParent para o mesmo MDI container (MainForm)
                 child.MdiParent = this.MdiParent;
                 child.Dock = DockStyle.Fill;
 

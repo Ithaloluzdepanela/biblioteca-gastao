@@ -312,6 +312,7 @@
     <Compile Include="Utils\PasswordForm.Designer.cs">
       <DependentUpon>PasswordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\TurmasUtil.cs" />
     <EmbeddedResource Include="Elements\AnimatedToggle.resx">
       <DependentUpon>AnimatedToggle.cs</DependentUpon>
     </EmbeddedResource>

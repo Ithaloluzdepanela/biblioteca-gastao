@@ -399,12 +399,8 @@ namespace BibliotecaApp.Forms.Livros
                 return;
             }
 
-            // Buscar sugestões apenas nas turmas já cadastradas
-            var sugestoes = turmasCadastradas
-                .Where(t => t.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
-                .Distinct()
-                .OrderBy(t => t)
-                .ToList();
+            // Buscar sugestões inteligentes nas turmas permitidas
+            var sugestoes = BibliotecaApp.Utils.TurmasUtil.BuscarSugestoes(texto);
 
             lstSugestoesTurma.Items.Clear();
 
@@ -417,8 +413,13 @@ namespace BibliotecaApp.Forms.Livros
                 int extraPadding = 8;
                 lstSugestoesTurma.Height = visibleItems * lstSugestoesTurma.ItemHeight + extraPadding;
                 lstSugestoesTurma.Width = txtTurma.Width;
-                lstSugestoesTurma.Left = txtTurma.Left;
-                lstSugestoesTurma.Top = txtTurma.Bottom;
+
+                // Posição exata abaixo do txtTurma, considerando o Form
+                var pt = txtTurma.Parent.PointToScreen(txtTurma.Location);
+                pt = this.PointToClient(pt);
+                lstSugestoesTurma.Left = pt.X;
+                lstSugestoesTurma.Top = pt.Y + txtTurma.Height;
+                lstSugestoesTurma.BringToFront();
                 lstSugestoesTurma.Visible = true;
             }
             else
@@ -434,16 +435,13 @@ namespace BibliotecaApp.Forms.Livros
                 if (!lstSugestoesTurma.Focused)
                 {
                     lstSugestoesTurma.Visible = false;
-
-                    string texto = txtTurma.Text.Trim();
-                    if (!string.IsNullOrEmpty(texto))
+                    // Impede sair do campo se não for uma turma permitida
+                    var turma = txtTurma.Text.Trim();
+                    if (!string.IsNullOrEmpty(turma) && !BibliotecaApp.Utils.TurmasUtil.TurmasPermitidas.Contains(turma))
                     {
-                        // Corrigir automaticamente a formatação ao sair do campo
-                        string turmaCorrigida = CorrigirTurma(texto);
-                        if (turmaCorrigida != texto)
-                        {
-                            txtTurma.Text = turmaCorrigida;
-                        }
+                        MessageBox.Show("Selecione uma turma válida da lista de turmas permitidas.", "Turma inválida", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        txtTurma.Text = "";
+                        txtTurma.Focus();
                     }
                 }
             }));

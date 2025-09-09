@@ -332,6 +332,7 @@ namespace BibliotecaApp.Forms.Usuario
 
             dgvPadroes.CellValueChanged += DgvPadroes_CellValueChanged;
             dgvPadroes.CurrentCellDirtyStateChanged += DgvPadroes_CurrentCellDirtyStateChanged;
+            dgvPadroes.CellEndEdit += DgvPadroes_CellEndEdit;
             dgvPadroes.DataError += DgvPadroes_DataError;
 
             // Preencher dados
@@ -486,6 +487,24 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
+        private void DgvPadroes_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dgvPadroes.Columns[e.ColumnIndex].Name == "NovoPadrao")
+            {
+                var cell = dgvPadroes.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                var valor = cell.Value?.ToString();
+                var turmaAtual = dgvPadroes.Rows[e.RowIndex].Cells["TurmaAtual"].Value?.ToString();
+                var opcoes = ((DataGridViewComboBoxCell)cell).Items.Cast<string>().ToList();
+                if (!string.IsNullOrEmpty(valor) && !opcoes.Contains(valor))
+                {
+                    MessageBox.Show("Selecione uma turma válida da lista de turmas permitidas.", "Turma inválida", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    cell.Value = "";
+                    dgvPadroes.CurrentCell = cell;
+                    dgvPadroes.BeginEdit(true);
+                }
+            }
+        }
+
         private bool IsEscolhaInvalidaParaPadrao(string turmaAtual, string novaEscolha)
         {
             if ((turmaAtual == "EGRESSO" || turmaAtual == "TRANSFERIDO" || turmaAtual == "DESISTENTE") &&
@@ -543,6 +562,7 @@ namespace BibliotecaApp.Forms.Usuario
 
             dgvAjustesIndividuais.CellValueChanged += DgvAjustesIndividuais_CellValueChanged;
             dgvAjustesIndividuais.CurrentCellDirtyStateChanged += DgvAjustesIndividuais_CurrentCellDirtyStateChanged;
+            dgvAjustesIndividuais.CellEndEdit += DgvAjustesIndividuais_CellEndEdit;
             dgvAjustesIndividuais.DataError += DgvAjustesIndividuais_DataError;
 
             EstilizarDataGrid(dgvAjustesIndividuais);
@@ -582,6 +602,23 @@ namespace BibliotecaApp.Forms.Usuario
                                   "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     dgvAjustesIndividuais.Rows[e.RowIndex].Cells["NovaEscolha"].Value =
                         dgvAjustesIndividuais.Rows[e.RowIndex].Cells["PadraoDefinido"].Value;
+                }
+            }
+        }
+
+        private void DgvAjustesIndividuais_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dgvAjustesIndividuais.Columns[e.ColumnIndex].Name == "NovaEscolha")
+            {
+                var cell = dgvAjustesIndividuais.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                var valor = cell.Value?.ToString();
+                var opcoes = ((DataGridViewComboBoxCell)cell).Items.Cast<string>().ToList();
+                if (!string.IsNullOrEmpty(valor) && !opcoes.Contains(valor))
+                {
+                    MessageBox.Show("Selecione uma turma válida da lista de turmas permitidas.", "Turma inválida", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    cell.Value = "";
+                    dgvAjustesIndividuais.CurrentCell = cell;
+                    dgvAjustesIndividuais.BeginEdit(true);
                 }
             }
         }

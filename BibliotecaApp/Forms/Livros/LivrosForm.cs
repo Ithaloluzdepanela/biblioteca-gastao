@@ -138,7 +138,7 @@ namespace BibliotecaApp.Forms.Livros
         /// </summary>
         private void LivrosForm_Load(object sender, EventArgs e)
         {
-            btnProcurar_Click(null, null); // Carrega lista inicial
+           
             CarregarLivros();
             ConfigurarGridLivros();
             cbDisponibilidade.SelectedIndex = 0;
@@ -151,7 +151,7 @@ namespace BibliotecaApp.Forms.Livros
 
         // Executa busca de livros com filtros dinâmicos
 
-        private void btnProcurar_Click(object sender, EventArgs e)
+        public void btnProcurar_Click(object sender, EventArgs e)
         {
             using (SqlCeConnection conexao = Conexao.ObterConexao())
             {
@@ -411,8 +411,7 @@ namespace BibliotecaApp.Forms.Livros
 
 
 
+
         #endregion
-
-
     }
 }

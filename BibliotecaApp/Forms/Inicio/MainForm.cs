@@ -436,6 +436,7 @@ namespace BibliotecaApp.Forms.Inicio
                 livros.FormClosed += Livros_FormClosed;
             }
             OpenChild(livros, keepPreviousHidden: true);
+           livros.btnProcurar_Click(null, null); // Carrega lista inicial
         }
         private void Livros_FormClosed(object sender, FormClosedEventArgs e)
         {

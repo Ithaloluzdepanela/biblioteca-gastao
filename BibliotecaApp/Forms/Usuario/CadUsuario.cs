@@ -15,14 +15,7 @@ namespace BibliotecaApp.Froms.Usuario
         private List<string> turmasCadastradas = new List<string>();
 
 
-        // Dicionário de turmas padrão
-        private Dictionary<string, string[]> dicionarioTurmas = new Dictionary<string, string[]>
-        {
-            { "Ano", new[] { "6° Ano", "7° Ano", "8° Ano", "9° Ano" } },
-            { "Desenvolvimento", new[] { "1° Desenvolvimento", "2° Desenvolvimento", "3° Desenvolvimento" } },
-            { "Agronegócio", new[] { "1° Agronegócio", "2° Agronegócio", "3° Agronegócio" } },
-            { "Propedêutico", new[] { "1° Propedêutico", "2° Propedêutico", "3° Propedêutico" } }
-        };
+       
 
         private List<string> todasTurmasPadrao;
         public event EventHandler UsuarioCriado;
@@ -51,8 +44,7 @@ namespace BibliotecaApp.Froms.Usuario
             SetAsteriscoVisibility(false);
             CarregarTurmasDoBanco();
 
-            // Inicializar lista de todas as turmas padrão
-            InicializarTurmasPadrao();
+            
 
             // Eventos para o autocomplete de Turma
             txtTurma.KeyDown += txtTurma_KeyDown;
@@ -591,14 +583,7 @@ VALUES
         #endregion
 
         #region Métodos de Turma
-        private void InicializarTurmasPadrao()
-        {
-            todasTurmasPadrao = new List<string>();
-            foreach (var categoria in dicionarioTurmas.Values)
-            {
-                todasTurmasPadrao.AddRange(categoria);
-            }
-        }
+       
 
         private string NormalizarTexto(string texto)
         {

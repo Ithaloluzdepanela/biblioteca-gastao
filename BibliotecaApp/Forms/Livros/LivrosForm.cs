@@ -138,6 +138,7 @@ namespace BibliotecaApp.Forms.Livros
         /// </summary>
         private void LivrosForm_Load(object sender, EventArgs e)
         {
+            btnProcurar_Click(null, null); // Carrega lista inicial
             CarregarLivros();
             ConfigurarGridLivros();
             cbDisponibilidade.SelectedIndex = 0;

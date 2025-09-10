@@ -525,6 +525,8 @@
     <Content Include="BibliotecaDB\bibliotecaDB.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\gast-removebg-preview 100x100%281%29.png" />
+    <None Include="Resources\gast-removebg-preview60x60 %281%29.png" />
     <None Include="Resources\icons8-export-excel-20.png" />
     <None Include="Resources\icons8-export-excel-25.png" />
     <None Include="Resources\png logo.png" />

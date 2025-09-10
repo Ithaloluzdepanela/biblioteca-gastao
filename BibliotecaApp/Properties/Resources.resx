@@ -121,6 +121,9 @@
   <data name="icons8-chamada-em-conferência-20" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-chamada-em-conferência-20.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="gast-removebg-preview60x60 (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gast-removebg-preview60x60 (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="icons8-livros-25" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-livros-25.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -142,8 +145,8 @@
   <data name="icons8-página-inicial-20" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-página-inicial-20.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icons8-relatório-30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icons8-relatório-30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="8d7e22bfe4da9ba08eb4b469ea8c532f-quadrado-quadrado-arredondado" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\8d7e22bfe4da9ba08eb4b469ea8c532f-quadrado-quadrado-arredondado.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="material-symbols - tab-search-rounded (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\material-symbols - tab-search-rounded (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -214,6 +217,9 @@
   <data name="icons8-usuário-50" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-usuário-50.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="icons8-export-excel-20" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-export-excel-20.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="clouds-upright-2x1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\clouds-upright-2x1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -274,13 +280,13 @@
   <data name="icons8-cardápio-30-black" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-cardápio-30-black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="8d7e22bfe4da9ba08eb4b469ea8c532f-quadrado-quadrado-arredondado" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\8d7e22bfe4da9ba08eb4b469ea8c532f-quadrado-quadrado-arredondado.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="icons8-relatório-30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-relatório-30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="icons8-usuário-1001" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-usuário-1001.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icons8-export-excel-20" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icons8-export-excel-20.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="gast-removebg-preview 100x100(1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gast-removebg-preview 100x100(1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

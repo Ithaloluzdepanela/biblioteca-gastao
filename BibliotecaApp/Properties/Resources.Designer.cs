@@ -153,6 +153,26 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap gast_removebg_preview_100x100_1_ {
+            get {
+                object obj = ResourceManager.GetObject("gast-removebg-preview 100x100(1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap gast_removebg_preview60x60__1_ {
+            get {
+                object obj = ResourceManager.GetObject("gast-removebg-preview60x60 (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_adicionar_usuário_masculino_25 {
             get {
                 object obj = ResourceManager.GetObject("icons8-adicionar-usuário-masculino-25", resourceCulture);

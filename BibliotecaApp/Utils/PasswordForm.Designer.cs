@@ -36,6 +36,7 @@
             this.panelHeader.Name = "panelHeader";
             this.panelHeader.Size = new System.Drawing.Size(400, 50);
             this.panelHeader.TabIndex = 0;
+            
             // 
             // lblTitulo
             // 
@@ -48,6 +49,7 @@
             this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "Confirmação de Senha";
             this.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+          
             // 
             // lblMensagem
             // 
@@ -58,6 +60,7 @@
             this.lblMensagem.TabIndex = 1;
             this.lblMensagem.Text = "Digite sua senha para confirmar a operação:";
             this.lblMensagem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+           
             // 
             // btnConfirmar
             // 
@@ -84,6 +87,7 @@
             this.lblErro.TabIndex = 3;
             this.lblErro.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblErro.Visible = false;
+         
             // 
             // txtSenha
             // 
@@ -113,6 +117,7 @@
             this.txtSenha.TabIndex = 64;
             this.txtSenha.TextColor = System.Drawing.Color.Black;
             this.txtSenha.UseSystemPasswordChar = false;
+            
             // 
             // btnCancelar
             // 
@@ -141,7 +146,7 @@
             this.Controls.Add(this.btnConfirmar);
             this.Controls.Add(this.lblMensagem);
             this.Controls.Add(this.panelHeader);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PasswordForm";

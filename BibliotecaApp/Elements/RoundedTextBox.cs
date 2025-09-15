@@ -148,6 +148,8 @@ public class RoundedTextBox : UserControl
         innerTextBox.Focus();
     }
 
+
+
     // ----------- PROPRIEDADES EXPONÍVEIS NO DESIGNER -----------
 
     [Category("Aparência")]

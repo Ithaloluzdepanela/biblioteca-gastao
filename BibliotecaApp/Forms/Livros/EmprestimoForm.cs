@@ -22,7 +22,7 @@ namespace BibliotecaApp.Forms.Livros
         private bool _carregandoLivroAutomaticamente = false;
         private List<Livro> _cacheLivros = new List<Livro>();
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
-        ReservaForm reservaForm;
+    
 
         #endregion
 
@@ -203,71 +203,72 @@ namespace BibliotecaApp.Forms.Livros
 
             if (!livro.Disponibilidade || livro.Quantidade <= 0)
             {
-                // Verificar se o livro pode ser reservado (há exemplares emprestados e vagas para reserva)
-                bool podeReservar = VerificarDisponibilidadeParaReserva(livro.Id);
+                string email = usuario.Email?.Trim();
+                bool emailValido = !string.IsNullOrWhiteSpace(email) && email.Contains("@");
 
-                if (!podeReservar)
+                if (emailValido)
                 {
                     MessageBox.Show(
-                        $"O livro \"{livro.Nome}\" está indisponível para empréstimo e também não pode ser reservado no momento.\n\n" +
-                        "Todos os exemplares emprestados já têm reservas ativas. Aguarde até que algum exemplar seja devolvido.",
+                        $"O livro \"{livro.Nome}\" está indisponível para empréstimo.\n\n" +
+                        "Você pode ser notificado por e-mail quando o livro estiver disponível.",
                         "Livro Indisponível",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information
                     );
-                    return;
-                }
 
-                DialogResult resposta = MessageBox.Show(
-                    $"O livro \"{livro.Nome}\" está indisponível para empréstimo.\n\nDeseja abrir o formulário de reserva?",
-                    "Livro Indisponível",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
-
-                if (resposta == DialogResult.Yes)
-                {
-                    // 🔹 Bloqueio caso o usuário já tenha reserva ativa
-                    if (ReservaForm.UsuarioPossuiReservaAtiva(usuario.Id, out var tituloJaReservado))
-                    {
-                        MessageBox.Show(
-                            $"Este usuário já possui uma reserva ativa para o livro \"{tituloJaReservado}\".\n\nConclua ou espere a expiração antes de criar outra.",
-                            "Reserva já existente",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information
-                        );
-                        return;
-                    }
-
-                    // 🔹 Abrindo o ReservaForm como no outro form (MDI, Dock, evento fechado)
-                    var reservaForm = new ReservaForm();
-                    reservaForm.MdiParent = this.MdiParent;
-                    reservaForm.Dock = DockStyle.Fill;
-
-                    // 🔹 Pré-preenchendo dados do usuário, livro e bibliotecária
-                    reservaForm.PreFillFromEmprestimo(
-                        usuario: usuario,
-                        livro: livro,
-                        bibliotecaria: responsavel,
-                        codigoBarras: !string.IsNullOrWhiteSpace(txtBarcode.Text) ? txtBarcode.Text.Trim() : livro.CodigoDeBarras,
-                        sugestaoDataDevolucao: dtpDataDevolucao.Value
+                    DialogResult resposta = MessageBox.Show(
+                        "Deseja receber um e-mail quando o livro estiver disponível?",
+                        "Notificação de Disponibilidade",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question
                     );
 
-                    reservaForm.FormClosed += (s, args) =>
+                    if (resposta == DialogResult.Yes)
                     {
-                        reservaForm.Dispose();
-                        CarregarLivrosDoBanco();      // Atualiza lista de livros
-                        CarregarUsuariosDoBanco();    // Atualiza lista de usuários
-                    };
+                        using (var conexao = Conexao.ObterConexao())
+                        {
+                            conexao.Open();
+                            string sql = @"INSERT INTO NotificacoesDisponibilidade (UsuarioId, LivroId, Email, Enviado)
+                   VALUES (@usuarioId, @livroId, @email, 0)";
+                            using (var cmd = new SqlCeCommand(sql, conexao))
+                            {
+                                cmd.Parameters.AddWithValue("@usuarioId", usuario.Id);
+                                cmd.Parameters.AddWithValue("@livroId", livro.Id);
+                                cmd.Parameters.AddWithValue("@email", usuario.Email);
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
 
-                    reservaForm.Show();
+
+                        string assunto = "📚 Notificação de disponibilidade - Biblioteca Monteiro Lobato";
+                        string corpo = $@"
+<html>
+<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+        <h2 style='color: #2c3e50;'>Olá, {usuario.Nome} 👋</h2>
+        <p>Você será avisado por e-mail assim que o livro <strong>{livro.Nome}</strong> estiver disponível para empréstimo.</p>
+        <hr />
+        <p style='font-size: 14px; color: #888;'>Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.</p>
+    </div>
+</body>
+</html>";
+                        EmailService.Enviar(email, assunto, corpo);
+                        MessageBox.Show("Você será notificado por e-mail quando o livro estiver disponível.", "Notificação registrada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"O livro \"{livro.Nome}\" está indisponível para empréstimo.\n\n" +
+                        "Nenhum e-mail cadastrado para notificação.",
+                        "Livro Indisponível",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
                 }
 
                 return; // interrompe o fluxo de empréstimo
             }
-
-
-
-
 
 
 
@@ -361,52 +362,11 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
-        private void reservaForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            reservaForm = null;
-        }
+        
         #endregion
 
 
-        private bool VerificarDisponibilidadeParaReserva(int livroId)
-        {
-            try
-            {
-                using (var conexao = Conexao.ObterConexao())
-                {
-                    conexao.Open();
-
-                    // 1. Conta empréstimos ativos (Ativo + Atrasado)
-                    string sql = @"SELECT COUNT(*) FROM Emprestimo
-                           WHERE Livro = @livroId AND Status IN ('Ativo', 'Atrasado')";
-                    int emprestimosAtivos;
-                    using (var cmd = new SqlCeCommand(sql, conexao))
-                    {
-                        cmd.Parameters.AddWithValue("@livroId", livroId);
-                        emprestimosAtivos = (int)cmd.ExecuteScalar();
-                    }
-
-                    // 2. Conta reservas pendentes (Pendente + Disponível)
-                    sql = @"SELECT COUNT(*) FROM Reservas
-                    WHERE LivroId = @livroId AND Status IN ('Pendente', 'Disponível')";
-                    int reservasAtivas;
-                    using (var cmd = new SqlCeCommand(sql, conexao))
-                    {
-                        cmd.Parameters.AddWithValue("@livroId", livroId);
-                        reservasAtivas = (int)cmd.ExecuteScalar();
-                    }
-
-                    // 3. Verifica se há vagas para reserva
-                    return emprestimosAtivos > 0 && reservasAtivas < emprestimosAtivos;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao verificar disponibilidade para reserva: {ex.Message}",
-                              "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-        }
+        
 
 
         #region Métodos de Usuário

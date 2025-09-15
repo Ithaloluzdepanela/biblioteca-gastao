@@ -35,7 +35,7 @@ namespace BibliotecaApp.Forms.Relatorio
             private string tblLivros = "Livros";
             private string tblEmprestimo = "Emprestimo";
             private string tblEmprestimoRapido = "EmprestimoRapido";
-            private string tblReservas = "Reservas";
+           
 
             public RelForm()
             {
@@ -175,7 +175,7 @@ namespace BibliotecaApp.Forms.Relatorio
                         tblLivros = GetExistingTableName(c, new[] { "Livros", "livros", "Livro", "livro" }) ?? tblLivros;
                         tblEmprestimo = GetExistingTableName(c, new[] { "Emprestimo", "Emprestimos", "emprestimo", "emprestimos" }) ?? tblEmprestimo;
                         tblEmprestimoRapido = GetExistingTableName(c, new[] { "EmprestimoRapido", "EmprestimoRapidos", "emprestimoRapido", "emprestimorapido" }) ?? tblEmprestimoRapido;
-                        tblReservas = GetExistingTableName(c, new[] { "Reservas", "reservas", "Reserva", "reserva" }) ?? tblReservas;
+                        
                     }
                 }
                 catch
@@ -189,7 +189,6 @@ namespace BibliotecaApp.Forms.Relatorio
                 cmbAcao.Items.Add("Empréstimo");          // index 1
                 cmbAcao.Items.Add("Devolução");           // index 2
                 cmbAcao.Items.Add("Empréstimo Rápido");   // index 3
-                cmbAcao.Items.Add("Reserva");             // index 4
                 cmbAcao.SelectedIndex = 0;
 
                 // popula combobox de bibliotecárias
@@ -423,25 +422,9 @@ namespace BibliotecaApp.Forms.Relatorio
         LEFT JOIN [{tblLivros}] l ON r.LivroId = l.Id
         WHERE r.DataHoraDevolucaoReal IS NOT NULL
     ");
-                    }
+                    
 
-                        // 4) Reservas
-                        if (!string.IsNullOrEmpty(tblReservas))
-                        {
-                        selects.Add($@"
-        SELECT 
-            r.Id,
-            COALESCE(u.Nome, 'Excluído') AS NomeU,
-            l.Nome AS NomeL,
-            'Reserva' AS Acao,
-            r.DataReserva AS DataAcao,
-            b.Nome AS Bibliotecaria
-        FROM [{tblReservas}] r
-        LEFT JOIN [{tblUsuarios}] u ON r.UsuarioId = u.Id
-        LEFT JOIN [{tblLivros}] l ON r.LivroId = l.Id
-        LEFT JOIN [{tblUsuarios}] b ON r.BibliotecariaId = b.Id
-        WHERE r.DataReserva IS NOT NULL
-    ");
+                       
                     }
 
                         if (selects.Count == 0)

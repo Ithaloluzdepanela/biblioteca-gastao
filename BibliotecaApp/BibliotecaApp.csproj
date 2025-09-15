@@ -125,6 +125,10 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.ProtectedData, Version=9.0.0.9, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.ProtectedData.9.0.9\lib\net462\System.Security.Cryptography.ProtectedData.dll</HintPath>
+    </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Text.Encodings.Web.9.0.8\lib\net462\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
@@ -222,6 +226,12 @@
       <DependentUpon>MapeamentoDeTurmasWizardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\MapeamentoModel.cs" />
+    <Compile Include="Utils\ActivationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\ActivationForm.Designer.cs">
+      <DependentUpon>ActivationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils\AppPaths.cs" />
     <Compile Include="Utils\BackupManager.cs" />
     <Compile Include="Utils\EmailService.cs" />
@@ -275,8 +285,8 @@
     <Compile Include="Forms\Inicio\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\LicenseValidator.cs" />
     <Compile Include="Utils\mdiProperties.cs" />
-    <Compile Include="Models\Reserva.cs" />
     <Compile Include="Models\Sessao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -284,12 +294,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Livros\ReservaForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Livros\ReservaForm.Designer.cs">
-      <DependentUpon>ReservaForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Usuario\UsuarioForm.cs">
       <SubType>Form</SubType>
@@ -311,6 +315,12 @@
     </Compile>
     <Compile Include="Utils\PasswordForm.Designer.cs">
       <DependentUpon>PasswordForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\TermsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\TermsForm.Designer.cs">
+      <DependentUpon>TermsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\TurmasUtil.cs" />
     <EmbeddedResource Include="Elements\AnimatedToggle.resx">
@@ -349,6 +359,9 @@
     <EmbeddedResource Include="Forms\Usuario\EditarUsuarioForm.resx">
       <DependentUpon>EditarUsuarioForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Utils\ActivationForm.resx">
+      <DependentUpon>ActivationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Utils\frmProgresso.resx">
       <DependentUpon>frmProgresso.cs</DependentUpon>
     </EmbeddedResource>
@@ -372,14 +385,14 @@
     <EmbeddedResource Include="Forms\Usuario\CadUsuario.resx">
       <DependentUpon>CadUsuario.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Livros\ReservaForm.resx">
-      <DependentUpon>ReservaForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Usuario\UsuarioForm.resx">
       <DependentUpon>UsuarioForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utils\PasswordForm.resx">
       <DependentUpon>PasswordForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utils\TermsForm.resx">
+      <DependentUpon>TermsForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="credentials.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -524,6 +537,9 @@
   <ItemGroup>
     <Content Include="BibliotecaDB\bibliotecaDB.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="publicKey.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\gast-removebg-preview 100x100%281%29.png" />
     <None Include="Resources\gast-removebg-preview60x60 %281%29.png" />

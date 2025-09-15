@@ -673,6 +673,10 @@ namespace BibliotecaApp.Forms.Inicio
         //Load para fechar o Login
         private void MainForm_Load(object sender, EventArgs e)
         {
+
+           
+
+
             btnIn();
 
             if (LoginForm.cancelar == false)

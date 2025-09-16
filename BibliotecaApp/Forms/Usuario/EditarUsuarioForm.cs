@@ -390,7 +390,7 @@ namespace BibliotecaApp.Forms.Usuario
                 {
                     conexao.Open();
 
-                    // Verificar se o usuário tem empréstimos ou reservas ativas
+                    // Verificar se o usuário tem empréstimos 
                     string sqlVerificar = @"
     SELECT COUNT(*) FROM Emprestimo WHERE Alocador = @id AND Status <> 'Devolvido'";
 
@@ -407,7 +407,7 @@ namespace BibliotecaApp.Forms.Usuario
                         }
                     }
 
-                    // Se houver empréstimos ou reservas ativas, mostrar aviso mais severo
+                    // Se houver empréstimos , mostrar aviso mais severo
                     if (emprestimosAtivos > 0)
                     {
                         var resultado = MessageBox.Show(

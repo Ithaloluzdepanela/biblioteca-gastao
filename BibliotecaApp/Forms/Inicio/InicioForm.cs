@@ -13,6 +13,7 @@ using System.Data;
 using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -24,6 +25,9 @@ namespace BibliotecaApp.Forms.Inicio
 {
     public partial class InicioForm : Form
     {
+        // Adicione este campo para armazenar o top usuário
+        private (string Nome, int Qtd) topUsuarioMaisEmprestimos = ("-", 0);
+
         // controls dinâmicos
         private FlowLayoutPanel flowCards;
         private Panel topPanelInside;         // container para cards
@@ -115,16 +119,22 @@ namespace BibliotecaApp.Forms.Inicio
             };
             topPanelInside.Controls.Add(flowCards);
 
-            var cardsInfo = new[]
+            var cardsInfo = new[] 
             {
                 new { Key = "Usuarios", Title = "Usuários", Sub = "Total de usuários", Color = Color.FromArgb(30,61,88) },
                 new { Key = "Livros", Title = "Livros", Sub = "Total de livros", Color = Color.FromArgb(9,74,158) },
                 new { Key = "EmpAtivos", Title = "Empréstimos Ativos", Sub = "Empréstimos não devolvidos", Color = Color.FromArgb(34,139,34) },
                 new { Key = "Atrasados", Title = "Atrasados", Sub = "Empréstimos em atraso", Color = Color.FromArgb(178,34,34) },
-                new { Key = "Reservas", Title = "Reservas Pendentes", Sub = "Reservas aguardando", Color = Color.FromArgb(233,149,25) },
-                new { Key = "RapidosHoje", Title = "Rápidos (hoje)", Sub = "Empréstimos rápidos hoje", Color = Color.FromArgb(92,92,205) }
+                new { Key = "RapidosHoje", Title = "Rápidos (hoje)", Sub = "Empréstimos rápidos hoje", Color = Color.FromArgb(92,92,205) },
+                new { Key = "MediaMes", Title = "Média/Mês", Sub = "Média de empréstimos deste mês", Color = Color.FromArgb(255, 140, 0) },
+                new { Key = "TopUsuario", Title = "Top Usuário 🏆", Sub = "Quem mais emprestou", Color = Color.FromArgb(0, 123, 167) }
             };
-            foreach (var c in cardsInfo) flowCards.Controls.Add(CriarCard(c.Key, c.Title, c.Sub, c.Color));
+
+            // Calcula o tamanho ideal para os cards
+            int cardWidth = (topPanelInside.Width - 24) / cardsInfo.Length - 16; // 16 = margem
+            int cardHeight = 110;
+
+            foreach (var c in cardsInfo) flowCards.Controls.Add(CriarCard(c.Key, c.Title, c.Sub, c.Color, cardWidth, cardHeight));
 
             // === ACTIONS PANEL (topo direito) com botão visível e maior ===
             if (actionsPanel != null) { panelTop.Controls.Remove(actionsPanel); actionsPanel.Dispose(); }
@@ -366,11 +376,11 @@ namespace BibliotecaApp.Forms.Inicio
             return gp;
         }
 
-        private Panel CriarCard(string key, string title, string subtitle, Color headerColor)
+        private Panel CriarCard(string key, string title, string subtitle, Color headerColor, int cardWidth, int cardHeight)
         {
             var card = new Panel
             {
-                Width = 220,
+                Width = 210,
                 Height = 110,
                 Margin = new Padding(8),
                 BackColor = Color.White,
@@ -656,9 +666,30 @@ namespace BibliotecaApp.Forms.Inicio
                 SetStatus("Carregando estatísticas...");
                 var stats = await Task.Run(() => ObterEstatisticas());
 
+                // NOVO: buscar top usuário (não-professor)
+                var topUser = await Task.Run(() => ObterTopUsuarioMaisEmprestimos());
+                topUsuarioMaisEmprestimos = topUser;
+
                 if (this.IsHandleCreated && !this.IsDisposed)
                 {
-                    BeginInvoke(new Action(() => AtualizarCards(stats)));
+                    BeginInvoke(new Action(() =>
+                    {
+                        AtualizarCards(stats);
+
+                        // Atualiza o card do Top Usuário
+                        var card = flowCards.Controls.OfType<Panel>().FirstOrDefault(p => (string)p.Tag == "TopUsuario");
+                        if (card != null)
+                        {
+                            var lbl = card.Controls.Find("val_TopUsuario", true).FirstOrDefault() as Label;
+                            if (lbl != null)
+                            {
+                                if (!string.IsNullOrWhiteSpace(topUsuarioMaisEmprestimos.Nome))
+                                    lbl.Text = $"{topUsuarioMaisEmprestimos.Nome}\n({topUsuarioMaisEmprestimos.Qtd} empréstimos)";
+                                else
+                                    lbl.Text = "-";
+                            }
+                        }
+                    }));
                 }
 
                 var topDevedores = await Task.Run(() => ObterTopDevedores(10));
@@ -710,6 +741,41 @@ namespace BibliotecaApp.Forms.Inicio
                 BeginInvoke(new Action(() => SetStatus($"Erro ao carregar: {ex.Message}")));
             }
         }
+
+        /// <summary>
+        /// Retorna o usuário (exceto professores) que mais fez empréstimos.
+        /// </summary>
+        private (string Nome, int Qtd) ObterTopUsuarioMaisEmprestimos()
+        {
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    // Inclui professores, exclui empréstimos rápidos
+                    string sql = @"
+SELECT TOP 1 u.Nome, COUNT(e.Id) AS Qtd
+FROM Emprestimo e
+INNER JOIN Usuarios u ON e.Alocador = u.Id
+LEFT JOIN EmprestimoRapido er ON e.Id = er.EmprestimoId  -- ajuste a relação
+WHERE er.EmprestimoId IS NULL  -- garante que NÃO é empréstimo rápido
+GROUP BY u.Nome
+ORDER BY Qtd DESC, u.Nome";
+            using (var cmd = new SqlCeCommand(sql, conexao))
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    string nome = reader.IsDBNull(0) ? "-" : reader.GetString(0);
+                    int qtd = reader.IsDBNull(1) ? 0 : Convert.ToInt32(reader.GetValue(1));
+                    return (nome, qtd);
+                }
+            }
+        }
+    }
+    catch (Exception ex) { try { var logDir = Path.Combine(Application.StartupPath, "logs"); Directory.CreateDirectory(logDir); File.AppendAllText(Path.Combine(logDir, "inicio_obter_top_usuario.log"), DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine); } catch { } }
+    return ("-", 0);
+}
 
         #region Métodos de obtenção (mantidos do seu código original)
         private List<DevedorInfo> ObterTopDevedores(int topN)
@@ -869,8 +935,8 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
                 ["Livros"] = 0,
                 ["EmpAtivos"] = 0,
                 ["Atrasados"] = 0,
-                ["Reservas"] = 0,
-                ["RapidosHoje"] = 0
+                ["RapidosHoje"] = 0,
+                ["MediaMes"] = 0 // novo campo
             };
 
             try
@@ -891,9 +957,6 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
                     using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM Emprestimo WHERE Status = 'Atrasado'", conexao))
                         dict["Atrasados"] = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
 
-                    using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM Reservas WHERE Status = 'Pendente'", conexao))
-                        dict["Reservas"] = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
-
                     using (var cmd = new SqlCeCommand("SELECT Id, DataHoraEmprestimo FROM EmprestimoRapido WHERE Status = 'Ativo'", conexao))
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -907,6 +970,19 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
                             }
                         }
                         dict["RapidosHoje"] = cont;
+                    }
+
+                    // Média de empréstimos do mês atual
+                    var primeiroDia = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                    var ultimoDia = primeiroDia.AddMonths(1).AddDays(-1);
+                    using (var cmd = new SqlCeCommand(
+                        "SELECT COUNT(*) FROM Emprestimo WHERE DataEmprestimo >= @inicio AND DataEmprestimo <= @fim", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@inicio", primeiroDia);
+                        cmd.Parameters.AddWithValue("@fim", ultimoDia);
+                        int totalMes = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                        int dias = DateTime.Now.Day;
+                        dict["MediaMes"] = dias > 0 ? (int)Math.Round(totalMes / (double)dias) : 0;
                     }
                 }
             }
@@ -1023,5 +1099,7 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
         #endregion
 
         private void lblResultado_Click(object sender, EventArgs e) { }
+
+        
     }
 }

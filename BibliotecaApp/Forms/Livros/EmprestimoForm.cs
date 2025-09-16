@@ -18,7 +18,7 @@ namespace BibliotecaApp.Forms.Livros
         public List<Usuarios> Usuarios { get; set; }
         public List<Livro> Livros { get; set; }
         public List<Emprestimo> Emprestimos { get; set; }
-        public bool AbertoPelaReserva { get; set; } = false;
+        
         private bool _carregandoLivroAutomaticamente = false;
         private List<Livro> _cacheLivros = new List<Livro>();
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
@@ -742,7 +742,7 @@ namespace BibliotecaApp.Forms.Livros
         #region Métodos de Código de Barras
         private void txtBarcode_Leave(object sender, EventArgs e)
         {// Não verifica se foi aberto pela reserva
-            if (AbertoPelaReserva) return;
+            
 
             // Só busca se o campo estiver preenchido
             if (!string.IsNullOrEmpty(txtBarcode.Text))

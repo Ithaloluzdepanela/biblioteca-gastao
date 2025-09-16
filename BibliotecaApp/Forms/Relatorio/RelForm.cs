@@ -456,15 +456,14 @@ namespace BibliotecaApp.Forms.Relatorio
                         if (usaLivro) final.AppendLine(" AND NomeL LIKE @livro");
 
                         // filtro por ação conforme cmbAcao selection
-                        // cmbAcao: 0 Todas, 1 Empréstimo, 2 Devolução, 3 Empréstimo Rápido, 4 Reserva
+                        // cmbAcao: 0 Todas, 1 Empréstimo, 2 Devolução, 3 Empréstimo Rápido
                         if (cmbAcao.SelectedIndex == 1)
                             final.AppendLine(" AND Acao = 'Empréstimo'");
                         else if (cmbAcao.SelectedIndex == 2)
                             final.AppendLine(" AND Acao = 'Devolução'");
                         else if (cmbAcao.SelectedIndex == 3)
                             final.AppendLine(" AND Acao = 'Empréstimo Rápido'");
-                        else if (cmbAcao.SelectedIndex == 4)
-                            final.AppendLine(" AND Acao = 'Reserva'");
+                        
 
                         if (usaCbBibl) final.AppendLine(" AND Bibliotecaria LIKE @bibliotecaria");
 

@@ -245,7 +245,7 @@ namespace BibliotecaApp.Forms.Livros
                     CASE
                         WHEN Quantidade = 0 THEN 'Indisponível'
                         WHEN Disponibilidade = 1 THEN 'Disponível'
-                        ELSE 'Reservado'
+                        
                     END AS Status
                 FROM Livros
                 WHERE 1 = 1";
@@ -266,9 +266,7 @@ namespace BibliotecaApp.Forms.Livros
                             case "Indisponível":
                                 sql += " AND Quantidade = 0";
                                 break;
-                            case "Reservado":
-                                sql += " AND Disponibilidade = 0 AND Quantidade > 0";
-                                break;
+                            
                         }
                     }
 

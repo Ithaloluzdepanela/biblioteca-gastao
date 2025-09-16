@@ -184,7 +184,7 @@ namespace BibliotecaApp.Forms.Livros
                     uAlocador.Nome AS [Alocador],
                     uResponsavel.Nome AS [Responsável],
                     e.Alocador AS [IdResponsavel],
-                    COALESCE(l.Nome, e.NomeLivro) AS [Livro],
+                    COALESCE(l.Nome, e.LivroNome) AS [Livro],
                     l.CodigoBarras AS [Código De Barras],
                     e.DataEmprestimo AS [Data do Empréstimo],
                     e.DataDevolucao AS [Data de Devolução],
@@ -193,7 +193,7 @@ namespace BibliotecaApp.Forms.Livros
                 JOIN Usuarios uAlocador ON e.Alocador = uAlocador.Id
                 JOIN Usuarios uResponsavel ON e.Responsavel = uResponsavel.Id
                 JOIN Livros l ON e.Livro = l.Id
-                WHERE l.Nome LIKE @NomeLivro";
+                WHERE l.Nome LIKE @LivroNome";
 
             if (filtros.FiltrarCodigoBarras)
                 queryBase += " AND l.CodigoBarras LIKE @CodigoBarras";
@@ -215,7 +215,7 @@ namespace BibliotecaApp.Forms.Livros
 
         private void AdicionarParametrosBusca(SqlCeCommand comando, FiltrosBusca filtros)
         {
-            comando.Parameters.AddWithValue("@NomeLivro", "%" + filtros.NomeLivro + "%");
+            comando.Parameters.AddWithValue("@LivroNome", "%" + filtros.NomeLivro + "%");
 
             if (filtros.FiltrarCodigoBarras)
                 comando.Parameters.AddWithValue("@CodigoBarras", "%" + filtros.CodigoBarras + "%");

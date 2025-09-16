@@ -84,7 +84,7 @@ namespace BibliotecaApp.Forms.Livros
 
         #region Eventos do Formulário
 
-
+        public event EventHandler LivroAtualizado;
         private void EmprestimoForm_Load(object sender, EventArgs e)
         {
             dtpDataEmprestimo.Value = DateTime.Today;
@@ -253,6 +253,7 @@ namespace BibliotecaApp.Forms.Livros
 </body>
 </html>";
                         EmailService.Enviar(email, assunto, corpo);
+                        LivroAtualizado?.Invoke(this, EventArgs.Empty);
                         MessageBox.Show("Você será notificado por e-mail quando o livro estiver disponível.", "Notificação registrada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
@@ -281,14 +282,15 @@ namespace BibliotecaApp.Forms.Livros
                     // Inserção do novo empréstimo
                     string sqlInserir = @"
     INSERT INTO Emprestimo 
-        (Alocador, Livro, Responsavel, DataEmprestimo, DataDevolucao, DataProrrogacao, DataRealDevolucao, Status, CodigoBarras)
+        (Alocador, Livro, LivroNome, Responsavel, DataEmprestimo, DataDevolucao, DataProrrogacao, DataRealDevolucao, Status, CodigoBarras)
     VALUES 
-        (@alocador, @livro, @responsavel, @dataEmprestimo, @dataDevolucao, NULL, NULL, 'Ativo', @codigoBarras)";
+        (@alocador, @livro, @livroNome, @responsavel, @dataEmprestimo, @dataDevolucao, NULL, NULL, 'Ativo', @codigoBarras)";
 
                     using (var cmdInsert = new SqlCeCommand(sqlInserir, conexao))
                     {
                         cmdInsert.Parameters.AddWithValue("@alocador", usuario.Id);
                         cmdInsert.Parameters.AddWithValue("@livro", livro.Id);
+                        cmdInsert.Parameters.AddWithValue("@livroNome", livro.Nome);
                         cmdInsert.Parameters.AddWithValue("@responsavel", responsavel.Id);
                         cmdInsert.Parameters.AddWithValue("@dataEmprestimo", DateTime.Now);
 
@@ -328,6 +330,7 @@ namespace BibliotecaApp.Forms.Livros
 
                 MessageBox.Show("Empréstimo registrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimparCampos();
+               LivroAtualizado?.Invoke(this, EventArgs.Empty);
 
                 // Envio de e-mail apenas se o e-mail for válido
                 string email = usuario.Email?.Trim();

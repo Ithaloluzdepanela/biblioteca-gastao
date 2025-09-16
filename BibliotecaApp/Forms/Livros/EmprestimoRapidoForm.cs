@@ -20,6 +20,8 @@ namespace BibliotecaApp.Forms.Livros
         private List<string> livrosCadastrados = new List<string>();
         private List<string> professoresCadastrados = new List<string>();
 
+        public event EventHandler LivroAtualizado;
+
         // Dicionário de turmas padrão
         private Dictionary<string, string[]> dicionarioTurmas = new Dictionary<string, string[]>
         {
@@ -202,8 +204,8 @@ namespace BibliotecaApp.Forms.Livros
                         }
                     }
 
-                    // Livros disponíveis
-                    using (var cmd = new SqlCeCommand("SELECT Nome FROM Livros WHERE Nome IS NOT NULL", conexao))
+                    // Livros disponíveis SOMENTE do gênero Didático
+                    using (var cmd = new SqlCeCommand("SELECT Nome FROM Livros WHERE Nome IS NOT NULL AND Genero = 'Didático'", conexao))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -589,10 +591,11 @@ namespace BibliotecaApp.Forms.Livros
                 {
                     conexao.Open();
 
-                    // checar livro e quantidade disponível
+                    // checar livro, quantidade disponível e gênero
                     int livroId;
                     int quantidadeDisponivel;
-                    using (var cmd = new SqlCeCommand("SELECT Id, Quantidade FROM Livros WHERE Nome = @nome", conexao))
+                    string generoLivro = null;
+                    using (var cmd = new SqlCeCommand("SELECT Id, Quantidade, Genero FROM Livros WHERE Nome = @nome", conexao))
                     {
                         cmd.Parameters.AddWithValue("@nome", txtLivro.Text.Trim());
                         using (var r = cmd.ExecuteReader())
@@ -604,7 +607,15 @@ namespace BibliotecaApp.Forms.Livros
                             }
                             livroId = Convert.ToInt32(r["Id"]);
                             quantidadeDisponivel = Convert.ToInt32(r["Quantidade"]);
+                            generoLivro = r["Genero"].ToString();
                         }
+                    }
+
+                    // Permitir empréstimo SOMENTE de livros com gênero "Didático"
+                    if (!string.Equals(generoLivro, "Didático", StringComparison.OrdinalIgnoreCase))
+                    {
+                        MessageBox.Show("Somente livros do gênero 'Didático' podem ser emprestados por este formulário.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
                     }
 
                     if (qtd > quantidadeDisponivel)
@@ -630,13 +641,14 @@ namespace BibliotecaApp.Forms.Livros
 
                     // Inserir EmprestimoRapido
                     string insertSql = @"INSERT INTO EmprestimoRapido
-(ProfessorId, LivroId, Turma, Quantidade, DataHoraEmprestimo, DataHoraDevolucaoReal, Bibliotecaria, Status)
-VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
+(ProfessorId, LivroId, LivroNome, Turma, Quantidade, DataHoraEmprestimo, DataHoraDevolucaoReal, Bibliotecaria, Status)
+VALUES (@prof, @livro, @livroNome, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
 
                     using (var cmd = new SqlCeCommand(insertSql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@prof", professorId);
                         cmd.Parameters.AddWithValue("@livro", livroId);
+                        cmd.Parameters.AddWithValue("@livroNome", txtLivro.Text.Trim());
                         cmd.Parameters.AddWithValue("@turma", txtTurma.Text.Trim());
                         cmd.Parameters.AddWithValue("@qt", qtd);
                         cmd.Parameters.AddWithValue("@dataEmp", DateTime.Now);
@@ -660,6 +672,7 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
                 LimparCampos();
                 CarregarSugestoesECombo(); // recarrega quantidades / listas
                 CarregarGridRapidos();
+                LivroAtualizado?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
@@ -810,12 +823,15 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
                 {
                     conexao.Open();
                     string sql = @"
-    SELECT r.Id, u.Nome as Professor, l.Nome as Livro, r.Turma, r.Quantidade,
-           r.DataHoraEmprestimo, r.DataHoraDevolucaoReal, r.Bibliotecaria, r.Status, r.LivroId
-    FROM EmprestimoRapido r
-    INNER JOIN Usuarios u ON r.ProfessorId = u.Id
-    INNER JOIN Livros l ON r.LivroId = l.Id
-    ORDER BY r.Id DESC";
+    SELECT r.Id, u.Nome as Professor, 
+       COALESCE(l.Nome, r.LivroNome) as Livro,
+       r.Turma, r.Quantidade,
+       r.DataHoraEmprestimo, r.DataHoraDevolucaoReal, 
+       r.Bibliotecaria, r.Status, r.LivroId
+FROM EmprestimoRapido r
+INNER JOIN Usuarios u ON r.ProfessorId = u.Id
+LEFT JOIN Livros l ON r.LivroId = l.Id
+ORDER BY r.Id DESC";
 
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     using (var reader = cmd.ExecuteReader())
@@ -965,23 +981,49 @@ VALUES (@prof, @livro, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
         private void dgvRapidos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0) return;
-            if (dgvRapidos.Columns[e.ColumnIndex].Name != "Status") return;
-            if (e.Value == null) return;
 
-            var status = e.Value.ToString();
-            if (status.Equals("Atrasado", StringComparison.OrdinalIgnoreCase))
+            // --- Status ---
+            if (dgvRapidos.Columns[e.ColumnIndex].Name == "Status" && e.Value != null)
             {
-                e.CellStyle.ForeColor = Color.FromArgb(178, 34, 34);
-                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                var status = e.Value.ToString();
+                if (status.Equals("Atrasado", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(178, 34, 34);
+                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                }
+                else if (status.Equals("Ativo", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(34, 139, 34);
+                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                }
+                else if (status.Equals("Devolvido", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.ForeColor = Color.Gray;
+                }
             }
-            else if (status.Equals("Ativo", StringComparison.OrdinalIgnoreCase))
+
+            // --- Livro Excluído ---
+            if (dgvRapidos.Columns[e.ColumnIndex].Name == "Livro")
             {
-                e.CellStyle.ForeColor = Color.FromArgb(34, 139, 34);
-                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
-            }
-            else if (status.Equals("Devolvido", StringComparison.OrdinalIgnoreCase))
-            {
-                e.CellStyle.ForeColor = Color.Gray;
+                var nomeLivro = e.Value?.ToString();
+                if (!string.IsNullOrEmpty(nomeLivro))
+                {
+                    using (var conexao = Conexao.ObterConexao())
+                    {
+                        conexao.Open();
+                        string sql = "SELECT COUNT(*) FROM Livros WHERE Nome = @nome";
+                        using (var cmd = new SqlCeCommand(sql, conexao))
+                        {
+                            cmd.Parameters.AddWithValue("@nome", nomeLivro);
+                            int count = (int)cmd.ExecuteScalar();
+                            if (count == 0)
+                            {
+                                e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                            }
+                        }
+                    }
+                }
             }
         }
 

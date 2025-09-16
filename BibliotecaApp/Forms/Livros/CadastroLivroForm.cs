@@ -18,7 +18,7 @@ namespace BibliotecaApp.Forms.Livros
             "Educação", "Romance", "Ficção", "Fantasia", "Mitologia", "Literatura Infantil",
             "Adolescentes", "Infantojuvenil", "Suspense", "Lenda", "Folclore", "Novela",
             "Fábula", "Narrativa", "Afetividade", "Letramento", "Filosofia",
-            "Política", "Culinária", "Crônica", "Conto", "Didatico"
+            "Política", "Culinária", "Crônica", "Conto", "Didático", "Literatura",
         };
 
         private bool generoSelecionadoDaLista = false; // Flag para controlar quando gênero foi selecionado da lista
@@ -107,6 +107,7 @@ namespace BibliotecaApp.Forms.Livros
             if (!ValidarCodigoBarras(out string codigoBarras))
                 return;
 
+           
             CadastrarLivro(quantidade, codigoBarras);
         }
 
@@ -348,6 +349,7 @@ namespace BibliotecaApp.Forms.Livros
 
                     MessageBox.Show("Livro salvo com sucesso!",
                                     "Cadastro realizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LivrosFormUpdater.AtualizarAberto();
 
                     LimparFormulario();
                 }

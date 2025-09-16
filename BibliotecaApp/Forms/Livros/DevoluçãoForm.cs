@@ -24,6 +24,7 @@ namespace BibliotecaApp.Forms.Livros
 
         #region Eventos do Formulário
 
+        public event EventHandler LivroAtualizado;
         private void DevoluçãoForm_Load(object sender, EventArgs e)
         {
             InicializarFormulario();
@@ -183,7 +184,7 @@ namespace BibliotecaApp.Forms.Livros
                     uAlocador.Nome AS [Alocador],
                     uResponsavel.Nome AS [Responsável],
                     e.Alocador AS [IdResponsavel],
-                    l.Nome AS [Livro],
+                    COALESCE(l.Nome, e.NomeLivro) AS [Livro],
                     l.CodigoBarras AS [Código De Barras],
                     e.DataEmprestimo AS [Data do Empréstimo],
                     e.DataDevolucao AS [Data de Devolução],
@@ -366,6 +367,37 @@ namespace BibliotecaApp.Forms.Livros
                 foreach (DataGridViewRow row in dgvEmprestimos.Rows)
                 {
                     AplicarCorStatus(row);
+                }
+            };
+
+            dgvEmprestimos.DataBindingComplete += (s, e) =>
+            {
+                foreach (DataGridViewRow row in dgvEmprestimos.Rows)
+                {
+                    AplicarCorStatus(row);
+
+                    // Verificar se o livro ainda existe
+                    string nomeLivro = row.Cells["Livro"].Value?.ToString();
+                    if (!string.IsNullOrEmpty(nomeLivro))
+                    {
+                        using (var conexao = Conexao.ObterConexao())
+                        {
+                            conexao.Open();
+                            string sql = "SELECT COUNT(*) FROM Livros WHERE Nome = @nome";
+                            using (var cmd = new SqlCeCommand(sql, conexao))
+                            {
+                                cmd.Parameters.AddWithValue("@nome", nomeLivro);
+                                int count = (int)cmd.ExecuteScalar();
+
+                                if (count == 0)
+                                {
+                                    row.Cells["Livro"].Style.ForeColor = Color.Red;
+                                    row.Cells["Livro"].Style.SelectionForeColor = Color.Red;
+                                    row.Cells["Livro"].Style.Font = new Font(dgvEmprestimos.DefaultCellStyle.Font, FontStyle.Bold);
+                                }
+                            }
+                        }
+                    }
                 }
             };
         }
@@ -555,6 +587,7 @@ namespace BibliotecaApp.Forms.Livros
 
             ProcessarDevolucaoNoBanco(emprestimoInfo.Id);
             MessageBox.Show("Livro devolvido com sucesso.");
+            LivroAtualizado?.Invoke(this, EventArgs.Empty);
             BuscarEmprestimos();
         }
 

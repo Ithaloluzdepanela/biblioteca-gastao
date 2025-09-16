@@ -209,7 +209,9 @@ namespace BibliotecaApp.Forms.Usuario
                 return;
             }
 
-            // Resto do código de salvamento...
+            
+
+            //  código de salvamento...
             try
             {
                 using (var conexao = Conexao.ObterConexao())
@@ -390,12 +392,9 @@ namespace BibliotecaApp.Forms.Usuario
 
                     // Verificar se o usuário tem empréstimos ou reservas ativas
                     string sqlVerificar = @"
-                SELECT COUNT(*) FROM Emprestimo WHERE Alocador = @id AND Status <> 'Devolvido'
-                UNION ALL
-                SELECT COUNT(*) FROM Reservas WHERE UsuarioId = @id AND Status IN ('Pendente', 'Disponível')";
+    SELECT COUNT(*) FROM Emprestimo WHERE Alocador = @id AND Status <> 'Devolvido'";
 
                     int emprestimosAtivos = 0;
-                    int reservasAtivas = 0;
 
                     using (var cmdVerificar = new SqlCeCommand(sqlVerificar, conexao))
                     {
@@ -404,17 +403,16 @@ namespace BibliotecaApp.Forms.Usuario
                         using (var reader = cmdVerificar.ExecuteReader())
                         {
                             if (reader.Read()) emprestimosAtivos = reader.GetInt32(0);
-                            if (reader.Read()) reservasAtivas = reader.GetInt32(0);
+                            
                         }
                     }
 
                     // Se houver empréstimos ou reservas ativas, mostrar aviso mais severo
-                    if (emprestimosAtivos > 0 || reservasAtivas > 0)
+                    if (emprestimosAtivos > 0)
                     {
                         var resultado = MessageBox.Show(
                             $"⚠️ ATENÇÃO: Este usuário possui registros ativos no sistema:\n\n" +
                             $"- {emprestimosAtivos} empréstimo(s) ativo(s)\n" +
-                            $"- {reservasAtivas} reserva(s) ativa(s)\n\n" +
                             $"A exclusão removerá TODOS os dados do usuario, mantendo somente registros do sistema..\n\n" +
                             $"Tem CERTEZA ABSOLUTA que deseja excluir este usuário?",
                             "ALERTA - Exclusão com Registros Ativos",
@@ -458,21 +456,7 @@ namespace BibliotecaApp.Forms.Usuario
                         if (confirm != DialogResult.Yes) return;
                     }
 
-                    // Primeiro, excluir todas as reservas do usuário para evitar erro de chave estrangeira
-                    if (reservasAtivas > 0)
-                    {
-                        string sqlExcluirReservas = "DELETE FROM Reservas WHERE UsuarioId = @id";
-                        using (var cmdReservas = new SqlCeCommand(sqlExcluirReservas, conexao))
-                        {
-                            cmdReservas.Parameters.AddWithValue("@id", _usuarioSelecionado.Id);
-                            int reservasExcluidas = cmdReservas.ExecuteNonQuery();
-
-                            if (reservasExcluidas > 0)
-                            {
-                                MessageBox.Show($"{reservasExcluidas} reserva(s) do usuário foram removida(s).");
-                            }
-                        }
-                    }
+                    
 
                     // Agora excluir o usuário
                     string sql = "DELETE FROM Usuarios WHERE Id = @id";
@@ -707,7 +691,7 @@ namespace BibliotecaApp.Forms.Usuario
             using (var conexao = Conexao.ObterConexao())
             {
                 conexao.Open();
-                string sql = "SELECT COUNT(*) FROM usuarios WHERE Cpf = @Cpf AND Id <> @IdAtual";
+                string sql = "SELECT COUNT(*) FROM usuarios WHERE CPF = @Cpf AND Id <> @IdAtual";
 
                 using (var cmd = new SqlCeCommand(sql, conexao))
                 {

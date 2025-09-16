@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace BibliotecaApp.Forms.Livros
         public LivrosForm()
         {
             InitializeComponent();
+            btnProcurar.PerformClick();
         }
 
         #endregion
@@ -223,7 +225,8 @@ namespace BibliotecaApp.Forms.Livros
         }
 
         // Carrega lista de livros com filtros opcionais
-        private void CarregarLivros(string nomeFiltro = "", string generoFiltro = "Todos", string disponibilidadeFiltro = "Todos")
+        // Torna o método público para permitir atualização externa
+        public void CarregarLivros(string nomeFiltro = "", string generoFiltro = "Todos", string disponibilidadeFiltro = "Todos")
         {
             try
             {
@@ -413,6 +416,21 @@ namespace BibliotecaApp.Forms.Livros
 
         #endregion
 
+    }
 
+    // Adicione esta classe utilitária para atualizar o LivrosForm
+    public static class LivrosFormUpdater
+    {
+        public static void AtualizarAberto()
+        {
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form is BibliotecaApp.Forms.Livros.LivrosForm livrosForm)
+                {
+                    // Chama o método público de atualização
+                    livrosForm.Invoke(new Action(() => livrosForm.CarregarLivros()));
+                }
+            }
+        }
     }
 }

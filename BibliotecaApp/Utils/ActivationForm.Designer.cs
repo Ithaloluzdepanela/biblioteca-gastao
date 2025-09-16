@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.panelHeader = new System.Windows.Forms.Panel();
+            this.picExit = new System.Windows.Forms.PictureBox();
             this.lblTitulo = new System.Windows.Forms.Label();
             this.btnImport = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.btnActivate = new System.Windows.Forms.Button();
             this.txtInfo = new System.Windows.Forms.RichTextBox();
             this.txtFilePath = new RoundedTextBox();
-            this.picExit = new System.Windows.Forms.PictureBox();
             this.panelHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picExit)).BeginInit();
             this.SuspendLayout();
@@ -50,6 +50,18 @@
             this.panelHeader.Name = "panelHeader";
             this.panelHeader.Size = new System.Drawing.Size(463, 50);
             this.panelHeader.TabIndex = 2;
+            // 
+            // picExit
+            // 
+            this.picExit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.picExit.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picExit.Image = global::BibliotecaApp.Properties.Resources.icons8_x_20;
+            this.picExit.Location = new System.Drawing.Point(440, 3);
+            this.picExit.Name = "picExit";
+            this.picExit.Size = new System.Drawing.Size(20, 20);
+            this.picExit.TabIndex = 3;
+            this.picExit.TabStop = false;
+            this.picExit.Click += new System.EventHandler(this.picExit_Click);
             // 
             // lblTitulo
             // 
@@ -70,7 +82,7 @@
             this.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImport.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
             this.btnImport.ForeColor = System.Drawing.Color.White;
-            this.btnImport.Location = new System.Drawing.Point(339, 105);
+            this.btnImport.Location = new System.Drawing.Point(337, 101);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(103, 35);
             this.btnImport.TabIndex = 66;
@@ -82,7 +94,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(21, 82);
+            this.label1.Location = new System.Drawing.Point(19, 81);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(190, 17);
             this.label1.TabIndex = 67;
@@ -95,7 +107,7 @@
             this.btnActivate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnActivate.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
             this.btnActivate.ForeColor = System.Drawing.Color.White;
-            this.btnActivate.Location = new System.Drawing.Point(339, 287);
+            this.btnActivate.Location = new System.Drawing.Point(337, 287);
             this.btnActivate.Name = "btnActivate";
             this.btnActivate.Size = new System.Drawing.Size(103, 35);
             this.btnActivate.TabIndex = 69;
@@ -109,7 +121,7 @@
             this.txtInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtInfo.Cursor = System.Windows.Forms.Cursors.Default;
             this.txtInfo.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtInfo.Location = new System.Drawing.Point(24, 148);
+            this.txtInfo.Location = new System.Drawing.Point(22, 155);
             this.txtInfo.Name = "txtInfo";
             this.txtInfo.ReadOnly = true;
             this.txtInfo.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
@@ -128,10 +140,11 @@
             this.txtFilePath.BorderRadius = 10;
             this.txtFilePath.BorderThickness = 1;
             this.txtFilePath.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtFilePath.Enabled = false;
             this.txtFilePath.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFilePath.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtFilePath.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtFilePath.Location = new System.Drawing.Point(24, 102);
+            this.txtFilePath.Location = new System.Drawing.Point(22, 101);
             this.txtFilePath.Name = "txtFilePath";
             this.txtFilePath.Padding = new System.Windows.Forms.Padding(7);
             this.txtFilePath.PlaceholderColor = System.Drawing.Color.Gray;
@@ -141,22 +154,10 @@
             this.txtFilePath.SelectedText = "";
             this.txtFilePath.SelectionLength = 0;
             this.txtFilePath.SelectionStart = 0;
-            this.txtFilePath.Size = new System.Drawing.Size(298, 40);
+            this.txtFilePath.Size = new System.Drawing.Size(298, 35);
             this.txtFilePath.TabIndex = 68;
             this.txtFilePath.TextColor = System.Drawing.Color.Black;
             this.txtFilePath.UseSystemPasswordChar = false;
-            // 
-            // picExit
-            // 
-            this.picExit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.picExit.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picExit.Image = global::BibliotecaApp.Properties.Resources.icons8_x_20;
-            this.picExit.Location = new System.Drawing.Point(440, 3);
-            this.picExit.Name = "picExit";
-            this.picExit.Size = new System.Drawing.Size(20, 20);
-            this.picExit.TabIndex = 3;
-            this.picExit.TabStop = false;
-            this.picExit.Click += new System.EventHandler(this.picExit_Click);
             // 
             // ActivationForm
             // 

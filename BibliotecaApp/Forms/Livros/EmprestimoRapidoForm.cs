@@ -549,17 +549,61 @@ namespace BibliotecaApp.Forms.Livros
 
         private void txtLivro_TextChanged(object sender, EventArgs e)
         {
-            var txt = txtLivro.Text.Trim().ToLower();
+            var txt = txtLivro.Text.Trim();
             lstSugestoesLivro.Items.Clear();
             if (string.IsNullOrWhiteSpace(txt)) { lstSugestoesLivro.Visible = false; return; }
 
-            var sugest = livrosCadastrados.Where(x => x.ToLower().Contains(txt)).ToArray();
+            var sugest = livrosCadastrados.Where(x => x.ToLower().Contains(txt.ToLower())).ToArray();
             if (sugest.Any())
             {
                 lstSugestoesLivro.Items.AddRange(sugest);
                 lstSugestoesLivro.Visible = true;
             }
             else lstSugestoesLivro.Visible = false;
+
+            // Limitar quantidade disponível
+            LimitarQuantidadeDisponivel(txt);
+        }
+
+        private int quantidadeMaximaDisponivel = 1;
+
+        private void LimitarQuantidadeDisponivel(string nomeLivro)
+        {
+            quantidadeMaximaDisponivel = 1; // valor padrão
+            if (string.IsNullOrWhiteSpace(nomeLivro))
+            {
+                numQuantidade.Text = "1";
+                return;
+            }
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    using (var cmd = new SqlCeCommand("SELECT Quantidade FROM Livros WHERE Nome = @nome", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@nome", nomeLivro);
+                        var obj = cmd.ExecuteScalar();
+                        int disponivel = 1;
+                        if (obj != null && int.TryParse(obj.ToString(), out disponivel) && disponivel > 0)
+                        {
+                            quantidadeMaximaDisponivel = disponivel;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                quantidadeMaximaDisponivel = 1;
+            }
+
+            // Corrige o valor atual se estiver acima do máximo
+            int valorAtual;
+            if (!int.TryParse(numQuantidade.Text, out valorAtual) || valorAtual < 1)
+                numQuantidade.Text = "1";
+            else if (valorAtual > quantidadeMaximaDisponivel)
+                numQuantidade.Text = quantidadeMaximaDisponivel.ToString();
         }
 
         private void lstSugestoesLivro_Click(object sender, EventArgs e)
@@ -1090,10 +1134,16 @@ ORDER BY r.Id DESC";
 
         private void numQuantidade_TextChanged(object sender, EventArgs e)
         {
-            if (!int.TryParse(numQuantidade.Text, out int valor) || valor < 1)
+            int valor;
+            if (!int.TryParse(numQuantidade.Text, out valor) || valor < 1)
             {
-
-                numQuantidade.SelectionStart = numQuantidade.Text.Length; // cursor no final
+                numQuantidade.Text = "1";
+                numQuantidade.SelectionStart = numQuantidade.Text.Length;
+            }
+            else if (valor > quantidadeMaximaDisponivel)
+            {
+                numQuantidade.Text = quantidadeMaximaDisponivel.ToString();
+                numQuantidade.SelectionStart = numQuantidade.Text.Length;
             }
         }
 

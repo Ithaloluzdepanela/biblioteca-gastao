@@ -271,10 +271,10 @@ namespace BibliotecaApp.Forms.Inicio
             dgvDevedores.Columns.Clear();
             dgvDevedores.Columns.AddRange(new DataGridViewColumn[] {
     new DataGridViewTextBoxColumn { Name = "Nome", HeaderText = "Nome", DataPropertyName = "Nome", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill },
-    new DataGridViewTextBoxColumn { Name = "Turma", HeaderText = "Turma", DataPropertyName = "Turma", Width = 120 },
-    new DataGridViewTextBoxColumn { Name = "Livro", HeaderText = "Livro", DataPropertyName = "Livro", Width = 200 },
-    new DataGridViewTextBoxColumn { Name = "DataDevolucao", HeaderText = "Data Devolução", DataPropertyName = "DataDevolucao", Width = 120, DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" } },
-    new DataGridViewTextBoxColumn { Name = "DiasAtraso", HeaderText = "Dias em Atraso", DataPropertyName = "DiasAtraso", Width = 100 }
+    new DataGridViewTextBoxColumn { Name = "Turma", HeaderText = "Turma", DataPropertyName = "Turma", Width = 250 },
+    new DataGridViewTextBoxColumn { Name = "Livro", HeaderText = "Livro", DataPropertyName = "Livro", Width = 250 },
+    new DataGridViewTextBoxColumn { Name = "DataDevolucao", HeaderText = "Data Devolução", DataPropertyName = "DataDevolucao", Width = 150, DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" } },
+    new DataGridViewTextBoxColumn { Name = "DiasAtraso", HeaderText = "Dias em Atraso", DataPropertyName = "DiasAtraso", Width = 130 }
 });
             dgvDevedores.Columns.Add(new DataGridViewButtonColumn
             {
@@ -1227,7 +1227,7 @@ private void GerarCartaCobrancaPDF(EmprestimoAtrasadoInfo devedor, List<(int Id,
         doc.Add(pCompromisso);
 
         // Livros
-        doc.Add(new Paragraph("Livros:", fontNormal) { SpacingAfter = 6f });
+        doc.Add(new Paragraph("Livro:", fontBold) { SpacingAfter = 6f });
         if (livros.Count == 0)
         {
             doc.Add(new Paragraph("Nenhum livro em atraso encontrado.", fontSmall) { SpacingAfter = 13f });
@@ -1236,15 +1236,16 @@ private void GerarCartaCobrancaPDF(EmprestimoAtrasadoInfo devedor, List<(int Id,
         {
             foreach (var livro in livros)
             {
-                // Exemplo: - [123] Título do Livro (Autor)
-                string linhaLivro = $"- [{livro.Id}] {livro.Nome} ({livro.Autor})";
-                doc.Add(new Paragraph(linhaLivro, fontNormal) { SpacingAfter = 13f });
+                // Cada informação em uma linha separada
+                doc.Add(new Paragraph($"ID: {livro.Id}", fontNormal));
+                doc.Add(new Paragraph($"Nome: {livro.Nome}", fontNormal));
+                doc.Add(new Paragraph($"Autor: {livro.Autor}", fontNormal) { SpacingAfter = 14f });
             }
         }
         // Linhas extras para preenchimento manual
         for (int i = livros.Count; i < 4; i++)
         {
-            doc.Add(new Paragraph("________________________________________________________________________________", fontNormal) { SpacingAfter = 3.5f });
+            doc.Add(new Paragraph("________________________________________________________________________________", fontNormal) { SpacingAfter = 3f });
         }
 
         doc.Add(new Paragraph("\n", fontNormal));

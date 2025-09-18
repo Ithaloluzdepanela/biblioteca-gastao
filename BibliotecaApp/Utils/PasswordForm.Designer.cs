@@ -22,8 +22,8 @@
             this.lblMensagem = new System.Windows.Forms.Label();
             this.btnConfirmar = new System.Windows.Forms.Button();
             this.lblErro = new System.Windows.Forms.Label();
-            this.txtSenha = new RoundedTextBox();
             this.btnCancelar = new System.Windows.Forms.Button();
+            this.txtSenha = new RoundedTextBox();
             this.panelHeader.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -36,7 +36,6 @@
             this.panelHeader.Name = "panelHeader";
             this.panelHeader.Size = new System.Drawing.Size(400, 50);
             this.panelHeader.TabIndex = 0;
-            
             // 
             // lblTitulo
             // 
@@ -49,7 +48,6 @@
             this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "Confirmação de Senha";
             this.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-          
             // 
             // lblMensagem
             // 
@@ -60,7 +58,6 @@
             this.lblMensagem.TabIndex = 1;
             this.lblMensagem.Text = "Digite sua senha para confirmar a operação:";
             this.lblMensagem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-           
             // 
             // btnConfirmar
             // 
@@ -87,14 +84,28 @@
             this.lblErro.TabIndex = 3;
             this.lblErro.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblErro.Visible = false;
-         
+            // 
+            // btnCancelar
+            // 
+            this.btnCancelar.BackColor = System.Drawing.Color.Gray;
+            this.btnCancelar.FlatAppearance.BorderSize = 0;
+            this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancelar.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
+            this.btnCancelar.ForeColor = System.Drawing.Color.White;
+            this.btnCancelar.Location = new System.Drawing.Point(128, 163);
+            this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Size = new System.Drawing.Size(110, 35);
+            this.btnCancelar.TabIndex = 2;
+            this.btnCancelar.Text = "Cancelar";
+            this.btnCancelar.UseVisualStyleBackColor = false;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // txtSenha
             // 
             this.txtSenha.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtSenha.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
             this.txtSenha.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtSenha.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtSenha.BackColor = System.Drawing.Color.White;
             this.txtSenha.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
             this.txtSenha.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.txtSenha.BorderRadius = 5;
@@ -117,28 +128,12 @@
             this.txtSenha.TabIndex = 64;
             this.txtSenha.TextColor = System.Drawing.Color.Black;
             this.txtSenha.UseSystemPasswordChar = false;
-            
-            // 
-            // btnCancelar
-            // 
-            this.btnCancelar.BackColor = System.Drawing.Color.Gray;
-            this.btnCancelar.FlatAppearance.BorderSize = 0;
-            this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancelar.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
-            this.btnCancelar.ForeColor = System.Drawing.Color.White;
-            this.btnCancelar.Location = new System.Drawing.Point(128, 163);
-            this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(110, 35);
-            this.btnCancelar.TabIndex = 2;
-            this.btnCancelar.Text = "Cancelar";
-            this.btnCancelar.UseVisualStyleBackColor = false;
-            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // PasswordForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(400, 210);
             this.Controls.Add(this.lblErro);
             this.Controls.Add(this.txtSenha);
@@ -146,7 +141,7 @@
             this.Controls.Add(this.btnConfirmar);
             this.Controls.Add(this.lblMensagem);
             this.Controls.Add(this.panelHeader);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PasswordForm";

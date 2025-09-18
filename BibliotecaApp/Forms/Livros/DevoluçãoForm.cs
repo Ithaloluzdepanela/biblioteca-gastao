@@ -37,9 +37,71 @@ namespace BibliotecaApp.Forms.Livros
             BuscarEmprestimos();
         }
 
-        private void btnLimpar_Click(object sender, EventArgs e)
+        private void btnProrrogar_Click(object sender, EventArgs e)
         {
-            ConfirmarELimparCampos();
+            if (dgvEmprestimos.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecione um empréstimo para prorrogar.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var row = dgvEmprestimos.SelectedRows[0];
+            int idEmprestimo = Convert.ToInt32(row.Cells["ID do Empréstimo"].Value);
+            string livro = row.Cells["Livro"].Value?.ToString();
+            string alocador = row.Cells["Alocador"].Value?.ToString();
+            DateTime dataDevolucaoAtual = row.Cells["Data de Devolução"].Value != null
+                ? Convert.ToDateTime(row.Cells["Data de Devolução"].Value)
+                : DateTime.Now;
+
+            using (var frm = new ProrrogarDiasForm())
+            {
+                frm.DataDevolucaoAtual = dataDevolucaoAtual; // Passe a data atual aqui
+                if (frm.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                // Validação do valor digitado no RoundedTextBox
+                if (!int.TryParse(frm.numQuantidade.Text, out int dias) || dias < 1)
+                {
+                    MessageBox.Show("Informe um número válido de dias.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                DateTime novaData = dataDevolucaoAtual.AddDays(dias);
+
+                // Verifica se a nova data é futura para definir o status
+                string novoStatus = novaData.Date >= DateTime.Now.Date ? "Ativo" : "Atrasado";
+
+                string msg = $"Confirma a prorrogação deste empréstimo?\n\n" +
+                             $"Livro: {livro}\n" +
+                             $"Alocador: {alocador}\n" +
+                             $"Data de Devolução Atual: {dataDevolucaoAtual:dd/MM/yyyy}\n" +
+                             $"Nova Data de Devolução: {novaData:dd/MM/yyyy}\n" +
+                             $"Dias de prorrogação: {dias}";
+
+                var confirm = MessageBox.Show(msg, "Confirmação de Prorrogação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (confirm != DialogResult.Yes)
+                    return;
+
+                // Atualiza no banco
+                using (SqlCeConnection conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string query = @"
+        UPDATE Emprestimo 
+        SET DataDevolucao = @NovaData, DataProrrogacao = @NovaData, Status = @Status
+        WHERE Id = @Id";
+                    using (SqlCeCommand cmd = new SqlCeCommand(query, conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@NovaData", novaData);
+                        cmd.Parameters.AddWithValue("@Status", novoStatus);
+                        cmd.Parameters.AddWithValue("@Id", idEmprestimo);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                MessageBox.Show("Empréstimo prorrogado com sucesso.", "Prorrogação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                BuscarEmprestimos();
+            }
         }
 
         private void btnConfirmarDevolucao_Click(object sender, EventArgs e)
@@ -757,6 +819,11 @@ namespace BibliotecaApp.Forms.Livros
         {
            BuscarEmprestimos();
             VerificarAtrasos();
+        }
+
+        private void lblNome_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

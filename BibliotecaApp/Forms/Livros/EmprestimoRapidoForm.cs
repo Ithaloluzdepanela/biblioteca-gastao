@@ -33,6 +33,7 @@ namespace BibliotecaApp.Forms.Livros
 
         private List<string> todasTurmasPadrao;
 
+
         // Conexao (reaproveita padrão)
         public static class Conexao
         {
@@ -57,7 +58,7 @@ namespace BibliotecaApp.Forms.Livros
 
             //Limpeza Automatica Semanal
             LimparEmprestimosSemana();
-            // Carrega dados para sugestões (turmas, livros, professores) e bibliotecárias
+            // Carrega dados para sugestões (turmas, livros, professors) e bibliotecárias
             CarregarSugestoesECombo();
 
             txtProfessor.Focus();
@@ -585,6 +586,33 @@ namespace BibliotecaApp.Forms.Livros
                 return;
             }
 
+            // BLOQUEIO: verifica se o professor já atingiu o limite de 2 "Faltando"
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    using (var cmd = new SqlCeCommand(
+                        "SELECT COUNT(*) FROM EmprestimoRapido r " +
+                        "INNER JOIN Usuarios u ON r.ProfessorId = u.Id " +
+                        "WHERE u.Nome = @professor AND r.Status = 'Faltando'", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@professor", txtProfessor.Text.Trim());
+                        int faltandoCount = (int)cmd.ExecuteScalar();
+                        if (faltandoCount >= 2)
+                        {
+                            MessageBox.Show("Este professor já atingiu o limite de 2 devoluções faltando. Ele não pode fazer novos empréstimos rápidos até regularizar pelo menos um livro.", "Bloqueado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                            return;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao verificar limite de faltando: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             try
             {
                 using (var conexao = Conexao.ObterConexao())
@@ -879,65 +907,7 @@ ORDER BY r.Id DESC";
                 MessageBox.Show("Empréstimo já finalizado.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-
-            var id = Convert.ToInt32(row.Cells["Id"].Value);
-            var quantidade = Convert.ToInt32(row.Cells["Quantidade"].Value);
-            var livroNome = row.Cells["Livro"].Value?.ToString();
-
-            var confirm = MessageBox.Show($"Finalizar empréstimo rápido de \"{livroNome}\" (qt {quantidade})?", "Confirmar Devolução", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (confirm != DialogResult.Yes) return;
-
-            try
-            {
-                using (var conexao = Conexao.ObterConexao())
-                {
-                    conexao.Open();
-
-                    // pegar LivroId and atualizar quantidade
-                    int livroId = -1;
-                    using (var cmd = new SqlCeCommand("SELECT LivroId FROM EmprestimoRapido WHERE Id = @id", conexao))
-                    {
-                        cmd.Parameters.AddWithValue("@id", id);
-                        var obj = cmd.ExecuteScalar();
-                        if (obj == null)
-                            throw new Exception("Registro não encontrado.");
-                        livroId = Convert.ToInt32(obj);
-                    }
-
-                    // Atualiza registro EmprestimoRapido -> Status = Devolvido
-                    using (var cmd = new SqlCeCommand("UPDATE EmprestimoRapido SET Status = 'Devolvido', DataHoraDevolucaoReal = @dataReal WHERE Id = @id", conexao))
-                    {
-                        cmd.Parameters.AddWithValue("@dataReal", DateTime.Now);
-                        cmd.Parameters.AddWithValue("@id", id);
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    // Atualiza quantidade no Livros (repor)
-                    using (var cmd = new SqlCeCommand("SELECT Quantidade FROM Livros WHERE Id = @id", conexao))
-                    {
-                        cmd.Parameters.AddWithValue("@id", livroId);
-                        var obj = cmd.ExecuteScalar();
-                        int atual = obj != null ? Convert.ToInt32(obj) : 0;
-                        int novo = atual + quantidade;
-
-                        using (var cmd2 = new SqlCeCommand("UPDATE Livros SET Quantidade = @qt, Disponibilidade = @disp WHERE Id = @id", conexao))
-                        {
-                            cmd2.Parameters.AddWithValue("@qt", novo);
-                            cmd2.Parameters.AddWithValue("@disp", novo > 0);
-                            cmd2.Parameters.AddWithValue("@id", livroId);
-                            cmd2.ExecuteNonQuery();
-                        }
-                    }
-                }
-
-                MessageBox.Show("Empréstimo finalizado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                CarregarSugestoesECombo();
-                CarregarGridRapidos();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao finalizar empréstimo: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            AbrirDevolucaoRapidaForm(row);
         }
 
         // CellPainting para desenhar botão arredondado (igual UsuarioForm)
@@ -999,6 +969,11 @@ ORDER BY r.Id DESC";
                 else if (status.Equals("Devolvido", StringComparison.OrdinalIgnoreCase))
                 {
                     e.CellStyle.ForeColor = Color.Gray;
+                }
+                else if (status.Equals("Faltando", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.ForeColor = Color.Red;
+                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
                 }
             }
 
@@ -1138,5 +1113,99 @@ ORDER BY r.Id DESC";
             numQuantidade.Text = valor.ToString();
         }
 
+        private void AbrirDevolucaoRapidaForm(DataGridViewRow row)
+        {
+            int emprestimoId = Convert.ToInt32(row.Cells["Id"].Value);
+            string professor = row.Cells["Professor"].Value?.ToString();
+            string livro = row.Cells["Livro"].Value?.ToString();
+            string turma = row.Cells["Turma"].Value?.ToString();
+            int quantidadeEmprestada = Convert.ToInt32(row.Cells["Quantidade"].Value);
+            DateTime dataEmprestimo = (DateTime)row.Cells["DataHoraEmprestimo"].Value;
+
+            string codigoBarras = "";
+            // Buscar o código de barras do livro no banco
+            using (var conexao = Conexao.ObterConexao())
+            {
+                conexao.Open();
+                using (var cmd = new SqlCeCommand("SELECT CodigoBarras FROM Livros WHERE Nome = @nome", conexao))
+                {
+                    cmd.Parameters.AddWithValue("@nome", livro);
+                    var obj = cmd.ExecuteScalar();
+                    if (obj != null)
+                        codigoBarras = obj.ToString();
+                }
+            }
+
+            using (var form = new DevoluçãoRapidaForm(emprestimoId, professor, livro, turma, quantidadeEmprestada, dataEmprestimo, codigoBarras))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    int quantidadeDevolvida = form.QuantidadeDevolvida;
+                    ProcessarDevolucaoRapida(emprestimoId, quantidadeEmprestada, quantidadeDevolvida, professor);
+                }
+            }
+        }
+        private void ProcessarDevolucaoRapida(int emprestimoId, int quantidadeEmprestada, int quantidadeDevolvida, string professor)
+        {
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+
+                    // Verifica limite de devoluções faltando
+                    if (quantidadeDevolvida < quantidadeEmprestada)
+                    {
+                        using (var cmd = new SqlCeCommand(
+                            "SELECT COUNT(*) FROM EmprestimoRapido r " +
+                            "INNER JOIN Usuarios u ON r.ProfessorId = u.Id " +
+                            "WHERE u.Nome = @professor AND r.Status = 'Faltando'", conexao))
+                        {
+                            cmd.Parameters.AddWithValue("@professor", professor);
+                            int faltandoCount = (int)cmd.ExecuteScalar();
+                            if (faltandoCount >= 2)
+                            {
+                                MessageBox.Show("Limite de 2 empréstimos devolvidos faltando por professor atingido.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                return;
+                            }
+                        }
+                    }
+
+                    // Atualiza status do empréstimo
+                    string novoStatus = quantidadeDevolvida == quantidadeEmprestada ? "Devolvido" : "Faltando";
+                    using (var cmd = new SqlCeCommand(
+                        "UPDATE EmprestimoRapido SET Status = @status, DataHoraDevolucaoReal = @data, Quantidade = @qtd WHERE Id = @id", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@status", novoStatus);
+                        cmd.Parameters.AddWithValue("@data", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@qtd", quantidadeEmprestada - quantidadeDevolvida == 0 ? 0 : quantidadeEmprestada - quantidadeDevolvida);
+                        cmd.Parameters.AddWithValue("@id", emprestimoId);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Atualiza quantidade do livro
+                    int livroId;
+                    using (var cmd = new SqlCeCommand("SELECT LivroId FROM EmprestimoRapido WHERE Id = @id", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@id", emprestimoId);
+                        livroId = Convert.ToInt32(cmd.ExecuteScalar());
+                    }
+                    using (var cmd = new SqlCeCommand("UPDATE Livros SET Quantidade = Quantidade + @qtd WHERE Id = @id", conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@qtd", quantidadeDevolvida);
+                        cmd.Parameters.AddWithValue("@id", livroId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                MessageBox.Show("Devolução registrada com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CarregarSugestoesECombo();
+                CarregarGridRapidos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao processar devolução: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

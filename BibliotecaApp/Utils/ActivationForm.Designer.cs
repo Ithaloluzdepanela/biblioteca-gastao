@@ -143,7 +143,7 @@
             this.txtFilePath.Enabled = false;
             this.txtFilePath.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFilePath.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtFilePath.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtFilePath.HoverBackColor = System.Drawing.Color.White;
             this.txtFilePath.Location = new System.Drawing.Point(22, 101);
             this.txtFilePath.Name = "txtFilePath";
             this.txtFilePath.Padding = new System.Windows.Forms.Padding(7);
@@ -171,6 +171,8 @@
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.panelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ActivationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ActiveForm";

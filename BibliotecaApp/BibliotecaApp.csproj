@@ -229,6 +229,12 @@
     <Compile Include="Elements\GradientPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\Livros\DevoluçãoRapidaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Livros\DevoluçãoRapidaForm.Designer.cs">
+      <DependentUpon>DevoluçãoRapidaForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Livros\EmprestimoRapidoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -243,6 +249,12 @@
     </Compile>
     <Compile Include="Forms\Livros\LivrosForm.Designer.cs">
       <DependentUpon>LivrosForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Livros\ProrrogarDiasForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Livros\ProrrogarDiasForm.Designer.cs">
+      <DependentUpon>ProrrogarDiasForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Login\AboutForm.cs">
       <SubType>Form</SubType>
@@ -384,6 +396,9 @@
     <EmbeddedResource Include="Forms\Livros\DevoluçãoForm.resx">
       <DependentUpon>DevoluçãoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Livros\DevoluçãoRapidaForm.resx">
+      <DependentUpon>DevoluçãoRapidaForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Livros\EmprestimoForm.resx">
       <DependentUpon>EmprestimoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -392,6 +407,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Livros\FichaAlunoForm.resx">
       <DependentUpon>FichaAlunoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Livros\ProrrogarDiasForm.resx">
+      <DependentUpon>ProrrogarDiasForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Login\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>

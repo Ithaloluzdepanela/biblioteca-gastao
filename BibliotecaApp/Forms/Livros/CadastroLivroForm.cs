@@ -10,6 +10,7 @@ namespace BibliotecaApp.Forms.Livros
     public partial class CadastroLivroForm : Form
     {
         #region Propriedades e Campos
+        public event EventHandler LivroAtualizado;
 
         private List<string> generosPadronizados = new List<string>
         {
@@ -349,7 +350,7 @@ namespace BibliotecaApp.Forms.Livros
 
                     MessageBox.Show("Livro salvo com sucesso!",
                                     "Cadastro realizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LivrosFormUpdater.AtualizarAberto();
+                    LivroAtualizado?.Invoke(this, EventArgs.Empty);
 
                     LimparFormulario();
                 }

@@ -19,6 +19,9 @@ namespace BibliotecaApp.Forms.Livros
         {
             InitializeComponent();
             btnProcurar.PerformClick();
+
+            // Assina o evento global para atualizar a lista automaticamente
+            BibliotecaApp.Utils.EventosGlobais.LivroCadastradoOuAlterado += (s, e) => CarregarLivros();
         }
 
         #endregion

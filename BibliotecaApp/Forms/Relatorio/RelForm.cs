@@ -54,6 +54,8 @@ namespace BibliotecaApp.Forms.Relatorio
                 txtLivro.TextChanged += TxtLivro_TextChanged;
                 txtLivro.KeyDown += TxtLivro_KeyDown;
                 lstLivros.Click += LstLivros_Click;
+
+                BibliotecaApp.Utils.EventosGlobais.BibliotecariaCadastrada += (s, e) => PopularCbBibliotecaria();
             }
 
             private void TxtLivro_TextChanged(object sender, EventArgs e)

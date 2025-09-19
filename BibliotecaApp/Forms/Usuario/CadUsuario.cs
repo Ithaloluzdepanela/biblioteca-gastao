@@ -574,8 +574,14 @@ VALUES
 
             MessageBox.Show("Cadastro concluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UsuarioCriado?.Invoke(this, EventArgs.Empty);
+
+            // Notifica todos os forms sobre novo usuario
+            if (cbUsuario.Text == "Bibliotecário(a)")
+                BibliotecaApp.Utils.EventosGlobais.OnBibliotecariaCadastrada();
+            if (cbUsuario.Text == "Professor(a)")
+            BibliotecaApp.Utils.EventosGlobais.OnProfessorCadastrado();
+
             this.DialogResult = DialogResult.OK;
-           
             LimparCampos();
         }
 

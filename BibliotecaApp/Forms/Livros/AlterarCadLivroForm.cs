@@ -165,6 +165,7 @@ namespace BibliotecaApp
                     {
                         MessageBox.Show("Livro atualizado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LivroAtualizado?.Invoke(this, EventArgs.Empty);
+                        BibliotecaApp.Utils.EventosGlobais.OnLivroCadastradoOuAlterado();
                         this.Close();
                     }
                     else
@@ -222,7 +223,7 @@ namespace BibliotecaApp
 
                                 // 🔔 Dispara o evento para atualizar o grid no LivrosForm
                                 LivroAtualizado?.Invoke(this, EventArgs.Empty);
-
+                                BibliotecaApp.Utils.EventosGlobais.OnLivroCadastradoOuAlterado();
                                 this.Close();
                             }
                             else

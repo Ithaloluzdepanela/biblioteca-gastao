@@ -78,6 +78,8 @@ namespace BibliotecaApp.Forms.Livros
             txtLivro.KeyDown += txtLivro_KeyDown;
             lstLivros.Click += lstLivros_Click;
             lstLivros.KeyDown += lstLivros_KeyDown;
+
+            BibliotecaApp.Utils.EventosGlobais.BibliotecariaCadastrada += (s, e) => CarregarBibliotecarias();
         }
 
         #endregion

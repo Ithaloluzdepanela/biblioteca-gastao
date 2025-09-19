@@ -47,6 +47,11 @@ namespace BibliotecaApp.Forms.Livros
             InitializeComponent();
             this.KeyPreview = true;
             this.KeyDown += EmprestimoRapidoForm_KeyDown;
+
+            BibliotecaApp.Utils.EventosGlobais.BibliotecariaCadastrada += (s, e) => CarregarSugestoesECombo();
+            BibliotecaApp.Utils.EventosGlobais.ProfessorCadastrado += (s, e) => CarregarSugestoesECombo();
+           
+            BibliotecaApp.Utils.EventosGlobais.LivroDidaticoCadastrado += (s, e) => CarregarSugestoesECombo();
         }
 
         private void EmprestimoRapidoForm_Load(object sender, EventArgs e)

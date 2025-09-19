@@ -108,7 +108,6 @@ namespace BibliotecaApp.Forms.Livros
             if (!ValidarCodigoBarras(out string codigoBarras))
                 return;
 
-           
             CadastrarLivro(quantidade, codigoBarras);
         }
 
@@ -351,6 +350,9 @@ namespace BibliotecaApp.Forms.Livros
                     MessageBox.Show("Livro salvo com sucesso!",
                                     "Cadastro realizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LivroAtualizado?.Invoke(this, EventArgs.Empty);
+
+                    // Dispara evento global para atualizar todos os forms
+                    BibliotecaApp.Utils.EventosGlobais.OnLivroCadastradoOuAlterado();
 
                     LimparFormulario();
                 }

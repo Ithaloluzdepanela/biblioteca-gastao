@@ -650,6 +650,10 @@ namespace BibliotecaApp.Forms.Livros
             ProcessarDevolucaoNoBanco(emprestimoInfo.Id);
             MessageBox.Show("Livro devolvido com sucesso.");
             LivroAtualizado?.Invoke(this, EventArgs.Empty);
+
+            // Gatilho global para atualização em outros formulários
+            BibliotecaApp.Utils.EventosGlobais.OnLivroDevolvido();
+
             BuscarEmprestimos();
         }
 

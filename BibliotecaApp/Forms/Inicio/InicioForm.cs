@@ -57,6 +57,16 @@ namespace BibliotecaApp.Forms.Inicio
             InitializeComponent();
             this.KeyPreview = true;
             this.KeyDown += InicioForm_KeyDown;
+
+            BibliotecaApp.Utils.EventosGlobais.LivroCadastradoOuAlterado += (s, e) => _ = CarregarEstatisticasAsync();
+            BibliotecaApp.Utils.EventosGlobais.BibliotecariaCadastrada += (s, e) => _ = CarregarEstatisticasAsync();
+            BibliotecaApp.Utils.EventosGlobais.ProfessorCadastrado += (s, e) => _ = CarregarEstatisticasAsync();
+            BibliotecaApp.Utils.EventosGlobais.LivroDidaticoCadastrado += (s, e) => _ = CarregarEstatisticasAsync();
+            BibliotecaApp.Utils.EventosGlobais.LivroDevolvido += (s, e) => _ = CarregarEstatisticasAsync();
+
+            this.Activated += (s, e) => _ = CarregarEstatisticasAsync();
+
+            // timerAutoRefresh pode ser mantido ou removido conforme sua preferência
         }
 
         #region Conexao (padrão do app)
@@ -73,7 +83,7 @@ namespace BibliotecaApp.Forms.Inicio
             AppPaths.EnsureFolders();
 
             // relógio
-            timerRelogio.Interval = 1000;
+            timerRelogio.Interval = 2000;
             timerRelogio.Tick += timerRelogio_Tick;
             timerRelogio.Start();
             AtualizarRelogio();

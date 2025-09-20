@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BibliotecaApp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,7 +16,8 @@ namespace BibliotecaApp.Forms.Livros
         public int QuantidadeDevolvida => int.Parse(numQuantidadeDevolvidos.Text);
         public event EventHandler LivroAtualizado;
 
-
+        private static bool IsAdminLogado()
+            => string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase);
 
         public DevoluçãoRapidaForm(int emprestimoId, string professor, string livro, string turma, int quantidadeEmprestada, DateTime dataEmprestimo, string codigoBarras)
         {
@@ -101,6 +103,12 @@ namespace BibliotecaApp.Forms.Livros
 
         private void btnConfirmar_Click(object sender, EventArgs e)
         {
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode registrar devoluções.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             int qtdDevolvida = int.Parse(numQuantidadeDevolvidos.Text);
             int qtdEmprestada = int.Parse(numQuantidadeEmprestado.Text);
 
@@ -120,5 +128,8 @@ namespace BibliotecaApp.Forms.Livros
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+       
+        
     }
 }

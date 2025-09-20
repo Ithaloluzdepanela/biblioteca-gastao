@@ -22,12 +22,9 @@ namespace BibliotecaApp.Forms.Livros
         private bool _carregandoLivroAutomaticamente = false;
         private List<Livro> _cacheLivros = new List<Livro>();
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
-    
-
         #endregion
 
         #region Classe Conexao
-        // Classe estática para conectar ao banco .sdf
         public static class Conexao
         {
             public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
@@ -41,17 +38,13 @@ namespace BibliotecaApp.Forms.Livros
         #endregion
 
         #region Construtores
-
-
         public EmprestimoForm()
         {
             InitializeComponent();
 
-
             EstilizarListBoxSugestao(lstSugestoesUsuario);
             EstilizarListBoxSugestao(lstLivros);
 
-            // ... para outros ListBox de sugestão
             Usuarios = new List<Usuarios>();
             Livros = new List<Livro>();
             Emprestimos = new List<Emprestimo>();
@@ -81,8 +74,10 @@ namespace BibliotecaApp.Forms.Livros
 
             BibliotecaApp.Utils.EventosGlobais.BibliotecariaCadastrada += (s, e) => CarregarBibliotecarias();
         }
-
         #endregion
+
+        private static bool IsAdminLogado()
+            => string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase);
 
         #region Eventos do Formulário
 
@@ -95,6 +90,7 @@ namespace BibliotecaApp.Forms.Livros
             this.KeyPreview = true;
             this.KeyDown += Form_KeyDown;
 
+           
         }
 
         private void label2_Click(object sender, EventArgs e) { }
@@ -104,21 +100,25 @@ namespace BibliotecaApp.Forms.Livros
         private void txtLivro_Load(object sender, EventArgs e) { }
         private void txtBarcode_Load(object sender, EventArgs e) { }
         private void txtBarcode_KeyDown(object sender, KeyEventArgs e) { }
-        
         private void label4_Click(object sender, EventArgs e) { }
         private void cbBibliotecaria_SelectedIndexChanged(object sender, EventArgs e)
-
-
         {
             cbBibliotecaria.DrawMode = DrawMode.OwnerDrawFixed;
             cbBibliotecaria.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbBibliotecaria.ItemHeight = 35; // define a altura dos itens
+            cbBibliotecaria.ItemHeight = 35;
         }
         #endregion
 
         #region Métodos de Empréstimo
         private void btnEmprestar_Click(object sender, EventArgs e)
         {
+            // Bloqueia ação por administrador
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode realizar empréstimos.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             // Obtendo o nome do usuário, livro e responsável (bibliotecário)
             string nomeUsuario = txtNomeUsuario.Text.Trim();
             string nomeLivro = txtLivro.Text.Trim();
@@ -200,8 +200,6 @@ namespace BibliotecaApp.Forms.Livros
                     }
                 }
             }
-
-
 
             if (!livro.Disponibilidade || livro.Quantidade <= 0)
             {
@@ -327,12 +325,9 @@ namespace BibliotecaApp.Forms.Livros
                     }
                 }
 
-                
-
-
                 MessageBox.Show("Empréstimo registrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimparCampos();
-               LivroAtualizado?.Invoke(this, EventArgs.Empty);
+                LivroAtualizado?.Invoke(this, EventArgs.Empty);
 
                 // Envio de e-mail apenas se o e-mail for válido
                 string email = usuario.Email?.Trim();
@@ -366,8 +361,6 @@ namespace BibliotecaApp.Forms.Livros
                 MessageBox.Show("Erro ao registrar empréstimo:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        
         #endregion
 
 

@@ -1,4 +1,5 @@
-﻿using BibliotecaApp.Utils;
+﻿using BibliotecaApp.Models;
+using BibliotecaApp.Utils;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -27,6 +28,8 @@ namespace BibliotecaApp.Forms.Livros
         public event EventHandler LivroAtualizado;
         private void DevoluçãoForm_Load(object sender, EventArgs e)
         {
+           
+
             InicializarFormulario();
             VerificarAtrasos(); // Atualiza status de atrasos antes de buscar
             BuscarEmprestimos(); // Exibe todos os empréstimos atualizados no grid
@@ -106,6 +109,12 @@ namespace BibliotecaApp.Forms.Livros
 
         private void btnConfirmarDevolucao_Click(object sender, EventArgs e)
         {
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode registrar devoluções.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             DevolverEmprestimo();
         }
 
@@ -153,19 +162,7 @@ namespace BibliotecaApp.Forms.Livros
 
         #region Métodos de Interface
 
-        private void ConfirmarELimparCampos()
-        {
-            DialogResult resultado = MessageBox.Show(
-                "Tem certeza de que deseja limpar tudo?",
-                "Confirmação",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (resultado == DialogResult.Yes)
-            {
-                LimparCampos();
-            }
-        }
+       
 
         private void LimparCampos()
         {
@@ -641,7 +638,7 @@ namespace BibliotecaApp.Forms.Livros
                          $"Livro: {livro}\n" +
                          $"Alocador: {alocador}\n" +
                          $"Data do Empréstimo: {dataEmprestimo}\n";
-                         
+                        
 
             var confirm = MessageBox.Show(msg, "Confirmação de Devolução", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes)
@@ -829,6 +826,9 @@ namespace BibliotecaApp.Forms.Livros
         {
 
         }
+
+        private static bool IsAdminLogado()
+        => string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase);
     }
 
     #region Classes Auxiliares

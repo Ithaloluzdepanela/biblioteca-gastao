@@ -22,7 +22,6 @@ namespace BibliotecaApp.Forms.Livros
 
         public event EventHandler LivroAtualizado;
 
-        // Dicionário de turmas padrão
         private Dictionary<string, string[]> dicionarioTurmas = new Dictionary<string, string[]>
         {
             { "Ano", new[] { "6° Ano", "7° Ano", "8° Ano", "9° Ano" } },
@@ -33,7 +32,6 @@ namespace BibliotecaApp.Forms.Livros
 
         private List<string> todasTurmasPadrao;
 
-
         // Conexao (reaproveita padrão)
         public static class Conexao
         {
@@ -41,6 +39,9 @@ namespace BibliotecaApp.Forms.Livros
             public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
             public static SqlCeConnection ObterConexao() => new SqlCeConnection(Conectar);
         }
+
+        private static bool IsAdminLogado()
+            => string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase);
 
         public EmprestimoRapidoForm()
         {
@@ -50,12 +51,13 @@ namespace BibliotecaApp.Forms.Livros
 
             BibliotecaApp.Utils.EventosGlobais.BibliotecariaCadastrada += (s, e) => CarregarSugestoesECombo();
             BibliotecaApp.Utils.EventosGlobais.ProfessorCadastrado += (s, e) => CarregarSugestoesECombo();
-           
             BibliotecaApp.Utils.EventosGlobais.LivroDidaticoCadastrado += (s, e) => CarregarSugestoesECombo();
         }
 
         private void EmprestimoRapidoForm_Load(object sender, EventArgs e)
         {
+            
+
             AppPaths.EnsureFolders();
 
             // Inicializar lista de todas as turmas padrão
@@ -240,27 +242,12 @@ namespace BibliotecaApp.Forms.Livros
                         }
                     }
 
-                    // Seleciona automaticamente a logada
+                    // Seleciona automaticamente a logada se existir na lista (não adiciona "Administrador")
                     if (!string.IsNullOrWhiteSpace(Sessao.NomeBibliotecariaLogada))
                     {
                         int idx = cbBibliotecaria.Items.IndexOf(Sessao.NomeBibliotecariaLogada);
                         if (idx >= 0)
                             cbBibliotecaria.SelectedIndex = idx;
-                        else
-                        {
-
-                        }
-                        {
-                            cbBibliotecaria.Items.Add(Sessao.NomeBibliotecariaLogada);
-                            cbBibliotecaria.SelectedIndex = cbBibliotecaria.Items.Count - 1;
-                        }
-                    }
-
-                    // fallback
-                    if (cbBibliotecaria.Items.Count == 0 && !string.IsNullOrWhiteSpace(Sessao.NomeBibliotecariaLogada))
-                    {
-                        cbBibliotecaria.Items.Add(Sessao.NomeBibliotecariaLogada);
-                        cbBibliotecaria.SelectedIndex = 0;
                     }
                 }
             }
@@ -624,6 +611,13 @@ namespace BibliotecaApp.Forms.Livros
         #region Registrar Empréstimo Rápido
         private void btnRegistrar_Click(object sender, EventArgs e)
         {
+            // Bloqueia ação por administrador
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode realizar empréstimos rápidos.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             // validações
             if (string.IsNullOrWhiteSpace(txtProfessor.Text) ||
                 string.IsNullOrWhiteSpace(txtLivro.Text) ||
@@ -716,7 +710,7 @@ namespace BibliotecaApp.Forms.Livros
                         professorId = Convert.ToInt32(obj);
                     }
 
-                    // Inserir EmprestimoRapido
+                    // Inserir EmprestimoRapido (Bibliotecaria é string; admin não chegará aqui pois já bloqueamos)
                     string insertSql = @"INSERT INTO EmprestimoRapido
 (ProfessorId, LivroId, LivroNome, Turma, Quantidade, DataHoraEmprestimo, DataHoraDevolucaoReal, Bibliotecaria, Status)
 VALUES (@prof, @livro, @livroNome, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')";
@@ -948,6 +942,13 @@ ORDER BY r.Id DESC";
         {
             if (e.RowIndex < 0) return;
             if (dgvRapidos.Columns[e.ColumnIndex].Name != "Finalizar") return;
+
+            // Impede devolução pelo admin
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode finalizar devoluções.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
 
             var row = dgvRapidos.Rows[e.RowIndex];
             var status = row.Cells["Status"].Value?.ToString();

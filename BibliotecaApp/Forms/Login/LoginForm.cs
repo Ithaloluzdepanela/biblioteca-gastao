@@ -35,10 +35,6 @@ namespace BibliotecaApp.Forms.Login
         {
             AppPaths.EnsureFolders();
             if (cancelar == true) { this.Close(); }
-
-           
-
-
         }
         #endregion
 
@@ -71,17 +67,6 @@ namespace BibliotecaApp.Forms.Login
             string email = txtEmail.Text.Trim();
             string senha = txtSenha.Text;
 
-            // login como administrador (provisório)
-            if (email == "admin" && senha == "1234")
-            {
-                // Login como administrador
-                cancelar = true;
-                await AtualizarStatusEmprestimosAsync();
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-                return;
-            }
-
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
             {
                 MessageBox.Show("Por favor, preencha todos os campos.", "Campos obrigatórios",
@@ -97,6 +82,18 @@ namespace BibliotecaApp.Forms.Login
                 {
                     conexao.Open();
 
+                    // 1) Tenta login como ADMIN (credenciais simples via banco)
+                    if (LoginAdmin(conexao, email, senha))
+                    {
+                        Sessao.NomeBibliotecariaLogada = "Administrador";
+                        cancelar = true;
+                        await AtualizarStatusEmprestimosAsync();
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                        return;
+                    }
+
+                    // 2) Tenta login como Bibliotecário(a)
                     string query = @"SELECT Nome, Senha_hash, Senha_salt FROM usuarios 
                     WHERE Email = @email AND TipoUsuario = 'Bibliotecário(a)'";
 
@@ -148,6 +145,21 @@ namespace BibliotecaApp.Forms.Login
             {
                 MessageBox.Show("Erro na autenticação: " + ex.Message, "Erro",
                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool LoginAdmin(SqlCeConnection conexao, string email, string senha)
+        {
+            // Tabela 'Admin' deve conter apenas 1 linha (um único admin)
+            const string sql = @"SELECT COUNT(*) FROM Admin 
+                                 WHERE Ativo = 1 AND Email = @email AND Senha = @senha";
+
+            using (var cmd = new SqlCeCommand(sql, conexao))
+            {
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@senha", senha);
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+                return count > 0;
             }
         }
 
@@ -629,8 +641,6 @@ string corpo = $@"
 
             this.Show(); // Reexibe o formulário anterior após o fechamento do modal
         }
-
-        
 
         private void lblVersion_Click(object sender, EventArgs e)
         {

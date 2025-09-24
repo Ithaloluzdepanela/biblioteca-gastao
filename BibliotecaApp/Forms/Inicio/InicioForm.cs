@@ -1,7 +1,4 @@
-﻿// Substitua completamente o conteúdo do seu InicioForm.cs por este arquivo.
-// Presume-se que seu Designer já tem: panelTop, panel1, lblRelogio, lblOla, timerRelogio, etc.
-
-using BibliotecaApp.Forms.Livros;
+﻿using BibliotecaApp.Forms.Livros;
 using BibliotecaApp.Forms.Relatorio;
 using BibliotecaApp.Models;
 using BibliotecaApp.Utils;
@@ -20,6 +17,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.Diagnostics;
 
 namespace BibliotecaApp.Forms.Inicio
 {
@@ -169,7 +169,7 @@ namespace BibliotecaApp.Forms.Inicio
                 BackColor = Color.FromArgb(9, 74, 158),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold),
+                Font = new System.Drawing.Font("Segoe UI Semibold", 11F, FontStyle.Bold),
                 AccessibleName = "Empréstimo Rápido",
                 Cursor = Cursors.Hand
             };
@@ -182,13 +182,13 @@ namespace BibliotecaApp.Forms.Inicio
                 var btn = s as Button;
                 if (btn == null) return;
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                using (var path = RoundedRect(new Rectangle(0, 0, btn.Width, btn.Height), 8))
+                using (var path = RoundedRect(new System.Drawing.Rectangle(0, 0, btn.Width, btn.Height), 8))
                 using (var brush = new SolidBrush(btn.BackColor))
                 {
                     e.Graphics.FillPath(brush, path);
                 }
                 // desenhar texto manualmente para garantir centralização
-                TextRenderer.DrawText(e.Graphics, btn.Text, btn.Font, new Rectangle(0, 0, btn.Width, btn.Height), btn.ForeColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                TextRenderer.DrawText(e.Graphics, btn.Text, btn.Font, new System.Drawing.Rectangle(0, 0, btn.Width, btn.Height), btn.ForeColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             };
             // esconder border padrão para evitar sobreposição
             btnEmprestimoRapido.FlatAppearance.BorderSize = 0;
@@ -211,7 +211,7 @@ namespace BibliotecaApp.Forms.Inicio
                 AutoSize = true,
                 Location = new Point(18, topPanelInside.Bottom + 6),
                 ForeColor = Color.Gray,
-                Font = new Font("Segoe UI", 9F),
+                Font = new System.Drawing.Font("Segoe UI", 9F),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left
             };
             panel1.Controls.Add(lblStatusSmall);
@@ -225,7 +225,7 @@ namespace BibliotecaApp.Forms.Inicio
                 ItemSize = new Size(120, 32),
                 SizeMode = TabSizeMode.Fixed,
                 DrawMode = TabDrawMode.OwnerDrawFixed,
-                Font = new Font("Segoe UI", 9F)
+                Font = new System.Drawing.Font("Segoe UI", 9F)
             };
             tabEstatisticas.DrawItem += (sender, e) =>
             {
@@ -242,7 +242,7 @@ namespace BibliotecaApp.Forms.Inicio
                 using (var pen = new Pen(borderColor)) e.Graphics.DrawRectangle(pen, rect);
 
                 TextRenderer.DrawText(e.Graphics, tabPage.Text,
-                    new Font("Segoe UI", 9, isSelected ? FontStyle.Bold : FontStyle.Regular),
+                    new System.Drawing. Font("Segoe UI", 9, isSelected ? FontStyle.Bold : FontStyle.Regular),
                     rect, textColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             };
 
@@ -264,8 +264,25 @@ namespace BibliotecaApp.Forms.Inicio
                 new DataGridViewTextBoxColumn { Name = "Atrasos", HeaderText = "Atrasos", DataPropertyName = "Atrasos", Width = 80 },
                 new DataGridViewTextBoxColumn { Name = "DiasAtrasoMedio", HeaderText = "Dias de Atraso (Médio)", DataPropertyName = "DiasAtrasoMedio", Width = 120 }
             });
-          
+           dgvDevedores.Columns.Add(new DataGridViewButtonColumn
+{
+    Name = "btnImprimir",
+    HeaderText = "",
+    Text = "Imprimir Carta",
+               
+               UseColumnTextForButtonValue = true,
+               Width = 110,
+               FillWeight = 70,
+               FlatStyle = FlatStyle.Flat
+              
+           });
+            dgvDevedores.CellContentClick += dgvDevedores_CellContentClick;
+
+
+
             tabDevedores.Controls.Add(dgvDevedores);
+
+           
 
             var dgvEstatEmp = CriarDataGridBasico("dgvEstatisticasEmprestimos");
             dgvEstatEmp.Margin = new Padding(12, topMarginDataGrid, 12, 12);
@@ -304,7 +321,7 @@ namespace BibliotecaApp.Forms.Inicio
                         if (pos == 1)
                         {
                             e.CellStyle.ForeColor = Color.Gold; // dourado
-                            e.CellStyle.Font = new Font(grid.Font, FontStyle.Bold); 
+                            e.CellStyle.Font = new System.Drawing.Font(grid.Font, FontStyle.Bold); 
                             e.Value = "🏆 #1"; // troféu e #1
                         }
                         else
@@ -351,10 +368,10 @@ namespace BibliotecaApp.Forms.Inicio
             // aumentar e centralizar visual das labels do header: saudação e relógio
             try
             {
-                lblOla.Font = new Font("Segoe UI", 20F, FontStyle.Bold);   // aumentada
+                lblOla.Font = new System.Drawing.Font("Segoe UI", 20F, FontStyle.Bold);   // aumentada
                 lblOla.ForeColor = Color.FromArgb(30, 61, 88);
 
-                lblRelogio.Font = new Font("Segoe UI", 16F, FontStyle.Regular); // já aumentado anteriormente
+                lblRelogio.Font = new System.Drawing.Font("Segoe UI", 16F, FontStyle.Regular); // já aumentado anteriormente
                 lblRelogio.ForeColor = Color.FromArgb(60, 60, 60);
 
                 // garantir que o relógio seja centralizado no panelTop
@@ -363,8 +380,26 @@ namespace BibliotecaApp.Forms.Inicio
             catch { /* ignore se labels não existirem no designer */ }
         }
 
+        private void dgvDevedores_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var dgv = sender as DataGridView;
+            if (dgv == null || e.RowIndex < 0) return;
+
+            if (dgv.Columns[e.ColumnIndex].Name == "btnImprimir")
+            {
+                var devedor = dgv.Rows[e.RowIndex].DataBoundItem as DevedorInfo;
+                if (devedor == null)
+                {
+                    MessageBox.Show("Não foi possível obter os dados do devedor.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                var livros = ObterLivrosAtrasadosPorAluno(devedor.Nome, devedor.Turma);
+                GerarCartaCobrancaPDF(devedor, livros);
+            }
+        }
+
         // Helper para desenhar retângulo arredondado
-        private GraphicsPath RoundedRect(Rectangle bounds, int radius)
+        private GraphicsPath RoundedRect(System.Drawing.Rectangle bounds, int radius)
         {
             var gp = new GraphicsPath();
             int d = radius * 2;
@@ -400,7 +435,7 @@ namespace BibliotecaApp.Forms.Inicio
             {
                 Text = title,
                 ForeColor = Color.White,
-                Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold),
+                Font = new System.Drawing.Font("Segoe UI Semibold", 9.5F, FontStyle.Bold),
                 Location = new Point(10, 6),
                 AutoSize = true
             };
@@ -411,7 +446,7 @@ namespace BibliotecaApp.Forms.Inicio
                 Name = "val_" + key,
                 Text = "0",
                 ForeColor = Color.FromArgb(20, 42, 60),
-                Font = new Font("Segoe UI", 20F, FontStyle.Bold),
+                Font = new  System.Drawing.Font("Segoe UI", 20F, FontStyle.Bold),
                 Location = new Point(12, header.Bottom + 6),
                 AutoSize = false,
                 Size = new Size(card.Width - 24, 36)
@@ -422,7 +457,7 @@ namespace BibliotecaApp.Forms.Inicio
             {
                 Text = subtitle,
                 ForeColor = Color.Gray,
-                Font = new Font("Segoe UI", 8.5F),
+                Font = new System.Drawing.Font("Segoe UI", 8.5F),
                 Location = new Point(12, lblValue.Bottom + 2),
                 AutoSize = true
             };
@@ -473,7 +508,7 @@ namespace BibliotecaApp.Forms.Inicio
 
             dgv.DefaultCellStyle.BackColor = Color.White;
             dgv.DefaultCellStyle.ForeColor = Color.FromArgb(60, 60, 60);
-            dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9f);
+            dgv.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 9f);
             dgv.DefaultCellStyle.SelectionBackColor = ColorTranslator.FromHtml("#E7EEF7");
             dgv.DefaultCellStyle.SelectionForeColor = ColorTranslator.FromHtml("#123A5D");
             dgv.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -486,7 +521,7 @@ namespace BibliotecaApp.Forms.Inicio
             dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(245, 245, 245);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(70, 70, 70);
-            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 10f, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI Semibold", 10f, FontStyle.Bold);
             dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgv.ColumnHeadersDefaultCellStyle.Padding = new Padding(8, 0, 8, 0);
             dgv.ColumnHeadersHeight = 36;
@@ -585,7 +620,7 @@ namespace BibliotecaApp.Forms.Inicio
                         TextAlign = ContentAlignment.MiddleCenter,
                         ForeColor = Color.Gray,
                         BackColor = Color.Transparent,
-                        Font = new Font("Segoe UI", 10F, FontStyle.Regular)
+                        Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Regular)
                     };
                     lbl.Location = dgv.PointToScreen(Point.Empty);
                     lbl.Left = dgv.Left;
@@ -614,7 +649,7 @@ namespace BibliotecaApp.Forms.Inicio
                 string nomeCompleto = Sessao.NomeBibliotecariaLogada ?? "";
                 string primeiroNome = nomeCompleto.Split(' ').FirstOrDefault() ?? "";
                 lblOla.Text = $"{saudacao}, {primeiroNome}!";
-                lblOla.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+                lblOla.Font = new System.Drawing.Font("Segoe UI", 20F, FontStyle.Bold);
                 lblOla.ForeColor = Color.FromArgb(30, 61, 88);
             }
             catch { }
@@ -624,7 +659,7 @@ namespace BibliotecaApp.Forms.Inicio
             string hora = agora.ToString("HH:mm:ss");
 
             lblRelogio.Text = $"{diaSemana}, {data} - {hora}";
-            lblRelogio.Font = new Font("Segoe UI", 16F, FontStyle.Regular);
+            lblRelogio.Font = new System.Drawing.Font("Segoe UI", 16F, FontStyle.Regular);
             lblRelogio.ForeColor = Color.FromArgb(60, 60, 60);
 
             // centralizar relógio após atualizar o texto
@@ -1096,10 +1131,193 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
             }
         }
         #endregion
-        #endregion
 
         private void lblResultado_Click(object sender, EventArgs e) { }
 
-        
+        private void BtnImprimirCarta_Click(object sender, EventArgs e)
+{
+    // Localiza o DataGrid de Devedores
+    var tabControl = panel1.Controls.Find("tabEstatisticas", true).FirstOrDefault() as TabControl;
+    if (tabControl == null) return;
+    var dgvDevedores = tabControl.TabPages[0].Controls.Find("dgvDevedores", true).FirstOrDefault() as DataGridView;
+    if (dgvDevedores == null || dgvDevedores.SelectedRows.Count == 0)
+    {
+        MessageBox.Show("Selecione um devedor na lista para imprimir a carta.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        return;
+    }
+
+    var devedor = dgvDevedores.SelectedRows[0].DataBoundItem as DevedorInfo;
+    if (devedor == null)
+    {
+        MessageBox.Show("Não foi possível obter os dados do devedor.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return;
+    }
+
+    // Buscar os livros em atraso do aluno
+    var livros = ObterLivrosAtrasadosPorAluno(devedor.Nome, devedor.Turma);
+    GerarCartaCobrancaPDF(devedor, livros);
+}
+
+private List<(int Id, string Nome, string Autor)> ObterLivrosAtrasadosPorAluno(string nomeAluno, string turma)
+{
+    var livros = new List<(int, string, string)>();
+    try
+    {
+        using (var conexao = Conexao.ObterConexao())
+        {
+            conexao.Open();
+            string sql = @"
+SELECT l.Id, l.Nome, l.Autor
+FROM Emprestimo e
+INNER JOIN Usuarios u ON e.Alocador = u.Id
+INNER JOIN Livros l ON e.Livro = l.Id
+WHERE e.Status = 'Atrasado' AND u.Nome = @nome AND u.Turma = @turma";
+            using (var cmd = new SqlCeCommand(sql, conexao))
+            {
+                cmd.Parameters.AddWithValue("@nome", nomeAluno);
+                cmd.Parameters.AddWithValue("@turma", turma);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
+                        string nome = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                        string autor = reader.IsDBNull(2) ? "" : reader.GetString(2);
+                        livros.Add((id, nome, autor));
+                    }
+                }
+            }
+        }
+    }
+    catch { }
+    return livros;
+}
+
+private void GerarCartaCobrancaPDF(DevedorInfo devedor, List<(int Id, string Nome, string Autor)> livros)
+{
+    // Buscar telefone do usuário
+    string telefone = "";
+    try
+    {
+        using (var conexao = Conexao.ObterConexao())
+        {
+            conexao.Open();
+            string sql = @"SELECT Telefone FROM Usuarios WHERE Nome = @nome AND Turma = @turma";
+            using (var cmd = new SqlCeCommand(sql, conexao))
+            {
+                cmd.Parameters.AddWithValue("@nome", devedor.Nome);
+                cmd.Parameters.AddWithValue("@turma", devedor.Turma);
+                var result = cmd.ExecuteScalar();
+                telefone = result != null ? result.ToString() : "";
+            }
+        }
+    }
+    catch { telefone = ""; }
+
+    var dlg = new SaveFileDialog
+    {
+        Filter = "PDF (*.pdf)|*.pdf",
+        FileName = $"Carta_Cobranca_{devedor.Nome}.pdf"
+    };
+    if (dlg.ShowDialog() != DialogResult.OK) return;
+
+    // Criação do documento PDF
+    Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
+    using (var fs = new FileStream(dlg.FileName, FileMode.Create, FileAccess.Write, FileShare.None))
+    {
+        PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+        doc.Open();
+
+        // Fontes
+        var fontTitle = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14);
+        var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 11);
+        var fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11);
+        var fontSmall = FontFactory.GetFont(FontFactory.HELVETICA, 9);
+
+        // Espaço para logotipos (opcional)
+      
+
+        // Título centralizado
+        var pTitle = new Paragraph("ESCOLA ESTADUAL PROFESSOR GASTÃO VALLE - EEPGV", fontTitle)
+        {
+            Alignment = Element.ALIGN_CENTER,
+            SpacingAfter = 80f
+        };
+        doc.Add(pTitle);
+
+        // Linha "Eu ____________________________"
+        var pEu = new Paragraph("Eu ____________________________________________________________", fontNormal)
+        {
+            SpacingAfter = 20f
+        };
+        doc.Add(pEu);
+
+        // Texto de compromisso
+        var pCompromisso = new Paragraph();
+        pCompromisso.Add(new Chunk("Assumo a responsabilidade de devolver todos os livros (descritos abaixo) que estão em meu poder. Ciente que a ", fontNormal));
+        pCompromisso.Add(new Chunk("não devolução", fontBold));
+        pCompromisso.Add(new Chunk(" dos mesmos, poderá gerar pendência na liberação da bibliotecária, podendo impedir a expedição dos meus documentos quando for solicitado.", fontNormal));
+        pCompromisso.SpacingAfter = 18f;
+        doc.Add(pCompromisso);
+
+        // Livros
+        doc.Add(new Paragraph("Livros:", fontNormal) { SpacingAfter = 6f });
+        if (livros.Count == 0)
+        {
+            doc.Add(new Paragraph("Nenhum livro em atraso encontrado.", fontSmall) { SpacingAfter = 13f });
+        }
+        else
+        {
+            foreach (var livro in livros)
+            {
+                // Exemplo: - [123] Título do Livro (Autor)
+                string linhaLivro = $"- [{livro.Id}] {livro.Nome} ({livro.Autor})";
+                doc.Add(new Paragraph(linhaLivro, fontNormal) { SpacingAfter = 13f });
+            }
+        }
+        // Linhas extras para preenchimento manual
+        for (int i = livros.Count; i < 4; i++)
+        {
+            doc.Add(new Paragraph("________________________________________________________________________________", fontNormal) { SpacingAfter = 3.5f });
+        }
+
+        doc.Add(new Paragraph("\n", fontNormal));
+
+        // Turma e Turno
+        var pTurma = new Paragraph();
+        pTurma.Add(new Chunk("Turma: ", fontNormal));
+        pTurma.Add(new Chunk(devedor.Turma + "    ", fontBold));
+        pTurma.Add(new Chunk("Turno: ___________", fontNormal));
+        pTurma.SpacingAfter = 10f;
+        doc.Add(pTurma);
+
+        // Data da comunicação (ano e mês atual)
+        var dataAtual = DateTime.Now;
+        string dataComunicacao = $"Data da comunicação: ____/ {dataAtual:MM/yyyy}";
+        doc.Add(new Paragraph(dataComunicacao, fontNormal) { SpacingAfter = 8f });
+
+        // Contato (telefone do usuário)
+        string contatoStr = "Contato do Aluno/Responsável: " + (string.IsNullOrWhiteSpace(telefone) ? "___________________________" : telefone);
+        doc.Add(new Paragraph(contatoStr, fontNormal) { SpacingAfter = 45f });
+
+        // Linha para assinatura
+        doc.Add(new Paragraph("___________________________________________________", fontNormal) { Alignment = Element.ALIGN_CENTER, SpacingAfter = 2f });
+
+
+        var pAssinatura = new Paragraph("ASSINATURA DO ALUNO/RESPONSÁVEL", fontNormal)
+        {
+            Alignment = Element.ALIGN_CENTER
+        };
+        doc.Add(pAssinatura);
+
+        doc.Close();
+    }
+
+    MessageBox.Show("Carta de cobrança gerada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+    // (Opcional) Abrir PDF após gerar
+    try { Process.Start(dlg.FileName); } catch { }
+}
     }
 }
+#endregion

@@ -1200,16 +1200,56 @@ private void GerarCartaCobrancaPDF(EmprestimoAtrasadoInfo devedor, List<(int Id,
         var fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11);
         var fontSmall = FontFactory.GetFont(FontFactory.HELVETICA, 9);
 
-        // Espaço para logotipos (opcional)
-      
-
-        // Título centralizado
-        var pTitle = new Paragraph("ESCOLA ESTADUAL PROFESSOR GASTÃO VALLE - EEPGV", fontTitle)
+        // Carregar imagens dos recursos do projeto
+        iTextSharp.text.Image imgEsq = null, imgDir = null;
+        using (var ms = new MemoryStream())
         {
-            Alignment = Element.ALIGN_CENTER,
-            SpacingAfter = 80f
-        };
-        doc.Add(pTitle);
+            Properties.Resources.Brasao_mg.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            imgEsq = iTextSharp.text.Image.GetInstance(ms.ToArray());
+            imgEsq.ScaleAbsolute(48f, 48f);
+            imgEsq.Alignment = Element.ALIGN_LEFT;
+        }
+        using (var ms = new MemoryStream())
+        {
+            Properties.Resources.brasao_Gastao_Black.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            imgDir = iTextSharp.text.Image.GetInstance(ms.ToArray());
+            imgDir.ScaleAbsolute(48f, 48f);
+            imgDir.Alignment = Element.ALIGN_RIGHT;
+        }
+
+        // Tabela para alinhar imagens e título
+        PdfPTable headerTable = new PdfPTable(3);
+        headerTable.WidthPercentage = 100;
+        headerTable.SetWidths(new float[] { 1.2f, 5f, 1.2f });
+
+        // Celula imagem esquerda
+        PdfPCell cellImgEsq = new PdfPCell();
+        if (imgEsq != null) cellImgEsq.AddElement(imgEsq);
+        cellImgEsq.Border = iTextSharp.text.Rectangle.NO_BORDER;
+        cellImgEsq.HorizontalAlignment = Element.ALIGN_LEFT;
+        cellImgEsq.VerticalAlignment = Element.ALIGN_MIDDLE;
+        headerTable.AddCell(cellImgEsq);
+
+        // Celula título centralizado
+        PdfPCell cellTitle = new PdfPCell(new Phrase("ESCOLA ESTADUAL PROFESSOR GASTÃO VALLE   EEPGV", fontTitle));
+        cellTitle.Border = iTextSharp.text.Rectangle.NO_BORDER;
+        cellTitle.HorizontalAlignment = Element.ALIGN_CENTER;
+        cellTitle.VerticalAlignment = Element.ALIGN_MIDDLE;
+        headerTable.AddCell(cellTitle);
+
+        // Celula imagem direita
+        PdfPCell cellImgDir = new PdfPCell();
+        if (imgDir != null) cellImgDir.AddElement(imgDir);
+        cellImgDir.Border = iTextSharp.text.Rectangle.NO_BORDER;
+        cellImgDir.HorizontalAlignment = Element.ALIGN_RIGHT;
+        cellImgDir.VerticalAlignment = Element.ALIGN_MIDDLE;
+        headerTable.AddCell(cellImgDir);
+
+        // Espaçamento após o header
+        headerTable.SpacingAfter = 30f;
+
+        // Adiciona a tabela ao documento
+        doc.Add(headerTable);
 
         // Linha "Eu ____________________________"
         var pEu = new Paragraph("Eu ____________________________________________________________", fontNormal)

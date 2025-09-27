@@ -608,6 +608,8 @@
     <Content Include="publicKey.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\images.png" />
+    <None Include="Resources\brasao_Gastao_Black.png" />
     <None Include="Resources\gast-removebg-preview 100x100%281%29.png" />
     <None Include="Resources\gast-removebg-preview60x60 %281%29.png" />
     <None Include="Resources\icons8-export-excel-20.png" />

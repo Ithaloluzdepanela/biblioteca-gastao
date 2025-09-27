@@ -25,6 +25,16 @@ namespace BibliotecaApp.Forms.Inicio
 {
     public partial class InicioForm : Form
     {
+        private class EmprestimoAtrasadoInfo
+        {
+            public int Id { get; set; }
+            public string Nome { get; set; }
+            public string Turma { get; set; }
+            public string Livro { get; set; }
+            public DateTime DataDevolucao { get; set; }
+            public int DiasAtraso { get; set; }
+        }
+
         // Adicione este campo para armazenar o top usuário
         private (string Nome, int Qtd) topUsuarioMaisEmprestimos = ("-", 0);
 
@@ -258,24 +268,23 @@ namespace BibliotecaApp.Forms.Inicio
             int topMarginDataGrid = 36; // já aumentado conforme seu pedido
             var dgvDevedores = CriarDataGridBasico("dgvDevedores");
             dgvDevedores.Margin = new Padding(12, topMarginDataGrid, 12, 12);
+            dgvDevedores.Columns.Clear();
             dgvDevedores.Columns.AddRange(new DataGridViewColumn[] {
-                new DataGridViewTextBoxColumn { Name = "Nome", HeaderText = "Nome", DataPropertyName = "Nome", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill },
-                new DataGridViewTextBoxColumn { Name = "Turma", HeaderText = "Turma", DataPropertyName = "Turma", Width = 120 },
-                new DataGridViewTextBoxColumn { Name = "Atrasos", HeaderText = "Atrasos", DataPropertyName = "Atrasos", Width = 80 },
-                new DataGridViewTextBoxColumn { Name = "DiasAtrasoMedio", HeaderText = "Dias de Atraso (Médio)", DataPropertyName = "DiasAtrasoMedio", Width = 120 }
+    new DataGridViewTextBoxColumn { Name = "Nome", HeaderText = "Nome", DataPropertyName = "Nome", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill },
+    new DataGridViewTextBoxColumn { Name = "Turma", HeaderText = "Turma", DataPropertyName = "Turma", Width = 120 },
+    new DataGridViewTextBoxColumn { Name = "Livro", HeaderText = "Livro", DataPropertyName = "Livro", Width = 200 },
+    new DataGridViewTextBoxColumn { Name = "DataDevolucao", HeaderText = "Data Devolução", DataPropertyName = "DataDevolucao", Width = 120, DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" } },
+    new DataGridViewTextBoxColumn { Name = "DiasAtraso", HeaderText = "Dias em Atraso", DataPropertyName = "DiasAtraso", Width = 100 }
+});
+            dgvDevedores.Columns.Add(new DataGridViewButtonColumn
+            {
+                Name = "btnImprimir",
+                HeaderText = "",
+                Text = "Imprimir Carta",
+                UseColumnTextForButtonValue = true,
+                Width = 110,
+                FlatStyle = FlatStyle.Flat
             });
-           dgvDevedores.Columns.Add(new DataGridViewButtonColumn
-{
-    Name = "btnImprimir",
-    HeaderText = "",
-    Text = "Imprimir Carta",
-               
-               UseColumnTextForButtonValue = true,
-               Width = 110,
-               FillWeight = 70,
-               FlatStyle = FlatStyle.Flat
-              
-           });
             dgvDevedores.CellContentClick += dgvDevedores_CellContentClick;
 
 
@@ -387,14 +396,15 @@ namespace BibliotecaApp.Forms.Inicio
 
             if (dgv.Columns[e.ColumnIndex].Name == "btnImprimir")
             {
-                var devedor = dgv.Rows[e.RowIndex].DataBoundItem as DevedorInfo;
-                if (devedor == null)
+                var emprestimo = dgv.Rows[e.RowIndex].DataBoundItem as EmprestimoAtrasadoInfo;
+                if (emprestimo == null)
                 {
-                    MessageBox.Show("Não foi possível obter os dados do devedor.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Não foi possível obter os dados do empréstimo.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                var livros = ObterLivrosAtrasadosPorAluno(devedor.Nome, devedor.Turma);
-                GerarCartaCobrancaPDF(devedor, livros);
+                // Busca todos os livros atrasados do aluno
+                var livros = this.ObterLivrosAtrasadosPorAluno(emprestimo.Nome, emprestimo.Turma);
+                GerarCartaCobrancaPDF(emprestimo, livros);
             }
         }
 
@@ -492,7 +502,7 @@ namespace BibliotecaApp.Forms.Inicio
             AplicarEstiloDataGridView(dgv);
             dgv.DefaultCellStyle.SelectionBackColor = ColorTranslator.FromHtml("#E7EEF7");
             dgv.DefaultCellStyle.SelectionForeColor = Color.FromArgb(20, 42, 60);
-          
+         
 
             dgv.CellMouseEnter += DataGrid_CellMouseEnter;
             dgv.CellMouseLeave += DataGrid_CellMouseLeave;
@@ -640,6 +650,49 @@ namespace BibliotecaApp.Forms.Inicio
             }
         }
 
+        private List<EmprestimoAtrasadoInfo> ObterEmprestimosAtrasados()
+        {
+            var lista = new List<EmprestimoAtrasadoInfo>();
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string sql = @"
+SELECT 
+    e.Id,
+    u.Nome,
+    u.Turma,
+    l.Nome AS Livro,
+    e.DataDevolucao,
+    DATEDIFF(day, e.DataDevolucao, GETDATE()) AS DiasAtraso
+FROM Emprestimo e
+INNER JOIN Usuarios u ON e.Alocador = u.Id
+INNER JOIN Livros l ON e.Livro = l.Id
+WHERE e.Status = 'Atrasado'
+ORDER BY DiasAtraso DESC, e.DataDevolucao ASC";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            lista.Add(new EmprestimoAtrasadoInfo
+                            {
+                                Id = reader.GetInt32(0),
+                                Nome = reader.GetString(1),
+                                Turma = reader.GetString(2),
+                                Livro = reader.GetString(3),
+                                DataDevolucao = reader.GetDateTime(4),
+                                DiasAtraso = reader.GetInt32(5)
+                            });
+                        }
+                    }
+                }
+            }
+            catch { }
+            return lista;
+        }
+
         private void AtualizarRelogio()
         {
             DateTime agora = DateTime.Now;
@@ -727,7 +780,6 @@ namespace BibliotecaApp.Forms.Inicio
                     }));
                 }
 
-                var topDevedores = await Task.Run(() => ObterTopDevedores(10));
                 var estatisticasEmprestimos = await Task.Run(() => ObterEstatisticasEmprestimos());
                 var livrosPopulares = await Task.Run(() => ObterLivrosPopulares(10));
 
@@ -744,11 +796,12 @@ namespace BibliotecaApp.Forms.Inicio
 
                             if (dgvDevedores != null)
                             {
+                                var emprestimosAtrasados = ObterEmprestimosAtrasados();
                                 dgvDevedores.DataSource = null;
-                                dgvDevedores.DataSource = topDevedores;
+                                dgvDevedores.DataSource = ObterEmprestimosAtrasados();
                                 dgvDevedores.ClearSelection();
                                 dgvDevedores.Refresh();
-                                EnsureEmptyOverlay(dgvDevedores, "Nenhum devedor no momento.");
+                                EnsureEmptyOverlay(dgvDevedores, "Nenhum empréstimo atrasado no momento.");
                             }
                             if (dgvEstatisticas != null)
                             {
@@ -813,57 +866,6 @@ ORDER BY Qtd DESC, u.Nome";
 }
 
         #region Métodos de obtenção (mantidos do seu código original)
-        private List<DevedorInfo> ObterTopDevedores(int topN)
-        {
-            var lista = new List<DevedorInfo>();
-            try
-            {
-                using (var conexao = Conexao.ObterConexao())
-                {
-                    conexao.Open();
-                    string sql = $@"
-SELECT TOP {topN}
-    u.Nome,
-    u.Turma,
-    COUNT(*) AS QtdAtrasos,
-    AVG(CAST(DATEDIFF(day, e.DataDevolucao, COALESCE(e.DataRealDevolucao, GETDATE())) AS FLOAT)) AS DiasAtrasoMedio
-FROM Emprestimo e
-INNER JOIN Usuarios u ON e.Alocador = u.Id
-WHERE e.Status = 'Atrasado'
-GROUP BY u.Nome, u.Turma
-ORDER BY QtdAtrasos DESC, DiasAtrasoMedio DESC";
-                    using (var cmd = new SqlCeCommand(sql, conexao))
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        int posicao = 1;
-                        while (reader.Read())
-                        {
-                            var nome = reader.IsDBNull(0) ? "" : reader.GetString(0);
-                            var turma = reader.IsDBNull(1) ? "" : reader.GetString(1);
-                            int qtdAtrasos = 0;
-                            double diasAtrasoMedio = 0;
-                            try { qtdAtrasos = reader.IsDBNull(2) ? 0 : Convert.ToInt32(reader.GetValue(2)); } catch { }
-                            try { diasAtrasoMedio = reader.IsDBNull(3) ? 0 : Convert.ToDouble(reader.GetValue(3)); } catch { }
-
-                            lista.Add(new DevedorInfo
-                            {
-                                Posicao = posicao++,
-                                Nome = nome,
-                                Turma = turma,
-                                Atrasos = qtdAtrasos,
-                                DiasAtrasoMedio = Math.Round(diasAtrasoMedio, 1)
-                            });
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                try { var logDir = Path.Combine(Application.StartupPath, "logs"); Directory.CreateDirectory(logDir); File.AppendAllText(Path.Combine(logDir, "inicio_obter_devedores.log"), DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine); } catch { }
-            }
-            return lista;
-        }
-
         private List<EstatisticaEmprestimo> ObterEstatisticasEmprestimos()
         {
             var lista = new List<EstatisticaEmprestimo>();
@@ -952,7 +954,6 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
             return lista;
         }
 
-        public class DevedorInfo { public int Posicao { get; set; } public string Nome { get; set; } public string Turma { get; set; } public int Atrasos { get; set; } public double DiasAtrasoMedio { get; set; } }
         public class EstatisticaEmprestimo { public string Categoria { get; set; } public double Valor { get; set; } public string Detalhes { get; set; } }
         public class LivroPopular { public int Posicao { get; set; } public string Titulo { get; set; } public string Autor { get; set; } public int Emprestimos { get; set; } public string Disponibilidade { get; set; } }
 
@@ -1135,65 +1136,30 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
         private void lblResultado_Click(object sender, EventArgs e) { }
 
         private void BtnImprimirCarta_Click(object sender, EventArgs e)
-{
-    // Localiza o DataGrid de Devedores
-    var tabControl = panel1.Controls.Find("tabEstatisticas", true).FirstOrDefault() as TabControl;
-    if (tabControl == null) return;
-    var dgvDevedores = tabControl.TabPages[0].Controls.Find("dgvDevedores", true).FirstOrDefault() as DataGridView;
-    if (dgvDevedores == null || dgvDevedores.SelectedRows.Count == 0)
-    {
-        MessageBox.Show("Selecione um devedor na lista para imprimir a carta.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        return;
-    }
-
-    var devedor = dgvDevedores.SelectedRows[0].DataBoundItem as DevedorInfo;
-    if (devedor == null)
-    {
-        MessageBox.Show("Não foi possível obter os dados do devedor.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        return;
-    }
-
-    // Buscar os livros em atraso do aluno
-    var livros = ObterLivrosAtrasadosPorAluno(devedor.Nome, devedor.Turma);
-    GerarCartaCobrancaPDF(devedor, livros);
-}
-
-private List<(int Id, string Nome, string Autor)> ObterLivrosAtrasadosPorAluno(string nomeAluno, string turma)
-{
-    var livros = new List<(int, string, string)>();
-    try
-    {
-        using (var conexao = Conexao.ObterConexao())
         {
-            conexao.Open();
-            string sql = @"
-SELECT l.Id, l.Nome, l.Autor
-FROM Emprestimo e
-INNER JOIN Usuarios u ON e.Alocador = u.Id
-INNER JOIN Livros l ON e.Livro = l.Id
-WHERE e.Status = 'Atrasado' AND u.Nome = @nome AND u.Turma = @turma";
-            using (var cmd = new SqlCeCommand(sql, conexao))
+            // Localiza o DataGrid de Devedores
+            var tabControl = panel1.Controls.Find("tabEstatisticas", true).FirstOrDefault() as TabControl;
+            if (tabControl == null) return;
+            var dgvDevedores = tabControl.TabPages[0].Controls.Find("dgvDevedores", true).FirstOrDefault() as DataGridView;
+            if (dgvDevedores == null || dgvDevedores.SelectedRows.Count == 0)
             {
-                cmd.Parameters.AddWithValue("@nome", nomeAluno);
-                cmd.Parameters.AddWithValue("@turma", turma);
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        int id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
-                        string nome = reader.IsDBNull(1) ? "" : reader.GetString(1);
-                        string autor = reader.IsDBNull(2) ? "" : reader.GetString(2);
-                        livros.Add((id, nome, autor));
-                    }
-                }
+                MessageBox.Show("Selecione um empréstimo atrasado na lista para imprimir a carta.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
-        }
-    }
-    catch { }
-    return livros;
-}
 
-private void GerarCartaCobrancaPDF(DevedorInfo devedor, List<(int Id, string Nome, string Autor)> livros)
+            var emprestimo = dgvDevedores.SelectedRows[0].DataBoundItem as EmprestimoAtrasadoInfo;
+            if (emprestimo == null)
+            {
+                MessageBox.Show("Não foi possível obter os dados do empréstimo.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Buscar os livros em atraso do aluno
+            var livros = this.ObterLivrosAtrasadosPorAluno(emprestimo.Nome, emprestimo.Turma);
+            GerarCartaCobrancaPDF(emprestimo, livros);
+        }
+
+private void GerarCartaCobrancaPDF(EmprestimoAtrasadoInfo devedor, List<(int Id, string Nome, string Autor)> livros)
 {
     // Buscar telefone do usuário
     string telefone = "";
@@ -1317,6 +1283,41 @@ private void GerarCartaCobrancaPDF(DevedorInfo devedor, List<(int Id, string Nom
 
     // (Opcional) Abrir PDF após gerar
     try { Process.Start(dlg.FileName); } catch { }
+}
+
+        private List<(int Id, string Nome, string Autor)> ObterLivrosAtrasadosPorAluno(string nomeAluno, string turma)
+{
+    var livros = new List<(int, string, string)>();
+    try
+    {
+        using (var conexao = Conexao.ObterConexao())
+        {
+            conexao.Open();
+            string sql = @"
+SELECT l.Id, l.Nome, l.Autor
+FROM Emprestimo e
+INNER JOIN Usuarios u ON e.Alocador = u.Id
+INNER JOIN Livros l ON e.Livro = l.Id
+WHERE e.Status = 'Atrasado' AND u.Nome = @nome AND u.Turma = @turma";
+            using (var cmd = new SqlCeCommand(sql, conexao))
+            {
+                cmd.Parameters.AddWithValue("@nome", nomeAluno);
+                cmd.Parameters.AddWithValue("@turma", turma);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
+                        string nome = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                        string autor = reader.IsDBNull(2) ? "" : reader.GetString(2);
+                        livros.Add((id, nome, autor));
+                    }
+                }
+            }
+        }
+    }
+    catch { }
+    return livros;
 }
     }
 }

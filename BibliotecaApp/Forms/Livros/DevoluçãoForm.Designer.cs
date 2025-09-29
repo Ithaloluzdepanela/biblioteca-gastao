@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnConfirmarDevolucao = new System.Windows.Forms.Button();
-            this.btnLimpar = new System.Windows.Forms.Button();
+            this.btnProrrogar = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.lblNome = new System.Windows.Forms.Label();
             this.Titulo = new System.Windows.Forms.Label();
@@ -52,7 +52,7 @@
             this.btnConfirmarDevolucao.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.btnConfirmarDevolucao.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnConfirmarDevolucao.ForeColor = System.Drawing.Color.White;
-            this.btnConfirmarDevolucao.Location = new System.Drawing.Point(720, 735);
+            this.btnConfirmarDevolucao.Location = new System.Drawing.Point(745, 706);
             this.btnConfirmarDevolucao.Name = "btnConfirmarDevolucao";
             this.btnConfirmarDevolucao.Size = new System.Drawing.Size(150, 60);
             this.btnConfirmarDevolucao.TabIndex = 118;
@@ -60,19 +60,19 @@
             this.btnConfirmarDevolucao.UseVisualStyleBackColor = false;
             this.btnConfirmarDevolucao.Click += new System.EventHandler(this.btnConfirmarDevolucao_Click);
             // 
-            // btnLimpar
+            // btnProrrogar
             // 
-            this.btnLimpar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnLimpar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.btnLimpar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnLimpar.ForeColor = System.Drawing.Color.White;
-            this.btnLimpar.Location = new System.Drawing.Point(388, 735);
-            this.btnLimpar.Name = "btnLimpar";
-            this.btnLimpar.Size = new System.Drawing.Size(150, 60);
-            this.btnLimpar.TabIndex = 117;
-            this.btnLimpar.Text = "LIMPAR";
-            this.btnLimpar.UseVisualStyleBackColor = false;
-            this.btnLimpar.Click += new System.EventHandler(this.btnLimpar_Click);
+            this.btnProrrogar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnProrrogar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.btnProrrogar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnProrrogar.ForeColor = System.Drawing.Color.White;
+            this.btnProrrogar.Location = new System.Drawing.Point(389, 706);
+            this.btnProrrogar.Name = "btnProrrogar";
+            this.btnProrrogar.Size = new System.Drawing.Size(150, 60);
+            this.btnProrrogar.TabIndex = 117;
+            this.btnProrrogar.Text = "PRORROGAR";
+            this.btnProrrogar.UseVisualStyleBackColor = false;
+            this.btnProrrogar.Click += new System.EventHandler(this.btnProrrogar_Click);
             // 
             // label4
             // 
@@ -99,6 +99,7 @@
             this.lblNome.Size = new System.Drawing.Size(140, 25);
             this.lblNome.TabIndex = 107;
             this.lblNome.Text = "Nome do livro:";
+            this.lblNome.Click += new System.EventHandler(this.lblNome_Click);
             // 
             // Titulo
             // 
@@ -116,14 +117,14 @@
             this.dgvEmprestimos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.dgvEmprestimos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvEmprestimos.BackgroundColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvEmprestimos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvEmprestimos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvEmprestimos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvEmprestimos.Location = new System.Drawing.Point(27, 290);
             this.dgvEmprestimos.Name = "dgvEmprestimos";
@@ -173,7 +174,7 @@
             this.panel1.Controls.Add(this.dgvEmprestimos);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.btnConfirmarDevolucao);
-            this.panel1.Controls.Add(this.btnLimpar);
+            this.panel1.Controls.Add(this.btnProrrogar);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -298,7 +299,7 @@
         #endregion
 
         private System.Windows.Forms.Button btnConfirmarDevolucao;
-        private System.Windows.Forms.Button btnLimpar;
+        private System.Windows.Forms.Button btnProrrogar;
         public System.Windows.Forms.Label label4;
         private RoundedMaskedTextBox mtxCodigoBarras;
         private RoundedTextBox txtNome;

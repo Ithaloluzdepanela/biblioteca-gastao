@@ -15,14 +15,7 @@ namespace BibliotecaApp.Froms.Usuario
         private List<string> turmasCadastradas = new List<string>();
 
 
-        // Dicionário de turmas padrão
-        private Dictionary<string, string[]> dicionarioTurmas = new Dictionary<string, string[]>
-        {
-            { "Ano", new[] { "6° Ano", "7° Ano", "8° Ano", "9° Ano" } },
-            { "Desenvolvimento", new[] { "1° Desenvolvimento", "2° Desenvolvimento", "3° Desenvolvimento" } },
-            { "Agronegócio", new[] { "1° Agronegócio", "2° Agronegócio", "3° Agronegócio" } },
-            { "Propedêutico", new[] { "1° Propedêutico", "2° Propedêutico", "3° Propedêutico" } }
-        };
+       
 
         private List<string> todasTurmasPadrao;
         public event EventHandler UsuarioCriado;
@@ -51,8 +44,7 @@ namespace BibliotecaApp.Froms.Usuario
             SetAsteriscoVisibility(false);
             CarregarTurmasDoBanco();
 
-            // Inicializar lista de todas as turmas padrão
-            InicializarTurmasPadrao();
+            
 
             // Eventos para o autocomplete de Turma
             txtTurma.KeyDown += txtTurma_KeyDown;
@@ -161,6 +153,7 @@ namespace BibliotecaApp.Froms.Usuario
             if (string.IsNullOrWhiteSpace(funcaoSelecionada))
             {
                 ConfigurarCamposGenericos();
+                LimparCamposOcultos(); // limpa tudo que estiver oculto/desabilitado
                 return;
             }
 
@@ -181,6 +174,38 @@ namespace BibliotecaApp.Froms.Usuario
                 default:
                     ConfigurarParaAluno();
                     break;
+            }
+
+            // Ao final, limpa TODOS os campos ocultos/desabilitados
+            LimparCamposOcultos();
+        }
+
+        // Limpa valores de todos os controles invisíveis ou desabilitados (TextBox, MaskedTextBox, ComboBox, CheckBox)
+        private void LimparCamposOcultos()
+        {
+            LimparCamposOcultosRecursivo(this);
+        }
+
+        private void LimparCamposOcultosRecursivo(Control parent)
+        {
+            foreach (Control c in parent.Controls)
+            {
+                if (c.HasChildren)
+                    LimparCamposOcultosRecursivo(c);
+
+                if (!c.Visible || !c.Enabled)
+                {
+                    // Campos de texto, masked e combos
+                    if (c is TextBoxBase || c is ComboBox)
+                    {
+                        c.Text = string.Empty;
+                    }
+                    // CheckBox (ex.: mostrar senha)
+                    else if (c is CheckBox cb)
+                    {
+                        cb.Checked = false;
+                    }
+                }
             }
         }
 
@@ -537,7 +562,8 @@ namespace BibliotecaApp.Froms.Usuario
             string hash = null;
             string salt = null;
 
-            if (tipoUsuario == "Bibliotecário(a)")
+            // Gera hash/salt somente se for Bibliotecário(a) e os campos estiverem ativos e preenchidos
+            if (tipoUsuario == "Bibliotecário(a)" && txtSenha.Visible && txtSenha.Enabled && !string.IsNullOrWhiteSpace(txtSenha.Text))
             {
                 BibliotecaApp.Utils.CriptografiaSenha.CriarHash(txtSenha.Text, out hash, out salt);
             }
@@ -555,14 +581,14 @@ namespace BibliotecaApp.Froms.Usuario
 VALUES 
 (@Nome, @Email, @Senha_hash, @Senha_salt, @CPF, @DataNascimento, @Turma, @Telefone, @TipoUsuario)";
 
-                        comando.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
-                        comando.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
+                        comando.Parameters.AddWithValue("@Nome", (object)(txtNome.Text ?? string.Empty).ToString().Trim());
+                        comando.Parameters.AddWithValue("@Email", DbValue(txtEmail));
                         comando.Parameters.AddWithValue("@Senha_hash", string.IsNullOrEmpty(hash) ? (object)DBNull.Value : hash);
                         comando.Parameters.AddWithValue("@Senha_salt", string.IsNullOrEmpty(salt) ? (object)DBNull.Value : salt);
-                        comando.Parameters.AddWithValue("@CPF", mtxCPF.Text);
+                        comando.Parameters.AddWithValue("@CPF", DbValue(mtxCPF));
                         comando.Parameters.AddWithValue("@DataNascimento", dtpDataNasc.Value);
-                        comando.Parameters.AddWithValue("@Turma", txtTurma.Text.Trim());
-                        comando.Parameters.AddWithValue("@Telefone", mtxTelefone.Text);
+                        comando.Parameters.AddWithValue("@Turma", DbValue(txtTurma));
+                        comando.Parameters.AddWithValue("@Telefone", DbValue(mtxTelefone));
                         comando.Parameters.AddWithValue("@TipoUsuario", tipoUsuario);
 
                         comando.ExecuteNonQuery();
@@ -582,23 +608,30 @@ VALUES
 
             MessageBox.Show("Cadastro concluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             UsuarioCriado?.Invoke(this, EventArgs.Empty);
+
+            if (cbUsuario.Text == "Bibliotecário(a)")
+                BibliotecaApp.Utils.EventosGlobais.OnBibliotecariaCadastrada();
+            if (cbUsuario.Text == "Professor(a)")
+                BibliotecaApp.Utils.EventosGlobais.OnProfessorCadastrado();
+
             this.DialogResult = DialogResult.OK;
-           
             LimparCampos();
         }
 
-        
+        // Retorna DBNull.Value se o controle estiver oculto/desabilitado ou se o texto estiver vazio;
+        // caso contrário, retorna o texto trimmed.
+        private object DbValue(Control c)
+        {
+            if (c == null) return DBNull.Value;
+            if (!c.Visible || !c.Enabled) return DBNull.Value;
+
+            var txt = (c.Text ?? string.Empty).Trim();
+            return string.IsNullOrEmpty(txt) ? (object)DBNull.Value : txt;
+        }
         #endregion
 
         #region Métodos de Turma
-        private void InicializarTurmasPadrao()
-        {
-            todasTurmasPadrao = new List<string>();
-            foreach (var categoria in dicionarioTurmas.Values)
-            {
-                todasTurmasPadrao.AddRange(categoria);
-            }
-        }
+       
 
         private string NormalizarTexto(string texto)
         {

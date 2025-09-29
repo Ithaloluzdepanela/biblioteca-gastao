@@ -382,10 +382,9 @@
             this.cmbAcao.Items.AddRange(new object[] {
             "Todas",
             "Empréstimos",
-            "Reservas",
             "Todas",
             "Empréstimos",
-            "Reservas"});
+            });
             this.cmbAcao.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbAcao.Location = new System.Drawing.Point(912, 179);
             this.cmbAcao.Name = "cmbAcao";

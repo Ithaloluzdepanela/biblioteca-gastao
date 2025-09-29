@@ -133,6 +133,26 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap brasao_Gastao_Black {
+            get {
+                object obj = ResourceManager.GetObject("brasao_Gastao_Black", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Brasao_mg {
+            get {
+                object obj = ResourceManager.GetObject("Brasao_mg", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap clouds_upright_2x {
             get {
                 object obj = ResourceManager.GetObject("clouds-upright-2x", resourceCulture);

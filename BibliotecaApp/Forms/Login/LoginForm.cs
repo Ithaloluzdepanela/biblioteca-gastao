@@ -35,8 +35,6 @@ namespace BibliotecaApp.Forms.Login
         {
             AppPaths.EnsureFolders();
             if (cancelar == true) { this.Close(); }
-
-            
         }
         #endregion
 
@@ -69,17 +67,6 @@ namespace BibliotecaApp.Forms.Login
             string email = txtEmail.Text.Trim();
             string senha = txtSenha.Text;
 
-            // login como administrador (provisório)
-            if (email == "admin" && senha == "1234")
-            {
-                // Login como administrador
-                cancelar = true;
-                await AtualizarStatusEmprestimosAsync();
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-                return;
-            }
-
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
             {
                 MessageBox.Show("Por favor, preencha todos os campos.", "Campos obrigatórios",
@@ -95,6 +82,18 @@ namespace BibliotecaApp.Forms.Login
                 {
                     conexao.Open();
 
+                    // 1) Tenta login como ADMIN (credenciais simples via banco)
+                    if (LoginAdmin(conexao, email, senha))
+                    {
+                        Sessao.NomeBibliotecariaLogada = "Administrador";
+                        cancelar = true;
+                        await AtualizarStatusEmprestimosAsync();
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                        return;
+                    }
+
+                    // 2) Tenta login como Bibliotecário(a)
                     string query = @"SELECT Nome, Senha_hash, Senha_salt FROM usuarios 
                     WHERE Email = @email AND TipoUsuario = 'Bibliotecário(a)'";
 
@@ -149,6 +148,21 @@ namespace BibliotecaApp.Forms.Login
             }
         }
 
+        private bool LoginAdmin(SqlCeConnection conexao, string email, string senha)
+        {
+            // Tabela 'Admin' deve conter apenas 1 linha (um único admin)
+            const string sql = @"SELECT COUNT(*) FROM Admin 
+                                 WHERE Ativo = 1 AND Email = @email AND Senha = @senha";
+
+            using (var cmd = new SqlCeCommand(sql, conexao))
+            {
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@senha", senha);
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+                return count > 0;
+            }
+        }
+
         private void BtnEntrar_MouseLeave(object sender, EventArgs e)
         {
             BtnEntrar.BackColor = Color.FromArgb(9, 74, 158);
@@ -174,7 +188,7 @@ namespace BibliotecaApp.Forms.Login
                 await Task.Run(() =>
                 {
                     AtualizarEmprestimos(progressForm);
-                    AtualizarReservas(progressForm);
+                    AtualizarNotificacoesDisponibilidade(progressForm);
 
                     //Retirar comentarios para ativar o envio semanal do relatorio!!!
 
@@ -302,7 +316,85 @@ namespace BibliotecaApp.Forms.Login
         }
 
 
+        private void AtualizarNotificacoesDisponibilidade(frmProgresso progressForm)
+        {
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string sql = @"
+                SELECT n.Id, n.Email, u.Nome, l.Nome
+                FROM NotificacoesDisponibilidade n
+                INNER JOIN Usuarios u ON n.UsuarioId = u.Id
+                INNER JOIN Livros l ON n.LivroId = l.Id
+                WHERE n.Enviado = 0 AND l.Disponibilidade = 1";
 
+                    var notificacoes = new List<dynamic>();
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            notificacoes.Add(new
+                            {
+                                Id = reader.GetInt32(0),
+                                Email = reader.GetString(1),
+                                NomeUsuario = reader.GetString(2),
+                                NomeLivro = reader.GetString(3)
+                            });
+                        }
+                    }
+
+                    int total = notificacoes.Count;
+                    int enviadas = 0;
+
+                    progressForm.AtualizarProgresso(10, "Processando notificações de disponibilidade...");
+
+                    foreach (var n in notificacoes)
+                    {
+                        try
+                        {
+                            string assunto = "📚 Notificação de disponibilidade - Biblioteca Monteiro Lobato";
+string corpo = $@"
+<html>
+<body style='font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;'>
+    <div style='max-width: 600px; margin: auto; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>
+        <h2 style='color: #2c3e50;'>Olá, {n.NomeUsuario} 👋</h2>
+        <p>O livro <strong>{n.NomeLivro}</strong> que você solicitou está disponível para empréstimo!</p>
+        <p>Compareça à biblioteca para retirar seu exemplar.</p>
+        <hr />
+        <p style='font-size: 14px; color: #888;'>Este é um e-mail automático enviado pela Biblioteca Monteiro Lobato.</p>
+    </div>
+</body>
+</html>";
+                            BibliotecaApp.Services.EmailService.Enviar(n.Email, assunto, corpo);
+
+                            // Marca como enviado
+                            string sqlUpdate = "UPDATE NotificacoesDisponibilidade SET Enviado = 1 WHERE Id = @id";
+                            using (var cmdUpdate = new SqlCeCommand(sqlUpdate, conexao))
+                            {
+                                cmdUpdate.Parameters.AddWithValue("@id", n.Id);
+                                cmdUpdate.ExecuteNonQuery();
+                            }
+                            enviadas++;
+                            int progresso = 10 + (int)((double)enviadas / total * 80);
+                            progressForm.AtualizarProgresso(progresso, $"Enviando notificações ({enviadas}/{total})...");
+                        }
+                        catch
+                        {
+                            // Se falhar, apenas continua
+                        }
+                    }
+
+                    progressForm.AtualizarProgresso(100, "Notificações de disponibilidade atualizadas!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao atualizar notificações de disponibilidade: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void AtualizarEmprestimos(frmProgresso progressForm)
         {
@@ -410,142 +502,6 @@ namespace BibliotecaApp.Forms.Login
             {
                 MessageBox.Show($"Erro ao atualizar empréstimos: {ex.Message}", "Erro",
                               MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void AtualizarReservas(frmProgresso progressForm)
-        {
-            try
-            {
-                using (var connection = Conexao.ObterConexao())
-                {
-                    connection.Open();
-
-                    DateTime hoje = DateTime.Now.Date;
-
-                    string sqlBuscarReservas = @"
-                SELECT r.Id, r.Status, r.DataDisponibilidade, r.DataLimiteRetirada, 
-                       r.UsuarioId, r.LivroId,
-                       u.Nome, u.Email, l.Nome, l.Autor
-                FROM Reservas r
-                INNER JOIN Usuarios u ON r.UsuarioId = u.Id
-                INNER JOIN Livros l ON r.LivroId = l.Id
-                WHERE r.Status IN ('Pendente', 'Disponível')";
-
-                    var reservasParaAtualizar = new List<dynamic>();
-                    var reservasParaEmail = new List<dynamic>();
-                    var livrosParaLiberar = new List<int>();
-
-                    using (var cmd = new SqlCeCommand(sqlBuscarReservas, connection))
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var reserva = new
-                            {
-                                Id = reader.GetInt32(0),
-                                Status = reader.GetString(1),
-                                DataDisponibilidade = reader.GetDateTime(2),
-                                DataLimiteRetirada = reader.GetDateTime(3),
-                                UsuarioId = reader.GetInt32(4),
-                                LivroId = reader.GetInt32(5),
-                                NomeUsuario = reader.GetString(6),
-                                EmailUsuario = reader.IsDBNull(7) ? null : reader.GetString(7),
-                                NomeLivro = reader.GetString(8),
-                                AutorLivro = reader.GetString(9)
-                            };
-
-                            if (reserva.Status == "Pendente" && reserva.DataDisponibilidade.Date <= hoje)
-                            {
-                                reservasParaAtualizar.Add(new { Id = reserva.Id, NovoStatus = "Disponível" });
-
-                                if (reserva.DataDisponibilidade.Date == hoje)
-                                {
-                                    reservasParaEmail.Add(reserva);
-                                }
-                            }
-                            else if (reserva.Status == "Disponível" && reserva.DataLimiteRetirada.Date < hoje)
-                            {
-                                reservasParaAtualizar.Add(new { Id = reserva.Id, NovoStatus = "Expirada" });
-                                livrosParaLiberar.Add(reserva.LivroId);
-                            }
-                        }
-                    }
-
-                    progressForm.AtualizarProgresso(25, "Processando reservas...");
-
-                    foreach (var reserva in reservasParaAtualizar)
-                    {
-                        string sqlUpdate = "UPDATE Reservas SET Status = @Status WHERE Id = @Id";
-                        using (var cmdUpdate = new SqlCeCommand(sqlUpdate, connection))
-                        {
-                            cmdUpdate.Parameters.AddWithValue("@Status", reserva.NovoStatus);
-                            cmdUpdate.Parameters.AddWithValue("@Id", reserva.Id);
-                            cmdUpdate.ExecuteNonQuery();
-                        }
-                    }
-
-                    progressForm.AtualizarProgresso(50, "Enviando emails de disponibilidade...");
-
-                    int emailsEnviados = 0;
-                    int emailsFalharam = 0;
-
-                    foreach (var reserva in reservasParaEmail)
-                    {
-                        try
-                        {
-                            if (!string.IsNullOrWhiteSpace(reserva.EmailUsuario) &&
-                                BibliotecaApp.Forms.Livros.ReservaForm.ValidarEmailStatic(reserva.EmailUsuario))
-                            {
-                                var usuario = new Usuarios { Nome = reserva.NomeUsuario, Email = reserva.EmailUsuario };
-                                var livro = new Livro { Nome = reserva.NomeLivro, Autor = reserva.AutorLivro };
-
-                                BibliotecaApp.Forms.Livros.ReservaForm.EnviarEmailDisponibilidadeStatic(
-                                    usuario, livro, reserva.DataDisponibilidade, reserva.DataLimiteRetirada);
-
-                                emailsEnviados++;
-                                System.Diagnostics.Debug.WriteLine($"Email enviado para: {reserva.EmailUsuario}");
-                            }
-                            else
-                            {
-                                System.Diagnostics.Debug.WriteLine($"Usuário '{reserva.NomeUsuario}' sem e-mail cadastrado ou e-mail inválido para reserva.");
-                            }
-                        }
-                        catch (Exception emailEx)
-                        {
-                            emailsFalharam++;
-                            System.Diagnostics.Debug.WriteLine($"Erro ao processar email: {emailEx.Message}");
-                        }
-                    }
-
-                    progressForm.AtualizarProgresso(75, "Liberando livros expirados...");
-
-                    foreach (var livroId in livrosParaLiberar.Distinct())
-                    {
-                        string sqlLiberar = "UPDATE Livros SET Disponibilidade = 1 WHERE Id = @LivroId";
-                        using (var cmdLiberar = new SqlCeCommand(sqlLiberar, connection))
-                        {
-                            cmdLiberar.Parameters.AddWithValue("@LivroId", livroId);
-                            cmdLiberar.ExecuteNonQuery();
-                        }
-                    }
-
-                    progressForm.AtualizarProgresso(100, "Atualização de reservas concluída!");
-
-                    if (emailsEnviados > 0 || emailsFalharam > 0)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Processamento de emails - Enviados: {emailsEnviados}, Falhas: {emailsFalharam}");
-                    }
-
-                    System.Diagnostics.Debug.WriteLine($"Reservas atualizadas: {reservasParaAtualizar.Count}");
-                    System.Diagnostics.Debug.WriteLine($"Livros liberados: {livrosParaLiberar.Distinct().Count()}");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao atualizar reservas: {ex.Message}", "Erro",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
-                System.Diagnostics.Debug.WriteLine($"Erro detalhado: {ex}");
             }
         }
 
@@ -685,8 +641,6 @@ namespace BibliotecaApp.Forms.Login
 
             this.Show(); // Reexibe o formulário anterior após o fechamento do modal
         }
-
-        
 
         private void lblVersion_Click(object sender, EventArgs e)
         {

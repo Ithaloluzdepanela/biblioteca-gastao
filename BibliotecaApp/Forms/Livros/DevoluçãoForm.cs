@@ -1,4 +1,5 @@
-﻿using BibliotecaApp.Utils;
+﻿using BibliotecaApp.Models;
+using BibliotecaApp.Utils;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -24,8 +25,11 @@ namespace BibliotecaApp.Forms.Livros
 
         #region Eventos do Formulário
 
+        public event EventHandler LivroAtualizado;
         private void DevoluçãoForm_Load(object sender, EventArgs e)
         {
+           
+
             InicializarFormulario();
             VerificarAtrasos(); // Atualiza status de atrasos antes de buscar
             BuscarEmprestimos(); // Exibe todos os empréstimos atualizados no grid
@@ -36,13 +40,81 @@ namespace BibliotecaApp.Forms.Livros
             BuscarEmprestimos();
         }
 
-        private void btnLimpar_Click(object sender, EventArgs e)
+        private void btnProrrogar_Click(object sender, EventArgs e)
         {
-            ConfirmarELimparCampos();
+            if (dgvEmprestimos.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecione um empréstimo para prorrogar.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var row = dgvEmprestimos.SelectedRows[0];
+            int idEmprestimo = Convert.ToInt32(row.Cells["ID do Empréstimo"].Value);
+            string livro = row.Cells["Livro"].Value?.ToString();
+            string alocador = row.Cells["Alocador"].Value?.ToString();
+            DateTime dataDevolucaoAtual = row.Cells["Data de Devolução"].Value != null
+                ? Convert.ToDateTime(row.Cells["Data de Devolução"].Value)
+                : DateTime.Now;
+
+            using (var frm = new ProrrogarDiasForm())
+            {
+                frm.DataDevolucaoAtual = dataDevolucaoAtual; // Passe a data atual aqui
+                if (frm.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                // Validação do valor digitado no RoundedTextBox
+                if (!int.TryParse(frm.numQuantidade.Text, out int dias) || dias < 1)
+                {
+                    MessageBox.Show("Informe um número válido de dias.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                DateTime novaData = dataDevolucaoAtual.AddDays(dias);
+
+                // Verifica se a nova data é futura para definir o status
+                string novoStatus = novaData.Date >= DateTime.Now.Date ? "Ativo" : "Atrasado";
+
+                string msg = $"Confirma a prorrogação deste empréstimo?\n\n" +
+                             $"Livro: {livro}\n" +
+                             $"Alocador: {alocador}\n" +
+                             $"Data de Devolução Atual: {dataDevolucaoAtual:dd/MM/yyyy}\n" +
+                             $"Nova Data de Devolução: {novaData:dd/MM/yyyy}\n" +
+                             $"Dias de prorrogação: {dias}";
+
+                var confirm = MessageBox.Show(msg, "Confirmação de Prorrogação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (confirm != DialogResult.Yes)
+                    return;
+
+                // Atualiza no banco
+                using (SqlCeConnection conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string query = @"
+        UPDATE Emprestimo 
+        SET DataDevolucao = @NovaData, DataProrrogacao = @NovaData, Status = @Status
+        WHERE Id = @Id";
+                    using (SqlCeCommand cmd = new SqlCeCommand(query, conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@NovaData", novaData);
+                        cmd.Parameters.AddWithValue("@Status", novoStatus);
+                        cmd.Parameters.AddWithValue("@Id", idEmprestimo);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                MessageBox.Show("Empréstimo prorrogado com sucesso.", "Prorrogação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                BuscarEmprestimos();
+            }
         }
 
         private void btnConfirmarDevolucao_Click(object sender, EventArgs e)
         {
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode registrar devoluções.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             DevolverEmprestimo();
         }
 
@@ -90,19 +162,7 @@ namespace BibliotecaApp.Forms.Livros
 
         #region Métodos de Interface
 
-        private void ConfirmarELimparCampos()
-        {
-            DialogResult resultado = MessageBox.Show(
-                "Tem certeza de que deseja limpar tudo?",
-                "Confirmação",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (resultado == DialogResult.Yes)
-            {
-                LimparCampos();
-            }
-        }
+       
 
         private void LimparCampos()
         {
@@ -183,7 +243,7 @@ namespace BibliotecaApp.Forms.Livros
                     uAlocador.Nome AS [Alocador],
                     uResponsavel.Nome AS [Responsável],
                     e.Alocador AS [IdResponsavel],
-                    l.Nome AS [Livro],
+                    COALESCE(l.Nome, e.LivroNome) AS [Livro],
                     l.CodigoBarras AS [Código De Barras],
                     e.DataEmprestimo AS [Data do Empréstimo],
                     e.DataDevolucao AS [Data de Devolução],
@@ -192,7 +252,7 @@ namespace BibliotecaApp.Forms.Livros
                 JOIN Usuarios uAlocador ON e.Alocador = uAlocador.Id
                 JOIN Usuarios uResponsavel ON e.Responsavel = uResponsavel.Id
                 JOIN Livros l ON e.Livro = l.Id
-                WHERE l.Nome LIKE @NomeLivro";
+                WHERE l.Nome LIKE @LivroNome";
 
             if (filtros.FiltrarCodigoBarras)
                 queryBase += " AND l.CodigoBarras LIKE @CodigoBarras";
@@ -214,7 +274,7 @@ namespace BibliotecaApp.Forms.Livros
 
         private void AdicionarParametrosBusca(SqlCeCommand comando, FiltrosBusca filtros)
         {
-            comando.Parameters.AddWithValue("@NomeLivro", "%" + filtros.NomeLivro + "%");
+            comando.Parameters.AddWithValue("@LivroNome", "%" + filtros.NomeLivro + "%");
 
             if (filtros.FiltrarCodigoBarras)
                 comando.Parameters.AddWithValue("@CodigoBarras", "%" + filtros.CodigoBarras + "%");
@@ -366,6 +426,37 @@ namespace BibliotecaApp.Forms.Livros
                 foreach (DataGridViewRow row in dgvEmprestimos.Rows)
                 {
                     AplicarCorStatus(row);
+                }
+            };
+
+            dgvEmprestimos.DataBindingComplete += (s, e) =>
+            {
+                foreach (DataGridViewRow row in dgvEmprestimos.Rows)
+                {
+                    AplicarCorStatus(row);
+
+                    // Verificar se o livro ainda existe
+                    string nomeLivro = row.Cells["Livro"].Value?.ToString();
+                    if (!string.IsNullOrEmpty(nomeLivro))
+                    {
+                        using (var conexao = Conexao.ObterConexao())
+                        {
+                            conexao.Open();
+                            string sql = "SELECT COUNT(*) FROM Livros WHERE Nome = @nome";
+                            using (var cmd = new SqlCeCommand(sql, conexao))
+                            {
+                                cmd.Parameters.AddWithValue("@nome", nomeLivro);
+                                int count = (int)cmd.ExecuteScalar();
+
+                                if (count == 0)
+                                {
+                                    row.Cells["Livro"].Style.ForeColor = Color.Red;
+                                    row.Cells["Livro"].Style.SelectionForeColor = Color.Red;
+                                    row.Cells["Livro"].Style.Font = new Font(dgvEmprestimos.DefaultCellStyle.Font, FontStyle.Bold);
+                                }
+                            }
+                        }
+                    }
                 }
             };
         }
@@ -547,7 +638,7 @@ namespace BibliotecaApp.Forms.Livros
                          $"Livro: {livro}\n" +
                          $"Alocador: {alocador}\n" +
                          $"Data do Empréstimo: {dataEmprestimo}\n";
-                         
+                        
 
             var confirm = MessageBox.Show(msg, "Confirmação de Devolução", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes)
@@ -555,6 +646,11 @@ namespace BibliotecaApp.Forms.Livros
 
             ProcessarDevolucaoNoBanco(emprestimoInfo.Id);
             MessageBox.Show("Livro devolvido com sucesso.");
+            LivroAtualizado?.Invoke(this, EventArgs.Empty);
+
+            // Gatilho global para atualização em outros formulários
+            BibliotecaApp.Utils.EventosGlobais.OnLivroDevolvido();
+
             BuscarEmprestimos();
         }
 
@@ -725,6 +821,14 @@ namespace BibliotecaApp.Forms.Livros
            BuscarEmprestimos();
             VerificarAtrasos();
         }
+
+        private void lblNome_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private static bool IsAdminLogado()
+        => string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase);
     }
 
     #region Classes Auxiliares

@@ -21,8 +21,58 @@ namespace BibliotecaApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+
+            string pubPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "publicKey.xml");
+            if (!System.IO.File.Exists(pubPath))
+            {
+                var result = MessageBox.Show(
+                    "Arquivo publicKey.xml não encontrado ao lado do executável.\n" +
+                    "Sem a chave pública o app não poderá validar licenças.\n\n" +
+                    "Coloque publicKey.xml na pasta do programa e reinicie.\n\n" +
+                    "Deseja abrir a pasta do programa agora para colar o arquivo?",
+                    "Atenção: publicKey.xml ausente",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory);
+                }
+
+                // opcional: parar a execução para evitar erros posteriores
+                return;
+            }
+
+            LicenseData license;
+            if (!LicenseValidator.TryGetActivation(out license) || !license.TermsAccepted)
+            {
+                using (var termsForm = new TermsForm())
+                {
+                    if (termsForm.ShowDialog() != DialogResult.OK || !termsForm.Accepted)
+                        return;
+                }
+
+                using (var activationForm = new ActivationForm())
+                {
+                    if (activationForm.ShowDialog() != DialogResult.OK)
+                        return;
+                }
+
+                // recarrega licença
+                LicenseValidator.TryGetActivation(out license);
+            }
+
+            if (LicenseValidator.IsExpired(license))
+            {
+                MessageBox.Show("Sua licença expirou!", "Licença expirada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+
+
             //Application.Run(new LivrosForm());
             //Repetição para quando clicar no logout reiniciar a aplicação
+
             while (true)
             {
                 using (LoginForm login = new LoginForm())

@@ -1,15 +1,15 @@
-﻿    using BibliotecaApp.Utils;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Data;
-    using System.IO;
-    using System.Data.SqlServerCe;
-    using System.Drawing;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Windows.Forms;
+﻿using BibliotecaApp.Utils;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.IO;
+using System.Data.SqlServerCe;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using ClosedXML.Excel;
 
 
@@ -35,7 +35,7 @@ namespace BibliotecaApp.Forms.Relatorio
             private string tblLivros = "Livros";
             private string tblEmprestimo = "Emprestimo";
             private string tblEmprestimoRapido = "EmprestimoRapido";
-            private string tblReservas = "Reservas";
+           
 
             public RelForm()
             {
@@ -54,6 +54,8 @@ namespace BibliotecaApp.Forms.Relatorio
                 txtLivro.TextChanged += TxtLivro_TextChanged;
                 txtLivro.KeyDown += TxtLivro_KeyDown;
                 lstLivros.Click += LstLivros_Click;
+
+                BibliotecaApp.Utils.EventosGlobais.BibliotecariaCadastrada += (s, e) => PopularCbBibliotecaria();
             }
 
             private void TxtLivro_TextChanged(object sender, EventArgs e)
@@ -175,7 +177,7 @@ namespace BibliotecaApp.Forms.Relatorio
                         tblLivros = GetExistingTableName(c, new[] { "Livros", "livros", "Livro", "livro" }) ?? tblLivros;
                         tblEmprestimo = GetExistingTableName(c, new[] { "Emprestimo", "Emprestimos", "emprestimo", "emprestimos" }) ?? tblEmprestimo;
                         tblEmprestimoRapido = GetExistingTableName(c, new[] { "EmprestimoRapido", "EmprestimoRapidos", "emprestimoRapido", "emprestimorapido" }) ?? tblEmprestimoRapido;
-                        tblReservas = GetExistingTableName(c, new[] { "Reservas", "reservas", "Reserva", "reserva" }) ?? tblReservas;
+                        
                     }
                 }
                 catch
@@ -189,7 +191,6 @@ namespace BibliotecaApp.Forms.Relatorio
                 cmbAcao.Items.Add("Empréstimo");          // index 1
                 cmbAcao.Items.Add("Devolução");           // index 2
                 cmbAcao.Items.Add("Empréstimo Rápido");   // index 3
-                cmbAcao.Items.Add("Reserva");             // index 4
                 cmbAcao.SelectedIndex = 0;
 
                 // popula combobox de bibliotecárias
@@ -362,7 +363,7 @@ namespace BibliotecaApp.Forms.Relatorio
         SELECT 
             e.Id,
             COALESCE(u.Nome, 'Excluído') AS NomeU,
-            l.Nome AS NomeL,
+           CASE WHEN l.Id IS NULL THEN e.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
             'Empréstimo' AS Acao,
             e.DataEmprestimo AS DataAcao,
             b.Nome AS Bibliotecaria
@@ -381,7 +382,7 @@ namespace BibliotecaApp.Forms.Relatorio
         SELECT 
             e.Id,
             COALESCE(u.Nome, 'Excluído') AS NomeU,
-            l.Nome AS NomeL,
+            CASE WHEN l.Id IS NULL THEN e.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
             'Devolução' AS Acao,
             e.DataRealDevolucao AS DataAcao,
             b.Nome AS Bibliotecaria
@@ -400,7 +401,7 @@ namespace BibliotecaApp.Forms.Relatorio
         SELECT
             r.Id,
             COALESCE(u.Nome, 'Excluído') AS NomeU,
-            l.Nome AS NomeL,
+           CASE WHEN l.Id IS NULL THEN r.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
             'Empréstimo Rápido' AS Acao,
             r.DataHoraEmprestimo AS DataAcao,
             r.Bibliotecaria AS Bibliotecaria
@@ -414,7 +415,7 @@ namespace BibliotecaApp.Forms.Relatorio
         SELECT
             r.Id,
             COALESCE(u.Nome, 'Excluído') AS NomeU,
-            l.Nome AS NomeL,
+            CASE WHEN l.Id IS NULL THEN r.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
             'Devolução' AS Acao,
             r.DataHoraDevolucaoReal AS DataAcao,
             r.Bibliotecaria AS Bibliotecaria
@@ -423,25 +424,9 @@ namespace BibliotecaApp.Forms.Relatorio
         LEFT JOIN [{tblLivros}] l ON r.LivroId = l.Id
         WHERE r.DataHoraDevolucaoReal IS NOT NULL
     ");
-                    }
+                    
 
-                        // 4) Reservas
-                        if (!string.IsNullOrEmpty(tblReservas))
-                        {
-                        selects.Add($@"
-        SELECT 
-            r.Id,
-            COALESCE(u.Nome, 'Excluído') AS NomeU,
-            l.Nome AS NomeL,
-            'Reserva' AS Acao,
-            r.DataReserva AS DataAcao,
-            b.Nome AS Bibliotecaria
-        FROM [{tblReservas}] r
-        LEFT JOIN [{tblUsuarios}] u ON r.UsuarioId = u.Id
-        LEFT JOIN [{tblLivros}] l ON r.LivroId = l.Id
-        LEFT JOIN [{tblUsuarios}] b ON r.BibliotecariaId = b.Id
-        WHERE r.DataReserva IS NOT NULL
-    ");
+                       
                     }
 
                         if (selects.Count == 0)
@@ -473,15 +458,14 @@ namespace BibliotecaApp.Forms.Relatorio
                         if (usaLivro) final.AppendLine(" AND NomeL LIKE @livro");
 
                         // filtro por ação conforme cmbAcao selection
-                        // cmbAcao: 0 Todas, 1 Empréstimo, 2 Devolução, 3 Empréstimo Rápido, 4 Reserva
+                        // cmbAcao: 0 Todas, 1 Empréstimo, 2 Devolução, 3 Empréstimo Rápido
                         if (cmbAcao.SelectedIndex == 1)
                             final.AppendLine(" AND Acao = 'Empréstimo'");
                         else if (cmbAcao.SelectedIndex == 2)
                             final.AppendLine(" AND Acao = 'Devolução'");
                         else if (cmbAcao.SelectedIndex == 3)
                             final.AppendLine(" AND Acao = 'Empréstimo Rápido'");
-                        else if (cmbAcao.SelectedIndex == 4)
-                            final.AppendLine(" AND Acao = 'Reserva'");
+                        
 
                         if (usaCbBibl) final.AppendLine(" AND Bibliotecaria LIKE @bibliotecaria");
 
@@ -621,6 +605,32 @@ namespace BibliotecaApp.Forms.Relatorio
                     // Resetar para a formatação padrão
                     e.CellStyle.ForeColor = dgvHistorico.DefaultCellStyle.ForeColor;
                     e.CellStyle.Font = dgvHistorico.DefaultCellStyle.Font;
+                }
+            }
+
+            if (dgvHistorico.Columns[e.ColumnIndex].Name == "NomeL")
+            {
+                var cellValue = dgvHistorico.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
+
+                // Se o livro não existe mais na tabela Livros, pintar de vermelho
+                if (!string.IsNullOrEmpty(cellValue))
+                {
+                    using (var conexao = Conexao.ObterConexao())
+                    {
+                        conexao.Open();
+                        string sql = "SELECT COUNT(*) FROM Livros WHERE Nome = @nome";
+                        using (var cmd = new SqlCeCommand(sql, conexao))
+                        {
+                            cmd.Parameters.AddWithValue("@nome", cellValue);
+                            int count = (int)cmd.ExecuteScalar();
+
+                            if (count == 0)
+                            {
+                                e.CellStyle.ForeColor = Color.Red;
+                                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                            }
+                        }
+                    }
                 }
             }
         }

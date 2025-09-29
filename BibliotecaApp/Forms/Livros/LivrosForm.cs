@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -17,6 +18,10 @@ namespace BibliotecaApp.Forms.Livros
         public LivrosForm()
         {
             InitializeComponent();
+            btnProcurar.PerformClick();
+
+            // Assina o evento global para atualizar a lista automaticamente
+            BibliotecaApp.Utils.EventosGlobais.LivroCadastradoOuAlterado += (s, e) => CarregarLivros();
         }
 
         #endregion
@@ -223,7 +228,8 @@ namespace BibliotecaApp.Forms.Livros
         }
 
         // Carrega lista de livros com filtros opcionais
-        private void CarregarLivros(string nomeFiltro = "", string generoFiltro = "Todos", string disponibilidadeFiltro = "Todos")
+        // Torna o método público para permitir atualização externa
+        public void CarregarLivros(string nomeFiltro = "", string generoFiltro = "Todos", string disponibilidadeFiltro = "Todos")
         {
             try
             {
@@ -242,7 +248,7 @@ namespace BibliotecaApp.Forms.Livros
                     CASE
                         WHEN Quantidade = 0 THEN 'Indisponível'
                         WHEN Disponibilidade = 1 THEN 'Disponível'
-                        ELSE 'Reservado'
+                        
                     END AS Status
                 FROM Livros
                 WHERE 1 = 1";
@@ -263,9 +269,7 @@ namespace BibliotecaApp.Forms.Livros
                             case "Indisponível":
                                 sql += " AND Quantidade = 0";
                                 break;
-                            case "Reservado":
-                                sql += " AND Disponibilidade = 0 AND Quantidade > 0";
-                                break;
+                            
                         }
                     }
 
@@ -413,5 +417,7 @@ namespace BibliotecaApp.Forms.Livros
 
 
         #endregion
+
+
     }
 }

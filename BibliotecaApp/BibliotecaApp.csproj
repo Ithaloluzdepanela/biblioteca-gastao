@@ -100,9 +100,54 @@
     <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=8.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.8.0.1\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=8.0.0.2, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.8.0.2\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=8.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Logging.8.0.1\lib\net462\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=8.0.0.2, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.8.0.2\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=8.0.0.2, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Options.8.0.2\lib\net462\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Primitives.8.0.0\lib\net462\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp, Version=6.2.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.6.2.1\lib\netstandard2.0\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.BarCodes, Version=6.2.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.6.2.1\lib\netstandard2.0\PdfSharp.BarCodes.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting, Version=6.2.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.6.2.1\lib\netstandard2.0\PdfSharp.Charting.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Cryptography, Version=6.2.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.6.2.1\lib\netstandard2.0\PdfSharp.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Quality, Version=6.2.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.6.2.1\lib\netstandard2.0\PdfSharp.Quality.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Shared, Version=6.2.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.6.2.1\lib\netstandard2.0\PdfSharp.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Snippets, Version=6.2.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.6.2.1\lib\netstandard2.0\PdfSharp.Snippets.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.System, Version=6.2.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.6.2.1\lib\netstandard2.0\PdfSharp.System.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.WPFonts, Version=6.2.1.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.6.2.1\lib\netstandard2.0\PdfSharp.WPFonts.dll</HintPath>
     </Reference>
     <Reference Include="RBush, Version=4.0.0.0, Culture=neutral, PublicKeyToken=c77e27b81f4d0187, processorArchitecture=MSIL">
       <HintPath>packages\RBush.Signed.4.0.0\lib\net47\RBush.dll</HintPath>
@@ -111,6 +156,7 @@
       <HintPath>packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
@@ -125,6 +171,13 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Pkcs, Version=8.0.0.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Pkcs.8.0.1\lib\net462\System.Security.Cryptography.Pkcs.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.ProtectedData, Version=9.0.0.9, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.ProtectedData.9.0.9\lib\net462\System.Security.Cryptography.ProtectedData.dll</HintPath>
+    </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Text.Encodings.Web.9.0.8\lib\net462\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
@@ -149,6 +202,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utils\EventosGlobais.cs" />
     <Compile Include="Elements\AnimatedToggle.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -176,6 +230,12 @@
     <Compile Include="Elements\GradientPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\Livros\DevoluçãoRapidaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Livros\DevoluçãoRapidaForm.Designer.cs">
+      <DependentUpon>DevoluçãoRapidaForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Livros\EmprestimoRapidoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -190,6 +250,12 @@
     </Compile>
     <Compile Include="Forms\Livros\LivrosForm.Designer.cs">
       <DependentUpon>LivrosForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Livros\ProrrogarDiasForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Livros\ProrrogarDiasForm.Designer.cs">
+      <DependentUpon>ProrrogarDiasForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Login\AboutForm.cs">
       <SubType>Form</SubType>
@@ -222,6 +288,12 @@
       <DependentUpon>MapeamentoDeTurmasWizardForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\MapeamentoModel.cs" />
+    <Compile Include="Utils\ActivationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\ActivationForm.Designer.cs">
+      <DependentUpon>ActivationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils\AppPaths.cs" />
     <Compile Include="Utils\BackupManager.cs" />
     <Compile Include="Utils\EmailService.cs" />
@@ -275,8 +347,8 @@
     <Compile Include="Forms\Inicio\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\LicenseValidator.cs" />
     <Compile Include="Utils\mdiProperties.cs" />
-    <Compile Include="Models\Reserva.cs" />
     <Compile Include="Models\Sessao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -284,12 +356,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Livros\ReservaForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Livros\ReservaForm.Designer.cs">
-      <DependentUpon>ReservaForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Usuario\UsuarioForm.cs">
       <SubType>Form</SubType>
@@ -312,6 +378,12 @@
     <Compile Include="Utils\PasswordForm.Designer.cs">
       <DependentUpon>PasswordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\TermsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\TermsForm.Designer.cs">
+      <DependentUpon>TermsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils\TurmasUtil.cs" />
     <EmbeddedResource Include="Elements\AnimatedToggle.resx">
       <DependentUpon>AnimatedToggle.cs</DependentUpon>
@@ -325,6 +397,9 @@
     <EmbeddedResource Include="Forms\Livros\DevoluçãoForm.resx">
       <DependentUpon>DevoluçãoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Livros\DevoluçãoRapidaForm.resx">
+      <DependentUpon>DevoluçãoRapidaForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Livros\EmprestimoForm.resx">
       <DependentUpon>EmprestimoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -333,6 +408,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Livros\FichaAlunoForm.resx">
       <DependentUpon>FichaAlunoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Livros\ProrrogarDiasForm.resx">
+      <DependentUpon>ProrrogarDiasForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Login\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
@@ -348,6 +426,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Usuario\EditarUsuarioForm.resx">
       <DependentUpon>EditarUsuarioForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utils\ActivationForm.resx">
+      <DependentUpon>ActivationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utils\frmProgresso.resx">
       <DependentUpon>frmProgresso.cs</DependentUpon>
@@ -372,14 +453,14 @@
     <EmbeddedResource Include="Forms\Usuario\CadUsuario.resx">
       <DependentUpon>CadUsuario.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Livros\ReservaForm.resx">
-      <DependentUpon>ReservaForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Usuario\UsuarioForm.resx">
       <DependentUpon>UsuarioForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utils\PasswordForm.resx">
       <DependentUpon>PasswordForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utils\TermsForm.resx">
+      <DependentUpon>TermsForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="credentials.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -525,6 +606,11 @@
     <Content Include="BibliotecaDB\bibliotecaDB.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="publicKey.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\images.png" />
+    <None Include="Resources\brasao_Gastao_Black.png" />
     <None Include="Resources\gast-removebg-preview 100x100%281%29.png" />
     <None Include="Resources\gast-removebg-preview60x60 %281%29.png" />
     <None Include="Resources\icons8-export-excel-20.png" />
@@ -545,6 +631,9 @@
     <None Include="Resources\Brasão da Gastão59x65.png" />
     <None Include="Resources\Brasão da Gastão75x82.png" />
     <None Include="Resources\icons8-livro-25.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BibliotecaApp\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

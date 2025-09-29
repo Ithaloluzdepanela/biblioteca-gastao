@@ -10,6 +10,7 @@ namespace BibliotecaApp.Forms.Livros
     public partial class CadastroLivroForm : Form
     {
         #region Propriedades e Campos
+        public event EventHandler LivroAtualizado;
 
         private List<string> generosPadronizados = new List<string>
         {
@@ -18,7 +19,7 @@ namespace BibliotecaApp.Forms.Livros
             "Educação", "Romance", "Ficção", "Fantasia", "Mitologia", "Literatura Infantil",
             "Adolescentes", "Infantojuvenil", "Suspense", "Lenda", "Folclore", "Novela",
             "Fábula", "Narrativa", "Afetividade", "Letramento", "Filosofia",
-            "Política", "Culinária", "Crônica", "Conto", "Didatico"
+            "Política", "Culinária", "Crônica", "Conto", "Didático", "Literatura",
         };
 
         private bool generoSelecionadoDaLista = false; // Flag para controlar quando gênero foi selecionado da lista
@@ -348,6 +349,10 @@ namespace BibliotecaApp.Forms.Livros
 
                     MessageBox.Show("Livro salvo com sucesso!",
                                     "Cadastro realizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LivroAtualizado?.Invoke(this, EventArgs.Empty);
+
+                    // Dispara evento global para atualizar todos os forms
+                    BibliotecaApp.Utils.EventosGlobais.OnLivroCadastradoOuAlterado();
 
                     LimparFormulario();
                 }

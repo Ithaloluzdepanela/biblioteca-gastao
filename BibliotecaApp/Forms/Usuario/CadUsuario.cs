@@ -45,12 +45,10 @@ namespace BibliotecaApp.Froms.Usuario
             SetAsteriscoVisibility(false);
             CarregarTurmasDoBanco();
 
-            
-
             // Eventos para o autocomplete de Turma
             txtTurma.KeyDown += txtTurma_KeyDown;
             txtTurma.Leave += txtTurma_Leave;
-            txtTurma.Validating += txtTurma_Validating; // <- adiciona validação de turma
+            txtTurma.Validating += txtTurma_Validating; // <- validação de turma
 
             lstSugestoesTurma.Click += lstSugestoesTurma_Click;
             lstSugestoesTurma.KeyDown += lstSugestoesTurma_KeyDown;
@@ -59,6 +57,10 @@ namespace BibliotecaApp.Froms.Usuario
             // Estilo do ListBox e z-order
             EstilizarListBoxSugestao(lstSugestoesTurma);
             lstSugestoesTurma.BringToFront();
+
+            // CORREÇÃO: não dispare validação ao ir para a lista; esconda inicialmente
+            lstSugestoesTurma.CausesValidation = false;
+            lstSugestoesTurma.Visible = false;
         }
 
         private void Form_KeyDown(object sender, KeyEventArgs e)
@@ -851,12 +853,15 @@ VALUES
                 int extraPadding = 8;
                 lstSugestoesTurma.Height = visibleItems * lstSugestoesTurma.ItemHeight + extraPadding;
                 lstSugestoesTurma.Width = txtTurma.Width;
+
+                // POSICIONAMENTO REVERTIDO (como era antes)
                 lstSugestoesTurma.Left = txtTurma.Left;
                 lstSugestoesTurma.Top = txtTurma.Bottom;
+
                 lstSugestoesTurma.BringToFront();
                 lstSugestoesTurma.Visible = true;
 
-                // NOVO: seleciona o primeiro item por padrão
+                // Seleciona o primeiro item por padrão
                 lstSugestoesTurma.SelectedIndex = 0;
             }
             else
@@ -888,6 +893,9 @@ VALUES
                 txtTurma.Text = turmaSelecionada;
                 lstSugestoesTurma.Visible = false;
                 txtTurma.Focus();
+
+                // Opcional: avançar para o próximo controle, igual ao EmprestimoRapidoForm
+                this.SelectNextControl(txtTurma, true, true, true, true);
             }
         }
 

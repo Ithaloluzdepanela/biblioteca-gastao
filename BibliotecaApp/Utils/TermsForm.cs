@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace BibliotecaApp.Utils
@@ -7,12 +8,52 @@ namespace BibliotecaApp.Utils
     {
         public bool Accepted { get; private set; } = false;
 
+        // Marca se o usuário já chegou ao final pelo menos uma vez
+        private bool _termsScrolledToBottomOnce;
+
+        // Win32 interop para ler o estado do scroll
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SCROLLINFO
+        {
+            public uint cbSize;
+            public uint fMask;
+            public int nMin;
+            public int nMax;
+            public uint nPage;
+            public int nPos;
+            public int nTrackPos;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool GetScrollInfo(IntPtr hwnd, int nBar, ref SCROLLINFO lpsi);
+
+        private const int SB_VERT = 1;
+        private const int SIF_RANGE = 0x1;
+        private const int SIF_PAGE = 0x2;
+        private const int SIF_POS = 0x4;
+        private const int SIF_TRACKPOS = 0x10;
+        private const int SIF_ALL = SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS;
+
         public TermsForm()
         {
             InitializeComponent();
-            GetTermsRtf();
 
+            // Carrega o termo e garante que começa no topo
             rtbTerms.Rtf = GetTermsRtf();
+            rtbTerms.SelectionStart = 0;
+            rtbTerms.ScrollToCaret();
+
+            // Desabilita o checkbox até que o usuário role até o final
+            chkAccept.Enabled = false;
+            _termsScrolledToBottomOnce = false;
+
+            // Assina eventos que podem alterar a visibilidade do final do texto
+            rtbTerms.VScroll += rtbTerms_VScroll;
+            rtbTerms.Resize += rtbTerms_Resize;
+            rtbTerms.ContentsResized += rtbTerms_ContentsResized;
+
+            // Caso o conteúdo caiba sem rolagem, habilita de imediato
+            CheckIfBottomReached();
         }
 
         private string GetTermsRtf()
@@ -21,7 +62,7 @@ namespace BibliotecaApp.Utils
             return @"{\rtf1\ansi
 {\b Termos de Uso — BibliotecaApp}\line
 \line
-{\b Última atualização:} 13/09/2025\line
+{\b Última atualização:} 01/10/2025\line
 \line
 Este documento estabelece os termos e condições aplicáveis ao uso do software {\b BibliotecaApp}\b0  (doravante, “Sistema”), desenvolvido e licenciado por {\b Beverso}\b0  (doravante, “Beverso” ou “Licenciante”). O Licenciado indicado neste Termo é a {\b Escola Estadual Professor Gastão Valle}\b0  (doravante, “Instituição” ou “Licenciado”).\line
 \line
@@ -101,6 +142,44 @@ Ao clicar em “Li e aceito os termos de uso”, a Instituição declara ter lid
 }";
         }
 
+        private void rtbTerms_VScroll(object sender, EventArgs e) => CheckIfBottomReached();
+        private void rtbTerms_Resize(object sender, EventArgs e) => CheckIfBottomReached();
+        private void rtbTerms_ContentsResized(object sender, ContentsResizedEventArgs e) => CheckIfBottomReached();
+
+        private void CheckIfBottomReached()
+        {
+            if (_termsScrolledToBottomOnce)
+                return;
+
+            if (IsScrolledToBottom(rtbTerms))
+            {
+                _termsScrolledToBottomOnce = true;
+                chkAccept.Enabled = true;
+            }
+        }
+
+        private static bool IsScrolledToBottom(RichTextBox rtb)
+        {
+            var si = new SCROLLINFO
+            {
+                cbSize = (uint)Marshal.SizeOf(typeof(SCROLLINFO)),
+                fMask = SIF_ALL
+            };
+
+            if (!GetScrollInfo(rtb.Handle, SB_VERT, ref si))
+            {
+                // Se não for possível obter o scroll, assume que não há rolagem necessária.
+                return true;
+            }
+
+            // Quando o conteúdo cabe, nMax <= nPage (sem barra de rolagem)
+            if (si.nMax <= si.nPage)
+                return true;
+
+            var maxPos = si.nMax - (int)si.nPage;
+            return si.nPos >= maxPos;
+        }
+
         private void btnContinue_Click(object sender, EventArgs e)
         {
             if (!chkAccept.Checked)
@@ -114,8 +193,6 @@ Ao clicar em “Li e aceito os termos de uso”, a Instituição declara ter lid
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
-
-        
 
         private void picExit_Click(object sender, EventArgs e)
         {

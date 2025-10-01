@@ -58,42 +58,43 @@ namespace BibliotecaApp.Forms.Relatorio
                 BibliotecaApp.Utils.EventosGlobais.BibliotecariaCadastrada += (s, e) => PopularCbBibliotecaria();
             }
 
-            private void TxtLivro_TextChanged(object sender, EventArgs e)
-            {
-                string filtro = txtLivro.Text.Trim();
+        private void TxtLivro_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = txtLivro.Text.Trim();
 
-                if (string.IsNullOrEmpty(filtro))
+            if (string.IsNullOrEmpty(filtro))
+            {
+                lstLivros.Visible = false;
+                return;
+            }
+
+            using (var conn = Conexao.ObterConexao())
+            {
+                conn.Open();
+                var cmd = new SqlCeCommand($"SELECT Nome FROM [{tblLivros}] WHERE Nome LIKE @filtro", conn);
+                cmd.Parameters.AddWithValue("@filtro", filtro + "%");
+
+
+                var lista = new List<string>();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                        lista.Add(reader.GetString(0));
+                }
+
+                if (lista.Any())
+                {
+                    lstLivros.Items.Clear();
+                    lstLivros.Items.AddRange(lista.ToArray());
+                    lstLivros.Visible = true;
+                }
+                else
                 {
                     lstLivros.Visible = false;
-                    return;
-                }
-
-                using (var conn = Conexao.ObterConexao())
-                {
-                    conn.Open();
-                    var cmd = new SqlCeCommand($"SELECT Nome FROM [{tblLivros}] WHERE Nome LIKE @filtro", conn);
-                    cmd.Parameters.AddWithValue("@filtro", filtro + "%");
-
-
-                    var lista = new List<string>();
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                            lista.Add(reader.GetString(0));
-                    }
-
-                    if (lista.Any())
-                    {
-                        lstLivros.Items.Clear();
-                        lstLivros.Items.AddRange(lista.ToArray());
-                        lstLivros.Visible = true;
-                    }
-                    else
-                    {
-                        lstLivros.Visible = false;
-                    }
                 }
             }
+        }
+           
 
 
             private void TxtLivro_KeyDown(object sender, KeyEventArgs e)
@@ -765,74 +766,130 @@ namespace BibliotecaApp.Forms.Relatorio
                 return;
             }
 
-            string pastaDownloads = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             string nomeArquivo = $"Relatorio_Biblioteca_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
-            string caminhoCompleto = Path.Combine(pastaDownloads, nomeArquivo);
+            string pastaDownloads = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            bool downloadsExiste = Directory.Exists(pastaDownloads);
 
-            try
+            using (var sfd = new SaveFileDialog())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws = wb.Worksheets.Add("Relatório");
+                sfd.Title = "Salvar relatório";
+                sfd.Filter = "Planilha do Excel (*.xlsx)|*.xlsx";
+                sfd.FileName = nomeArquivo;
+                sfd.OverwritePrompt = true;
+                sfd.InitialDirectory = downloadsExiste
+                    ? pastaDownloads
+                    : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-                    // Cabeçalhos
-                    int colIndex = 1;
-                    foreach (DataGridViewColumn col in dgvHistorico.Columns)
+                var dr = sfd.ShowDialog(this);
+                if (dr != DialogResult.OK) return;
+
+                string caminhoCompleto = sfd.FileName;
+
+                try
+                {
+                    // Garante que a pasta existe
+                    string dir = Path.GetDirectoryName(caminhoCompleto);
+                    if (!string.IsNullOrWhiteSpace(dir) && !Directory.Exists(dir))
                     {
-                        if (col.Visible && !(col is DataGridViewButtonColumn))
-                        {
-                            ws.Cell(1, colIndex).Value = col.HeaderText;
-                            ws.Cell(1, colIndex).Style.Font.Bold = true;
-                            ws.Cell(1, colIndex).Style.Font.FontSize = 13;
-                            ws.Cell(1, colIndex).Style.Fill.BackgroundColor = XLColor.FromArgb(30, 61, 88);
-                            ws.Cell(1, colIndex).Style.Font.FontColor = XLColor.White;
-                            ws.Cell(1, colIndex).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                            ws.Cell(1, colIndex).Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
-                            ws.Column(colIndex).Width = 30;
-                            colIndex++;
-                        }
+                        Directory.CreateDirectory(dir);
                     }
 
-                    // Dados
-                    for (int r = 0; r < dgvHistorico.Rows.Count; r++)
+                    using (var wb = new XLWorkbook())
                     {
-                        if (dgvHistorico.Rows[r].IsNewRow) continue;
-                        int cIndex = 1;
+                        var ws = wb.Worksheets.Add("Relatório");
+
+                        // Cabeçalhos
+                        int colIndex = 1;
                         foreach (DataGridViewColumn col in dgvHistorico.Columns)
                         {
                             if (col.Visible && !(col is DataGridViewButtonColumn))
                             {
-                                var valor = dgvHistorico.Rows[r].Cells[col.Name].Value;
-                                var cell = ws.Cell(r + 2, cIndex);
-                                if (valor == null || valor == DBNull.Value)
-                                    cell.Value = "";
-                                else if (col.HeaderText.ToLower().Contains("data") && valor is DateTime dt)
-                                    cell.Value = dt;
-                                else
-                                    cell.Value = valor.ToString();
-                                cell.Style.Font.FontSize = 12;
-                                cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                                cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                                if (col.HeaderText.ToLower().Contains("data") && valor is DateTime)
-                                {
-                                    cell.Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
-                                }
-                                cIndex++;
+                                var headerCell = ws.Cell(1, colIndex);
+                                headerCell.Value = col.HeaderText;
+                                headerCell.Style.Font.Bold = true;
+                                headerCell.Style.Font.FontSize = 13;
+                                headerCell.Style.Fill.BackgroundColor = XLColor.FromArgb(30, 61, 88);
+                                headerCell.Style.Font.FontColor = XLColor.White;
+                                headerCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                                headerCell.Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
+                                ws.Column(colIndex).Width = 30;
+                                colIndex++;
                             }
                         }
+
+                        // Dados
+                        for (int r = 0; r < dgvHistorico.Rows.Count; r++)
+                        {
+                            if (dgvHistorico.Rows[r].IsNewRow) continue;
+
+                            int cIndex = 1;
+                            foreach (DataGridViewColumn col in dgvHistorico.Columns)
+                            {
+                                if (col.Visible && !(col is DataGridViewButtonColumn))
+                                {
+                                    var valor = dgvHistorico.Rows[r].Cells[col.Name].Value;
+                                    var cell = ws.Cell(r + 2, cIndex);
+
+                                    if (valor == null || valor == DBNull.Value)
+                                    {
+                                        cell.Value = "";
+                                    }
+                                    else if (col.HeaderText.ToLower().Contains("data") && valor is DateTime dt)
+                                    {
+                                        cell.Value = dt;
+                                        cell.Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                                    }
+                                    else
+                                    {
+                                        cell.Value = valor.ToString();
+                                    }
+
+                                    cell.Style.Font.FontSize = 12;
+                                    cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                                    cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                                    cIndex++;
+                                }
+                            }
+                        }
+
+                        var used = ws.RangeUsed();
+                        if (used != null)
+                        {
+                            used.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                            used.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                        }
+
+                        // Opcional: autoajuste das colunas para melhor leitura
+                        ws.Columns().AdjustToContents();
+
+                        wb.SaveAs(caminhoCompleto);
                     }
 
-                    ws.RangeUsed().Style.Border.InsideBorder = XLBorderStyleValues.Thin;
-                    ws.RangeUsed().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    wb.SaveAs(caminhoCompleto);
-                }
+                    MessageBox.Show($"Exportação concluída!\nArquivo salvo em:\n{caminhoCompleto}", "Exportação",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                MessageBox.Show($"Exportação concluída!\nArquivo salvo em:\n{caminhoCompleto}", "Exportação", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{caminhoCompleto}\"");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao exportar: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    try
+                    {
+                        System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{caminhoCompleto}\"");
+                    }
+                    catch
+                    {
+                        // Ignora se o Explorer não puder ser aberto
+                    }
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    MessageBox.Show(
+                        "Sem permissão para gravar no local escolhido.\n\n" +
+                        "Dica: salve em uma pasta com permissão (ex.: Documentos, Desktop) " +
+                        "ou desative o 'Acesso a pastas controladas' para este aplicativo.\n\n" +
+                        $"Detalhes: {ex.Message}",
+                        "Permissão negada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao exportar: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

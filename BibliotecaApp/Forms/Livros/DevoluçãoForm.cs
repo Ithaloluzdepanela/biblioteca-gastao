@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using static Usuarios;
@@ -230,10 +231,12 @@ namespace BibliotecaApp.Forms.Livros
             return new FiltrosBusca
             {
                 NomeLivro = txtNome.Text.Trim(),
-                CodigoBarras = mtxCodigoBarras.Text.Trim(),
+                CodigoBarras = ObterCodigoDeBarrasFormatado(),
                 StatusFiltro = cbFiltroEmprestimo.SelectedItem?.ToString()
             };
         }
+
+        private string ObterCodigoDeBarrasFormatado() { return new string(mtxCodigoBarras.Text.Where(char.IsDigit).ToArray()); }
 
         private string ConstruirQueryBusca(FiltrosBusca filtros)
         {

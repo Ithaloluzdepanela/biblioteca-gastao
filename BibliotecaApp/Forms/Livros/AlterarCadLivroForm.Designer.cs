@@ -43,6 +43,7 @@
             this.txtNome = new RoundedTextBox();
             this.lblNome = new System.Windows.Forms.Label();
             this.Titulo = new System.Windows.Forms.Label();
+            this.lstSugestoesGenero = new System.Windows.Forms.ListBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,6 +51,7 @@
             // 
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.lstSugestoesGenero);
             this.panel1.Controls.Add(this.btnCancelar);
             this.panel1.Controls.Add(this.btnExcluir);
             this.panel1.Controls.Add(this.btnSalvar);
@@ -331,6 +333,17 @@
             this.Titulo.TabIndex = 93;
             this.Titulo.Text = "Editor de Livro";
             // 
+            // lstSugestoesGenero
+            // 
+            this.lstSugestoesGenero.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lstSugestoesGenero.FormattingEnabled = true;
+            this.lstSugestoesGenero.ItemHeight = 25;
+            this.lstSugestoesGenero.Location = new System.Drawing.Point(308, 262);
+            this.lstSugestoesGenero.Name = "lstSugestoesGenero";
+            this.lstSugestoesGenero.Size = new System.Drawing.Size(617, 79);
+            this.lstSugestoesGenero.TabIndex = 132;
+            this.lstSugestoesGenero.Visible = false;
+            // 
             // AlterarCadLivroForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -365,5 +378,6 @@
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnExcluir;
         private System.Windows.Forms.Button btnSalvar;
+        private System.Windows.Forms.ListBox lstSugestoesGenero;
     }
 }

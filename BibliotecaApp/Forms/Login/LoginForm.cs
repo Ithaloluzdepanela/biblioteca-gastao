@@ -20,14 +20,26 @@ namespace BibliotecaApp.Forms.Login
         #region Propriedades
         // Variável para controle externo de login
         public static bool cancelar = false;
+
+        // Evita reentrância no clique (duplo Enter/click)
+        private bool _isAuthenticating = false;
         #endregion
 
         #region Construtor
         public LoginForm()
         {
             InitializeComponent();
-            txtEmail.KeyDown += txtEmail_KeyDown;
-            txtSenha.KeyDown += txtSenha_KeyDown;
+
+            // AcceptButton só será ativado quando o foco estiver em txtSenha
+            this.AcceptButton = null;
+
+            // Ativa/desativa AcceptButton conforme foco na senha
+            this.txtSenha.Enter += txtSenha_Enter;
+            this.txtSenha.Leave += txtSenha_Leave;
+
+            // Removido: KeyDown já está inscrito no Designer
+            // txtEmail.KeyDown += txtEmail_KeyDown;
+            // txtSenha.KeyDown += txtSenha_KeyDown;
         }
 
         //Fecharo form se o login for cancelado externamente
@@ -64,87 +76,99 @@ namespace BibliotecaApp.Forms.Login
         #region Métodos de Login
         private async void BtnEntrar_Click(object sender, EventArgs e)
         {
-            string email = txtEmail.Text.Trim();
-            string senha = txtSenha.Text;
-
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
-            {
-                MessageBox.Show("Por favor, preencha todos os campos.", "Campos obrigatórios",
-                              MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                if (string.IsNullOrEmpty(email)) txtEmail.Focus();
-                else txtSenha.Focus();
-                return;
-            }
+            if (_isAuthenticating) return;
+            _isAuthenticating = true;
+            if (BtnEntrar != null) BtnEntrar.Enabled = false;
 
             try
             {
-                using (SqlCeConnection conexao = Conexao.ObterConexao())
+                string email = txtEmail.Text.Trim();
+                string senha = txtSenha.Text;
+
+                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
                 {
-                    conexao.Open();
+                    MessageBox.Show("Por favor, preencha todos os campos.", "Campos obrigatórios",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    if (string.IsNullOrEmpty(email)) txtEmail.Focus();
+                    else txtSenha.Focus();
+                    return;
+                }
 
-                    // 1) Tenta login como ADMIN (credenciais simples via banco)
-                    if (LoginAdmin(conexao, email, senha))
+                try
+                {
+                    using (SqlCeConnection conexao = Conexao.ObterConexao())
                     {
-                        Sessao.NomeBibliotecariaLogada = "Administrador";
-                        cancelar = true;
-                        await AtualizarStatusEmprestimosAsync();
-                        this.DialogResult = DialogResult.OK;
-                        this.Close();
-                        return;
-                    }
+                        conexao.Open();
 
-                    // 2) Tenta login como Bibliotecário(a)
-                    string query = @"SELECT Nome, Senha_hash, Senha_salt FROM usuarios 
+                        // 1) Tenta login como ADMIN (credenciais simples via banco)
+                        if (LoginAdmin(conexao, email, senha))
+                        {
+                            Sessao.NomeBibliotecariaLogada = "Administrador";
+                            cancelar = true;
+                            await AtualizarStatusEmprestimosAsync();
+                            this.DialogResult = DialogResult.OK;
+                            this.Close();
+                            return;
+                        }
+
+                        // 2) Tenta login como Bibliotecário(a)
+                        string query = @"SELECT Nome, Senha_hash, Senha_salt FROM usuarios 
                     WHERE Email = @email AND TipoUsuario = 'Bibliotecário(a)'";
 
-                    using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
-                    {
-                        comando.Parameters.AddWithValue("@email", email);
-
-                        using (SqlCeDataReader reader = comando.ExecuteReader())
+                        using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
                         {
-                            if (reader.Read())
+                            comando.Parameters.AddWithValue("@email", email);
+
+                            using (SqlCeDataReader reader = comando.ExecuteReader())
                             {
-                                string hashSalvo = reader["Senha_hash"].ToString();
-                                string saltSalvo = reader["Senha_salt"].ToString();
-                                string nomeUsuario = reader["Nome"].ToString();
-
-                                bool senhaCorreta = CriptografiaSenha.VerificarSenha(senha, hashSalvo, saltSalvo);
-
-                                if (senhaCorreta)
+                                if (reader.Read())
                                 {
-                                    Sessao.NomeBibliotecariaLogada = nomeUsuario;
+                                    string hashSalvo = reader["Senha_hash"].ToString();
+                                    string saltSalvo = reader["Senha_salt"].ToString();
+                                    string nomeUsuario = reader["Nome"].ToString();
 
-                                    await AtualizarStatusEmprestimosAsync();
+                                    bool senhaCorreta = CriptografiaSenha.VerificarSenha(senha, hashSalvo, saltSalvo);
 
-                                    cancelar = true;
-                                    this.DialogResult = DialogResult.OK;
-                                    this.Close();
-                                    return;
+                                    if (senhaCorreta)
+                                    {
+                                        Sessao.NomeBibliotecariaLogada = nomeUsuario;
+
+                                        await AtualizarStatusEmprestimosAsync();
+
+                                        cancelar = true;
+                                        this.DialogResult = DialogResult.OK;
+                                        this.Close();
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Senha incorreta.", "Erro de autenticação",
+                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        txtSenha.Focus();
+                                        return;
+                                    }
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Senha incorreta.", "Erro de autenticação",
+                                    MessageBox.Show("E-mail não encontrado ou usuário sem permissão.", "Erro de autenticação",
                                         MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    txtSenha.Focus();
+                                    txtEmail.Focus();
                                     return;
                                 }
-                            }
-                            else
-                            {
-                                MessageBox.Show("E-mail não encontrado ou usuário sem permissão.", "Erro de autenticação",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                txtEmail.Focus();
-                                return;
                             }
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro na autenticação: " + ex.Message, "Erro",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            catch (Exception ex)
+            finally
             {
-                MessageBox.Show("Erro na autenticação: " + ex.Message, "Erro",
-                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _isAuthenticating = false;
+                if (!IsDisposed && BtnEntrar != null) BtnEntrar.Enabled = true;
             }
         }
 
@@ -177,8 +201,6 @@ namespace BibliotecaApp.Forms.Login
         #endregion
 
         #region Métodos de Atualização
-
-
         private async Task AtualizarStatusEmprestimosAsync()
         {
             using (var progressForm = new frmProgresso())
@@ -576,6 +598,8 @@ string corpo = $@"
         {
             if (e.KeyCode == Keys.Enter)
             {
+                // Impede o AcceptButton e vai para a senha
+                e.Handled = true;
                 e.SuppressKeyPress = true;
                 txtSenha.Focus();
             }
@@ -585,9 +609,19 @@ string corpo = $@"
         {
             if (e.KeyCode == Keys.Enter)
             {
-                e.SuppressKeyPress = true;
-                BtnEntrar.PerformClick();
+                // Deixe o AcceptButton (BtnEntrar) cuidar do Enter no campo senha
             }
+        }
+
+        // Ativa o AcceptButton apenas quando a senha tem foco
+        private void txtSenha_Enter(object sender, EventArgs e)
+        {
+            this.AcceptButton = BtnEntrar;
+        }
+
+        private void txtSenha_Leave(object sender, EventArgs e)
+        {
+            this.AcceptButton = null;
         }
         #endregion
 
@@ -603,12 +637,10 @@ string corpo = $@"
         }
         #endregion
 
-
         #region ControleSemanal (TXT)
         public static class ControleSemanal
         {
             private static readonly string txtPath = Path.Combine(AppPaths.AppDataFolder, "EnvioRelatorioSemanal.txt");
-
 
             public static bool JaEnviadoEstaSemana()
             {
@@ -660,7 +692,8 @@ string corpo = $@"
         }
 
         private void lblVersion_MouseLeave(object sender, EventArgs e)
-        {lblVersion.ForeColor = Color.White;
+        {
+            lblVersion.ForeColor = Color.White;
 
         }
     }

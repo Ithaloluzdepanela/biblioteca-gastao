@@ -297,7 +297,7 @@ namespace BibliotecaApp.Forms.Livros
 
         private bool ValidarQuantidade(out int quantidade)
         {
-            if (!int.TryParse(txtQuantidade.Text, out quantidade))
+            if (!int.TryParse(txtQuantidade.Text.Trim(), out quantidade))
             {
                 MessageBox.Show("Por favor, insira apenas números no campo 'Quantidade'.",
                                 "Erro de formato", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -377,9 +377,9 @@ namespace BibliotecaApp.Forms.Livros
                             VALUES
                             (@Nome, @Autor, @Genero, @Quantidade, @CodigoBarras, @Disponibilidade)";
 
-                        comando.Parameters.AddWithValue("@Nome", txtNome.Text);
-                        comando.Parameters.AddWithValue("@Autor", txtAutor.Text);
-                        comando.Parameters.AddWithValue("@Genero", txtGenero.Text);
+                        comando.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
+                        comando.Parameters.AddWithValue("@Autor", txtAutor.Text.Trim());
+                        comando.Parameters.AddWithValue("@Genero", txtGenero.Text.Trim());
                         comando.Parameters.AddWithValue("@Quantidade", quantidade);
                         comando.Parameters.AddWithValue("@CodigoBarras", codigoBarras);
                         comando.Parameters.AddWithValue("@Disponibilidade", 1);

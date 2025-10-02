@@ -170,7 +170,7 @@ namespace BibliotecaApp
             string nome = txtNome.Text.Trim();
             string autor = txtAutor.Text.Trim();
             string genero = txtGenero.Text.Trim();
-            int quantidade = int.Parse(txtQuantidade.Text);
+            int quantidade = int.Parse(txtQuantidade.Text.Trim());
 
             // >>> Salvar COM máscara, sempre que possível
             string codigoBarras = ObterCodigoDeBarrasFormatado();

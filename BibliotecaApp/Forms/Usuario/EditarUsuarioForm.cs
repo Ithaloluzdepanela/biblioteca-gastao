@@ -1,4 +1,5 @@
-﻿using BibliotecaApp.Forms.Livros;
+﻿using BibliotecaApp.Forms.Inicio;
+using BibliotecaApp.Forms.Livros;
 using BibliotecaApp.Models;
 using BibliotecaApp.Utils;
 using System;
@@ -18,6 +19,7 @@ namespace BibliotecaApp.Forms.Usuario
 {
     public partial class EditarUsuarioForm : Form
     {
+        
         private Size originalSize;
         private List<string> turmasCadastradas = new List<string>();
 
@@ -169,6 +171,7 @@ namespace BibliotecaApp.Forms.Usuario
             {
                 LimparCampos();
             }
+            this.Close();
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)

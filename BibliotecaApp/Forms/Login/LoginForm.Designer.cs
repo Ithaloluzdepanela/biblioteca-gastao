@@ -86,7 +86,7 @@
             this.txtEmail.Location = new System.Drawing.Point(3, 35);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(271, 19);
-            this.txtEmail.TabIndex = 12;
+            this.txtEmail.TabIndex = 1;
             this.txtEmail.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtEmail_KeyDown);
             // 
             // panel1
@@ -144,7 +144,7 @@
             this.txtSenha.Location = new System.Drawing.Point(3, 35);
             this.txtSenha.Name = "txtSenha";
             this.txtSenha.Size = new System.Drawing.Size(271, 19);
-            this.txtSenha.TabIndex = 12;
+            this.txtSenha.TabIndex = 2;
             this.txtSenha.UseSystemPasswordChar = true;
             this.txtSenha.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSenha_KeyDown);
             // 
@@ -184,7 +184,7 @@
             this.BtnEntrar.Location = new System.Drawing.Point(96, 462);
             this.BtnEntrar.Name = "BtnEntrar";
             this.BtnEntrar.Size = new System.Drawing.Size(220, 52);
-            this.BtnEntrar.TabIndex = 18;
+            this.BtnEntrar.TabIndex = 25;
             this.BtnEntrar.Text = "Entrar";
             this.BtnEntrar.UseVisualStyleBackColor = false;
             this.BtnEntrar.Click += new System.EventHandler(this.BtnEntrar_Click);

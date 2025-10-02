@@ -14,7 +14,8 @@ namespace BibliotecaApp.Utils
         public ActivationForm()
         {
             InitializeComponent();
-           
+            System.Diagnostics.Debug.WriteLine(BibliotecaApp.Utils.LicenseValidator.GetMachineId());
+
         }
 
         private LicenseData loadedLicense;
@@ -49,6 +50,9 @@ namespace BibliotecaApp.Utils
                         txtInfo.AppendText("Tipo: " + license.Type + Environment.NewLine);
                         txtInfo.AppendText("Chave: " + license.Key + Environment.NewLine);
                         txtInfo.AppendText("TargetMachineId: " + (license.TargetMachineId ?? "<nenhum>") + Environment.NewLine);
+
+                       
+
                         txtInfo.AppendText("Emitida: " + license.DateIssued.ToString("dd/MM/yyyy HH:mm") + Environment.NewLine);
                         txtInfo.AppendText("Expira: " + (license.ExpireDate == DateTime.MaxValue ? "Permanente" : license.ExpireDate.ToString("dd/MM/yyyy")) + Environment.NewLine);
                     }

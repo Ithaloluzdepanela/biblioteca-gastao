@@ -22,16 +22,7 @@ namespace BibliotecaApp.Forms.Usuario
         
         private Size originalSize;
         private List<string> turmasCadastradas = new List<string>();
-
-        // Dicionário de turmas padrão
-        private Dictionary<string, string[]> dicionarioTurmas = new Dictionary<string, string[]>
-        {
-            { "Ano", new[] { "6° Ano", "7° Ano", "8° Ano", "9° Ano" } },
-            { "Desenvolvimento", new[] { "1° Desenvolvimento", "2° Desenvolvimento", "3° Desenvolvimento" } },
-            { "Agronegócio", new[] { "1° Agronegócio", "2° Agronegócio", "3° Agronegócio" } },
-            { "Propedêutico", new[] { "1° Propedêutico", "2° Propedêutico", "3° Propedêutico" } }
-        };
-
+        
         private List<string> todasTurmasPadrao;
         public event EventHandler UsuarioAtualizado;
 
@@ -42,7 +33,7 @@ namespace BibliotecaApp.Forms.Usuario
             this.KeyPreview = true;
             this.KeyDown += EditarUsuarioForm_KeyDown;
 
-            // Adicionar eventos KeyDown para os controles individuais
+            // Navegação genérica
             txtNome.KeyDown += Control_KeyDown;
             txtEmail.KeyDown += Control_KeyDown;
             txtTurma.KeyDown += Control_KeyDown;
@@ -52,36 +43,53 @@ namespace BibliotecaApp.Forms.Usuario
 
             EstilizarListBoxSugestao(lstSugestoesUsuario);
             originalSize = this.Size;
-            foreach (Control ctrl in this.Controls)
-            {
-                ctrl.Tag = ctrl.Bounds;
-            }
+            foreach (Control ctrl in this.Controls) ctrl.Tag = ctrl.Bounds;
 
-            // Evento de resize
             this.Resize += EditarUsuarioForm_Resize;
 
-            // Inicializar lista de todas as turmas padrão
-            InicializarTurmasPadrao();
+   
 
-            // Eventos para o autocomplete de Turma
+            // Turma
             txtTurma.KeyDown += txtTurma_KeyDown;
             txtTurma.Leave += txtTurma_Leave;
-
             lstSugestoesTurma.Click += lstSugestoesTurma_Click;
             lstSugestoesTurma.KeyDown += lstSugestoesTurma_KeyDown;
             lstSugestoesTurma.Leave += lstSugestoesTurma_Leave;
-
-            // Estilo do ListBox e z-order
             EstilizarListBoxSugestao(lstSugestoesTurma);
             lstSugestoesTurma.BringToFront();
+
+            // NOVO: Nome (eventos para teclado e clique)
+            txtNomeUsuario.KeyDown += txtNomeUsuario_KeyDown;
+            lstSugestoesUsuario.KeyDown += lstSugestoesUsuario_KeyDown;
+            lstSugestoesUsuario.Click += lstSugestoesUsuario_Click;
+            lstSugestoesUsuario.Leave += lstSugestoesUsuario_Leave;
         }
+        // Substitua o método EditarUsuarioForm_KeyDown
         private void EditarUsuarioForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode != Keys.Enter) return;
+
+            // Confirma a lista relacionada ao foco atual (suporta RoundedTextBox via ContainsFocus)
+            if (lstSugestoesUsuario.Visible || lstSugestoesTurma.Visible)
             {
                 e.SuppressKeyPress = true;
-                this.SelectNextControl(this.ActiveControl, true, true, true, true);
+
+                if (lstSugestoesUsuario.Focused || (txtNomeUsuario != null && txtNomeUsuario.ContainsFocus))
+                    if (ConfirmarSugestaoUsuario()) return;
+
+                if (lstSugestoesTurma.Focused || (txtTurma != null && txtTurma.ContainsFocus))
+                    if (ConfirmarSugestaoTurma()) return;
+
+                // Fallback: tenta confirmar qualquer uma visível
+                if (ConfirmarSugestaoUsuario()) return;
+                if (ConfirmarSugestaoTurma()) return;
+
+                return;
             }
+
+            // Fluxo padrão
+            e.SuppressKeyPress = true;
+            this.SelectNextControl(this.ActiveControl, true, true, true, true);
         }
 
         private void Control_KeyDown(object sender, KeyEventArgs e)
@@ -96,19 +104,19 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void lstSugestoesUsuario_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && lstSugestoesUsuario.SelectedItem != null)
+            if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
-                lstSugestoesTurma.Visible = false;
-                txtTurma.Focus();
-                this.SelectNextControl(txtTurma, true, true, true, true);
+                if (lstSugestoesUsuario.SelectedIndex < 0 && lstSugestoesUsuario.Items.Count > 0)
+                    lstSugestoesUsuario.SelectedIndex = 0;
+
+                ConfirmarSugestaoUsuario();
             }
             else if (e.KeyCode == Keys.Escape)
             {
                 e.SuppressKeyPress = true;
-                lstSugestoesTurma.Visible = false;
-                txtTurma.Focus();
+                lstSugestoesUsuario.Visible = false;
+                txtNomeUsuario.Focus();
             }
         }
 
@@ -536,78 +544,99 @@ namespace BibliotecaApp.Forms.Usuario
             return false;
         }
 
-        private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lstSugestoesUsuario.SelectedIndex >= 0)
-            {
-                SelecionarUsuario(lstSugestoesUsuario.SelectedIndex);
-            }
-        }
+        
+            // Substitua o handler para NÃO preencher automaticamente ao mudar a seleção
+private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e)
+{
+    // Evita preenchimento automático; confirmação só por Click ou Enter
+    // Intencionalmente vazio.
+}
 
         private void txtNomeUsuario_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Down && lstSugestoesUsuario.Visible && lstSugestoesUsuario.Items.Count > 0)
+            if (!lstSugestoesUsuario.Visible || lstSugestoesUsuario.Items.Count == 0)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+                return;
+            }
+
+            if (e.KeyCode == Keys.Down)
             {
                 e.SuppressKeyPress = true;
                 lstSugestoesUsuario.Focus();
-                lstSugestoesUsuario.SelectedIndex = 0;
+                if (lstSugestoesUsuario.SelectedIndex < 0 && lstSugestoesUsuario.Items.Count > 0)
+                    lstSugestoesUsuario.SelectedIndex = 0;
             }
             else if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                this.SelectNextControl((Control)sender, true, true, true, true);
+                ConfirmarSugestaoUsuario();
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesUsuario.Visible = false;
             }
         }
 
-        private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
+        // Substitua o método txtNomeUsuario_TextChanged — remove a seleção automática
+private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
+{
+    lstSugestoesUsuario.Items.Clear();
+    lstSugestoesUsuario.Visible = false;
+    _cacheUsuarios.Clear();
+
+    string nomeBusca = txtNomeUsuario.Text.Trim();
+    if (string.IsNullOrWhiteSpace(nomeBusca))
+        return;
+
+    try
+    {
+        using (var conexao = Conexao.ObterConexao())
         {
-            lstSugestoesUsuario.Items.Clear();
-            lstSugestoesUsuario.Visible = false;
-            _cacheUsuarios.Clear();
-
-            string nomeBusca = txtNomeUsuario.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(nomeBusca))
-                return;
-
-            try
+            conexao.Open();
+            string sql = "SELECT * FROM usuarios WHERE Nome LIKE @nome ORDER BY Nome";
+            using (var cmd = new SqlCeCommand(sql, conexao))
             {
-                using (var conexao = Conexao.ObterConexao())
+                cmd.Parameters.AddWithValue("@nome", nomeBusca + "%");
+                using (var reader = cmd.ExecuteReader())
                 {
-                    conexao.Open();
-                    string sql = "SELECT * FROM usuarios WHERE Nome LIKE @nome ORDER BY Nome";
-                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    while (reader.Read())
                     {
-                        cmd.Parameters.AddWithValue("@nome", nomeBusca + "%");
-                        using (var reader = cmd.ExecuteReader())
+                        var usuario = new Usuarios
                         {
-                            while (reader.Read())
-                            {
-                                var usuario = new Usuarios
-                                {
-                                    Id = (int)reader["Id"],
-                                    Nome = reader["Nome"].ToString(),
-                                    Email = reader["Email"].ToString(),
-                                    CPF = reader["CPF"].ToString(),
-                                    DataNascimento = reader["DataNascimento"] != DBNull.Value ? Convert.ToDateTime(reader["DataNascimento"]) : DateTime.MinValue,
-                                    Telefone = reader["Telefone"].ToString(),
-                                    Turma = reader["Turma"].ToString(),
-                                    TipoUsuario = reader["TipoUsuario"].ToString()
-                                };
-                                _cacheUsuarios.Add(usuario);
-                                lstSugestoesUsuario.Items.Add(usuario); // ToString mostra Nome - Turma
-                            }
-                        }
+                            Id = (int)reader["Id"],
+                            Nome = reader["Nome"].ToString(),
+                            Email = reader["Email"].ToString(),
+                            CPF = reader["CPF"].ToString(),
+                            DataNascimento = reader["DataNascimento"] != DBNull.Value ? Convert.ToDateTime(reader["DataNascimento"]) : DateTime.MinValue,
+                            Telefone = reader["Telefone"].ToString(),
+                            Turma = reader["Turma"].ToString(),
+                            TipoUsuario = reader["TipoUsuario"].ToString()
+                        };
+                        _cacheUsuarios.Add(usuario);
+                        lstSugestoesUsuario.Items.Add(usuario); // ToString exibe Nome - Turma
                     }
                 }
-                lstSugestoesUsuario.Visible = lstSugestoesUsuario.Items.Count > 0;
-                lstSugestoesUsuario.Enabled = lstSugestoesUsuario.Items.Count > 0;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro na busca: " + ex.Message);
             }
         }
+
+        lstSugestoesUsuario.Visible = lstSugestoesUsuario.Items.Count > 0;
+        lstSugestoesUsuario.Enabled = lstSugestoesUsuario.Items.Count > 0;
+
+        // NÃO pré-seleciona; permite digitar sem auto-preencher
+        if (lstSugestoesUsuario.Visible)
+            lstSugestoesUsuario.SelectedIndex = -1;
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show("Erro na busca: " + ex.Message);
+    }
+}
 
         // Configurações de exibição para Edição de Usuário
 
@@ -911,14 +940,7 @@ namespace BibliotecaApp.Forms.Usuario
         }
 
         #region Métodos de Turma
-        private void InicializarTurmasPadrao()
-        {
-            todasTurmasPadrao = new List<string>();
-            foreach (var categoria in dicionarioTurmas.Values)
-            {
-                todasTurmasPadrao.AddRange(categoria);
-            }
-        }
+        
 
         private void CarregarTurmasDoBanco()
         {
@@ -953,156 +975,45 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
-        private string CorrigirTurma(string turmaDigitada)
-        {
-            if (string.IsNullOrWhiteSpace(turmaDigitada))
-                return turmaDigitada;
+        
 
-            // Adicionar ° automaticamente se não tiver
-            if (!turmaDigitada.Contains("°") && Regex.IsMatch(turmaDigitada, @"^\d+"))
-            {
-                turmaDigitada = Regex.Replace(turmaDigitada, @"^(\d+)", "$1°");
-            }
+        // Substitua o txtTurma_TextChanged: remove a seleção automática
+private void txtTurma_TextChanged(object sender, EventArgs e)
+{
+    string texto = txtTurma.Text.Trim();
 
-            // Extrair número e tipo
-            string numeroStr = "";
-            string tipo = "";
-            string numeroTurma = "";
+    if (string.IsNullOrEmpty(texto))
+    {
+        lstSugestoesTurma.Visible = false;
+        return;
+    }
 
-            // Extrair o número principal (antes do °)
-            Match matchNumero = Regex.Match(turmaDigitada, @"^(\d+)°");
-            if (matchNumero.Success)
-            {
-                numeroStr = matchNumero.Groups[1].Value;
-            }
-            else
-            {
-                // Se não encontrou o padrão com °, tentar sem °
-                matchNumero = Regex.Match(turmaDigitada, @"^(\d+)\s");
-                if (matchNumero.Success)
-                {
-                    numeroStr = matchNumero.Groups[1].Value;
-                    turmaDigitada = turmaDigitada.Replace(matchNumero.Value, matchNumero.Groups[1].Value + "° ");
-                }
-            }
+    var sugestoes = BibliotecaApp.Utils.TurmasUtil.BuscarSugestoes(texto);
 
-            // Determinar o tipo de turma
-            string turmaLower = turmaDigitada.ToLower();
-            if (turmaLower.Contains("p"))
-            {
-                tipo = "Propedêutico";
-            }
-            else if (turmaLower.Contains("d"))
-            {
-                tipo = "Desenvolvimento";
-            }
-            else if (turmaLower.Contains("ag"))
-            {
-                tipo = "Agronegócio";
-            }
-            else if (turmaLower.Contains("an"))
-            {
-                tipo = "Ano";
-            }
+    lstSugestoesTurma.Items.Clear();
 
-            // Extrair número da turma (no final)
-            Match matchNumeroTurma = Regex.Match(turmaDigitada, @"(\d+)$");
-            if (matchNumeroTurma.Success)
-            {
-                numeroTurma = matchNumeroTurma.Value;
-            }
+    if (sugestoes.Count > 0)
+    {
+        foreach (var s in sugestoes)
+            lstSugestoesTurma.Items.Add(s);
 
-            // Corrigir número principal se for impossível
-            if (!string.IsNullOrEmpty(numeroStr))
-            {
-                int numero;
-                if (int.TryParse(numeroStr, out numero))
-                {
-                    if (tipo == "Ano")
-                    {
-                        // Para turmas de Ano: 6° a 9°
-                        if (numero < 6) numero = 6;
-                        else if (numero > 9) numero = 9;
-                    }
-                    else if (!string.IsNullOrEmpty(tipo))
-                    {
-                        // Para outras turmas: 1° a 3°
-                        if (numero < 1) numero = 1;
-                        else if (numero > 3) numero = 3;
-                    }
+        int visibleItems = Math.Min(5, sugestoes.Count);
+        int extraPadding = 8;
+        lstSugestoesTurma.Height = visibleItems * lstSugestoesTurma.ItemHeight + extraPadding;
+        lstSugestoesTurma.Width = txtTurma.Width;
+        lstSugestoesTurma.Left = txtTurma.Left;
+        lstSugestoesTurma.Top = txtTurma.Bottom;
+        lstSugestoesTurma.BringToFront();
+        lstSugestoesTurma.Visible = true;
 
-                    numeroStr = numero.ToString();
-                }
-            }
-
-            // Corrigir número da turma se for impossível
-            if (!string.IsNullOrEmpty(numeroTurma))
-            {
-                int numero;
-                if (int.TryParse(numeroTurma, out numero))
-                {
-                    if (numero < 1) numero = 1;
-                    // Não há limite máximo para o número da turma
-                    numeroTurma = numero.ToString();
-                }
-            }
-
-            // NOVA LÓGICA: Remover apenas o número "1" no final para cursos técnicos
-            if (!string.IsNullOrEmpty(tipo) && tipo != "Ano" && !string.IsNullOrEmpty(numeroTurma) && numeroTurma == "1")
-            {
-                // Para cursos técnicos, remover apenas o número "1" da turma (final)
-                numeroTurma = "";
-            }
-
-            // Montar turma corrigida
-            string turmaCorrigida = !string.IsNullOrEmpty(numeroStr) ? numeroStr + "°" : "";
-
-            if (!string.IsNullOrEmpty(tipo))
-            {
-                turmaCorrigida += " " + tipo;
-            }
-
-            if (!string.IsNullOrEmpty(numeroTurma))
-            {
-                turmaCorrigida += " " + numeroTurma;
-            }
-
-            return !string.IsNullOrEmpty(turmaCorrigida) ? turmaCorrigida.Trim() : turmaDigitada;
-        }
-
-        private void txtTurma_TextChanged(object sender, EventArgs e)
-        {
-            string texto = txtTurma.Text.Trim();
-
-            if (string.IsNullOrEmpty(texto))
-            {
-                lstSugestoesTurma.Visible = false;
-                return;
-            }
-
-            // Buscar sugestões apenas nas turmas permitidas
-            var sugestoes = BibliotecaApp.Utils.TurmasUtil.BuscarSugestoes(texto);
-
-            lstSugestoesTurma.Items.Clear();
-
-            if (sugestoes.Count > 0)
-            {
-                foreach (var s in sugestoes)
-                    lstSugestoesTurma.Items.Add(s);
-
-                int visibleItems = Math.Min(5, sugestoes.Count);
-                int extraPadding = 8;
-                lstSugestoesTurma.Height = visibleItems * lstSugestoesTurma.ItemHeight + extraPadding;
-                lstSugestoesTurma.Width = txtTurma.Width;
-                lstSugestoesTurma.Left = txtTurma.Left;
-                lstSugestoesTurma.Top = txtTurma.Bottom;
-                lstSugestoesTurma.Visible = true;
-            }
-            else
-            {
-                lstSugestoesTurma.Visible = false;
-            }
-        }
+        // NÃO seleciona nada automaticamente aqui
+        lstSugestoesTurma.SelectedIndex = -1;
+    }
+    else
+    {
+        lstSugestoesTurma.Visible = false;
+    }
+}
 
         private void txtTurma_Leave(object sender, EventArgs e)
         {
@@ -1134,6 +1045,7 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
+        // Substitua para usar confirmação centralizada (Turma)
         private void txtTurma_KeyDown(object sender, KeyEventArgs e)
         {
             if (!lstSugestoesTurma.Visible || lstSugestoesTurma.Items.Count == 0)
@@ -1150,19 +1062,16 @@ namespace BibliotecaApp.Forms.Usuario
             {
                 e.SuppressKeyPress = true;
                 lstSugestoesTurma.Focus();
-                if (lstSugestoesTurma.Items.Count > 0)
+                if (lstSugestoesTurma.SelectedIndex < 0 && lstSugestoesTurma.Items.Count > 0)
                     lstSugestoesTurma.SelectedIndex = 0;
             }
             else if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                if (lstSugestoesTurma.SelectedItem != null)
-                    txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
-                else if (lstSugestoesTurma.Items.Count > 0)
-                    txtTurma.Text = lstSugestoesTurma.Items[0].ToString();
-
-                lstSugestoesTurma.Visible = false;
-                this.SelectNextControl((Control)sender, true, true, true, true);
+                // Se nada estiver selecionado, seleciona o primeiro e confirma
+                if (lstSugestoesTurma.SelectedIndex < 0 && lstSugestoesTurma.Items.Count > 0)
+                    lstSugestoesTurma.SelectedIndex = 0;
+                ConfirmarSugestaoTurma();
             }
             else if (e.KeyCode == Keys.Escape)
             {
@@ -1174,13 +1083,14 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void lstSugestoesTurma_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && lstSugestoesTurma.SelectedItem != null)
+            if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
-                lstSugestoesTurma.Visible = false;
-                txtTurma.Focus();
-                this.SelectNextControl(txtTurma, true, true, true, true);
+
+                if (lstSugestoesTurma.SelectedIndex < 0 && lstSugestoesTurma.Items.Count > 0)
+                    lstSugestoesTurma.SelectedIndex = 0;
+
+                ConfirmarSugestaoTurma();
             }
             else if (e.KeyCode == Keys.Escape)
             {
@@ -1213,5 +1123,49 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
+        // NOVO: clique/leave do listbox de Nome
+        private void lstSugestoesUsuario_Click(object sender, EventArgs e)
+        {
+            if (lstSugestoesUsuario.SelectedIndex >= 0)
+                SelecionarUsuario(lstSugestoesUsuario.SelectedIndex);
+        }
+
+        private void lstSugestoesUsuario_Leave(object sender, EventArgs e)
+        {
+            lstSugestoesUsuario.Visible = false;
+        }
+
+        // Helpers centralizados (adicione próximo às outras rotinas)
+        private bool ConfirmarSugestaoUsuario()
+        {
+            if (!lstSugestoesUsuario.Visible || lstSugestoesUsuario.Items.Count == 0)
+                return false;
+
+            if (lstSugestoesUsuario.SelectedIndex < 0)
+                lstSugestoesUsuario.SelectedIndex = 0;
+
+            SelecionarUsuario(lstSugestoesUsuario.SelectedIndex);
+            txtNomeUsuario.Focus();
+            this.SelectNextControl(txtNomeUsuario, true, true, true, true);
+            return true;
+        }
+
+        private bool ConfirmarSugestaoTurma()
+        {
+            if (!lstSugestoesTurma.Visible || lstSugestoesTurma.Items.Count == 0)
+                return false;
+
+            if (lstSugestoesTurma.SelectedIndex < 0)
+                lstSugestoesTurma.SelectedIndex = 0;
+
+            var valor = lstSugestoesTurma.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(valor)) return false;
+
+            txtTurma.Text = valor;
+            lstSugestoesTurma.Visible = false;
+            txtTurma.Focus();
+            this.SelectNextControl(txtTurma, true, true, true, true);
+            return true;
+        }
     }
 }

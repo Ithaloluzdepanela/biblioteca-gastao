@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace BibliotecaApp.Utils
@@ -7,80 +8,176 @@ namespace BibliotecaApp.Utils
     {
         public bool Accepted { get; private set; } = false;
 
+        // Marca se o usuário já chegou ao final pelo menos uma vez
+        private bool _termsScrolledToBottomOnce;
+
+        // Win32 interop para ler o estado do scroll
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SCROLLINFO
+        {
+            public uint cbSize;
+            public uint fMask;
+            public int nMin;
+            public int nMax;
+            public uint nPage;
+            public int nPos;
+            public int nTrackPos;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool GetScrollInfo(IntPtr hwnd, int nBar, ref SCROLLINFO lpsi);
+
+        private const int SB_VERT = 1;
+        private const int SIF_RANGE = 0x1;
+        private const int SIF_PAGE = 0x2;
+        private const int SIF_POS = 0x4;
+        private const int SIF_TRACKPOS = 0x10;
+        private const int SIF_ALL = SIF_RANGE | SIF_PAGE | SIF_POS | SIF_TRACKPOS;
+
         public TermsForm()
         {
             InitializeComponent();
-            GetTermsRtf();
 
+            // Carrega o termo e garante que começa no topo
             rtbTerms.Rtf = GetTermsRtf();
+            rtbTerms.SelectionStart = 0;
+            rtbTerms.ScrollToCaret();
+
+            // Desabilita o checkbox até que o usuário role até o final
+            chkAccept.Enabled = false;
+            _termsScrolledToBottomOnce = false;
+
+            // Assina eventos que podem alterar a visibilidade do final do texto
+            rtbTerms.VScroll += rtbTerms_VScroll;
+            rtbTerms.Resize += rtbTerms_Resize;
+            rtbTerms.ContentsResized += rtbTerms_ContentsResized;
+
+            // Caso o conteúdo caiba sem rolagem, habilita de imediato
+            CheckIfBottomReached();
         }
 
         private string GetTermsRtf()
         {
-            // RichText formatado: \i ... \i0 deixa em itálico
+            // RichText formatado: \i ... \i0 para itálico, \b ... \b0 para negrito, \line para quebra de linha
             return @"{\rtf1\ansi
-Última atualização: 13/09/2025\line
+{\b Termos de Uso — BibliotecaApp}\line
 \line
-Ao utilizar o Sistema BibliotecaApp (“Sistema”), você concorda integralmente com os termos e condições abaixo. Caso não concorde, não utilize o Sistema.\line
+{\b Última atualização:} 01/10/2025\line
 \line
-1. Licença de Uso\line
-- A {\i Beverso}\i0  concede ao usuário uma licença não exclusiva, intransferível, limitada e revogável para utilizar o Sistema apenas para gestão de bibliotecas.\line
-- O uso do Sistema requer ativação por chave fornecida exclusivamente pela {\i Beverso}\i0.\line
-- A licença é válida apenas na(s) máquina(s) em que a chave for ativada.\line
-- A {\i Beverso}\i0  reserva-se o direito de suspender ou revogar a licença em caso de violação destes termos.\line
+Este documento estabelece os termos e condições aplicáveis ao uso do software {\b BibliotecaApp}\b0  (doravante, “Sistema”), desenvolvido e licenciado por {\b Beverso}\b0  (doravante, “Beverso” ou “Licenciante”). O Licenciado indicado neste Termo é a {\b Escola Estadual Professor Gastão Valle}\b0  (doravante, “Instituição” ou “Licenciado”).\line
 \line
-2. Requisitos de Ativação\line
-- Cada chave de ativação possui limite de ativações e uso pessoal.\line
-- É proibido compartilhar, distribuir ou vender chaves.\line
-- Qualquer tentativa de burlar o mecanismo de ativação ou gerar chaves indevidas é crime de violação de software.\line
+Ao utilizar o Sistema, a Instituição concorda integralmente com estes Termos. Caso não concorde, não instale, ative ou utilize o Sistema.\line
 \line
-3. Uso Aceitável\line
-- O Sistema deve ser utilizado somente para fins administrativos de bibliotecas.\line
-- É proibido: modificar, copiar, descompilar, traduzir, engenharia reversa, redistribuir, usar para fins ilícitos ou transferir licença sem autorização da {\i Beverso}\i0.\line
+{\b 1. Concessão de Licença}\line
+1.1. A Beverso concede à Instituição uma {\b licença limitada, não exclusiva, intransferível e revogável} para utilização do Sistema, exclusivamente para fins administrativos da biblioteca da Instituição.\line
+1.2. Esta licença refere-se {\b apenas à edição única e exclusiva} do Sistema disponibilizada gratuitamente à Instituição nesta data. Essa edição única {\b não implicará transferência de titularidade} do software nem de quaisquer direitos de propriedade intelectual.\line
+1.3. A licença é válida somente nas máquinas ou ambientes em que a chave de ativação fornecida pela Beverso for corretamente ativada, observados os limites de ativações comunicados pela Beverso.\line
 \line
-4. Responsabilidades do Usuário\line
-- Manter backup regular de todos os dados armazenados.\line
-- Proteger credenciais e controlar acesso ao computador.\line
-- A {\i Beverso}\i0  não se responsabiliza por perda, alteração ou corrupção de dados.\line
+{\b 2. Ativação e Controle de Chaves}\line
+2.1. A ativação do Sistema depende de chave fornecida pela Beverso. Cada chave possui limite de ativações e é destinada ao uso exclusivo da Instituição.\line
+2.2. É proibido compartilhar, distribuir, alugar, sublicenciar, ceder, vender ou de qualquer forma transferir as chaves de ativação a terceiros. Qualquer tentativa de fraudar, burlar ou manipular o mecanismo de ativação poderá ensejar responsabilização civil e criminal.\line
 \line
-5. Privacidade e Proteção de Dados\line
-- O Sistema pode armazenar informações de usuários da biblioteca, cadastros de livros e registros de empréstimos.\line
-- A {\i Beverso}\i0  não coleta dados pessoais sem consentimento explícito.\line
-- O usuário deve proteger os dados contra acessos não autorizados.\line
-- Em caso de violação, o usuário deve notificar a {\i Beverso}\i0  imediatamente.\line
+{\b 3. Uso Aceitável e Restrições}\line
+3.1. O Sistema deverá ser utilizado somente para a gestão da biblioteca da Instituição.\line
+3.2. Fica expressamente vedado: (i) copiar, modificar, adaptar, traduzir, descompilar, fazer engenharia reversa, desmontar, produzir trabalhos derivados, ou de qualquer forma tentar acessar o código-fonte; (ii) redistribuir, sublicenciar, revender ou disponibilizar o Sistema a terceiros; (iii) utilizar o Sistema para fins ilícitos ou em desacordo com estes Termos.\line
+3.3. A Instituição declara que não realizará publicações, distribuições ou disponibilizações do Sistema ou de quaisquer partes do mesmo sem autorização escrita e prévia da Beverso.\line
 \line
-6. Suporte e Atualizações\line
-- Atualizações podem incluir correções de bugs, melhorias de segurança ou novas funcionalidades.\line
-- Sujeitas a novos termos de uso.\line
-- O suporte técnico não garante recuperação de dados perdidos ou falhas de terceiros.\line
+{\b 4. Propriedade Intelectual}\line
+4.1. Todo o código-fonte, documentação, design, interfaces, banco de dados, imagens, fluxos, marcas, e demais componentes do Sistema são {\b propriedade exclusiva da Beverso}.\line
+4.2. Nenhum direito de propriedade intelectual é transferido à Instituição em razão destes Termos, salvo o direito limitado de uso descrito na cláusula 1.\line
+4.3. A Instituição reconhece a autoria e paternidade da Beverso sobre o Sistema e concorda em não contestar tais direitos.\line
 \line
-7. Garantia Limitada\line
-- O Sistema é fornecido “no estado em que se encontra”, sem garantias expressas ou implícitas.\line
-- A {\i Beverso}\i0  não será responsável por danos diretos, indiretos, incidentais, especiais ou consequenciais.\line
-- A responsabilidade total da {\i Beverso}\i0, se houver, será limitada ao valor pago pelo Sistema.\line
+{\b 5. Edição Única e Sem Custos Adicionais}\line
+5.1. A edição do Sistema fornecida à Instituição nesta data foi disponibilizada {\b uma única vez} e {\b sem custos de licenciamento adicionais}.\line
+5.2. A Beverso reserva-se o direito de condicionar atualizações, novas versões, suporte técnico continuado ou customizações à contratação de serviços pagos, conforme previsto na Cláusula 6.\line
 \line
-8. Propriedade Intelectual\line
-- O Sistema, incluindo código, design, imagens e documentação, é propriedade exclusiva da {\i Beverso}\i0.\line
-- Nenhum direito de propriedade intelectual é transferido ao usuário.\line
-- Uso indevido de direitos autorais, patentes ou marcas registradas poderá resultar em ação judicial.\line
+{\b 6. Suporte, Atualizações e Customizações}\line
+6.1. Atualizações, manutenção, correções de segurança, funcionalidades novas ou melhorias {\b serão fornecidas somente mediante contratação} específica entre a Instituição e a Beverso, salvo quando expressamente previsto em documento contrário assinado por ambas as partes.\line
+6.2. Customizações, integrações com sistemas de terceiros ou adaptações do Sistema também dependem de contrato específico e remuneração adicional.\line
+6.3. O suporte técnico prestado pela Beverso, quando contratado, terá o escopo definido no respectivo contrato de prestação de serviços.\line
 \line
-9. Rescisão\line
-- A {\i Beverso}\i0  pode rescindir a licença em caso de violação destes termos.\line
-- Após a rescisão, o usuário deve desinstalar o Sistema e excluir todos os arquivos relacionados.\line
-- Violação pode implicar responsabilidade civil e criminal.\line
+{\b 7. Responsabilidades da Instituição}\line
+7.1. A Instituição é responsável por: (i) manter cópias de segurança (backup) atualizadas de todos os dados introduzidos no Sistema; (ii) proteger credenciais de acesso (usuários e senhas); (iii) garantir a segurança física e lógica das máquinas e da rede onde o Sistema estiver instalado; (iv) cumprir a legislação aplicável ao tratamento de dados pessoais.\line
+7.2. A Beverso não assume responsabilidade pela perda, dano, corrupção ou indisponibilidade de dados causada por má utilização, falhas de hardware, falhas de terceiros, ataques, ou por ausência de backups adequados pela Instituição.\line
 \line
-10. Alterações nos Termos\line
-- A {\i Beverso}\i0  pode modificar ou atualizar os termos a qualquer momento.\line
-- É responsabilidade do usuário verificar periodicamente a versão mais recente.\line
+{\b 8. Privacidade e Proteção de Dados}\line
+8.1. O Sistema pode processar e armazenar dados pessoais de usuários da biblioteca (alunos, professores, servidores, terceiros). A Instituição, enquanto controladora dos dados, declara e garante que observará a legislação aplicável, inclusive a Lei Geral de Proteção de Dados Pessoais — LGPD (Lei nº 13.709/2018), quando aplicável.\line
+8.2. A Beverso não coletará dados pessoais da Instituição ou dos usuários sem consentimento explícito ou previsão contratual, exceto para finalidades técnicas estritamente necessárias (por exemplo, logs de erro, telemetria) quando previamente informadas.\line
+8.3. Em caso de incidente de segurança que envolva dados pessoais, a Instituição deverá notificar a Beverso tempestivamente, e as partes cooperarão para mitigar impactos, observados os deveres legais de comunicação às autoridades competentes e titulares, quando exigido.\line
 \line
-11. Legislação Aplicável\line
-- Estes termos são regidos pelas leis da República Federativa do Brasil.\line
-- Litígios serão resolvidos no foro da cidade de Bocaiuva, Estado de Minas Gerais, Brasil.\line
+{\b 9. Auditoria e Monitoramento}\line
+9.1. A Beverso poderá, mediante aviso prévio e observadas as restrições legais aplicáveis, realizar auditorias técnicas ou operacionais para verificar o cumprimento destes Termos, ou em razão de indícios de uso indevido do Sistema.\line
+9.2. Caso seja constatado uso indevido, a Beverso poderá suspender o acesso até regularização, sem prejuízo da adoção das medidas legais cabíveis.\line
 \line
-12. Aceitação do Usuário\line
-- Ao clicar em “Li e aceito os termos de uso”, você declara que leu, compreendeu e concorda integralmente.\line
-- Caso não aceite os termos, não poderá utilizar o Sistema.\line
+{\b 10. Vigência}\line
+10.1. Estes Termos vigoram por prazo {\b vitalício} quanto à edição única e exclusiva fornecida gratuitamente à Instituição nesta data, ressalvadas situações de rescisão previstas nestes Termos ou por decisão judicial.\line
+10.2. A Beverso poderá rescindir a licença em caso de descumprimento destes Termos, fraude ou uso indevido. Após a rescisão, a Instituição deverá desinstalar o Sistema e excluir todos os arquivos relacionados, salvo disposição contratual em contrário.\line
+\line
+{\b 11. Garantia e Limitação de Responsabilidade}\line
+11.1. O Sistema é fornecido “no estado em que se encontra” ({\i as is}\i0). A Beverso não concede garantias expressas ou implícitas quanto a adequação a um propósito específico, ausência de erros ou compatibilidade com equipamentos da Instituição.\line
+11.2. A Beverso não será responsável por danos indiretos, especiais, incidentais, emergentes ou lucros cessantes decorrentes do uso ou incapacidade de uso do Sistema.\line
+11.3. A responsabilidade total da Beverso, quando existente, fica limitada ao valor efetivamente pago pela Instituição pela contratação de serviços vinculados ao Sistema, se houver.\line
+\line
+{\b 12. Rescisão}\line
+12.1. A Beverso poderá rescindir a licença e o acesso ao Sistema em caso de violação destes Termos, mediante notificação e prazo para regularização quando aplicável.\line
+12.2. A rescisão não exime as partes de responsabilidades por atos praticados anteriormente.\line
+\line
+{\b 13. Alterações destes Termos}\line
+13.1. A Beverso poderá modificar estes Termos a qualquer momento. Quando houver alterações relevantes, a Beverso informará a Instituição por meio do canal de comunicação previamente estabelecido.\line
+13.2. É responsabilidade da Instituição verificar periodicamente a versão mais recente destes Termos.\line
+\line
+{\b 14. Lei Aplicável e Foro}\line
+14.1. Estes Termos serão regidos e interpretados de acordo com as leis da República Federativa do Brasil.\line
+14.2. Fica eleito o foro da comarca de Bocaiuva, Estado de Minas Gerais, Brasil, como competente para dirimir quaisquer controvérsias decorrentes destes Termos, com renúncia expressa a qualquer outro, por mais privilegiado que seja.\line
+\line
+{\b 15. Disposições Finais}\line
+15.1. Caso qualquer disposição destes Termos seja considerada inválida ou inexequível, as demais disposições permanecerão em pleno vigor.\line
+15.2. A eventual tolerância da Beverso quanto ao descumprimento de quaisquer das obrigações estabelecidas nestes Termos não importará em renúncia de direitos.\line
+\line
+Ao clicar em “Li e aceito os termos de uso”, a Instituição declara ter lido, compreendido e concordado com todos os termos e condições aqui descritos.\line
+\line
+{\b Beverso.}\line
+\line
+{\b Licenciado:} Escola Estadual Professor Gastão Valle\line
 }";
+        }
+
+        private void rtbTerms_VScroll(object sender, EventArgs e) => CheckIfBottomReached();
+        private void rtbTerms_Resize(object sender, EventArgs e) => CheckIfBottomReached();
+        private void rtbTerms_ContentsResized(object sender, ContentsResizedEventArgs e) => CheckIfBottomReached();
+
+        private void CheckIfBottomReached()
+        {
+            if (_termsScrolledToBottomOnce)
+                return;
+
+            if (IsScrolledToBottom(rtbTerms))
+            {
+                _termsScrolledToBottomOnce = true;
+                chkAccept.Enabled = true;
+            }
+        }
+
+        private static bool IsScrolledToBottom(RichTextBox rtb)
+        {
+            var si = new SCROLLINFO
+            {
+                cbSize = (uint)Marshal.SizeOf(typeof(SCROLLINFO)),
+                fMask = SIF_ALL
+            };
+
+            if (!GetScrollInfo(rtb.Handle, SB_VERT, ref si))
+            {
+                // Se não for possível obter o scroll, assume que não há rolagem necessária.
+                return true;
+            }
+
+            // Quando o conteúdo cabe, nMax <= nPage (sem barra de rolagem)
+            if (si.nMax <= si.nPage)
+                return true;
+
+            var maxPos = si.nMax - (int)si.nPage;
+            return si.nPos >= maxPos;
         }
 
         private void btnContinue_Click(object sender, EventArgs e)
@@ -96,8 +193,6 @@ Ao utilizar o Sistema BibliotecaApp (“Sistema”), você concorda integralment
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
-
-        
 
         private void picExit_Click(object sender, EventArgs e)
         {

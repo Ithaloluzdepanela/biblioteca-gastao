@@ -80,7 +80,7 @@ namespace BibliotecaApp
                     if (login.ShowDialog() == DialogResult.OK)
                     {
 
-                        // ---- Backup diario desativado / ative na versao final juntamente com o relatorio para secretaria //
+                        // ---- Backup diario desativado / ative na versao final juntamente com o relatorio para secretaria em loginform //
 
                         //try
                         //{

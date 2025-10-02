@@ -22,6 +22,9 @@ namespace BibliotecaApp.Forms.Livros
         private bool _carregandoLivroAutomaticamente = false;
         private List<Livro> _cacheLivros = new List<Livro>();
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
+        
+        private const int LIMITE_CODIGO_BARRAS = 13;
+
         #endregion
 
         #region Classe Conexao
@@ -67,7 +70,7 @@ namespace BibliotecaApp.Forms.Livros
 
             txtLivro.TextChanged += txtLivro_TextChanged;
             txtLivro.Leave += txtLivro_Leave;
-            lstLivros.Leave += lstLivros_Leave;
+            
             txtLivro.KeyDown += txtLivro_KeyDown;
             lstLivros.Click += lstLivros_Click;
             lstLivros.KeyDown += lstLivros_KeyDown;
@@ -90,7 +93,9 @@ namespace BibliotecaApp.Forms.Livros
             this.KeyPreview = true;
             this.KeyDown += Form_KeyDown;
 
-           
+            // Limite de caracteres para o código de barras (RoundedTextBox não tem MaxLength)
+            txtBarcode.KeyPress += txtBarcode_KeyPressLimiter;
+            txtBarcode.TextChanged += txtBarcode_TextChangedLimiter;
         }
 
         private void label2_Click(object sender, EventArgs e) { }
@@ -373,7 +378,6 @@ namespace BibliotecaApp.Forms.Livros
             string nomeBusca = txtNomeUsuario.Text.Trim();
 
             lstSugestoesUsuario.Items.Clear();
-            
             lstSugestoesUsuario.Visible = false;
             _cacheUsuarios.Clear();
 
@@ -412,6 +416,10 @@ namespace BibliotecaApp.Forms.Livros
                 }
                 lstSugestoesUsuario.Visible = lstSugestoesUsuario.Items.Count > 0;
                 lstSugestoesUsuario.Enabled = lstSugestoesUsuario.Items.Count > 0;
+
+                // Seleciona o primeiro item por padrão
+                if (lstSugestoesUsuario.Visible)
+                    lstSugestoesUsuario.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -429,31 +437,47 @@ namespace BibliotecaApp.Forms.Livros
 
         private void txtNomeUsuario_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!lstSugestoesUsuario.Visible) return;
+            if (!lstSugestoesUsuario.Visible || lstSugestoesUsuario.Items.Count == 0)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+                return;
+            }
 
-            if (e.KeyCode == Keys.Down && lstSugestoesUsuario.SelectedIndex < lstSugestoesUsuario.Items.Count - 1)
+            if (e.KeyCode == Keys.Down)
             {
-                e.Handled = true;
-                lstSugestoesUsuario.SelectedIndex++;
+                e.SuppressKeyPress = true;
+                lstSugestoesUsuario.Focus();
+                if (lstSugestoesUsuario.Items.Count > 0)
+                    lstSugestoesUsuario.SelectedIndex = 0;
             }
-            else if (e.KeyCode == Keys.Up && lstSugestoesUsuario.SelectedIndex > 0)
+            else if (e.KeyCode == Keys.Enter)
             {
-                e.Handled = true;
-                lstSugestoesUsuario.SelectedIndex--;
+                e.SuppressKeyPress = true;
+                ConfirmarSugestaoUsuario();
             }
-            else if (e.KeyCode == Keys.Enter && lstSugestoesUsuario.SelectedIndex >= 0)
+            else if (e.KeyCode == Keys.Escape)
             {
-                e.Handled = true;
-                SelecionarUsuario(lstSugestoesUsuario.SelectedIndex);
+                e.SuppressKeyPress = true;
+                lstSugestoesUsuario.Visible = false;
             }
         }
 
         private void lstSugestoesUsuario_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && lstSugestoesUsuario.SelectedIndex >= 0)
+            if (e.KeyCode == Keys.Enter)
             {
-                e.Handled = true;
-                SelecionarUsuario(lstSugestoesUsuario.SelectedIndex);
+                e.SuppressKeyPress = true;
+                ConfirmarSugestaoUsuario();
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesUsuario.Visible = false;
+                txtNomeUsuario.Focus();
             }
         }
 
@@ -526,22 +550,32 @@ namespace BibliotecaApp.Forms.Livros
         #region Métodos de Livros
         private void txtLivro_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!lstLivros.Visible) return;
+            if (!lstLivros.Visible || lstLivros.Items.Count == 0)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+                return;
+            }
 
-            if (e.KeyCode == Keys.Down && lstLivros.SelectedIndex < lstLivros.Items.Count - 1)
+            if (e.KeyCode == Keys.Down)
             {
-                e.Handled = true;
-                lstLivros.SelectedIndex++;
+                e.SuppressKeyPress = true;
+                lstLivros.Focus();
+                if (lstLivros.Items.Count > 0)
+                    lstLivros.SelectedIndex = 0;
             }
-            else if (e.KeyCode == Keys.Up && lstLivros.SelectedIndex > 0)
+            else if (e.KeyCode == Keys.Enter)
             {
-                e.Handled = true;
-                lstLivros.SelectedIndex--;
+                e.SuppressKeyPress = true;
+                ConfirmarSugestaoLivro();
             }
-            else if (e.KeyCode == Keys.Enter && lstLivros.SelectedIndex >= 0)
+            else if (e.KeyCode == Keys.Escape)
             {
-                e.Handled = true;
-                SelecionarLivro(lstLivros.SelectedIndex);
+                e.SuppressKeyPress = true;
+                lstLivros.Visible = false;
             }
         }
 
@@ -596,148 +630,152 @@ namespace BibliotecaApp.Forms.Livros
                 if (lstLivros.Visible)
                     lstLivros.BringToFront();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro ao buscar livros:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+catch (Exception ex)
+{
+    MessageBox.Show("Erro ao buscar livros:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+}
+}
 
-        private void lstLivros_Click(object sender, EventArgs e)
+private void lstLivros_Click(object sender, EventArgs e)
+{
+    if (lstLivros.SelectedIndex >= 0)
+        SelecionarLivro(lstLivros.SelectedIndex);
+}
+
+private void lstLivros_KeyDown(object sender, KeyEventArgs e)
+{
+    if (e.KeyCode == Keys.Enter)
+    {
+        e.SuppressKeyPress = true;
+        ConfirmarSugestaoLivro();
+    }
+    else if (e.KeyCode == Keys.Escape)
+    {
+        e.SuppressKeyPress = true;
+        lstLivros.Visible = false;
+        txtLivro.Focus();
+    }
+}
+
+private void SelecionarLivro(int index)
+{
+    var livro = _cacheLivros[index];
+
+    txtLivro.Text = livro.Nome;
+    txtBarcode.Enabled = true;
+    txtBarcode.Text = livro.CodigoDeBarras;
+    txtBarcode.Enabled = false;
+
+    lstLivros.Visible = false;
+}
+
+
+private void txtLivro_TextChanged(object sender, EventArgs e)
+{
+    string filtro = txtLivro.Text.Trim();
+
+    lstLivros.Items.Clear();
+    lstLivros.Visible = false;
+    _cacheLivros.Clear();
+
+    if (string.IsNullOrWhiteSpace(filtro))
+        return;
+
+    try
+    {
+        using (var conexao = Conexao.ObterConexao())
         {
-            if (lstLivros.SelectedIndex >= 0)
-                SelecionarLivro(lstLivros.SelectedIndex);
-        }
-
-        private void lstLivros_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter && lstLivros.SelectedIndex >= 0)
-            {
-                e.Handled = true;
-                SelecionarLivro(lstLivros.SelectedIndex);
-            }
-        }
-
-        private void SelecionarLivro(int index)
-        {
-            var livro = _cacheLivros[index];
-
-            txtLivro.Text = livro.Nome;
-            txtBarcode.Enabled = true;
-            txtBarcode.Text = livro.CodigoDeBarras;
-            txtBarcode.Enabled = false;
-
-            lstLivros.Visible = false;
-        }
-
-
-        private void txtLivro_TextChanged(object sender, EventArgs e)
-        {
-            string filtro = txtLivro.Text.Trim();
-
-            lstLivros.Items.Clear();
-            lstLivros.Visible = false;
-            _cacheLivros.Clear();
-
-            if (string.IsNullOrWhiteSpace(filtro))
-                return;
-
-            try
-            {
-                using (var conexao = Conexao.ObterConexao())
-                {
-                    conexao.Open();
-                    string sql = @"SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade 
+            conexao.Open();
+            string sql = @"SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade 
                            FROM Livros 
                            WHERE Nome LIKE @nome
                            ORDER BY Nome";
-                    using (var cmd = new SqlCeCommand(sql, conexao))
-                    {
-                        cmd.Parameters.AddWithValue("@nome", filtro + "%");
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                Livro livro = new Livro
-                                {
-                                    Id = reader.GetInt32(0),
-                                    Nome = reader.GetString(1),
-                                    Autor = reader.GetString(2),
-                                    Genero = reader.GetString(3),
-                                    Quantidade = reader.GetInt32(4),
-                                    CodigoDeBarras = reader.GetString(5),
-                                    Disponibilidade = reader.GetBoolean(6)
-                                };
-                                _cacheLivros.Add(livro);
-                                lstLivros.Items.Add($"{livro.Nome} - {livro.Autor}");
-                            }
-                        }
-                    }
-                }
-                lstLivros.Visible = lstLivros.Items.Count > 0;
-                if (lstLivros.Visible)
-                    lstLivros.BringToFront();
-            }
-            catch (Exception ex)
+            using (var cmd = new SqlCeCommand(sql, conexao))
             {
-                MessageBox.Show("Erro ao buscar livros:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
-        private void txtLivro_Leave(object sender, EventArgs e)
-        {
-            if (!lstLivros.Focused)
-                lstLivros.Visible = false;
-        }
-
-        private void lstLivros_Leave(object sender, EventArgs e)
-        {
-            lstLivros.Visible = false;
-        }
-
-        private void CarregarLivrosDoBanco()
-        {
-            Livros.Clear();
-
-            try
-            {
-                using (var conexao = Conexao.ObterConexao())
+                cmd.Parameters.AddWithValue("@nome", filtro + "%");
+                using (var reader = cmd.ExecuteReader())
                 {
-                    conexao.Open();
-                    string sql = "SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade FROM Livros";
-
-                    using (var cmd = new SqlCeCommand(sql, conexao))
-                    using (var reader = cmd.ExecuteReader())
+                    while (reader.Read())
                     {
-                        while (reader.Read())
+                        Livro livro = new Livro
                         {
-                            Livro livro = new Livro(
-                                reader.GetString(1), // Nome
-                                reader.GetString(2), // Autor
-                                reader.GetString(3), // Genero
-                                reader.GetBoolean(6), // Disponibilidade
-                                reader.GetInt32(4),   // Quantidade
-                                reader.GetString(5)   // CodigoBarras
-                            );
-
-                            // Setando o ID (tornar public set temporariamente ou criar outro construtor com ID)
-                            typeof(Livro).GetProperty("Id").SetValue(livro, reader.GetInt32(0));
-                            Livros.Add(livro);
-                        }
+                            Id = reader.GetInt32(0),
+                            Nome = reader.GetString(1),
+                            Autor = reader.GetString(2),
+                            Genero = reader.GetString(3),
+                            Quantidade = reader.GetInt32(4),
+                            CodigoDeBarras = reader.GetString(5),
+                            Disponibilidade = reader.GetBoolean(6)
+                        };
+                        _cacheLivros.Add(livro);
+                        lstLivros.Items.Add($"{livro.Nome} - {livro.Autor}");
                     }
                 }
             }
-            catch (Exception ex)
+        }
+        lstLivros.Visible = lstLivros.Items.Count > 0;
+        if (lstLivros.Visible)
+            lstLivros.SelectedIndex = 0; // Seleciona o primeiro por padrão
+        if (lstLivros.Visible)
+            lstLivros.BringToFront();
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show("Erro ao buscar livros:\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+}
+
+
+private void txtLivro_Leave(object sender, EventArgs e)
+{
+    if (!lstLivros.Focused)
+        lstLivros.Visible = false;
+}
+
+private void CarregarLivrosDoBanco()
+{
+    Livros.Clear();
+
+    try
+    {
+        using (var conexao = Conexao.ObterConexao())
+        {
+            conexao.Open();
+            string sql = "SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade FROM Livros";
+
+            using (var cmd = new SqlCeCommand(sql, conexao))
+            using (var reader = cmd.ExecuteReader())
             {
-                MessageBox.Show("Erro ao carregar livros: " + ex.Message, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                while (reader.Read())
+                {
+                    Livro livro = new Livro(
+                        reader.GetString(1), // Nome
+                        reader.GetString(2), // Autor
+                        reader.GetString(3), // Genero
+                        reader.GetBoolean(6), // Disponibilidade
+                        reader.GetInt32(4),   // Quantidade
+                        reader.GetString(5)   // CodigoBarras
+                    );
+
+                    // Setando o ID (tornar public set temporariamente ou criar outro construtor com ID)
+                    typeof(Livro).GetProperty("Id").SetValue(livro, reader.GetInt32(0));
+                    Livros.Add(livro);
+                }
             }
         }
-        #endregion
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show("Erro ao carregar livros: " + ex.Message, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+    }
+}
+#endregion
 
-        #region Métodos de Código de Barras
-        private void txtBarcode_Leave(object sender, EventArgs e)
-        {// Não verifica se foi aberto pela reserva
+#region Métodos de Código de Barras
+private void txtBarcode_Leave(object sender, EventArgs e)
+{// Não verifica se foi aberto pela reserva
             
+
 
             // Só busca se o campo estiver preenchido
             if (!string.IsNullOrEmpty(txtBarcode.Text))
@@ -822,10 +860,53 @@ namespace BibliotecaApp.Forms.Livros
         #region Métodos de Navegação e Data
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode != Keys.Enter) return;
+
+            // Se alguma lista estiver visível, confirma a seleção correspondente
+            if (lstSugestoesUsuario.Visible || lstLivros.Visible)
             {
                 e.SuppressKeyPress = true;
-                this.SelectNextControl(this.ActiveControl, true, true, true, true);
+
+                if (lstSugestoesUsuario.Focused || (txtNomeUsuario.Focused && lstSugestoesUsuario.Visible))
+                    if (ConfirmarSugestaoUsuario()) return;
+
+                if (lstLivros.Focused || (txtLivro.Focused && lstLivros.Visible))
+                    if (ConfirmarSugestaoLivro()) return;
+
+                // Fallback na ordem
+                if (ConfirmarSugestaoUsuario()) return;
+                if (ConfirmarSugestaoLivro()) return;
+
+                return;
+            }
+
+            // Fluxo normal do Enter
+            e.SuppressKeyPress = true;
+            this.SelectNextControl(this.ActiveControl, !e.Shift, true, true, true);
+        }
+
+        private void txtBarcode_KeyPressLimiter(object sender, KeyPressEventArgs e)
+        {
+            // Bloqueia entrada quando atingir o limite (permitindo teclas de controle e substituição de seleção)
+            if (!char.IsControl(e.KeyChar))
+            {
+                int textoAtual = txtBarcode.Text?.Length ?? 0;
+                int selecao = txtBarcode.SelectionLength;
+                int novoTamanho = textoAtual - selecao + 1; // +1 pelo novo char
+                if (novoTamanho > LIMITE_CODIGO_BARRAS)
+                    e.Handled = true;
+            }
+        }
+
+        private void txtBarcode_TextChangedLimiter(object sender, EventArgs e)
+        {
+            // Trunca conteúdo excedente (cobre colagens, entrada do leitor, etc.)
+            var texto = txtBarcode.Text ?? string.Empty;
+            if (texto.Length > LIMITE_CODIGO_BARRAS)
+            {
+                int caret = txtBarcode.SelectionStart;
+                txtBarcode.Text = texto.Substring(0, LIMITE_CODIGO_BARRAS);
+                txtBarcode.SelectionStart = Math.Min(caret, LIMITE_CODIGO_BARRAS);
             }
         }
 
@@ -958,5 +1039,32 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
+        private bool ConfirmarSugestaoUsuario()
+        {
+            if (!lstSugestoesUsuario.Visible || lstSugestoesUsuario.Items.Count == 0)
+                return false;
+
+            if (lstSugestoesUsuario.SelectedIndex < 0)
+                lstSugestoesUsuario.SelectedIndex = 0;
+
+            SelecionarUsuario(lstSugestoesUsuario.SelectedIndex);
+            txtNomeUsuario.Focus();
+            this.SelectNextControl(txtNomeUsuario, true, true, true, true);
+            return true;
+        }
+
+        private bool ConfirmarSugestaoLivro()
+        {
+            if (!lstLivros.Visible || lstLivros.Items.Count == 0)
+                return false;
+
+            if (lstLivros.SelectedIndex < 0)
+                lstLivros.SelectedIndex = 0;
+
+            SelecionarLivro(lstLivros.SelectedIndex);
+            txtLivro.Focus();
+            this.SelectNextControl(txtLivro, true, true, true, true);
+            return true;
+        }
     }
 }

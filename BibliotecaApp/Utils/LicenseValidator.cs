@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using Microsoft.Win32;
 
 namespace BibliotecaApp.Utils
 {
@@ -132,17 +133,24 @@ namespace BibliotecaApp.Utils
                     }
                 }
 
-                // Se for User, verifica MachineId
+                // Se for User, verifica MachineGuid (sem fallback para MachineName)
                 if (string.Equals(license.Type, "User", StringComparison.OrdinalIgnoreCase))
                 {
                     string localMachine = GetMachineId();
-                    if (string.IsNullOrEmpty(license.TargetMachineId))
+
+                    if (string.IsNullOrWhiteSpace(license.TargetMachineId))
                     {
                         error = "Licença do tipo User não contém TargetMachineId.";
                         return false;
                     }
 
-                    if (!string.Equals(localMachine, license.TargetMachineId, StringComparison.OrdinalIgnoreCase))
+                    if (string.IsNullOrWhiteSpace(localMachine))
+                    {
+                        error = "Não foi possível obter o MachineGuid local.";
+                        return false;
+                    }
+
+                    if (!string.Equals(localMachine.Trim(), license.TargetMachineId.Trim(), StringComparison.OrdinalIgnoreCase))
                     {
                         error = "Licença é para outra máquina (TargetMachineId não confere).";
                         return false;
@@ -201,42 +209,43 @@ namespace BibliotecaApp.Utils
             return license.ExpireDate < DateTime.Now;
         }
 
+        // Retorna estritamente o MachineGuid do Windows (sem hash e sem fallback para MachineName).
         public static string GetMachineId()
         {
             try
             {
-                string machineGuid = null;
-                try
-                {
-                    using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Cryptography"))
-                    {
-                        if (key != null)
-                        {
-                            var val = key.GetValue("MachineGuid");
-                            if (val != null) machineGuid = val.ToString();
-                        }
-                    }
-                }
-                catch
-                {
-                    machineGuid = null;
-                }
-
-                if (!string.IsNullOrEmpty(machineGuid))
-                {
-                    using (var sha = SHA256.Create())
-                    {
-                        var b = Encoding.UTF8.GetBytes(machineGuid);
-                        var h = sha.ComputeHash(b);
-                        return BitConverter.ToString(h).Replace("-", "");
-                    }
-                }
-
-                return Environment.MachineName;
+                var guid = TryReadMachineGuid();
+                return string.IsNullOrWhiteSpace(guid) ? null : guid.Trim();
             }
             catch
             {
-                return Environment.MachineName;
+                return null;
+            }
+        }
+
+        private static string TryReadMachineGuid()
+        {
+            // Tenta primeiro no view de 64 bits (em SO 64 bits), depois no de 32 bits
+            var guid = ReadMachineGuid(RegistryView.Registry64);
+            if (string.IsNullOrWhiteSpace(guid))
+                guid = ReadMachineGuid(RegistryView.Registry32);
+            return guid;
+        }
+
+        private static string ReadMachineGuid(RegistryView view)
+        {
+            try
+            {
+                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view))
+                using (var key = baseKey.OpenSubKey(@"SOFTWARE\Microsoft\Cryptography"))
+                {
+                    var val = key?.GetValue("MachineGuid") as string;
+                    return string.IsNullOrWhiteSpace(val) ? null : val;
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
     }

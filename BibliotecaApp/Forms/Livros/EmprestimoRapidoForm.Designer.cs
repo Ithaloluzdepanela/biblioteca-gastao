@@ -273,6 +273,7 @@ namespace BibliotecaApp.Forms.Livros
             this.numQuantidade.TabIndex = 5;
             this.numQuantidade.TextColor = System.Drawing.Color.Black;
             this.numQuantidade.UseSystemPasswordChar = false;
+            
             this.numQuantidade.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numQuantidade_KeyPress);
             // 
             // btnMais

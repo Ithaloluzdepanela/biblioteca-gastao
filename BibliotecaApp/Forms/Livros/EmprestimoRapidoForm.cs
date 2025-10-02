@@ -22,13 +22,7 @@ namespace BibliotecaApp.Forms.Livros
 
         public event EventHandler LivroAtualizado;
 
-        private Dictionary<string, string[]> dicionarioTurmas = new Dictionary<string, string[]>
-        {
-            { "Ano", new[] { "6° Ano", "7° Ano", "8° Ano", "9° Ano" } },
-            { "Desenvolvimento", new[] { "1° Desenvolvimento", "2° Desenvolvimento", "3° Desenvolvimento" } },
-            { "Agronegócio", new[] { "1° Agronegócio", "2° Agronegócio", "3° Agronegócio" } },
-            { "Propedêutico", new[] { "1° Propedêutico", "2° Propedêutico", "3° Propedêutico" } }
-        };
+       
 
         private List<string> todasTurmasPadrao;
 
@@ -60,8 +54,7 @@ namespace BibliotecaApp.Forms.Livros
 
             AppPaths.EnsureFolders();
 
-            // Inicializar lista de todas as turmas padrão
-            InicializarTurmasPadrao();
+            
 
             //Limpeza Automatica Semanal
             LimparEmprestimosSemana();
@@ -79,6 +72,7 @@ namespace BibliotecaApp.Forms.Livros
             numQuantidade.Text = "1"; // valor inicial
             numQuantidade.KeyPress += numQuantidade_KeyPress;
             numQuantidade.TextChanged += numQuantidade_TextChanged;
+            numQuantidade.Leave += numQuantidade_Leave; // NOVO
 
             // Eventos para o autocomplete de Turma
             txtTurma.KeyDown += txtTurma_KeyDown;
@@ -87,6 +81,16 @@ namespace BibliotecaApp.Forms.Livros
             lstSugestoesTurma.Click += lstSugestoesTurma_Click;
             lstSugestoesTurma.KeyDown += lstSugestoesTurma_KeyDown;
             lstSugestoesTurma.Leave += lstSugestoesTurma_Leave;
+
+            // NOVO: Eventos para Professor
+            txtProfessor.KeyDown += txtProfessor_KeyDown;
+            lstSugestoesProfessor.KeyDown += lstSugestoesProfessor_KeyDown;
+            lstSugestoesProfessor.Leave += lstSugestoesProfessor_Leave;
+
+            // NOVO: Eventos para Livro
+            txtLivro.KeyDown += txtLivro_KeyDown;
+            lstSugestoesLivro.KeyDown += lstSugestoesLivro_KeyDown;
+            lstSugestoesLivro.Leave += lstSugestoesLivro_Leave;
 
             // Esconde listboxes inicialmente
             lstSugestoesProfessor.Visible = false;
@@ -98,25 +102,56 @@ namespace BibliotecaApp.Forms.Livros
             EstilizarListBoxSugestao(lstSugestoesTurma);
         }
 
-        
-
         private void EmprestimoRapidoForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true; // evita bip ou comportamento padrão
+            if (e.KeyCode != Keys.Enter) return;
 
-                // Se o foco estiver no botão Registrar -> dispara o clique
-                if (this.ActiveControl == btnRegistrar)
-                {
-                    btnRegistrar.PerformClick();
-                }
-                else
-                {
-                    // Senão, navega para o próximo campo
-                    this.SelectNextControl(this.ActiveControl, !e.Shift, true, true, true);
-                }
+            // Se houver alguma lista visível, confirma a seleção correspondente
+            if (lstSugestoesProfessor.Visible || lstSugestoesLivro.Visible || lstSugestoesTurma.Visible)
+            {
+                e.SuppressKeyPress = true;
+
+                // Prioriza a lista focada; se não houver, prioriza a relacionada ao campo focado
+                if (lstSugestoesProfessor.Focused || (txtProfessor.Focused && lstSugestoesProfessor.Visible))
+                    if (ConfirmarSugestao(lstSugestoesProfessor, txtProfessor)) return;
+
+                if (lstSugestoesLivro.Focused || (txtLivro.Focused && lstSugestoesLivro.Visible))
+                    if (ConfirmarSugestao(lstSugestoesLivro, txtLivro)) return;
+
+                if (lstSugestoesTurma.Focused || (txtTurma.Focused && lstSugestoesTurma.Visible))
+                    if (ConfirmarSugestao(lstSugestoesTurma, txtTurma)) return;
+
+                // Fallback: se alguma está visível, confirma na ordem
+                if (ConfirmarSugestao(lstSugestoesProfessor, txtProfessor)) return;
+                if (ConfirmarSugestao(lstSugestoesLivro, txtLivro)) return;
+                if (ConfirmarSugestao(lstSugestoesTurma, txtTurma)) return;
+
+                return;
             }
+
+            // Fluxo normal de Enter no formulário
+            e.SuppressKeyPress = true;
+            if (this.ActiveControl == btnRegistrar)
+                btnRegistrar.PerformClick();
+            else
+                this.SelectNextControl(this.ActiveControl, !e.Shift, true, true, true);
+        }
+
+        // Confirma a seleção do listbox (seleciona o primeiro se nada estiver selecionado)
+        private bool ConfirmarSugestao(ListBox listBox, RoundedTextBox target)
+        {
+            if (!listBox.Visible || listBox.Items.Count == 0) return false;
+
+            if (listBox.SelectedIndex < 0) listBox.SelectedIndex = 0;
+
+            var valor = listBox.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(valor)) return false;
+
+            target.Text = valor;
+            listBox.Visible = false;
+            target.Focus();
+            this.SelectNextControl(target, true, true, true, true);
+            return true;
         }
 
         private void LimparEmprestimosSemana()
@@ -258,131 +293,9 @@ namespace BibliotecaApp.Forms.Livros
         }
 
         #region Métodos de Turma
-        private void InicializarTurmasPadrao()
-        {
-            todasTurmasPadrao = new List<string>();
-            foreach (var categoria in dicionarioTurmas.Values)
-            {
-                todasTurmasPadrao.AddRange(categoria);
-            }
-        }
+        
 
-        private string CorrigirTurma(string turmaDigitada)
-        {
-            if (string.IsNullOrWhiteSpace(turmaDigitada))
-                return turmaDigitada;
-
-            // Adicionar ° automaticamente se não tiver
-            if (!turmaDigitada.Contains("°") && Regex.IsMatch(turmaDigitada, @"^\d+"))
-            {
-                turmaDigitada = Regex.Replace(turmaDigitada, @"^(\d+)", "$1°");
-            }
-
-            // Extrair número e tipo
-            string numeroStr = "";
-            string tipo = "";
-            string numeroTurma = "";
-
-            // Extrair o número principal (antes do °)
-            Match matchNumero = Regex.Match(turmaDigitada, @"^(\d+)°");
-            if (matchNumero.Success)
-            {
-                numeroStr = matchNumero.Groups[1].Value;
-            }
-            else
-            {
-                // Se não encontrou o padrão com °, tentar sem °
-                matchNumero = Regex.Match(turmaDigitada, @"^(\d+)\s");
-                if (matchNumero.Success)
-                {
-                    numeroStr = matchNumero.Groups[1].Value;
-                    turmaDigitada = turmaDigitada.Replace(matchNumero.Value, matchNumero.Groups[1].Value + "° ");
-                }
-            }
-
-            // Determinar o tipo de turma
-            string turmaLower = turmaDigitada.ToLower();
-            if (turmaLower.Contains("p"))
-            {
-                tipo = "Propedêutico";
-            }
-            else if (turmaLower.Contains("d"))
-            {
-                tipo = "Desenvolvimento";
-            }
-            else if (turmaLower.Contains("ag"))
-            {
-                tipo = "Agronegócio";
-            }
-            else if (turmaLower.Contains("an"))
-            {
-                tipo = "Ano";
-            }
-
-            // Extrair número da turma (no final)
-            Match matchNumeroTurma = Regex.Match(turmaDigitada, @"(\d+)$");
-            if (matchNumeroTurma.Success)
-            {
-                numeroTurma = matchNumeroTurma.Value;
-            }
-
-            // Corrigir número principal se for impossível
-            if (!string.IsNullOrEmpty(numeroStr))
-            {
-                int numero;
-                if (int.TryParse(numeroStr, out numero))
-                {
-                    if (tipo == "Ano")
-                    {
-                        // Para turmas de Ano: 6° a 9°
-                        if (numero < 6) numero = 6;
-                        else if (numero > 9) numero = 9;
-                    }
-                    else if (!string.IsNullOrEmpty(tipo))
-                    {
-                        // Para outras turmas: 1° a 3°
-                        if (numero < 1) numero = 1;
-                        else if (numero > 3) numero = 3;
-                    }
-
-                    numeroStr = numero.ToString();
-                }
-            }
-
-            // Corrigir número da turma se for impossível
-            if (!string.IsNullOrEmpty(numeroTurma))
-            {
-                int numero;
-                if (int.TryParse(numeroTurma, out numero))
-                {
-                    if (numero < 1) numero = 1;
-                    // Não há limite máximo para o número da turma
-                    numeroTurma = numero.ToString();
-                }
-            }
-
-            // NOVA LÓGICA: Remover apenas o número "1" no final para cursos técnicos
-            if (!string.IsNullOrEmpty(tipo) && tipo != "Ano" && !string.IsNullOrEmpty(numeroTurma) && numeroTurma == "1")
-            {
-                // Para cursos técnicos, remover apenas o número "1" da turma (final)
-                numeroTurma = "";
-            }
-
-            // Montar turma corrigida
-            string turmaCorrigida = !string.IsNullOrEmpty(numeroStr) ? numeroStr + "°" : "";
-
-            if (!string.IsNullOrEmpty(tipo))
-            {
-                turmaCorrigida += " " + tipo;
-            }
-
-            if (!string.IsNullOrEmpty(numeroTurma))
-            {
-                turmaCorrigida += " " + numeroTurma;
-            }
-
-            return !string.IsNullOrEmpty(turmaCorrigida) ? turmaCorrigida.Trim() : turmaDigitada;
-        }
+        
 
         private void txtTurma_TextChanged(object sender, EventArgs e)
         {
@@ -403,6 +316,9 @@ namespace BibliotecaApp.Forms.Livros
             {
                 foreach (var s in sugestoes)
                     lstSugestoesTurma.Items.Add(s);
+
+                // Seleciona o primeiro item por padrão
+                lstSugestoesTurma.SelectedIndex = 0;
 
                 int visibleItems = Math.Min(5, sugestoes.Count);
                 int extraPadding = 8;
@@ -492,13 +408,21 @@ namespace BibliotecaApp.Forms.Livros
 
         private void lstSugestoesTurma_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && lstSugestoesTurma.SelectedItem != null)
+            if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
-                lstSugestoesTurma.Visible = false;
-                txtTurma.Focus();
-                this.SelectNextControl(txtTurma, true, true, true, true);
+
+                // Garante selecionar a primeira opção se nada estiver selecionado
+                if (lstSugestoesTurma.SelectedIndex < 0 && lstSugestoesTurma.Items.Count > 0)
+                    lstSugestoesTurma.SelectedIndex = 0;
+
+                if (lstSugestoesTurma.SelectedItem != null)
+                {
+                    txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
+                    lstSugestoesTurma.Visible = false;
+                    txtTurma.Focus();
+                    this.SelectNextControl(txtTurma, true, true, true, true);
+                }
             }
             else if (e.KeyCode == Keys.Escape)
             {
@@ -506,6 +430,140 @@ namespace BibliotecaApp.Forms.Livros
                 lstSugestoesTurma.Visible = false;
                 txtTurma.Focus();
             }
+        }
+
+        private void txtProfessor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!lstSugestoesProfessor.Visible || lstSugestoesProfessor.Items.Count == 0)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+                return;
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesProfessor.Focus();
+                if (lstSugestoesProfessor.Items.Count > 0)
+                    lstSugestoesProfessor.SelectedIndex = 0;
+            }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                if (lstSugestoesProfessor.SelectedItem != null)
+                    txtProfessor.Text = lstSugestoesProfessor.SelectedItem.ToString();
+                else if (lstSugestoesProfessor.Items.Count > 0)
+                    txtProfessor.Text = lstSugestoesProfessor.Items[0].ToString();
+
+                lstSugestoesProfessor.Visible = false;
+                this.SelectNextControl((Control)sender, true, true, true, true);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesProfessor.Visible = false;
+            }
+        }
+
+        private void lstSugestoesProfessor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+
+                if (lstSugestoesProfessor.SelectedIndex < 0 && lstSugestoesProfessor.Items.Count > 0)
+                    lstSugestoesProfessor.SelectedIndex = 0;
+
+                if (lstSugestoesProfessor.SelectedItem != null)
+                {
+                    txtProfessor.Text = lstSugestoesProfessor.SelectedItem.ToString();
+                    lstSugestoesProfessor.Visible = false;
+                    txtProfessor.Focus();
+                    this.SelectNextControl(txtProfessor, true, true, true, true);
+                }
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesProfessor.Visible = false;
+                txtProfessor.Focus();
+            }
+        }
+
+        private void txtLivro_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!lstSugestoesLivro.Visible || lstSugestoesLivro.Items.Count == 0)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+                return;
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesLivro.Focus();
+                if (lstSugestoesLivro.Items.Count > 0)
+                    lstSugestoesLivro.SelectedIndex = 0;
+            }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                if (lstSugestoesLivro.SelectedItem != null)
+                    txtLivro.Text = lstSugestoesLivro.SelectedItem.ToString();
+                else if (lstSugestoesLivro.Items.Count > 0)
+                    txtLivro.Text = lstSugestoesLivro.Items[0].ToString();
+
+                lstSugestoesLivro.Visible = false;
+                this.SelectNextControl((Control)sender, true, true, true, true);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesLivro.Visible = false;
+            }
+        }
+
+        private void lstSugestoesLivro_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+
+                if (lstSugestoesLivro.SelectedIndex < 0 && lstSugestoesLivro.Items.Count > 0)
+                    lstSugestoesLivro.SelectedIndex = 0;
+
+                if (lstSugestoesLivro.SelectedItem != null)
+                {
+                    txtLivro.Text = lstSugestoesLivro.SelectedItem.ToString();
+                    lstSugestoesLivro.Visible = false;
+                    txtLivro.Focus();
+                    this.SelectNextControl(txtLivro, true, true, true, true);
+                }
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesLivro.Visible = false;
+                txtLivro.Focus();
+            }
+        }
+
+        private void lstSugestoesLivro_Leave(object sender, EventArgs e)
+        {
+            lstSugestoesLivro.Visible = false;
+        }
+
+        private void lstSugestoesProfessor_Leave(object sender, EventArgs e)
+        {
+            lstSugestoesProfessor.Visible = false;
         }
 
         private void lstSugestoesTurma_Leave(object sender, EventArgs e)
@@ -517,17 +575,28 @@ namespace BibliotecaApp.Forms.Livros
         #region Autocomplete listboxes (Professor / Livro)
         private void txtProfessor_TextChanged(object sender, EventArgs e)
         {
-            var txt = txtProfessor.Text.Trim().ToLower();
+            var prefixo = txtProfessor.Text.Trim();
             lstSugestoesProfessor.Items.Clear();
-            if (string.IsNullOrWhiteSpace(txt)) { lstSugestoesProfessor.Visible = false; return; }
+            if (string.IsNullOrWhiteSpace(prefixo))
+            {
+                lstSugestoesProfessor.Visible = false;
+                return;
+            }
 
-            var sugest = professoresCadastrados.Where(x => x.ToLower().Contains(txt)).ToArray();
-            if (sugest.Any())
+            var sugest = professoresCadastrados
+                .Where(x => x != null && x.StartsWith(prefixo, StringComparison.CurrentCultureIgnoreCase))
+                .ToArray();
+
+            if (sugest.Length > 0)
             {
                 lstSugestoesProfessor.Items.AddRange(sugest);
                 lstSugestoesProfessor.Visible = true;
+                lstSugestoesProfessor.SelectedIndex = 0; // seleciona a primeira opção
             }
-            else lstSugestoesProfessor.Visible = false;
+            else
+            {
+                lstSugestoesProfessor.Visible = false;
+            }
         }
 
         private void lstSugestoesProfessor_Click(object sender, EventArgs e)
@@ -541,20 +610,33 @@ namespace BibliotecaApp.Forms.Livros
 
         private void txtLivro_TextChanged(object sender, EventArgs e)
         {
-            var txt = txtLivro.Text.Trim();
+            var prefixo = txtLivro.Text.Trim();
             lstSugestoesLivro.Items.Clear();
-            if (string.IsNullOrWhiteSpace(txt)) { lstSugestoesLivro.Visible = false; return; }
 
-            var sugest = livrosCadastrados.Where(x => x.ToLower().Contains(txt.ToLower())).ToArray();
-            if (sugest.Any())
+            if (string.IsNullOrWhiteSpace(prefixo))
+            {
+                lstSugestoesLivro.Visible = false;
+                LimitarQuantidadeDisponivel(prefixo);
+                return;
+            }
+
+            var sugest = livrosCadastrados
+                .Where(x => x != null && x.StartsWith(prefixo, StringComparison.CurrentCultureIgnoreCase))
+                .ToArray();
+
+            if (sugest.Length > 0)
             {
                 lstSugestoesLivro.Items.AddRange(sugest);
                 lstSugestoesLivro.Visible = true;
+                lstSugestoesLivro.SelectedIndex = 0; // seleciona a primeira opção
             }
-            else lstSugestoesLivro.Visible = false;
+            else
+            {
+                lstSugestoesLivro.Visible = false;
+            }
 
             // Limitar quantidade disponível
-            LimitarQuantidadeDisponivel(txt);
+            LimitarQuantidadeDisponivel(prefixo);
         }
 
         private int quantidadeMaximaDisponivel = 1;
@@ -564,7 +646,9 @@ namespace BibliotecaApp.Forms.Livros
             quantidadeMaximaDisponivel = 1; // valor padrão
             if (string.IsNullOrWhiteSpace(nomeLivro))
             {
-                numQuantidade.Text = "1";
+                // Só define 1 se o campo estiver vazio (não force durante digitação)
+                if (!numQuantidade.Focused && string.IsNullOrWhiteSpace(numQuantidade.Text))
+                    numQuantidade.Text = "1";
                 return;
             }
 
@@ -590,9 +674,11 @@ namespace BibliotecaApp.Forms.Livros
                 quantidadeMaximaDisponivel = 1;
             }
 
-            // Corrige o valor atual se estiver acima do máximo
-            int valorAtual;
-            if (!int.TryParse(numQuantidade.Text, out valorAtual) || valorAtual < 1)
+            // Se o usuário está digitando, não altere o texto agora; valida ao sair
+            if (numQuantidade.Focused) return;
+
+            // Fora de foco, normalize o valor para o intervalo permitido
+            if (!int.TryParse(numQuantidade.Text, out var valorAtual) || valorAtual < 1)
                 numQuantidade.Text = "1";
             else if (valorAtual > quantidadeMaximaDisponivel)
                 numQuantidade.Text = quantidadeMaximaDisponivel.ToString();
@@ -1127,47 +1213,58 @@ ORDER BY r.Id DESC";
         }
         #endregion
 
-        private void numQuantidade_ValueChanged(object sender, EventArgs e)
-        {
+        
 
-        }
+        // Helpers centralizados
+private int ObterQuantidadeAtual()
+{
+    int valor;
+    return int.TryParse(numQuantidade.Text, out valor) ? valor : 0;
+}
 
-        private void numQuantidade_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
-                e.Handled = true;// cancela caracteres não numéricos
-        }
+private void DefinirQuantidade(int valor)
+{
+    if (valor < 1) valor = 1;
+    if (valor > quantidadeMaximaDisponivel) valor = quantidadeMaximaDisponivel;
+    numQuantidade.Text = valor.ToString();
+}
 
-        private void numQuantidade_TextChanged(object sender, EventArgs e)
-        {
-            int valor;
-            if (!int.TryParse(numQuantidade.Text, out valor) || valor < 1)
-            {
-                numQuantidade.Text = "1";
-                numQuantidade.SelectionStart = numQuantidade.Text.Length;
-            }
-            else if (valor > quantidadeMaximaDisponivel)
-            {
-                numQuantidade.Text = quantidadeMaximaDisponivel.ToString();
-                numQuantidade.SelectionStart = numQuantidade.Text.Length;
-            }
-        }
+private void numQuantidade_KeyPress(object sender, KeyPressEventArgs e)
+{
+    // Permite teclas de controle (Delete, Backspace, Ctrl+C/V etc.) e dígitos
+    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+        e.Handled = true;
+}
 
-        private void btnMais_Click(object sender, EventArgs e)
-        {
-            int valor = int.Parse(numQuantidade.Text);
-            valor++;
-            numQuantidade.Text = valor.ToString();
+private void numQuantidade_TextChanged(object sender, EventArgs e)
+{
+    // Não faz clamp durante a digitação. Valida no Leave e nos botões.
+    // Mantemos este handler leve para permitir múltiplos dígitos.
+}
 
-        }
+private void numQuantidade_Leave(object sender, EventArgs e)
+{
+    // Normaliza ao sair do campo
+    if (string.IsNullOrWhiteSpace(numQuantidade.Text))
+    {
+        numQuantidade.Text = "1";
+        return;
+    }
 
-        private void btnMenos_Click(object sender, EventArgs e)
-        {
-            int valor = int.Parse(numQuantidade.Text);
-            if (valor > 1)
-                valor--;
-            numQuantidade.Text = valor.ToString();
-        }
+    DefinirQuantidade(ObterQuantidadeAtual());
+}
+
+private void btnMais_Click(object sender, EventArgs e)
+{
+    var atual = ObterQuantidadeAtual();
+    DefinirQuantidade(atual + 1);
+}
+
+private void btnMenos_Click(object sender, EventArgs e)
+{
+    var atual = ObterQuantidadeAtual();
+    DefinirQuantidade(atual - 1);
+}
 
         private void AbrirDevolucaoRapidaForm(DataGridViewRow row)
         {
@@ -1263,5 +1360,7 @@ ORDER BY r.Id DESC";
                 MessageBox.Show("Erro ao processar devolução: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        
     }
 }

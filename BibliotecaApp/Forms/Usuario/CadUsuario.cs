@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace BibliotecaApp.Froms.Usuario
 {
@@ -44,11 +45,10 @@ namespace BibliotecaApp.Froms.Usuario
             SetAsteriscoVisibility(false);
             CarregarTurmasDoBanco();
 
-            
-
             // Eventos para o autocomplete de Turma
             txtTurma.KeyDown += txtTurma_KeyDown;
             txtTurma.Leave += txtTurma_Leave;
+            txtTurma.Validating += txtTurma_Validating; // <- validação de turma
 
             lstSugestoesTurma.Click += lstSugestoesTurma_Click;
             lstSugestoesTurma.KeyDown += lstSugestoesTurma_KeyDown;
@@ -57,16 +57,26 @@ namespace BibliotecaApp.Froms.Usuario
             // Estilo do ListBox e z-order
             EstilizarListBoxSugestao(lstSugestoesTurma);
             lstSugestoesTurma.BringToFront();
+
+            // CORREÇÃO: não dispare validação ao ir para a lista; esconda inicialmente
+            lstSugestoesTurma.CausesValidation = false;
+            lstSugestoesTurma.Visible = false;
         }
 
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
-            // Navegação entre campos com Enter
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode != Keys.Enter) return;
+
+            // Se a lista de turmas estiver visível, confirma antes de avançar
+            if (lstSugestoesTurma.Visible)
             {
                 e.SuppressKeyPress = true;
-                this.SelectNextControl(this.ActiveControl, true, true, true, true);
+                if (ConfirmarSugestaoTurma()) return;
             }
+
+            // Fluxo padrão
+            e.SuppressKeyPress = true;
+            this.SelectNextControl(this.ActiveControl, true, true, true, true);
         }
         #endregion
 
@@ -217,16 +227,7 @@ namespace BibliotecaApp.Froms.Usuario
             if (!ValidarDadosUsuario())
                 return;
 
-            // Validar turma permitida
-            if (txtTurma.Enabled && !string.IsNullOrWhiteSpace(txtTurma.Text))
-            {
-                var turma = txtTurma.Text.Trim();
-                if (!BibliotecaApp.Utils.TurmasUtil.TurmasPermitidas.Contains(turma))
-                {
-                    MessageBox.Show("Selecione uma turma válida da lista de turmas permitidas.", "Turma inválida", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
+            // Removido: a validação de turma permitida agora ocorre no Validating do txtTurma
 
             CadastrarNovoUsuario();
         }
@@ -255,6 +256,33 @@ namespace BibliotecaApp.Froms.Usuario
         private void txtEmail_TextChanged(object sender, EventArgs e)
         {
             lblAvisoEmail.Visible = string.IsNullOrWhiteSpace(txtEmail.Text);
+        }
+
+        private void txtTurma_Validating(object sender, CancelEventArgs e)
+        {
+            if (!txtTurma.Enabled || !txtTurma.Visible) return;
+
+            var turma = txtTurma.Text.Trim();
+            if (string.IsNullOrEmpty(turma)) return; // obrigatoriedade tratada no botão Cadastrar
+
+            if (!BibliotecaApp.Utils.TurmasUtil.TurmasPermitidas.Contains(turma))
+            {
+                e.Cancel = true; // impede perder o foco neste momento
+                MessageBox.Show(
+                    "Selecione uma turma válida da lista de turmas permitidas.",
+                    "Turma inválida",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                // Limpa o campo e fecha a lista de sugestões
+                txtTurma.Text = string.Empty;
+                lstSugestoesTurma.Visible = false;
+
+                BeginInvoke(new Action(() =>
+                {
+                    txtTurma.Focus();
+                }));
+            }
         }
         #endregion
 
@@ -461,7 +489,6 @@ namespace BibliotecaApp.Froms.Usuario
         private void SetLabelColors(bool enabled)
         {
             Color color = enabled ? Color.FromArgb(20, 41, 60) : Color.LightGray;
-           
             lblNome.ForeColor = color;
             lblSenha.ForeColor = color;
             lblConfirmSenha.ForeColor = color;
@@ -826,9 +853,16 @@ VALUES
                 int extraPadding = 8;
                 lstSugestoesTurma.Height = visibleItems * lstSugestoesTurma.ItemHeight + extraPadding;
                 lstSugestoesTurma.Width = txtTurma.Width;
+
+                // POSICIONAMENTO REVERTIDO (como era antes)
                 lstSugestoesTurma.Left = txtTurma.Left;
                 lstSugestoesTurma.Top = txtTurma.Bottom;
+
+                lstSugestoesTurma.BringToFront();
                 lstSugestoesTurma.Visible = true;
+
+                // Seleciona o primeiro item por padrão
+                lstSugestoesTurma.SelectedIndex = 0;
             }
             else
             {
@@ -844,14 +878,7 @@ VALUES
                 if (!lstSugestoesTurma.Focused)
                 {
                     lstSugestoesTurma.Visible = false;
-                    // Impede sair do campo se não for uma turma permitida
-                    var turma = txtTurma.Text.Trim();
-                    if (!string.IsNullOrEmpty(turma) && !BibliotecaApp.Utils.TurmasUtil.TurmasPermitidas.Contains(turma))
-                    {
-                        MessageBox.Show("Selecione uma turma válida da lista de turmas permitidas.", "Turma inválida", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        txtTurma.Text = "";
-                        txtTurma.Focus();
-                    }
+                    // Não valida aqui para evitar mensagens duplicadas
                 }
             }));
         }
@@ -866,6 +893,9 @@ VALUES
                 txtTurma.Text = turmaSelecionada;
                 lstSugestoesTurma.Visible = false;
                 txtTurma.Focus();
+
+                // Opcional: avançar para o próximo controle, igual ao EmprestimoRapidoForm
+                this.SelectNextControl(txtTurma, true, true, true, true);
             }
         }
 
@@ -891,13 +921,7 @@ VALUES
             else if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                if (lstSugestoesTurma.SelectedItem != null)
-                    txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
-                else if (lstSugestoesTurma.Items.Count > 0)
-                    txtTurma.Text = lstSugestoesTurma.Items[0].ToString();
-
-                lstSugestoesTurma.Visible = false;
-                this.SelectNextControl((Control)sender, true, true, true, true);
+                ConfirmarSugestaoTurma();
             }
             else if (e.KeyCode == Keys.Escape)
             {
@@ -908,13 +932,15 @@ VALUES
 
         private void lstSugestoesTurma_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && lstSugestoesTurma.SelectedItem != null)
+            if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                txtTurma.Text = lstSugestoesTurma.SelectedItem.ToString();
-                lstSugestoesTurma.Visible = false;
-                txtTurma.Focus();
-                this.SelectNextControl(txtTurma, true, true, true, true);
+
+                // NOVO: garante selecionar a primeira opção se nada estiver selecionado
+                if (lstSugestoesTurma.SelectedIndex < 0 && lstSugestoesTurma.Items.Count > 0)
+                    lstSugestoesTurma.SelectedIndex = 0;
+
+                ConfirmarSugestaoTurma();
             }
             else if (e.KeyCode == Keys.Escape)
             {
@@ -927,6 +953,24 @@ VALUES
         private void lstSugestoesTurma_Leave(object sender, EventArgs e)
         {
             lstSugestoesTurma.Visible = false;
+        }
+
+        private bool ConfirmarSugestaoTurma()
+        {
+            if (!lstSugestoesTurma.Visible || lstSugestoesTurma.Items.Count == 0)
+                return false;
+
+            if (lstSugestoesTurma.SelectedIndex < 0)
+                lstSugestoesTurma.SelectedIndex = 0;
+
+            var valor = lstSugestoesTurma.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(valor)) return false;
+
+            txtTurma.Text = valor;
+            lstSugestoesTurma.Visible = false;
+            txtTurma.Focus();
+            this.SelectNextControl(txtTurma, true, true, true, true);
+            return true;
         }
         #endregion
 

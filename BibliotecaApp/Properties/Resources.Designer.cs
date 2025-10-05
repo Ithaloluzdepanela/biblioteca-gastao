@@ -191,6 +191,16 @@ namespace BibliotecaApp.Properties {
         }
         
         /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Icon semelhante a (Ícone).
+        /// </summary>
+        internal static System.Drawing.Icon icon_gastao_valle_zoomed_v2 {
+            get {
+                object obj = ResourceManager.GetObject("icon_gastao_valle_zoomed_v2", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap icons8_adicionar_usuário_masculino_25 {

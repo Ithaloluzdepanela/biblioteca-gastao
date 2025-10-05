@@ -48,7 +48,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon_gastao_valle_zoomed_v2.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
@@ -605,10 +606,10 @@
     <Content Include="BibliotecaDB\bibliotecaDB.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="icon_gastao_valle_zoomed_v2.ico" />
     <Content Include="publicKey.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\icon_gastao_valle_zoomed_v2.ico" />
     <None Include="Resources\images.png" />
     <None Include="Resources\brasao_Gastao_Black.png" />
     <None Include="Resources\gast-removebg-preview 100x100%281%29.png" />

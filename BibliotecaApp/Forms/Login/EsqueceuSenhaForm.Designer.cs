@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EsqueceuSenhaForm));
             this.lblReenviar = new System.Windows.Forms.Label();
             this.btnEnviar = new System.Windows.Forms.Button();
             this.txtTeste = new System.Windows.Forms.TextBox();
@@ -407,10 +408,11 @@
             this.Controls.Add(this.btnEnviar);
             this.Controls.Add(this.lblReenviar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "EsqueceuSenhaForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "EsqueceuSenhaForm";
+            this.Text = "BibliotecaApp";
             this.Load += new System.EventHandler(this.EsqueceuSenhaForm_Load);
             this.pnSenha.ResumeLayout(false);
             this.pnSenha.PerformLayout();

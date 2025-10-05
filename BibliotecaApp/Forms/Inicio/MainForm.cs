@@ -349,7 +349,7 @@ namespace BibliotecaApp.Forms.Inicio
         }
 
         //Botão de edição do usuário
-        private void btnUserEdit_Click(object sender, EventArgs e)
+        public void btnUserEdit_Click(object sender, EventArgs e)
         {
             btnUserEdit.Enabled = false;
             btnRel.Enabled = true;

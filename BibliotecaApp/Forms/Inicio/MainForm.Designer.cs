@@ -232,7 +232,7 @@ namespace BibliotecaApp.Forms.Inicio
             this.btnUser.Size = new System.Drawing.Size(200, 60);
             this.btnUser.TabIndex = 15;
             this.btnUser.TabStop = false;
-            this.btnUser.Text = "Pessoas";
+            this.btnUser.Text = "Cadastros";
             this.btnUser.UseVisualStyleBackColor = false;
             this.btnUser.Click += new System.EventHandler(this.btnUser_Click);
             // 

@@ -661,7 +661,10 @@ private void SelecionarLivro(int index)
 {
     var livro = _cacheLivros[index];
 
-    txtLivro.Text = livro.Nome;
+    // Alteração programática do nome (não deve limpar o barcode)
+    SetLivroTextProgrammatic(livro.Nome, origemBarcode: false);
+
+    // Mantém o mesmo comportamento de preencher o barcode do livro selecionado
     txtBarcode.Enabled = true;
     txtBarcode.Text = livro.CodigoDeBarras;
     txtBarcode.Enabled = false;
@@ -673,6 +676,25 @@ private void SelecionarLivro(int index)
 private void txtLivro_TextChanged(object sender, EventArgs e)
 {
     string filtro = txtLivro.Text.Trim();
+
+    // Se veio do scanner, não exibir listbox agora
+    if (_preenchendoPorBarcode)
+    {
+        lstLivros.Items.Clear();
+        lstLivros.Visible = false;
+        _preenchendoPorBarcode = false; // consome o estado do scanner
+        return;
+    }
+
+    // Se o usuário alterou o nome que foi preenchido via código de barras, limpar o código de barras
+    if (!_alterandoTxtLivroProgramaticamente && !string.IsNullOrEmpty(_nomePreenchidoPorBarcode))
+    {
+        if (!string.Equals(filtro, _nomePreenchidoPorBarcode, StringComparison.CurrentCulture))
+        {
+            txtBarcode.Text = "";
+            _nomePreenchidoPorBarcode = null; // não considerar mais “nome vindo do barcode”
+        }
+    }
 
     lstLivros.Items.Clear();
     lstLivros.Visible = false;
@@ -794,7 +816,7 @@ private void txtBarcode_Leave(object sender, EventArgs e)
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = "SELECT Nome FROM Livros WHERE CodigoBarras = @codigo";
+                    string sql = "SELECT TOP 1 Nome FROM Livros WHERE CodigoBarras = @codigo";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         cmd.Parameters.AddWithValue("@codigo", codigo);
@@ -803,11 +825,15 @@ private void txtBarcode_Leave(object sender, EventArgs e)
                         {
                             if (reader.Read())
                             {
-                                txtLivro.Text = reader.GetString(0);
+                                // Preenche o nome sem exibir a lista
+                                SetLivroTextProgrammatic(reader.GetString(0), origemBarcode: true);
+
+                                // Oculta qualquer lista de sugestão
+                                lstLivros.Visible = false;
                             }
                             else
                             {
-                                MessageBox.Show("Livro não encontrado. Escaneei novamente", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show("Livro não encontrado. Escaneie novamente", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 txtBarcode.Focus();
                                 txtBarcode.Text = "";
                             }
@@ -1066,5 +1092,26 @@ private void txtBarcode_Leave(object sender, EventArgs e)
             this.SelectNextControl(txtLivro, true, true, true, true);
             return true;
         }
+        
+        // Flags para diferenciar alterações programáticas x usuário
+private bool _alterandoTxtLivroProgramaticamente = false;
+private bool _preenchendoPorBarcode = false;
+private string _nomePreenchidoPorBarcode = null;
+
+// Helper para definir texto do livro de forma programática
+private void SetLivroTextProgrammatic(string value, bool origemBarcode)
+{
+    _alterandoTxtLivroProgramaticamente = true;
+
+    if (origemBarcode)
+    {
+        _preenchendoPorBarcode = true;     // sinaliza que veio do scanner
+        _nomePreenchidoPorBarcode = value; // guarda o nome encontrado pelo código
+    }
+
+    txtLivro.Text = value;
+
+    _alterandoTxtLivroProgramaticamente = false;
+}
     }
 }

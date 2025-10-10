@@ -22,9 +22,10 @@ namespace BibliotecaApp.Forms.Livros
 
         public event EventHandler LivroAtualizado;
 
-       
-
         private List<string> todasTurmasPadrao;
+
+        // Limite de caracteres do código de barras (igual ao EmprestimoForm)
+        private const int LIMITE_CODIGO_BARRAS = 13;
 
         // Conexao (reaproveita padrão)
         public static class Conexao
@@ -50,11 +51,7 @@ namespace BibliotecaApp.Forms.Livros
 
         private void EmprestimoRapidoForm_Load(object sender, EventArgs e)
         {
-            
-
             AppPaths.EnsureFolders();
-
-            
 
             //Limpeza Automatica Semanal
             LimparEmprestimosSemana();
@@ -100,6 +97,11 @@ namespace BibliotecaApp.Forms.Livros
             EstilizarListBoxSugestao(lstSugestoesProfessor);
             EstilizarListBoxSugestao(lstSugestoesLivro);
             EstilizarListBoxSugestao(lstSugestoesTurma);
+
+            // === NOVO: Eventos do txtBarcode (igual EmprestimoForm) ===
+            txtBarcode.Leave += txtBarcode_Leave;
+            txtBarcode.KeyPress += txtBarcode_KeyPressLimiter;
+            txtBarcode.TextChanged += txtBarcode_TextChangedLimiter;
         }
 
         private void EmprestimoRapidoForm_KeyDown(object sender, KeyEventArgs e)
@@ -148,6 +150,11 @@ namespace BibliotecaApp.Forms.Livros
             if (string.IsNullOrEmpty(valor)) return false;
 
             target.Text = valor;
+
+            // === NOVO: ao confirmar livro pelo nome, preencher o barcode como no EmprestimoForm ===
+            if (ReferenceEquals(target, txtLivro))
+                AtualizarBarcodePorLivro(valor);
+
             listBox.Visible = false;
             target.Focus();
             this.SelectNextControl(target, true, true, true, true);
@@ -293,10 +300,6 @@ namespace BibliotecaApp.Forms.Livros
         }
 
         #region Métodos de Turma
-        
-
-        
-
         private void txtTurma_TextChanged(object sender, EventArgs e)
         {
             string texto = txtTurma.Text.Trim();
@@ -517,12 +520,13 @@ namespace BibliotecaApp.Forms.Livros
             {
                 e.SuppressKeyPress = true;
                 if (lstSugestoesLivro.SelectedItem != null)
-                    txtLivro.Text = lstSugestoesLivro.SelectedItem.ToString();
-                else if (lstSugestoesLivro.Items.Count > 0)
-                    txtLivro.Text = lstSugestoesLivro.Items[0].ToString();
-
-                lstSugestoesLivro.Visible = false;
-                this.SelectNextControl((Control)sender, true, true, true, true);
+                {
+                    SetLivroTextProgrammatic(lstSugestoesLivro.SelectedItem.ToString(), origemBarcode: false);
+                    AtualizarBarcodePorLivro(txtLivro.Text);
+                    lstSugestoesLivro.Visible = false;
+                    txtLivro.Focus();
+                    this.SelectNextControl(txtLivro, true, true, true, true);
+                }
             }
             else if (e.KeyCode == Keys.Escape)
             {
@@ -543,6 +547,10 @@ namespace BibliotecaApp.Forms.Livros
                 if (lstSugestoesLivro.SelectedItem != null)
                 {
                     txtLivro.Text = lstSugestoesLivro.SelectedItem.ToString();
+
+                    // === NOVO: ao escolher o livro pelo nome, preencher o barcode ===
+                    AtualizarBarcodePorLivro(txtLivro.Text);
+
                     lstSugestoesLivro.Visible = false;
                     txtLivro.Focus();
                     this.SelectNextControl(txtLivro, true, true, true, true);
@@ -612,6 +620,25 @@ namespace BibliotecaApp.Forms.Livros
         {
             var prefixo = txtLivro.Text.Trim();
             lstSugestoesLivro.Items.Clear();
+
+            // Se veio do scanner, não exibe listbox e só aplica limites
+            if (_preenchendoPorBarcode)
+            {
+                lstSugestoesLivro.Visible = false;
+                LimitarQuantidadeDisponivel(prefixo);
+                _preenchendoPorBarcode = false; // consome o estado do scanner
+                return;
+            }
+
+            // Se o usuário alterou o nome que foi preenchido pelo código de barras, limpar o código
+            if (!_alterandoTxtLivroProgramaticamente && !string.IsNullOrEmpty(_nomePreenchidoPorBarcode))
+            {
+                if (!string.Equals(prefixo, _nomePreenchidoPorBarcode, StringComparison.CurrentCulture))
+                {
+                    txtBarcode.Text = "";
+                    _nomePreenchidoPorBarcode = null; // não considerar mais “nome vindo do barcode”
+                }
+            }
 
             if (string.IsNullOrWhiteSpace(prefixo))
             {
@@ -689,6 +716,10 @@ namespace BibliotecaApp.Forms.Livros
             if (lstSugestoesLivro.SelectedItem != null)
             {
                 txtLivro.Text = lstSugestoesLivro.SelectedItem.ToString();
+
+                // === NOVO: ao escolher o livro pelo nome, preencher o barcode ===
+                AtualizarBarcodePorLivro(txtLivro.Text);
+
                 lstSugestoesLivro.Visible = false;
             }
         }
@@ -843,6 +874,8 @@ VALUES (@prof, @livro, @livroNome, @turma, @qt, @dataEmp, NULL, @bibli, 'Ativo')
             txtLivro.Text = "";
             txtTurma.Text = "";
             numQuantidade.Text = "1";
+            // === NOVO: limpar o campo de código de barras (igual EmprestimoForm) ===
+            txtBarcode.Text = "";
         }
         #endregion
 
@@ -1213,58 +1246,56 @@ ORDER BY r.Id DESC";
         }
         #endregion
 
-        
-
         // Helpers centralizados
-private int ObterQuantidadeAtual()
-{
-    int valor;
-    return int.TryParse(numQuantidade.Text, out valor) ? valor : 0;
-}
+        private int ObterQuantidadeAtual()
+        {
+            int valor;
+            return int.TryParse(numQuantidade.Text, out valor) ? valor : 0;
+        }
 
-private void DefinirQuantidade(int valor)
-{
-    if (valor < 1) valor = 1;
-    if (valor > quantidadeMaximaDisponivel) valor = quantidadeMaximaDisponivel;
-    numQuantidade.Text = valor.ToString();
-}
+        private void DefinirQuantidade(int valor)
+        {
+            if (valor < 1) valor = 1;
+            if (valor > quantidadeMaximaDisponivel) valor = quantidadeMaximaDisponivel;
+            numQuantidade.Text = valor.ToString();
+        }
 
-private void numQuantidade_KeyPress(object sender, KeyPressEventArgs e)
-{
-    // Permite teclas de controle (Delete, Backspace, Ctrl+C/V etc.) e dígitos
-    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-        e.Handled = true;
-}
+        private void numQuantidade_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Permite teclas de controle (Delete, Backspace, Ctrl+C/V etc.) e dígitos
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+        }
 
-private void numQuantidade_TextChanged(object sender, EventArgs e)
-{
-    // Não faz clamp durante a digitação. Valida no Leave e nos botões.
-    // Mantemos este handler leve para permitir múltiplos dígitos.
-}
+        private void numQuantidade_TextChanged(object sender, EventArgs e)
+        {
+            // Não faz clamp durante a digitação. Valida no Leave e nos botões.
+            // Mantemos este handler leve para permitir múltiplos dígitos.
+        }
 
-private void numQuantidade_Leave(object sender, EventArgs e)
-{
-    // Normaliza ao sair do campo
-    if (string.IsNullOrWhiteSpace(numQuantidade.Text))
-    {
-        numQuantidade.Text = "1";
-        return;
-    }
+        private void numQuantidade_Leave(object sender, EventArgs e)
+        {
+            // Normaliza ao sair do campo
+            if (string.IsNullOrWhiteSpace(numQuantidade.Text))
+            {
+                numQuantidade.Text = "1";
+                return;
+            }
 
-    DefinirQuantidade(ObterQuantidadeAtual());
-}
+            DefinirQuantidade(ObterQuantidadeAtual());
+        }
 
-private void btnMais_Click(object sender, EventArgs e)
-{
-    var atual = ObterQuantidadeAtual();
-    DefinirQuantidade(atual + 1);
-}
+        private void btnMais_Click(object sender, EventArgs e)
+        {
+            var atual = ObterQuantidadeAtual();
+            DefinirQuantidade(atual + 1);
+        }
 
-private void btnMenos_Click(object sender, EventArgs e)
-{
-    var atual = ObterQuantidadeAtual();
-    DefinirQuantidade(atual - 1);
-}
+        private void btnMenos_Click(object sender, EventArgs e)
+        {
+            var atual = ObterQuantidadeAtual();
+            DefinirQuantidade(atual - 1);
+        }
 
         private void AbrirDevolucaoRapidaForm(DataGridViewRow row)
         {
@@ -1361,6 +1392,157 @@ private void btnMenos_Click(object sender, EventArgs e)
             }
         }
 
-        
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void numQuantidade_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        // =========================
+        // NOVO: Métodos de Código de Barras (igual EmprestimoForm)
+        // =========================
+        private void txtBarcode_Leave(object sender, EventArgs e)
+        {
+            // Só busca se o campo estiver preenchido
+            if (!string.IsNullOrEmpty(txtBarcode.Text))
+            {
+                BuscarEPreencherLivroPorCodigo();
+            }
+        }
+
+        private void BuscarEPreencherLivroPorCodigo()
+        {
+            string codigo = (txtBarcode.Text ?? string.Empty).Trim();
+            if (string.IsNullOrEmpty(codigo)) return;
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    // Busca apenas livros do gênero Didático
+                    string sql = "SELECT TOP 1 Nome FROM Livros WHERE CodigoBarras = @codigo AND Genero = 'Didático'";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@codigo", codigo);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // Define o nome sem mostrar listbox e sem acionar autocompletar visual
+                                SetLivroTextProgrammatic(reader.GetString(0), origemBarcode: true);
+
+                                // Oculta qualquer lista e aplica limitações de quantidade
+                                lstSugestoesLivro.Visible = false;
+                                LimitarQuantidadeDisponivel(txtLivro.Text);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Livro (Didático) não encontrado pelo código de barras. Escaneie novamente.",
+                                                "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                txtBarcode.Focus();
+                                txtBarcode.Text = "";
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao buscar o livro por código de barras: " + ex.Message,
+                                "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void txtBarcode_KeyPressLimiter(object sender, KeyPressEventArgs e)
+        {
+            // Bloqueia entrada quando atingir o limite (permitindo teclas de controle e substituição de seleção)
+            if (!char.IsControl(e.KeyChar))
+            {
+                int textoAtual = txtBarcode.Text?.Length ?? 0;
+                int selecao = txtBarcode.SelectionLength;
+                int novoTamanho = textoAtual - selecao + 1; // +1 pelo novo char
+                if (novoTamanho > LIMITE_CODIGO_BARRAS)
+                    e.Handled = true;
+            }
+        }
+
+        private void txtBarcode_TextChangedLimiter(object sender, EventArgs e)
+        {
+            // Trunca conteúdo excedente (cobre colagens, entrada do leitor, etc.)
+            var texto = txtBarcode.Text ?? string.Empty;
+            if (texto.Length > LIMITE_CODIGO_BARRAS)
+            {
+                int caret = txtBarcode.SelectionStart;
+                txtBarcode.Text = texto.Substring(0, LIMITE_CODIGO_BARRAS);
+                txtBarcode.SelectionStart = Math.Min(caret, LIMITE_CODIGO_BARRAS);
+            }
+        }
+
+        // Preenche o código de barras com base no nome do livro selecionado (igual EmprestimoForm)
+        private void AtualizarBarcodePorLivro(string nomeLivro)
+        {
+            if (string.IsNullOrWhiteSpace(nomeLivro))
+            {
+                txtBarcode.Enabled = true;
+                txtBarcode.Text = "";
+                txtBarcode.Enabled = false; // segue o mesmo comportamento
+                return;
+            }
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string sql = "SELECT CodigoBarras FROM Livros WHERE Nome = @nome";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@nome", nomeLivro);
+                        var obj = cmd.ExecuteScalar();
+
+                        string codigo = obj == null ? "" : obj.ToString();
+
+                        // Igual ao EmprestimoForm: habilita, seta e desabilita o campo
+                        txtBarcode.Enabled = true;
+                        txtBarcode.Text = codigo;
+                        txtBarcode.Enabled = false;
+                    }
+                }
+            }
+            catch
+            {
+                // Em caso de erro, mantemos o comportamento simples
+                txtBarcode.Enabled = true;
+                txtBarcode.Text = "";
+                txtBarcode.Enabled = false;
+            }
+        }
+
+        // Flags de controle para diferenciar alterações programáticas x usuário
+        private bool _alterandoTxtLivroProgramaticamente = false;
+        private bool _preenchendoPorBarcode = false;
+        private string _nomePreenchidoPorBarcode = null;
+
+        // Helper para definir o texto do livro de forma programática
+        private void SetLivroTextProgrammatic(string value, bool origemBarcode)
+        {
+            _alterandoTxtLivroProgramaticamente = true;
+
+            if (origemBarcode)
+            {
+                _preenchendoPorBarcode = true;           // sinaliza que veio do scanner
+                _nomePreenchidoPorBarcode = value;       // guarda o nome encontrado pelo código
+            }
+
+            txtLivro.Text = value;
+
+            _alterandoTxtLivroProgramaticamente = false;
+        }
     }
 }

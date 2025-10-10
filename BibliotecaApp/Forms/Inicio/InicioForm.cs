@@ -83,7 +83,7 @@ namespace BibliotecaApp.Forms.Inicio
             AppPaths.EnsureFolders();
 
             // relógio
-            timerRelogio.Interval = 2000;
+            timerRelogio.Interval = 1000; // 1 segundo
             timerRelogio.Tick += timerRelogio_Tick;
             timerRelogio.Start();
             AtualizarRelogio();

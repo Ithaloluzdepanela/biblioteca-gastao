@@ -11,6 +11,9 @@ namespace BibliotecaApp.Utils
         // Marca se o usuário já chegou ao final pelo menos uma vez
         private bool _termsScrolledToBottomOnce;
 
+        // Modo leitura
+        private bool _readOnlyMode;
+
         // Win32 interop para ler o estado do scroll
         [StructLayout(LayoutKind.Sequential)]
         private struct SCROLLINFO
@@ -38,6 +41,8 @@ namespace BibliotecaApp.Utils
         {
             InitializeComponent();
 
+            _readOnlyMode = false;
+
             // Carrega o termo e garante que começa no topo
             rtbTerms.Rtf = GetTermsRtf();
             rtbTerms.SelectionStart = 0;
@@ -54,6 +59,14 @@ namespace BibliotecaApp.Utils
 
             // Caso o conteúdo caiba sem rolagem, habilita de imediato
             CheckIfBottomReached();
+        }
+
+        // Construtor que permite abrir em modo somente leitura
+        public TermsForm(bool readOnly) : this()
+        {
+            _readOnlyMode = readOnly;
+            if (readOnly)
+                EnableReadOnlyMode();
         }
 
         private string GetTermsRtf()
@@ -180,8 +193,49 @@ Ao clicar em “Li e aceito os termos de uso”, a Instituição declara ter lid
             return si.nPos >= maxPos;
         }
 
+        // Habilita o modo somente leitura (oculta aceitação e ajusta botão para OK)
+        private void EnableReadOnlyMode()
+        {
+            _readOnlyMode = true;
+            _termsScrolledToBottomOnce = true;
+
+            // Oculta/Desabilita aceitação
+            if (chkAccept != null)
+            {
+                chkAccept.Checked = false;
+                chkAccept.Enabled = false;
+                chkAccept.Visible = false;
+                chkAccept.TabStop = false;
+            }
+
+            // Ajusta o botão para "OK" e deixa visível para fechar
+            if (btnContinue != null)
+            {
+                btnContinue.Text = "OK";
+                btnContinue.Enabled = true;
+                btnContinue.Visible = true;
+                btnContinue.TabStop = true;
+            }
+
+            // Desliga eventos que habilitam a aceitação
+            rtbTerms.VScroll -= rtbTerms_VScroll;
+            rtbTerms.Resize -= rtbTerms_Resize;
+            rtbTerms.ContentsResized -= rtbTerms_ContentsResized;
+
+            // Garante leitura apenas do texto
+            rtbTerms.ReadOnly = true;
+            rtbTerms.ShortcutsEnabled = false;
+        }
+
         private void btnContinue_Click(object sender, EventArgs e)
         {
+            // Em modo leitura, o botão "OK" apenas fecha
+            if (_readOnlyMode)
+            {
+                this.Close();
+                return;
+            }
+
             if (!chkAccept.Checked)
             {
                 MessageBox.Show("Você precisa aceitar os termos de uso para continuar.",

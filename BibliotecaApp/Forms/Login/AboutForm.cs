@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BibliotecaApp.Utils;
 
 namespace BibliotecaApp.Forms.Login
 {
@@ -53,6 +55,70 @@ namespace BibliotecaApp.Forms.Login
                 this.Hide();
                 LoginForm novoLogin = new LoginForm();
                 novoLogin.Show();
+            }
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void btnTerm_Click(object sender, EventArgs e)
+        {
+            // Esconde o About enquanto o Terms estiver aberto
+            this.Hide();
+            try
+            {
+                using (var terms = new TermsForm(readOnly: true))
+                {
+                    terms.StartPosition = FormStartPosition.CenterScreen;
+                    terms.ShowInTaskbar = false;
+                    terms.ShowDialog();
+                }
+            }
+            finally
+            {
+                // Reexibe o About ao fechar os Termos
+                this.Show();
+                this.Activate();
+                this.BringToFront();
+            }
+        }
+
+        private void gradientPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void GitRenato_Click(object sender, EventArgs e)
+        {
+            OpenUrl("https://github.com/renato0x"); // substitua pela URL correta
+        }
+
+        private void GitLuis_Click(object sender, EventArgs e)
+        {
+            OpenUrl("https://github.com/ManoLouas"); // substitua pela URL correta
+        }
+
+        private void GitIthalo_Click(object sender, EventArgs e)
+        {
+            OpenUrl("https://github.com/Ithaloluzdepanela"); // substitua pela URL correta
+        }
+
+        private void GitMatheus_Click(object sender, EventArgs e)
+        {
+            OpenUrl("https://github.com/MatheusAlmeida10"); // substitua pela URL correta
+        }
+
+        private static void OpenUrl(string url)
+        {
+            try
+            {
+                Process.Start(url); // .NET Framework 4.8: abre no navegador padrão
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Não foi possível abrir o link: " + ex.Message,
+                                "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

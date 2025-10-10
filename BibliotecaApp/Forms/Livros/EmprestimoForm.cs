@@ -686,14 +686,16 @@ private void txtLivro_TextChanged(object sender, EventArgs e)
         return;
     }
 
-    // Se o usuário alterou o nome que foi preenchido via código de barras, limpar o código de barras
-    if (!_alterandoTxtLivroProgramaticamente && !string.IsNullOrEmpty(_nomePreenchidoPorBarcode))
+    // Qualquer alteração manual no nome do livro limpa o código de barras
+    if (!_alterandoTxtLivroProgramaticamente)
     {
-        if (!string.Equals(filtro, _nomePreenchidoPorBarcode, StringComparison.CurrentCulture))
+        if (!string.IsNullOrEmpty(txtBarcode.Text))
         {
             txtBarcode.Text = "";
-            _nomePreenchidoPorBarcode = null; // não considerar mais “nome vindo do barcode”
         }
+        // Se estava marcado como "veio do barcode", invalida esse estado
+        if (!string.IsNullOrEmpty(_nomePreenchidoPorBarcode))
+            _nomePreenchidoPorBarcode = null;
     }
 
     lstLivros.Items.Clear();

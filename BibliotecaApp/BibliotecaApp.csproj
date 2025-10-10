@@ -609,6 +609,8 @@
     <Content Include="publicKey.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\icons8-github-50.png" />
+    <None Include="Resources\icons8-github-30.png" />
     <None Include="Resources\icon_gastao_valle_zoomed_v2.ico" />
     <None Include="Resources\images.png" />
     <None Include="Resources\brasao_Gastao_Black.png" />

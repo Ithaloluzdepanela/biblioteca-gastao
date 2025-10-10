@@ -1544,5 +1544,20 @@ ORDER BY r.Id DESC";
 
             _alterandoTxtLivroProgramaticamente = false;
         }
+
+        private void cbBibliotecaria_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtTurma_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lstSugestoesLivro_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

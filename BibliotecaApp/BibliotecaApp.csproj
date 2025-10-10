@@ -609,6 +609,7 @@
     <Content Include="publicKey.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\icon_gastao_valle_zoomed_v2.ico" />
     <None Include="Resources\images.png" />
     <None Include="Resources\brasao_Gastao_Black.png" />
     <None Include="Resources\gast-removebg-preview 100x100%281%29.png" />

@@ -3,6 +3,10 @@
     "",
     "\\BibliotecaApp"
   ],
+<<<<<<< HEAD
   "SelectedNode": "\\BibliotecaApp\\BibliotecaApp.sln",
+=======
+  "SelectedNode": "\\BibliotecaApp.sln",
+>>>>>>> bfe396b79307028ef35c93073bf595974ba60e05
   "PreviewInSolutionExplorer": false
 }

@@ -155,7 +155,6 @@ namespace BibliotecaApp.Forms.Livros
         #region Funcionalidades de Busca e Filtros
 
         // Executa busca de livros com filtros dinâmicos
-
         public void btnProcurar_Click(object sender, EventArgs e)
         {
             using (SqlCeConnection conexao = Conexao.ObterConexao())
@@ -164,25 +163,30 @@ namespace BibliotecaApp.Forms.Livros
                 {
                     conexao.Open();
 
-                    // Define campo da pesquisa: nome, autor ou gênero
                     string campo = "nome"; // padrão
                     if (cbFiltro.SelectedItem != null)
                     {
                         string selecionado = cbFiltro.SelectedItem.ToString();
                         if (selecionado == "Autor") campo = "autor";
                         else if (selecionado == "Gênero") campo = "genero";
+                        else if (selecionado == "Nome") campo = "nome";
                     }
 
-                    // Começa com consulta base
                     string query = "SELECT * FROM livros WHERE 1=1";
 
-                    // Aplica filtro de texto se houver
+                    // 🔍 Filtro por nome, autor ou gênero
                     if (!string.IsNullOrWhiteSpace(txtNome.Text))
                     {
                         query += $" AND {campo} LIKE @termo";
                     }
 
-                    // Aplica filtro de disponibilidade
+                    // 🔍 Filtro por código de barras (busca exata)
+                    if (!string.IsNullOrWhiteSpace(ObterCodigoDeBarrasFormatado()))
+                    {
+                        query += " AND CodigoBarras = @codigo";
+                    }
+
+                    // 🔍 Filtro por disponibilidade
                     if (cbDisponibilidade.SelectedItem != null)
                     {
                         string status = cbDisponibilidade.SelectedItem.ToString();
@@ -192,7 +196,6 @@ namespace BibliotecaApp.Forms.Livros
                             query += " AND disponibilidade = '0'";
                     }
 
-                    // Ordena por nome
                     query += " ORDER BY nome ASC";
 
                     using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
@@ -202,17 +205,20 @@ namespace BibliotecaApp.Forms.Livros
                             comando.Parameters.AddWithValue("@termo", "%" + txtNome.Text.Trim() + "%");
                         }
 
+                        if (!string.IsNullOrWhiteSpace(ObterCodigoDeBarrasFormatado()))
+                        {
+                            comando.Parameters.AddWithValue("@codigo", ObterCodigoDeBarrasFormatado());
+                        }
+
                         SqlCeDataAdapter adaptador = new SqlCeDataAdapter(comando);
                         DataTable tabela = new DataTable();
                         adaptador.Fill(tabela);
 
-                        //Gerar Itens da coluna
                         dgvLivros.AutoGenerateColumns = true;
                         dgvLivros.DataSource = tabela;
 
                         lblTotal.Text = $"Total de livros encontrados: {tabela.Rows.Count}";
 
-                        //Ocultar a coluna Disponibilidade
                         if (dgvLivros.Columns.Contains("disponibilidade"))
                         {
                             dgvLivros.Columns["disponibilidade"].Visible = false;
@@ -226,6 +232,13 @@ namespace BibliotecaApp.Forms.Livros
                 }
             }
         }
+
+        private string ObterCodigoDeBarrasFormatado()
+        {
+            return new string(mtxCodigoBarras.Text.Where(char.IsDigit).ToArray());
+        }
+
+
 
         // Carrega lista de livros com filtros opcionais
         // Torna o método público para permitir atualização externa

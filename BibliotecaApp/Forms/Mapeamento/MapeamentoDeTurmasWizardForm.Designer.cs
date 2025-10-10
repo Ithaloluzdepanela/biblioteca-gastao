@@ -303,12 +303,13 @@
             this.ClientSize = new System.Drawing.Size(1200, 800);
             this.Controls.Add(this.panelPrincipal);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MapeamentoDeTurmasWizardForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Mapeamento de Turmas - Wizard";
+            this.Text = "BibliotecaApp - Mapeamento Anual";
             this.panelPrincipal.ResumeLayout(false);
             this.panelPrincipal.PerformLayout();
             this.pnlTutorial.ResumeLayout(false);

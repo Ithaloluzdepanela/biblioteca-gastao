@@ -200,7 +200,7 @@
             this.MinimizeBox = false;
             this.Name = "ProrrogarDiasForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Prorrogar Emprestimo";
+            this.Text = "BibliotecaApp";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.ProrrogarForm_Load);
             this.panelHeader.ResumeLayout(false);

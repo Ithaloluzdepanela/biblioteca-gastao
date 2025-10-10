@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DevoluçãoRapidaForm));
             this.btnMenos = new System.Windows.Forms.Button();
             this.numQuantidadeDevolvidos = new RoundedTextBox();
             this.btnMais = new System.Windows.Forms.Button();
@@ -477,11 +478,12 @@
             this.Controls.Add(this.numQuantidadeDevolvidos);
             this.Controls.Add(this.btnMais);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DevoluçãoRapidaForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "DevoluçãoRapidaForm";
+            this.Text = "BibliotecaApp";
             this.panelHeader.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

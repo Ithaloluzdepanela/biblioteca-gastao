@@ -498,7 +498,7 @@ namespace BibliotecaApp.Forms.Inicio
         //Botão de empréstimo rápido
         private void EmprestimoRap_FormClosed(object sender, FormClosedEventArgs e)
         {
-            emprestimo = null;
+            emprestimoRap = null; // corrigido
         }
         private void btnLivroCad_Click(object sender, EventArgs e)
         {

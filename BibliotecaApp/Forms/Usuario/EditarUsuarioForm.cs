@@ -147,22 +147,6 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
-        #region Classe Conexao
-
-        // Classe estática para conectar ao banco .sdf
-        public static class Conexao
-        {
-            public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
-
-            public static SqlCeConnection ObterConexao()
-            {
-                return new SqlCeConnection(Conectar);
-            }
-        }
-
-        #endregion
-
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
         private Usuarios _usuarioSelecionado;
 

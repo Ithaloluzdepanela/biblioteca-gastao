@@ -1,8 +1,11 @@
 ﻿using BibliotecaApp.Utils;
+using BibliotecaApp.Utils.Etiquetas;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.Drawing;
+using System.Drawing.Printing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -394,6 +397,9 @@ namespace BibliotecaApp.Forms.Livros
                     // Broadcast para outras telas
                     BibliotecaApp.Utils.EventosGlobais.OnLivroCadastradoOuAlterado();
 
+                    // Pergunta imprimir/gerar PDF de etiquetas
+                    OferecerImpressaoOuPdfEtiquetas(txtNome.Text.Trim(), txtGenero.Text.Trim(), codigoBarras, quantidade);
+
                     LimparFormulario();
                 }
                 catch (Exception ex)
@@ -402,6 +408,141 @@ namespace BibliotecaApp.Forms.Livros
                                     "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        // NOVO: fluxo em 2 passos (Gerar? -> PDF ou Imprimir?)
+        private void OferecerImpressaoOuPdfEtiquetas(string titulo, string genero, string codigoBarras, int quantidade)
+        {
+            if (string.IsNullOrWhiteSpace(codigoBarras))
+                return;
+
+            var r1 = MessageBox.Show("Deseja gerar etiquetas agora?",
+                             "Etiquetas",
+                             MessageBoxButtons.YesNo,
+                             MessageBoxIcon.Question);
+            if (r1 != DialogResult.Yes) return;
+
+            var itens = new List<EtiquetaLabelItem>();
+            int n = Math.Max(1, quantidade);
+            for (int i = 0; i < n; i++)
+            {
+                itens.Add(new EtiquetaLabelItem
+                {
+                    CodigoBarras = codigoBarras,
+                    Titulo = titulo,
+                    Genero = genero
+                });
+            }
+
+            while (true)
+            {
+                using (var dlg = new LabelActionDialog(titulo))
+                {
+                    // Esconde o seletor e fixa a quantidade nas unidades cadastradas
+                    dlg.ConfigureQuantity(allowSelection: false, fixedQuantity: n);
+
+                    var dr = dlg.ShowDialog(this);
+                    if (dr != DialogResult.OK || dlg.Choice == LabelActionChoice.None)
+                        return;
+
+                    try
+                    {
+                        if (dlg.Choice == LabelActionChoice.Pdf)
+                        {
+                            using (var sfd = new SaveFileDialog
+                            {
+                                Title = "Salvar etiquetas em PDF",
+                                Filter = "PDF (*.pdf)|*.pdf",
+                                FileName = $"{SanitizeFileName(titulo)} - {n} etiquetas.pdf",
+                                OverwritePrompt = true,
+                                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                            })
+                            {
+                                if (sfd.ShowDialog(this) != DialogResult.OK)
+                                    continue; // reabre o LabelActionDialog
+
+                                var opts = new LabelPrintOptions
+                                {
+                                    StartPosition = 1,
+                                    OffsetXmm = 0f,
+                                    OffsetYmm = 0f,
+                                    GroupByGenre = true
+                                };
+                                // Se você já possui um gerador de PDF próprio:
+                                LabelPdfExporter.ExportPdf(itens, opts, sfd.FileName, barcodeDpi: 200);
+                                MessageBox.Show("PDF gerado com sucesso!", "Etiquetas", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            break; // finaliza após salvar
+                        }
+                        else if (dlg.Choice == LabelActionChoice.Print)
+                        {
+                            using (var pd = new PrintDialog { UseEXDialog = true })
+                            using (var dummyDoc = new PrintDocument())
+                            {
+                                pd.Document = dummyDoc;
+
+                                // Abre o PrintDialog; se cancelar, reabre o LabelActionDialog
+                                if (pd.ShowDialog(this) != DialogResult.OK)
+                                    continue;
+
+                                var chosenPrinter = pd.PrinterSettings.PrinterName ?? string.Empty;
+
+                                var opts = new LabelPrintOptions
+                                {
+                                    StartPosition = 1,
+                                    OffsetXmm = 0f,
+                                    OffsetYmm = 0f,
+                                    GroupByGenre = true,
+                                    Preview = false,
+                                    ShowPrintDialog = false, // já escolhemos a impressora
+                                    PrinterName = chosenPrinter
+                                };
+
+                                // Se for Microsoft Print to PDF, perguntar nome/local e salvar direto
+                                if (chosenPrinter.IndexOf("Microsoft Print to PDF", StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    using (var sfd = new SaveFileDialog
+                                    {
+                                        Title = "Salvar etiquetas em PDF",
+                                        Filter = "PDF (*.pdf)|*.pdf",
+                                        FileName = $"{SanitizeFileName(titulo)} - {n} etiquetas.pdf",
+                                        OverwritePrompt = true,
+                                        InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                                    })
+                                    {
+                                        if (sfd.ShowDialog(this) != DialogResult.OK)
+                                            continue; // reabre o LabelActionDialog
+
+                                        opts.PrintToFile = true;
+                                        opts.OutputFilePath = sfd.FileName;
+                                    }
+                                }
+                                else
+                                {
+                                    opts.PrintToFile = false;
+                                    opts.OutputFilePath = null;
+                                }
+
+                                LabelPrinterService.PrintLabels(itens, opts);
+                                break; // finaliza após imprimir
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        var root = ex.GetBaseException()?.Message ?? ex.Message;
+                        MessageBox.Show("Falha ao gerar etiquetas: " + root, "Etiquetas", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        // volta ao diálogo de ação
+                    }
+                }
+            }
+        }
+
+        private static string SanitizeFileName(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return "Livro";
+            foreach (var c in System.IO.Path.GetInvalidFileNameChars()) s = s.Replace(c, '_');
+            return s;
         }
         #endregion
 

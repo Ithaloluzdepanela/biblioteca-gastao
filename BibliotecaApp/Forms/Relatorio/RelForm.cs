@@ -17,18 +17,7 @@ namespace BibliotecaApp.Forms.Relatorio
     {
         public partial class RelForm : Form
         {
-            #region Classe de Conexão com o Banco de Dados
-            public static class Conexao
-            {
-                public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-                public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
-
-                public static SqlCeConnection ObterConexao()
-                {
-                    return new SqlCeConnection(Conectar);
-                }
-            }
-            #endregion
+            
 
             // nomes detectados das tabelas (serão preenchidos no Load)
             private string tblUsuarios = "Usuarios";

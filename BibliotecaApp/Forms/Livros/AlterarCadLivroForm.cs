@@ -1,14 +1,17 @@
 ﻿using BibliotecaApp.Forms.Usuario;
 using BibliotecaApp.Models;
 using BibliotecaApp.Utils;
+using BibliotecaApp.Utils.Etiquetas; // + Etiquetas
 using System;
 using System.Collections.Generic;
 using System.ComponentModel; // MaskedTextProvider
 using System.Data.SqlServerCe;
 using System.Drawing;
+using System.Drawing.Printing; // + PrinterSettings
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using System.IO; // + IO
 
 namespace BibliotecaApp
 {
@@ -32,29 +35,33 @@ namespace BibliotecaApp
         {
             InitializeComponent();
 
-            // Prioridade de teclado no Form (ganha do AcceptButton)
             this.KeyPreview = true;
 
-            // Estado inicial da lista de sugestões
             if (lstSugestoesGenero != null)
             {
                 lstSugestoesGenero.Visible = false;
                 lstSugestoesGenero.TabStop = false;
             }
 
-            // Autocomplete Gênero: wiring
-            txtGenero.Enter += txtGenero_Enter;                 // foca => reavalia
-            txtGenero.MouseDown += txtGenero_MouseDown;         // clique => reavalia
-            txtGenero.TextChanged += txtGenero_TextChanged;     // digitação => reavalia
-            txtGenero.KeyUp += txtGenero_KeyUp;                 // reforço de refresh p/ RoundedTextBox
-            txtGenero.KeyDown += txtGenero_KeyDown;             // Enter/Tab/Down/Esc
-            txtGenero.Leave += txtGenero_Leave;                 // esconder quando sair (com proteção)
+            txtGenero.Enter += txtGenero_Enter;
+            txtGenero.MouseDown += txtGenero_MouseDown;
+            txtGenero.TextChanged += txtGenero_TextChanged;
+            txtGenero.KeyUp += txtGenero_KeyUp;
+            txtGenero.KeyDown += txtGenero_KeyDown;
+            txtGenero.Leave += txtGenero_Leave;
 
-            lstSugestoesGenero.MouseDown += lstSugestoesGenero_MouseDown; // marca clique seguro
-            lstSugestoesGenero.MouseUp += lstSugestoesGenero_MouseUp;     // libera marca
-            lstSugestoesGenero.Click += lstSugestoesGenero_Click;         // clique confirma
-            lstSugestoesGenero.KeyDown += lstSugestoesGenero_KeyDown;     // Enter/Tab/Esc
+            lstSugestoesGenero.MouseDown += lstSugestoesGenero_MouseDown;
+            lstSugestoesGenero.MouseUp += lstSugestoesGenero_MouseUp;
+            lstSugestoesGenero.Click += lstSugestoesGenero_Click;
+            lstSugestoesGenero.KeyDown += lstSugestoesGenero_KeyDown;
             lstSugestoesGenero.Leave += lstSugestoesGenero_Leave;
+
+            // EVITAR DUPLICIDADE: remove se já estiver assinado (Designer) e adiciona apenas uma vez.
+            if (btnGerarEtiqueta != null)
+            {
+                btnGerarEtiqueta.Click -= btnGerarEtiqueta_Click;
+                btnGerarEtiqueta.Click += btnGerarEtiqueta_Click;
+            }
         }
         #endregion
 
@@ -127,7 +134,7 @@ namespace BibliotecaApp
             return new string(mtxCodigoBarras.Text.Where(char.IsDigit).ToArray());
         }
 
- 
+
 
         private bool VerificarSenhaBibliotecaria(string senha)
         {
@@ -178,6 +185,7 @@ namespace BibliotecaApp
             using (var conn = Conexao.ObterConexao())
             {
                 conn.Open();
+                // FIX: recolocar cbA na declaração
                 string nA = "", aA = "", gA = "", cbA = ""; int qA = 0; bool mudou = false;
 
                 using (var cmdL = new SqlCeCommand(
@@ -266,6 +274,203 @@ namespace BibliotecaApp
         }
 
         private void btnCancelar_Click(object sender, EventArgs e) => this.Close();
+        #endregion
+
+        #region Etiquetas (BtnGerarEtiqueta)
+
+        private string TentarObterImpressoraPdf()
+        {
+            try
+            {
+                foreach (string name in PrinterSettings.InstalledPrinters)
+                {
+                    if (name.IndexOf("Microsoft Print to PDF", StringComparison.OrdinalIgnoreCase) >= 0)
+                        return name;
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+            return null;
+        }
+
+        private void btnGerarEtiqueta_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var titulo = (txtNome.Text ?? "").Trim();
+                var genero = (txtGenero.Text ?? "").Trim();
+                var codigo = ObterCodigoDeBarrasFormatado();
+
+                if (string.IsNullOrWhiteSpace(titulo) || string.IsNullOrWhiteSpace(codigo))
+                {
+                    MessageBox.Show("Preencha o Nome do Livro e o Código de Barras antes de gerar etiquetas.",
+                        "Dados incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!int.TryParse((txtQuantidade.Text ?? "0").Trim(), out int maxQtd)) maxQtd = 0;
+                if (maxQtd <= 0) maxQtd = 1;
+
+                while (true)
+                {
+                    using (var act = new BibliotecaApp.Utils.Etiquetas.LabelActionDialog(titulo, maxQtd))
+                    {
+                        // Aqui, em AlterarCadLivroForm, mantemos a seleção de quantidade visível (padrão)
+
+                        if (act.ShowDialog(this) != DialogResult.OK || act.Choice == LabelActionChoice.None)
+                            return;
+
+                        int qtd = Math.Max(1, Math.Min(act.Quantity, maxQtd));
+
+                        var items = Enumerable.Range(0, qtd)
+                            .Select(_ => new EtiquetaLabelItem
+                            {
+                                CodigoBarras = codigo,
+                                Titulo = titulo,
+                                Genero = genero
+                            })
+                            .ToList();
+
+                        if (act.Choice == LabelActionChoice.Pdf)
+                        {
+                            using (var sfd = new SaveFileDialog
+                            {
+                                Title = "Salvar etiquetas em PDF",
+                                Filter = "PDF (*.pdf)|*.pdf",
+                                FileName = $"{SanitizeFileName(titulo)} - {qtd} etiquetas.pdf",
+                                OverwritePrompt = true,
+                                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                            })
+                            {
+                                if (sfd.ShowDialog(this) != DialogResult.OK) 
+                                    continue; // reabre o LabelActionDialog
+
+                                string pdfPrinter = TentarObterImpressoraPdf();
+                                if (string.IsNullOrWhiteSpace(pdfPrinter))
+                                {
+                                    MessageBox.Show("Impressora 'Microsoft Print to PDF' não encontrada no sistema. Instale-a para salvar em PDF.",
+                                        "PDF", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                    continue; // reabre o LabelActionDialog
+                                }
+
+                                var options = new LabelPrintOptions
+                                {
+                                    StartPosition = 1,
+                                    OffsetXmm = 0f,
+                                    OffsetYmm = 0f,
+                                    GroupByGenre = true,
+                                    Preview = false,
+                                    ShowPrintDialog = false,
+                                    PrinterName = pdfPrinter,
+                                    PrintToFile = true,
+                                    OutputFilePath = sfd.FileName
+                                };
+
+                                LabelPrinterService.PrintLabels(items, options);
+
+                                try
+                                {
+                                    if (File.Exists(sfd.FileName))
+                                        System.Diagnostics.Process.Start(sfd.FileName);
+                                }
+                                catch { }
+                                break; // finaliza fluxo após salvar
+                            }
+                        }
+                        else // Imprimir
+                        {
+                            using (var pd = new PrintDialog { UseEXDialog = true })
+                            using (var dummyDoc = new PrintDocument())
+                            {
+                                pd.Document = dummyDoc;
+
+                                // Abre o PrintDialog; se cancelar, reabre o LabelActionDialog
+                                if (pd.ShowDialog(this) != DialogResult.OK)
+                                    continue;
+
+                                var chosenPrinter = pd.PrinterSettings.PrinterName ?? string.Empty;
+
+                                var options = new LabelPrintOptions
+                                {
+                                    StartPosition = 1,
+                                    OffsetXmm = 0f,
+                                    OffsetYmm = 0f,
+                                    GroupByGenre = true,
+                                    Preview = false,
+                                    ShowPrintDialog = false, // já escolhemos a impressora
+                                    PrinterName = chosenPrinter
+                                };
+
+                                // Se for Microsoft Print to PDF, perguntar nome/local e salvar direto
+                                if (chosenPrinter.IndexOf("Microsoft Print to PDF", StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    using (var sfd = new SaveFileDialog
+                                    {
+                                        Title = "Salvar etiquetas em PDF",
+                                        Filter = "PDF (*.pdf)|*.pdf",
+                                        FileName = $"{SanitizeFileName(titulo)} - {qtd} etiquetas.pdf",
+                                        OverwritePrompt = true,
+                                        InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                                    })
+                                    {
+                                        if (sfd.ShowDialog(this) != DialogResult.OK)
+                                            continue; // reabre o LabelActionDialog
+
+                                        options.PrintToFile = true;
+                                        options.OutputFilePath = sfd.FileName;
+                                    }
+                                }
+                                else
+                                {
+                                    options.PrintToFile = false;
+                                    options.OutputFilePath = null;
+                                }
+
+                                LabelPrinterService.PrintLabels(items, options);
+                                break; // finaliza após imprimir
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao gerar etiquetas: " + ex.Message,
+                    "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private static string SanitizeFileName(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return "Etiquetas";
+            var invalid = Path.GetInvalidFileNameChars();
+            var safe = new string(s.Select(ch => invalid.Contains(ch) ? '_' : ch).ToArray()).Trim();
+            return string.IsNullOrWhiteSpace(safe) ? "Etiquetas" : safe;
+        }
+
+        private static string BuildUniquePath(string folder, string fileName)
+        {
+            try
+            {
+                Directory.CreateDirectory(folder);
+            }
+            catch { /* ignore */ }
+
+            string path = Path.Combine(folder, fileName);
+            if (!File.Exists(path)) return path;
+
+            string name = Path.GetFileNameWithoutExtension(fileName);
+            string ext = Path.GetExtension(fileName);
+            int i = 2;
+            while (File.Exists(path) && i < 1000)
+            {
+                path = Path.Combine(folder, $"{name} ({i}){ext}");
+                i++;
+            }
+            return path;
+        }
         #endregion
 
         #region Mensagem de Confirmação
@@ -465,6 +670,8 @@ namespace BibliotecaApp
             lstSugestoesGenero.DataSource = null;
             MutarAcceptCancelEnquantoSugestao(false);
         }
+
+     
 
         private void MutarAcceptCancelEnquantoSugestao(bool mutar)
         {

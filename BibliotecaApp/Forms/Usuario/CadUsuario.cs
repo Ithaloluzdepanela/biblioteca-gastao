@@ -4,6 +4,7 @@ using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using BibliotecaApp.Utils;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.ComponentModel;
@@ -80,18 +81,7 @@ namespace BibliotecaApp.Froms.Usuario
         }
         #endregion
 
-        #region Classe Conexao
-        public static class Conexao
-        {
-            public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
-
-            public static SqlCeConnection ObterConexao()
-            {
-                return new SqlCeConnection(Conectar);
-            }
-        }
-        #endregion
+        
 
         #region Métodos Públicos
         public void LimparCampos()

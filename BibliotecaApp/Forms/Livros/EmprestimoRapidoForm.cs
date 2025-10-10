@@ -27,14 +27,6 @@ namespace BibliotecaApp.Forms.Livros
         // Limite de caracteres do código de barras (igual ao EmprestimoForm)
         private const int LIMITE_CODIGO_BARRAS = 13;
 
-        // Conexao (reaproveita padrão)
-        public static class Conexao
-        {
-            public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
-            public static SqlCeConnection ObterConexao() => new SqlCeConnection(Conectar);
-        }
-
         private static bool IsAdminLogado()
             => string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase);
 

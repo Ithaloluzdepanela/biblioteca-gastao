@@ -1,5 +1,6 @@
 ﻿using BibliotecaApp.Forms.Inicio;
 using BibliotecaApp.Forms.Livros;
+using BibliotecaApp.Utils; // ADICIONE ESTA LINHA
 using System;
 using System.Data;
 using System.Data.SqlServerCe;
@@ -19,33 +20,7 @@ namespace BibliotecaApp.Forms.Usuario
             this.Load += UsuarioForm_Load;
         }
 
-        #region Classe Conexao
-
-        // Classe estática para conectar ao banco .sdf
-        public static class Conexao
-        {
-            public static string CaminhoBanco
-            {
-                get
-                {
-                    var raiz = Application.StartupPath;
-                    return Path.Combine(raiz, "bibliotecaDB", "bibliotecaDB.sdf");
-                }
-            }
-
-            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
-
-            public static SqlCeConnection ObterConexao()
-            {
-                if (!File.Exists(CaminhoBanco))
-                {
-                    throw new FileNotFoundException("Arquivo .sdf não encontrado no caminho: " + CaminhoBanco);
-                }
-                return new SqlCeConnection(Conectar);
-            }
-        }
-
-        #endregion
+        
 
         private void UsuarioForm_Load(object sender, EventArgs e)
         {

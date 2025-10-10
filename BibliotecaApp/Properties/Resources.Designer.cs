@@ -463,6 +463,16 @@ namespace BibliotecaApp.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_refresh_barcode_25 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_refresh_barcode_25", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_registration_25 {
             get {
                 object obj = ResourceManager.GetObject("icons8-registration-25", resourceCulture);

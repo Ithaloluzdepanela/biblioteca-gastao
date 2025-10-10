@@ -1,5 +1,6 @@
 ﻿using BibliotecaApp.Models;
 using BibliotecaApp.Services;
+using BibliotecaApp.Utils; // ADICIONE ESTA LINHA
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -25,19 +26,6 @@ namespace BibliotecaApp.Forms.Livros
         
         private const int LIMITE_CODIGO_BARRAS = 13;
 
-        #endregion
-
-        #region Classe Conexao
-        public static class Conexao
-        {
-            public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
-
-            public static SqlCeConnection ObterConexao()
-            {
-                return new SqlCeConnection(Conectar);
-            }
-        }
         #endregion
 
         #region Construtores
@@ -299,7 +287,7 @@ namespace BibliotecaApp.Forms.Livros
                         cmdInsert.Parameters.AddWithValue("@responsavel", responsavel.Id);
                         cmdInsert.Parameters.AddWithValue("@dataEmprestimo", DateTime.Now);
 
-                        var dataDevolucaoParaInserir = usuario.TipoUsuario == "Professor" ? DateTime.Now : dtpDataDevolucao.Value;
+                        var dataDevolucaoParaInserir = dtpDataDevolucao.Value; // respeita o DTP (professor pode ter prazo maior)
                         cmdInsert.Parameters.AddWithValue("@dataDevolucao", dataDevolucaoParaInserir);
 
                         // Prioriza texto do scanner; se vazio usa o código do livro; se ainda vazio grava string vazia ""

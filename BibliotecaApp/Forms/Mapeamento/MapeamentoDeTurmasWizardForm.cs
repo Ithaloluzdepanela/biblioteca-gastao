@@ -67,22 +67,6 @@ namespace BibliotecaApp.Forms.Usuario
         }
         #endregion
 
-        #region Conexão com Banco
-        public static class Conexao
-        {
-            public static string CaminhoBanco => Path.Combine(Application.StartupPath, "bibliotecaDB", "bibliotecaDB.sdf");
-            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
-
-            public static SqlCeConnection ObterConexao()
-            {
-                if (!File.Exists(CaminhoBanco))
-                    throw new FileNotFoundException("Arquivo .sdf não encontrado no caminho: " + CaminhoBanco);
-
-                return new SqlCeConnection(Conectar);
-            }
-        }
-        #endregion
-
         #region Carregamento de Dados
         private void CarregarDadosIniciais()
         {
@@ -737,7 +721,6 @@ namespace BibliotecaApp.Forms.Usuario
             {
                 var cell = dgvPadroes.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 var valor = cell.Value?.ToString();
-                var turmaAtual = dgvPadroes.Rows[e.RowIndex].Cells["TurmaAtual"].Value?.ToString();
                 var opcoes = ((DataGridViewComboBoxCell)cell).Items.Cast<string>().ToList();
                 if (!string.IsNullOrEmpty(valor) && !opcoes.Contains(valor))
                 {

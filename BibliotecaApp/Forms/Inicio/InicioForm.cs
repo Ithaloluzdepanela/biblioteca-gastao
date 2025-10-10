@@ -69,15 +69,6 @@ namespace BibliotecaApp.Forms.Inicio
             // timerAutoRefresh pode ser mantido ou removido conforme sua preferência
         }
 
-        #region Conexao (padrão do app)
-        public static class Conexao
-        {
-            public static string CaminhoBanco => Application.StartupPath + @"\bibliotecaDB\bibliotecaDB.sdf";
-            public static string Conectar => $"Data Source={CaminhoBanco}; Password=123";
-            public static SqlCeConnection ObterConexao() => new SqlCeConnection(Conectar);
-        }
-        #endregion
-
         private void InicioForm_Load(object sender, EventArgs e)
         {
             AppPaths.EnsureFolders();
@@ -435,8 +426,8 @@ namespace BibliotecaApp.Forms.Inicio
         {
             var card = new Panel
             {
-                Width = 210,
-                Height = 110,
+                Width = cardWidth,
+                Height = cardHeight,
                 Margin = new Padding(8),
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.None,
@@ -850,13 +841,13 @@ ORDER BY DiasAtraso DESC, e.DataDevolucao ASC";
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    // Inclui professores, exclui empréstimos rápidos
                     string sql = @"
 SELECT TOP 1 u.Nome, COUNT(e.Id) AS Qtd
 FROM Emprestimo e
 INNER JOIN Usuarios u ON e.Alocador = u.Id
-LEFT JOIN EmprestimoRapido er ON e.Id = er.EmprestimoId  -- ajuste a relação
-WHERE er.EmprestimoId IS NULL  -- garante que NÃO é empréstimo rápido
+LEFT JOIN EmprestimoRapido er ON er.EmprestimoId = e.Id
+WHERE er.EmprestimoId IS NULL
+  AND (u.TipoUsuario IS NULL OR u.TipoUsuario NOT LIKE 'Professor%')
 GROUP BY u.Nome
 ORDER BY Qtd DESC, u.Nome";
             using (var cmd = new SqlCeCommand(sql, conexao))

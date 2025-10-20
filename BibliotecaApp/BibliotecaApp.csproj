@@ -629,6 +629,7 @@
     <Content Include="publicKey.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\icons8-search-25.png" />
     <None Include="Resources\icons8-refresh-barcode-25.png" />
     <None Include="Resources\icons8-barcode-scanner-20 %281%29.png" />
     <None Include="Resources\icons8-synchronize-25.png" />

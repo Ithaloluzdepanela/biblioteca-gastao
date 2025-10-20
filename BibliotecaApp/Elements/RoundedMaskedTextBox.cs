@@ -123,6 +123,22 @@ using System.Windows.Forms;
 
             this.MouseEnter += (s, e) => { isMouseOver = true; Invalidate(); };
             this.MouseLeave += (s, e) => { isMouseOver = false; Invalidate(); };
+
+            // Encaminha eventos de tecla do inner MaskedTextBox para o UserControl
+            // Isso permite que handlers registrados em mtxCodigoBarras.KeyDown / KeyPress / KeyUp
+            // sejam chamados (por exemplo, para detectar Enter de scanners).
+            maskedTextBox.KeyDown += (s, e) =>
+            {
+                try { OnKeyDown(e); } catch { /* não propagar exceções */ }
+            };
+            maskedTextBox.KeyPress += (s, e) =>
+            {
+                try { OnKeyPress(e); } catch { /* não propagar exceções */ }
+            };
+            maskedTextBox.KeyUp += (s, e) =>
+            {
+                try { OnKeyUp(e); } catch { /* não propagar exceções */ }
+            };
         }
 
         // ==== DESENHO PERSONALIZADO ====

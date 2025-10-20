@@ -8,6 +8,9 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace BibliotecaApp.Forms.Livros
 {
@@ -54,7 +57,7 @@ namespace BibliotecaApp.Forms.Livros
 
         private void CadastroLivroForm_Load(object sender, EventArgs e)
         {
-            // Mantido por compatibilidade, sem lógica adicional
+            
         }
 
         private void ConfigurarEventos()
@@ -71,6 +74,8 @@ namespace BibliotecaApp.Forms.Livros
             // Botões (se não estiverem no designer)
             // btnCadastrar.Click += btnCadastrar_Click;
             // btnLimpar.Click += btnLimpar_Click;
+
+            mtxCodigoBarras.KeyDown += mtxCodigoBarras_KeyDown;
         }
 
         private void ConfigurarNavegacao()
@@ -136,9 +141,84 @@ namespace BibliotecaApp.Forms.Livros
         {
             if (!ValidarCampos()) return;
             if (!ValidarQuantidade(out int quantidade)) return;
-            if (!ValidarCodigoBarras(out string codigoBarras)) return;
 
-            CadastrarLivro(quantidade, codigoBarras);
+            string codigoBarras = ObterCodigoDeBarrasFormatado();
+
+            // Verifica se o código de barras está vazio
+            if (string.IsNullOrWhiteSpace(codigoBarras))
+            {
+                var resultado = MessageBox.Show(
+                    "O código de barras não foi preenchido. Deseja gerar um código de barras único automaticamente?",
+                    "Código de Barras",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (resultado == DialogResult.Yes)
+                {
+                    codigoBarras = GerarCodigoDeBarrasUnico();
+
+                   
+                    mtxCodigoBarras.Text = codigoBarras;
+                }
+
+                else
+                {
+                    MessageBox.Show("O cadastro foi cancelado. Preencha o código de barras ou aceite gerar um automaticamente.",
+                                    "Cadastro Cancelado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            if (!ValidarCodigoBarras(out string codigoBarrasValidado))
+            {
+                MessageBox.Show("O código de barras gerado ou informado é inválido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            CadastrarLivro(quantidade, codigoBarrasValidado);
+        }
+
+        /// <summary>
+        /// Gera um código de barras único baseado em um padrão próprio.
+        /// </summary>
+        /// <returns>Um código de barras único.</returns>
+        private static readonly Random _random = new Random();
+
+        private string GerarCodigoDeBarrasUnico()
+        {
+            string codigoBarras;
+            lock (_random) // evita colisões em threads
+            {
+                do
+                {
+                    // prefixo 999 + 10 dígitos aleatórios = 13 dígitos
+                    string part1 = _random.Next(0, 100000).ToString("D5"); // 5 dígitos
+                    string part2 = _random.Next(0, 100000).ToString("D5"); // 5 dígitos
+                    codigoBarras = "999" + part1 + part2; // 3 + 5 + 5 = 13
+                } while (CodigoBarrasExisteNoBanco(codigoBarras));
+            }
+            return codigoBarras;
+        }
+
+
+        /// <summary>
+        /// Verifica se o código de barras já existe no banco de dados.
+        /// </summary>
+        /// <param name="codigoBarras">Código de barras a ser verificado.</param>
+        /// <returns>True se o código já existir, caso contrário, False.</returns>
+        private bool CodigoBarrasExisteNoBanco(string codigoBarras)
+        {
+            using (var conexao = Conexao.ObterConexao())
+            {
+                conexao.Open();
+                string query = "SELECT COUNT(*) FROM Livros WHERE CodigoBarras = @CodigoBarras";
+                using (var comando = new SqlCeCommand(query, conexao))
+                {
+                    comando.Parameters.AddWithValue("@CodigoBarras", codigoBarras);
+                    int count = (int)comando.ExecuteScalar();
+                    return count > 0;
+                }
+            }
         }
         #endregion
 
@@ -288,8 +368,7 @@ namespace BibliotecaApp.Forms.Livros
             if (string.IsNullOrWhiteSpace(txtNome.Text) ||
                 string.IsNullOrWhiteSpace(txtAutor.Text) ||
                 string.IsNullOrWhiteSpace(txtGenero.Text) ||
-                string.IsNullOrWhiteSpace(txtQuantidade.Text) ||
-                string.IsNullOrWhiteSpace(mtxCodigoBarras.Text.Replace(" ", "")))
+                string.IsNullOrWhiteSpace(txtQuantidade.Text))
             {
                 MessageBox.Show("Por favor, preencha todos os campos antes de cadastrar.",
                                 "Campos obrigatórios", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -297,6 +376,7 @@ namespace BibliotecaApp.Forms.Livros
             }
             return true;
         }
+
 
         private bool ValidarQuantidade(out int quantidade)
         {
@@ -369,58 +449,71 @@ namespace BibliotecaApp.Forms.Livros
         {
             using (SqlCeConnection conexao = Conexao.ObterConexao())
             {
-                try
+                conexao.Open();
+                using (var trans = conexao.BeginTransaction())
                 {
-                    conexao.Open();
-
-                    using (SqlCeCommand comando = conexao.CreateCommand())
+                    try
                     {
-                        comando.CommandText = @"INSERT INTO Livros 
-                            (Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade)
-                            VALUES
-                            (@Nome, @Autor, @Genero, @Quantidade, @CodigoBarras, @Disponibilidade)";
+                        using (SqlCeCommand comando = conexao.CreateCommand())
+                        {
+                            comando.Transaction = trans;
+                            comando.CommandText = @"INSERT INTO Livros 
+                        (Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade)
+                        VALUES
+                        (@Nome, @Autor, @Genero, @Quantidade, @CodigoBarras, @Disponibilidade)";
 
-                        comando.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
-                        comando.Parameters.AddWithValue("@Autor", txtAutor.Text.Trim());
-                        comando.Parameters.AddWithValue("@Genero", txtGenero.Text.Trim());
-                        comando.Parameters.AddWithValue("@Quantidade", quantidade);
-                        comando.Parameters.AddWithValue("@CodigoBarras", codigoBarras);
-                        comando.Parameters.AddWithValue("@Disponibilidade", 1);
+                            comando.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
+                            comando.Parameters.AddWithValue("@Autor", txtAutor.Text.Trim());
+                            comando.Parameters.AddWithValue("@Genero", txtGenero.Text.Trim());
+                            comando.Parameters.AddWithValue("@Quantidade", quantidade);
+                            comando.Parameters.AddWithValue("@CodigoBarras", codigoBarras);
+                            comando.Parameters.AddWithValue("@Disponibilidade", 1);
 
-                        comando.ExecuteNonQuery();
+                            comando.ExecuteNonQuery();
+                        }
+
+                        // Agora obrigamos a geração/impresão da etiqueta; se falhar ou cancelar, damos rollback
+                        bool etiquetasGeradas = OferecerImpressaoOuPdfEtiquetas(txtNome.Text.Trim(), txtGenero.Text.Trim(), codigoBarras, quantidade);
+                        if (!etiquetasGeradas)
+                        {
+                            trans.Rollback();
+                            MessageBox.Show("Cadastro cancelado porque as etiquetas não foram geradas.", "Cadastro cancelado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        // commit porque etiqueta gerada com sucesso
+                        trans.Commit();
+
+                        MessageBox.Show("Livro salvo com sucesso!",
+                                        "Cadastro realizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LivroAtualizado?.Invoke(this, EventArgs.Empty);
+                        BibliotecaApp.Utils.EventosGlobais.OnLivroCadastradoOuAlterado();
+
+                        LimparFormulario();
                     }
-
-                    MessageBox.Show("Livro salvo com sucesso!",
-                                    "Cadastro realizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LivroAtualizado?.Invoke(this, EventArgs.Empty);
-
-                    // Broadcast para outras telas
-                    BibliotecaApp.Utils.EventosGlobais.OnLivroCadastradoOuAlterado();
-
-                    // Pergunta imprimir/gerar PDF de etiquetas
-                    OferecerImpressaoOuPdfEtiquetas(txtNome.Text.Trim(), txtGenero.Text.Trim(), codigoBarras, quantidade);
-
-                    LimparFormulario();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Erro ao cadastrar livro: {ex.Message}",
-                                    "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    catch (Exception ex)
+                    {
+                        try { trans.Rollback(); } catch { /* ignore */ }
+                        MessageBox.Show($"Erro ao cadastrar livro: {ex.Message}",
+                                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
 
-        // NOVO: fluxo em 2 passos (Gerar? -> PDF ou Imprimir?)
-        private void OferecerImpressaoOuPdfEtiquetas(string titulo, string genero, string codigoBarras, int quantidade)
+
+        // Retorna true se o usuário gerou/imprimiu o conjunto de etiquetas com sucesso.
+        // Retorna false se o usuário cancelou em qualquer etapa.
+        private bool OferecerImpressaoOuPdfEtiquetas(string titulo, string genero, string codigoBarras, int quantidade)
         {
             if (string.IsNullOrWhiteSpace(codigoBarras))
-                return;
+                return false; // não podemos gerar etiquetas sem código
 
             var r1 = MessageBox.Show("Deseja gerar etiquetas agora?",
                              "Etiquetas",
                              MessageBoxButtons.YesNo,
                              MessageBoxIcon.Question);
-            if (r1 != DialogResult.Yes) return;
+            if (r1 != DialogResult.Yes) return false;
 
             var itens = new List<EtiquetaLabelItem>();
             int n = Math.Max(1, quantidade);
@@ -438,12 +531,10 @@ namespace BibliotecaApp.Forms.Livros
             {
                 using (var dlg = new LabelActionDialog(titulo))
                 {
-                    // Esconde o seletor e fixa a quantidade nas unidades cadastradas
                     dlg.ConfigureQuantity(allowSelection: false, fixedQuantity: n);
-
                     var dr = dlg.ShowDialog(this);
                     if (dr != DialogResult.OK || dlg.Choice == LabelActionChoice.None)
-                        return;
+                        return false; // usuário cancelou
 
                     try
                     {
@@ -468,11 +559,10 @@ namespace BibliotecaApp.Forms.Livros
                                     OffsetYmm = 0f,
                                     GroupByGenre = true
                                 };
-                                // Se você já possui um gerador de PDF próprio:
                                 LabelPdfExporter.ExportPdf(itens, opts, sfd.FileName, barcodeDpi: 200);
                                 MessageBox.Show("PDF gerado com sucesso!", "Etiquetas", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
-                            break; // finaliza após salvar
+                            return true; // sucesso
                         }
                         else if (dlg.Choice == LabelActionChoice.Print)
                         {
@@ -481,7 +571,6 @@ namespace BibliotecaApp.Forms.Livros
                             {
                                 pd.Document = dummyDoc;
 
-                                // Abre o PrintDialog; se cancelar, reabre o LabelActionDialog
                                 if (pd.ShowDialog(this) != DialogResult.OK)
                                     continue;
 
@@ -494,11 +583,10 @@ namespace BibliotecaApp.Forms.Livros
                                     OffsetYmm = 0f,
                                     GroupByGenre = true,
                                     Preview = false,
-                                    ShowPrintDialog = false, // já escolhemos a impressora
+                                    ShowPrintDialog = false,
                                     PrinterName = chosenPrinter
                                 };
 
-                                // Se for Microsoft Print to PDF, perguntar nome/local e salvar direto
                                 if (chosenPrinter.IndexOf("Microsoft Print to PDF", StringComparison.OrdinalIgnoreCase) >= 0)
                                 {
                                     using (var sfd = new SaveFileDialog
@@ -511,8 +599,7 @@ namespace BibliotecaApp.Forms.Livros
                                     })
                                     {
                                         if (sfd.ShowDialog(this) != DialogResult.OK)
-                                            continue; // reabre o LabelActionDialog
-
+                                            continue; // reabre
                                         opts.PrintToFile = true;
                                         opts.OutputFilePath = sfd.FileName;
                                     }
@@ -524,7 +611,7 @@ namespace BibliotecaApp.Forms.Livros
                                 }
 
                                 LabelPrinterService.PrintLabels(itens, opts);
-                                break; // finaliza após imprimir
+                                return true; // sucesso
                             }
                         }
                     }
@@ -537,6 +624,7 @@ namespace BibliotecaApp.Forms.Livros
                 }
             }
         }
+
 
         private static string SanitizeFileName(string s)
         {
@@ -557,7 +645,7 @@ namespace BibliotecaApp.Forms.Livros
             lstSugestoesGenero.Visible = false;
             lstSugestoesGenero.DataSource = null;
             MutarAcceptCancelEnquantoSugestao(false);
-            txtNome.Focus();
+            mtxCodigoBarras.Focus();
         }
 
         private string ObterCodigoDeBarrasFormatado()
@@ -659,6 +747,166 @@ namespace BibliotecaApp.Forms.Livros
             // Enter/Tab seguem o tab order
             this.SelectNextControl(txtGenero, true, true, true, true);
         }
+
+        private void mtxCodigoBarras_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Garante que o evento será disparado mesmo se o controle for customizado
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            {
+                e.SuppressKeyPress = true;
+                btnBuscar.Focus(); // Garante que o botão está focado antes de disparar o click
+                btnBuscar.PerformClick();
+            }
+        }
+
+        private async void btnBuscar_Click(object sender, EventArgs e)
+        {
+            string isbn = new string(mtxCodigoBarras.Text.Where(char.IsDigit).ToArray());
+            if (isbn.Length != 13)
+            {
+                MessageBox.Show("Digite um ISBN válido de 13 dígitos.", "ISBN inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                mtxCodigoBarras.Focus();
+                return;
+            }
+
+            btnBuscar.Enabled = false;
+            try
+            {
+                var resultado = await BuscarLivroPorIsbnAsync(isbn);
+
+                if (resultado == null)
+                {
+                    MessageBox.Show("Nenhum livro encontrado para o ISBN informado.", "Não encontrado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    txtNome.Focus();
+                    return;
+                }
+
+                // Preenche os campos encontrados
+                string msg = "Dados encontrados:\n";
+                bool nomePreenchido = false, autorPreenchido = false, generoPreenchido = false;
+
+                if (!string.IsNullOrEmpty(resultado.Nome))
+                {
+                    txtNome.Text = resultado.Nome;
+                    msg += "- Nome\n";
+                    nomePreenchido = true;
+                }
+                if (!string.IsNullOrEmpty(resultado.Autor))
+                {
+                    txtAutor.Text = resultado.Autor;
+                    msg += "- Autor\n";
+                    autorPreenchido = true;
+                }
+                if (!string.IsNullOrEmpty(resultado.Genero))
+                {
+                    var generoPadrao = generosPadronizados.FirstOrDefault(g => string.Equals(g, resultado.Genero, StringComparison.OrdinalIgnoreCase));
+                    if (generoPadrao != null)
+                    {
+                        txtGenero.Text = generoPadrao;
+                        msg += "- Gênero\n";
+                        generoPreenchido = true;
+                    }
+                }
+
+                MessageBox.Show(msg, "Busca concluída", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Foco no primeiro campo não preenchido, ou txtQuantidade se todos preenchidos
+                if (!nomePreenchido)
+                    txtNome.Focus();
+                else if (!autorPreenchido)
+                    txtAutor.Focus();
+                else if (!generoPreenchido)
+                    txtGenero.Focus();
+                else
+                    txtQuantidade.Focus();
+            }
+            finally
+            {
+                btnBuscar.Enabled = true;
+            }
+        }
+
+        // Classe auxiliar para resultado
+        private class LivroBuscaResultado
+        {
+            public string Nome { get; set; }
+            public string Autor { get; set; }
+            public string Genero { get; set; }
+        }
+
+        // Busca nas duas APIs
+        private async Task<LivroBuscaResultado> BuscarLivroPorIsbnAsync(string isbn)
+        {
+            // 1. Tenta Open Library
+            var resultado = await BuscarOpenLibraryAsync(isbn);
+            if (resultado != null && (!string.IsNullOrEmpty(resultado.Nome) || !string.IsNullOrEmpty(resultado.Autor)))
+                return resultado;
+
+            // 2. Tenta Google Books
+            resultado = await BuscarGoogleBooksAsync(isbn);
+            if (resultado != null && (!string.IsNullOrEmpty(resultado.Nome) || !string.IsNullOrEmpty(resultado.Autor)))
+                return resultado;
+
+            return null;
+        }
+
+        private async Task<LivroBuscaResultado> BuscarOpenLibraryAsync(string isbn)
+        {
+            using (var client = new HttpClient())
+            {
+                string url = $"https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data";
+                var resp = await client.GetAsync(url);
+                if (!resp.IsSuccessStatusCode) return null;
+
+                var json = await resp.Content.ReadAsStringAsync();
+                var obj = JObject.Parse(json);
+                var livro = obj[$"ISBN:{isbn}"];
+                if (livro == null) return null;
+
+                return new LivroBuscaResultado
+                {
+                    Nome = livro["title"]?.ToString(),
+                    Autor = livro["authors"]?.First?["name"]?.ToString(),
+                    Genero = livro["subjects"]?.First?["name"]?.ToString()
+                };
+            }
+        }
+
+        private async Task<LivroBuscaResultado> BuscarGoogleBooksAsync(string isbn)
+        {
+            using (var client = new HttpClient())
+            {
+                string apiKey = "AIzaSyAl09C8xUcIavKjzK3M4-L39_n0E46lE_Y";
+                string url = $"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={apiKey}";
+                var resp = await client.GetAsync(url);
+                if (!resp.IsSuccessStatusCode) return null;
+
+                var json = await resp.Content.ReadAsStringAsync();
+                var obj = JObject.Parse(json);
+                var item = obj["items"]?.First;
+                if (item == null) return null;
+
+                var volumeInfo = item["volumeInfo"];
+                string genero = null;
+                if (volumeInfo["categories"] != null)
+                {
+                    // Tenta casar com os gêneros padronizados
+                    var categorias = volumeInfo["categories"].Select(c => c.ToString());
+                    genero = categorias.Select(cat =>
+                        generosPadronizados.FirstOrDefault(g => cat.IndexOf(g, StringComparison.OrdinalIgnoreCase) >= 0)
+                    ).FirstOrDefault(g => g != null);
+                }
+
+                return new LivroBuscaResultado
+                {
+                    Nome = volumeInfo["title"]?.ToString(),
+                    Autor = volumeInfo["authors"]?.First?.ToString(),
+                    Genero = genero
+                };
+            }
+        }
+
+
         #endregion
 
         #region Infra de Accept/Cancel “mute”

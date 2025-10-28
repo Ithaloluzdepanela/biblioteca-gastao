@@ -30,11 +30,42 @@ namespace BibliotecaApp.Forms.Inicio
     {
 
         private bool menuAnimating = false;
+        private NotifyIcon notifyIcon;
+        private ContextMenuStrip notifyMenu;
+
         public MainForm()
         {
             InitializeComponent();
             mdiProp();
-            
+
+            // Inicializa NotifyIcon e menu de contexto
+            notifyMenu = new ContextMenuStrip();
+            var abrirItem = new ToolStripMenuItem("Abrir");
+            var sairItem = new ToolStripMenuItem("Sair");
+
+            abrirItem.Click += (s, e) => RestoreFromTray();
+            sairItem.Click += (s, e) =>
+            {
+                // remove o ícone antes de sair para não deixar resíduo
+                try { notifyIcon.Visible = false; notifyIcon.Dispose(); } catch { }
+                Application.Exit();
+            };
+
+            notifyMenu.Items.Add(abrirItem);
+            notifyMenu.Items.Add(new ToolStripSeparator());
+            notifyMenu.Items.Add(sairItem);
+
+            notifyIcon = new NotifyIcon
+            {
+                Icon =  Resources.icon_gastao_valle_zoomed_v2, 
+                Visible = false,
+                Text = "BibliotecaApp",
+                ContextMenuStrip = notifyMenu
+            };
+            notifyIcon.DoubleClick += NotifyIcon_DoubleClick;
+
+            // Redireciona minimizar (botão de minimizar ou System) para bandeja
+            this.Resize += MainForm_Resize;
         }
 
         #region Componentes de inicialização
@@ -609,15 +640,13 @@ namespace BibliotecaApp.Forms.Inicio
         #region Control box
         private void picExit_Click(object sender, EventArgs e)
         {
-            const string msg = "Tem certeza de que quer fechar a Aplicação?";
+            const string msg = "Tem certeza de que quer sair da Aplicação?";
             const string box = "Confirmação de Encerramento";
             var confirma = MessageBox.Show(msg, box, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirma == DialogResult.Yes)
             {
-                Application.Exit();
+                HideToTray();
             }
-            
-
         }
 
         //Funcionalidade dos botões
@@ -788,6 +817,59 @@ namespace BibliotecaApp.Forms.Inicio
                 activeChild = child;
             }
             catch { /*silent para não quebrar UI*/ }
+        }
+
+        private void NotifyIcon_DoubleClick(object sender, EventArgs e)
+        {
+            RestoreFromTray();
+        }
+
+        private void RestoreFromTray()
+        {
+            try
+            {
+                this.Show();
+                this.WindowState = FormWindowState.Normal;
+                notifyIcon.Visible = false;
+                this.Activate();
+                this.BringToFront();
+            }
+            catch { }
+        }
+
+        private void HideToTray()
+        {
+            try
+            {
+                this.Hide();
+                notifyIcon.Visible = true;
+                notifyIcon.ShowBalloonTip(800, "BibliotecaApp", "O aplicativo está minimizado na bandeja.", ToolTipIcon.Info);
+            }
+            catch { }
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                HideToTray();
+            }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            // Se o usuário está tentando fechar pelo botão de fechar (não pelo Application.Exit)
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                HideToTray();
+            }
+            else
+            {
+                // Encerramento intencional (Application.Exit, Sair pelo menu) -> libera recursos do notify
+                try { notifyIcon.Visible = false; notifyIcon.Dispose(); } catch { }
+                base.OnFormClosing(e);
+            }
         }
 
         #endregion

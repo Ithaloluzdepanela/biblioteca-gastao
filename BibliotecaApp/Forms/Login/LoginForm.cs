@@ -37,6 +37,8 @@ namespace BibliotecaApp.Forms.Login
             this.txtSenha.Enter += txtSenha_Enter;
             this.txtSenha.Leave += txtSenha_Leave;
 
+            txtEmail.CharacterCasing = CharacterCasing.Lower;
+
             // Removido: KeyDown já está inscrito no Designer
             // txtEmail.KeyDown += txtEmail_KeyDown;
             // txtSenha.KeyDown += txtSenha_KeyDown;
@@ -82,7 +84,7 @@ namespace BibliotecaApp.Forms.Login
 
             try
             {
-                string email = txtEmail.Text.Trim();
+                string email = txtEmail.Text.Trim().ToLowerInvariant();
                 string senha = txtSenha.Text;
 
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))

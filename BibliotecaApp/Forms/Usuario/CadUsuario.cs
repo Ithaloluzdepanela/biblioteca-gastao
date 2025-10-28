@@ -46,6 +46,8 @@ namespace BibliotecaApp.Froms.Usuario
             SetAsteriscoVisibility(false);
             CarregarTurmasDoBanco();
 
+            
+
             // Eventos para o autocomplete de Turma
             txtTurma.KeyDown += txtTurma_KeyDown;
             txtTurma.Leave += txtTurma_Leave;
@@ -243,9 +245,42 @@ namespace BibliotecaApp.Froms.Usuario
             }
         }
 
+        private bool _suppressEmailTextChanged = false;
+        private void txtEmail_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar))
+            {
+                e.KeyChar = char.ToLowerInvariant(e.KeyChar);
+            }
+        }
+        private void txtEmail_Leave(object sender, EventArgs e)
+        {
+            // trim + normalização final
+            txtEmail.Text = txtEmail.Text.Trim().ToLowerInvariant();
+        }
         private void txtEmail_TextChanged(object sender, EventArgs e)
         {
             lblAvisoEmail.Visible = string.IsNullOrWhiteSpace(txtEmail.Text);
+
+            if (_suppressEmailTextChanged) return;
+
+          
+            var tb = sender as TextBox;
+            if (tb == null) return;
+
+            string lower = tb.Text.ToLowerInvariant();
+            if (tb.Text != lower)
+            {
+                int selStart = tb.SelectionStart;
+                int selLen = tb.SelectionLength;
+
+                _suppressEmailTextChanged = true;
+                tb.Text = lower;
+                // restaura a posição do cursor de forma segura
+                tb.SelectionStart = Math.Min(selStart, tb.Text.Length);
+                tb.SelectionLength = selLen;
+                _suppressEmailTextChanged = false;
+            }
         }
 
         private void txtTurma_Validating(object sender, CancelEventArgs e)
@@ -345,6 +380,9 @@ namespace BibliotecaApp.Froms.Usuario
             chkMostrarSenha.Enabled = true;
             chkMostrarSenha.ForeColor = Color.FromArgb(20, 41, 60);
         }
+      
+
+       
 
         private void ConfigurarParaProfessor()
         {
@@ -536,7 +574,7 @@ namespace BibliotecaApp.Froms.Usuario
         {
             string cpf = RemoverMascara(mtxCPF.Text);
             string telefone = RemoverMascara(mtxTelefone.Text);
-            string email = txtEmail.Text.Trim();
+            string email = txtEmail.Text.Trim().ToLowerInvariant();
             string senha = txtSenha.Text.Trim();
             string confirmar = txtConfirmSenha.Text.Trim();
 
@@ -1030,8 +1068,11 @@ VALUES
             (sender as ListBox).Invalidate();
         }
 
+
         #endregion
 
-        
+       
+
+
     }
 }

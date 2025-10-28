@@ -36,33 +36,11 @@ namespace BibliotecaApp.Utils
         // Lê AppSettings["DBPasswordProtected"], decodifica Base64 e descriptografa com DPAPI (escopo máquina)
         private static string GetDatabasePasswordProtected()
         {
-            try
-            {
-                var protectedBase64 = ConfigurationManager.AppSettings["DBPasswordProtected"];
-                if (string.IsNullOrWhiteSpace(protectedBase64))
-                    return null;
+            var base64 = ConfigurationManager.AppSettings["DBPasswordProtected"];
+            if (string.IsNullOrWhiteSpace(base64))
+                return null;
 
-                var protectedBytes = Convert.FromBase64String(protectedBase64);
-                var plainBytes = ProtectedData.Unprotect(protectedBytes, null, DataProtectionScope.LocalMachine);
-                return Encoding.UTF8.GetString(plainBytes);
-            }
-            catch (FormatException)
-            {
-                throw new InvalidOperationException("DBPasswordProtected não é um Base64 válido.");
-            }
-            catch (CryptographicException ex)
-            {
-                throw new InvalidOperationException("Falha ao descriptografar DBPasswordProtected (DPAPI). Verifique se o valor foi gerado nesta máquina.", ex);
-            }
-        }
-
-   
-        public static string ProtectPasswordForConfig(string clearPassword)
-        {
-            if (clearPassword == null) throw new ArgumentNullException(nameof(clearPassword));
-            var bytes = Encoding.UTF8.GetBytes(clearPassword);
-            var protectedBytes = ProtectedData.Protect(bytes, null, DataProtectionScope.LocalMachine);
-            return Convert.ToBase64String(protectedBytes);
+            return Encoding.UTF8.GetString(Convert.FromBase64String(base64));
         }
     }
 }

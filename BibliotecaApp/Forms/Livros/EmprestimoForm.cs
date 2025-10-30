@@ -317,7 +317,10 @@ namespace BibliotecaApp.Forms.Livros
                         cmdLivro.ExecuteNonQuery();
                     }
                 }
+               
 
+                // dispara atualização global
+                BibliotecaApp.Utils.EventosGlobais.OnEmprestimoRealizado();
                 MessageBox.Show("Empréstimo registrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimparCampos();
                 LivroAtualizado?.Invoke(this, EventArgs.Empty);
@@ -645,23 +648,24 @@ private void lstLivros_KeyDown(object sender, KeyEventArgs e)
     }
 }
 
-private void SelecionarLivro(int index)
-{
-    var livro = _cacheLivros[index];
+        private void SelecionarLivro(int index)
+        {
+            var livro = _cacheLivros[index];
 
-    // Alteração programática do nome (não deve limpar o barcode)
-    SetLivroTextProgrammatic(livro.Nome, origemBarcode: false);
+            // Alteração programática do nome (não deve limpar o barcode)
+            SetLivroTextProgrammatic(livro.Nome, origemBarcode: false);
 
-    // Mantém o mesmo comportamento de preencher o barcode do livro selecionado
-    txtBarcode.Enabled = true;
-    txtBarcode.Text = livro.CodigoDeBarras;
-    txtBarcode.Enabled = false;
+            // Mantém o mesmo comportamento de preencher o barcode do livro selecionado
+            txtBarcode.Enabled = true;
+            txtBarcode.Text = livro.CodigoDeBarras;
+           
 
-    lstLivros.Visible = false;
-}
+            lstLivros.Visible = false;
+        }
 
 
-private void txtLivro_TextChanged(object sender, EventArgs e)
+
+        private void txtLivro_TextChanged(object sender, EventArgs e)
 {
     string filtro = txtLivro.Text.Trim();
 

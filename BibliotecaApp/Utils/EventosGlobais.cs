@@ -33,5 +33,12 @@ namespace BibliotecaApp.Utils
         {
             LivroDevolvido?.Invoke(null, EventArgs.Empty);
         }
+
+        public static event EventHandler EmprestimoRealizado;
+        public static void OnEmprestimoRealizado()
+        {
+            EmprestimoRealizado?.Invoke(null, EventArgs.Empty);
+        }
+
     }
 }

@@ -48,7 +48,7 @@ namespace BibliotecaApp.Forms.Login
         private void LoginForm_Load(object sender, EventArgs e)
         {
             AppPaths.EnsureFolders();
-            if (cancelar == true) { this.Close(); }
+            
         }
         #endregion
 

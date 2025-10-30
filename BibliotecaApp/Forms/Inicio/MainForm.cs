@@ -620,7 +620,6 @@ namespace BibliotecaApp.Forms.Inicio
             rel = null;
         }
 
-        //Botão de sair
         private void btnSair_Click(object sender, EventArgs e)
         {
             const string msg = "Tem certeza de que quer finalizar a sessão?";
@@ -628,10 +627,18 @@ namespace BibliotecaApp.Forms.Inicio
             var confirma = MessageBox.Show(msg, box, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirma == DialogResult.Yes)
             {
-                LoginForm.cancelar = false;
+                // sinaliza logout para permitir fechamento real do MainForm
+                Program.RequestLogout = true;
+
+                // garante liberar notifyIcon
+                try { notifyIcon.Visible = false; notifyIcon.Dispose(); } catch { }
+
+                // fecha o MainForm (OnFormClosing permitirá o fechamento por causa da flag)
                 this.Close();
             }
         }
+
+
 
         #endregion
 
@@ -858,7 +865,15 @@ namespace BibliotecaApp.Forms.Inicio
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            // Se o usuário está tentando fechar pelo botão de fechar (não pelo Application.Exit)
+            // Se estamos saindo por LOGOUT (sinalizado pelo Program.RequestLogout), deixa fechar normalmente
+            if (Program.RequestLogout)
+            {
+                try { notifyIcon.Visible = false; notifyIcon.Dispose(); } catch { }
+                base.OnFormClosing(e);
+                return;
+            }
+
+            // Se for fechamento de usuário (clicou no X), cancelamos e mandamos para a bandeja
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
@@ -866,11 +881,12 @@ namespace BibliotecaApp.Forms.Inicio
             }
             else
             {
-                // Encerramento intencional (Application.Exit, Sair pelo menu) -> libera recursos do notify
                 try { notifyIcon.Visible = false; notifyIcon.Dispose(); } catch { }
                 base.OnFormClosing(e);
             }
         }
+
+
 
         #endregion
 

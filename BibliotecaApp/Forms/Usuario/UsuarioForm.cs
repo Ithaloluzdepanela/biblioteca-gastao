@@ -8,7 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-
+using BibliotecaApp.Utils;
 
 namespace BibliotecaApp.Forms.Usuario
 {
@@ -24,6 +24,9 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void UsuarioForm_Load(object sender, EventArgs e)
         {
+            BibliotecaApp.Utils.EventosGlobais.EmprestimoRealizado -= EventosGlobais_EmprestimoRealizado;
+            BibliotecaApp.Utils.EventosGlobais.EmprestimoRealizado += EventosGlobais_EmprestimoRealizado;
+
             var caminho = Conexao.CaminhoBanco;
             if (!File.Exists(caminho))
             {
@@ -75,6 +78,16 @@ namespace BibliotecaApp.Forms.Usuario
             string emprestimo = cmbEmprestimo?.SelectedItem?.ToString() ?? "Todos";
             CarregarUsuarios(nome, tipo, emprestimo);
         }
+
+        private void EventosGlobais_EmprestimoRealizado(object sender, EventArgs e)
+        {
+            // Atualiza a lista de usuários após empréstimo
+            this.BeginInvoke(new Action(() =>
+            {
+                CarregarUsuarios();
+            }));
+        }
+
 
         private void CarregarUsuarios(string nomeFiltro = "", string tipoFiltro = "Todos", string emprestimoFiltro = "Todos")
         {

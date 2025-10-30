@@ -13,6 +13,8 @@ namespace BibliotecaApp
 {
     internal static class Program
     {
+        public static bool RequestLogout = false;
+
         /// <summary>
         /// Ponto de entrada principal para o aplicativo.
         /// </summary>

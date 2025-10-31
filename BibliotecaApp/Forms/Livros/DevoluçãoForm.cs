@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using static Usuarios;
+using System.Threading.Tasks;
 
 namespace BibliotecaApp.Forms.Livros
 {
@@ -825,9 +826,46 @@ namespace BibliotecaApp.Forms.Livros
             VerificarAtrasos();
         }
 
-        private void lblNome_Click(object sender, EventArgs e)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            // 1. Verifica se a tecla pressionada é ENTER e se o foco está no campo mtxCodigoBarras
+            if (keyData == Keys.Enter && this.ActiveControl == mtxCodigoBarras)
+            {
+                // Pega o código de barras formatado (apenas dígitos)
+                string codigo = ObterCodigoDeBarrasFormatado();
 
+                // Só executa a busca se houver algum código
+                if (!string.IsNullOrWhiteSpace(codigo))
+                {
+                    // 2. Aciona o clique no botão de busca
+                    btnBuscarEmprestimo.PerformClick();
+
+                    // 3. Agenda a limpeza do campo para permitir o próximo escaneamento
+                    Task.Delay(1000).ContinueWith(_ =>
+                    {
+                        try
+                        {
+                            // Usa Invoke para garantir que a atualização da UI seja feita na thread principal
+                            Invoke((MethodInvoker)(() =>
+                            {
+                                mtxCodigoBarras.Text = "";
+                                mtxCodigoBarras.Focus();
+                            }));
+                        }
+                        catch
+                        {
+                            // Ignora erros caso o formulário seja fechado durante o delay
+                        }
+                    });
+                }
+
+                // 4. Retorna 'true' para indicar que a tecla já foi processada.
+                // Isso impede que o som de "bip" do Windows toque.
+                return true;
+            }
+
+            // 5. Para qualquer outra tecla, mantém o comportamento padrão do Windows Forms.
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private static bool IsAdminLogado()

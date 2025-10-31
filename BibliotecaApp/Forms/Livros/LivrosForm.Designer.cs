@@ -32,8 +32,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.lblTotal = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.mtxCodigoBarras = new RoundedTextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.mtxCodigoBarras = new RoundedMaskedTextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtNome = new RoundedTextBox();
             this.btnProcurar = new System.Windows.Forms.Button();
@@ -53,7 +53,7 @@
             this.lblTotal.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTotal.AutoSize = true;
             this.lblTotal.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotal.Location = new System.Drawing.Point(761, 171);
+            this.lblTotal.Location = new System.Drawing.Point(748, 171);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(0, 19);
             this.lblTotal.TabIndex = 11;
@@ -61,8 +61,8 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.mtxCodigoBarras);
+            this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.txtNome);
             this.panel1.Controls.Add(this.btnProcurar);
@@ -80,41 +80,49 @@
             this.panel1.Size = new System.Drawing.Size(1280, 845);
             this.panel1.TabIndex = 16;
             // 
+            // mtxCodigoBarras
+            // 
+            this.mtxCodigoBarras.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.mtxCodigoBarras.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.mtxCodigoBarras.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.mtxCodigoBarras.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.mtxCodigoBarras.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.mtxCodigoBarras.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.mtxCodigoBarras.BorderRadius = 10;
+            this.mtxCodigoBarras.BorderThickness = 1;
+            this.mtxCodigoBarras.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.mtxCodigoBarras.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mtxCodigoBarras.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.mtxCodigoBarras.HoverBackColor = System.Drawing.Color.LightGray;
+            this.mtxCodigoBarras.Location = new System.Drawing.Point(736, 241);
+            this.mtxCodigoBarras.Margin = new System.Windows.Forms.Padding(4);
+            this.mtxCodigoBarras.Name = "mtxCodigoBarras";
+            this.mtxCodigoBarras.Padding = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.mtxCodigoBarras.PlaceholderColor = System.Drawing.Color.Gray;
+            this.mtxCodigoBarras.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mtxCodigoBarras.PlaceholderMarginLeft = 12;
+            this.mtxCodigoBarras.PlaceholderText = "Escaneei para buscar...";
+            this.mtxCodigoBarras.SelectedText = "";
+            this.mtxCodigoBarras.SelectionLength = 0;
+            this.mtxCodigoBarras.SelectionStart = 0;
+            this.mtxCodigoBarras.Size = new System.Drawing.Size(230, 40);
+            this.mtxCodigoBarras.TabIndex = 135;
+            this.mtxCodigoBarras.TextColor = System.Drawing.Color.Black;
+            this.mtxCodigoBarras.UseSystemPasswordChar = false;
+           
+            // 
             // label3
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(744, 209);
+            this.label3.Location = new System.Drawing.Point(731, 209);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(162, 25);
             this.label3.TabIndex = 134;
             this.label3.Text = "Código de Barras:";
-            // 
-            // mtxCodigoBarras
-            // 
-            this.mtxCodigoBarras.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.mtxCodigoBarras.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.mtxCodigoBarras.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.mtxCodigoBarras.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.mtxCodigoBarras.BorderRadius = 10;
-            this.mtxCodigoBarras.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.mtxCodigoBarras.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mtxCodigoBarras.ForeColor = System.Drawing.Color.Gray;
-            this.mtxCodigoBarras.HoverBackColor = System.Drawing.Color.LightGray;
-            this.mtxCodigoBarras.HoverBorderColor = System.Drawing.Color.DarkGray;
-            this.mtxCodigoBarras.LeftMargin = 0;
-            this.mtxCodigoBarras.Location = new System.Drawing.Point(748, 238);
-            this.mtxCodigoBarras.Margin = new System.Windows.Forms.Padding(4);
-            this.mtxCodigoBarras.Mask = "0 000000 000000";
-            this.mtxCodigoBarras.MaskTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.mtxCodigoBarras.Name = "mtxCodigoBarras";
-            this.mtxCodigoBarras.Padding = new System.Windows.Forms.Padding(14, 10, 8, 14);
-            this.mtxCodigoBarras.Size = new System.Drawing.Size(202, 40);
-            this.mtxCodigoBarras.TabIndex = 133;
-            this.mtxCodigoBarras.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mtxCodigoBarras_KeyDown);
             // 
             // label2
             // 
@@ -122,7 +130,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label2.Location = new System.Drawing.Point(138, 136);
+            this.label2.Location = new System.Drawing.Point(125, 136);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(90, 25);
@@ -143,7 +151,7 @@
             this.txtNome.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtNome.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtNome.Location = new System.Drawing.Point(143, 164);
+            this.txtNome.Location = new System.Drawing.Point(130, 164);
             this.txtNome.Name = "txtNome";
             this.txtNome.Padding = new System.Windows.Forms.Padding(7);
             this.txtNome.PlaceholderColor = System.Drawing.Color.Gray;
@@ -165,10 +173,10 @@
             this.btnProcurar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnProcurar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnProcurar.ForeColor = System.Drawing.Color.White;
-            this.btnProcurar.Location = new System.Drawing.Point(993, 229);
+            this.btnProcurar.Location = new System.Drawing.Point(1011, 229);
             this.btnProcurar.Name = "btnProcurar";
             this.btnProcurar.Size = new System.Drawing.Size(150, 60);
-            this.btnProcurar.TabIndex = 130;
+            this.btnProcurar.TabIndex = 136;
             this.btnProcurar.Text = "Procurar";
             this.btnProcurar.UseVisualStyleBackColor = false;
             this.btnProcurar.Click += new System.EventHandler(this.btnProcurar_Click);
@@ -191,7 +199,7 @@
             "Autor",
             "Gênero"});
             this.cbFiltro.ItemsFont = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.cbFiltro.Location = new System.Drawing.Point(144, 244);
+            this.cbFiltro.Location = new System.Drawing.Point(131, 244);
             this.cbFiltro.Name = "cbFiltro";
             this.cbFiltro.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F);
             this.cbFiltro.PlaceholderMargin = 10;
@@ -205,7 +213,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(139, 218);
+            this.label1.Location = new System.Drawing.Point(126, 218);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(114, 25);
@@ -230,7 +238,7 @@
             "Disponíveis",
             "Indisponíveis"});
             this.cbDisponibilidade.ItemsFont = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.cbDisponibilidade.Location = new System.Drawing.Point(449, 244);
+            this.cbDisponibilidade.Location = new System.Drawing.Point(436, 244);
             this.cbDisponibilidade.Name = "cbDisponibilidade";
             this.cbDisponibilidade.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F);
             this.cbDisponibilidade.PlaceholderMargin = 10;
@@ -244,7 +252,7 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label6.Location = new System.Drawing.Point(444, 218);
+            this.label6.Location = new System.Drawing.Point(431, 218);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(150, 25);
@@ -331,7 +339,7 @@
         private System.Windows.Forms.Button btnProcurar;
         private RoundedTextBox txtNome;
         private System.Windows.Forms.Label label2;
-        private RoundedMaskedTextBox mtxCodigoBarras;
         private System.Windows.Forms.Label label3;
+        private RoundedTextBox mtxCodigoBarras;
     }
 }

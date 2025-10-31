@@ -8,7 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using BibliotecaApp.Utils;
+
 
 namespace BibliotecaApp.Forms.Usuario
 {
@@ -385,12 +385,16 @@ namespace BibliotecaApp.Forms.Usuario
 
         // dentro da classe UsuarioForm
         private EditarUsuarioForm usuarioEdit;
+        private int? _restoredUserId = null;
+        private bool _needsRefreshAfterClose = false;
+
 
 
         private void UsuarioEdit_UsuarioAtualizado(object sender, EventArgs e)
         {
             // Recarrega a grid com os dados mais recentes
             CarregarUsuarios();
+            _needsRefreshAfterClose = true;
         }
 
         private void CadUsuario_UsuarioCriado(object sender, EventArgs e)
@@ -422,12 +426,23 @@ namespace BibliotecaApp.Forms.Usuario
                 usuarioEdit.UsuarioAtualizado += UsuarioEdit_UsuarioAtualizado;
             }
 
+            usuarioEdit.FecharAoSalvar = true;
+
             // Ajusta botões no MainForm (se MdiParent existir)
             var main = this.MdiParent as MainForm;
             if (main != null)
             {
                 main.btnUserEdit.Enabled = false;
                 main.btnUser.Enabled = true;
+            }
+
+            if (row.Cells["Id"].Value != null && int.TryParse(row.Cells["Id"].Value.ToString(), out int selectedId))
+            {
+                _restoredUserId = selectedId;
+            }
+            else
+            {
+                _restoredUserId = null;
             }
 
             // Abre o editor primeiro (assim OnLoad/Shown já executam)
@@ -465,8 +480,82 @@ namespace BibliotecaApp.Forms.Usuario
             if (main != null)
                 main.ResetarUsuarioEdit();
 
+            // Se o editor sinalizou que houve alteração -> recarrega e tenta restaurar a seleção/posição
+            if (_needsRefreshAfterClose)
+            {
+                try
+                {
+                    CarregarUsuarios();
+                    RestoreSelectionAfterRefresh();
+                }
+                catch (Exception ex)
+                {
+                    // opcional: Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    _needsRefreshAfterClose = false;
+                }
+            }
+
             usuarioEdit = null;
         }
+
+
+        private void RestoreSelectionAfterRefresh()
+        {
+            if (!_restoredUserId.HasValue) return;
+
+            int idParaRestaurar = _restoredUserId.Value;
+
+            // Executa depois que o binding for aplicado à grid (garante que as linhas já existam)
+            this.BeginInvoke(new Action(() =>
+            {
+                try
+                {
+                    for (int i = 0; i < dgvUsuarios.Rows.Count; i++)
+                    {
+                        var cell = dgvUsuarios.Rows[i].Cells["Id"];
+                        if (cell?.Value == null) continue;
+
+                        if (int.TryParse(cell.Value.ToString(), out int rowId) && rowId == idParaRestaurar)
+                        {
+                            // Seleciona a linha encontrada
+                            dgvUsuarios.ClearSelection();
+                            dgvUsuarios.Rows[i].Selected = true;
+
+                            // Ajusta a célula corrente
+                            dgvUsuarios.CurrentCell = dgvUsuarios.Rows[i].Cells[0];
+
+                            // Centraliza a linha na visualização
+                            int visible = Math.Max(1, dgvUsuarios.DisplayedRowCount(false));
+                            int targetFirst = Math.Max(0, i - visible / 2);
+                            targetFirst = Math.Min(targetFirst, Math.Max(0, dgvUsuarios.RowCount - 1));
+                            try
+                            {
+                                dgvUsuarios.FirstDisplayedScrollingRowIndex = targetFirst;
+                            }
+                            catch
+                            {
+                                // ignore
+                            }
+
+                            break;
+                        }
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+                finally
+                {
+                    // limpa para não tentar restaurar novamente
+                    _restoredUserId = null;
+                }
+            }));
+        }
+
 
         public void RefreshGrid()
         {

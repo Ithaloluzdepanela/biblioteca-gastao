@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace BibliotecaApp.Forms.Livros
 {
@@ -18,6 +19,10 @@ namespace BibliotecaApp.Forms.Livros
         public LivrosForm()
         {
             InitializeComponent();
+
+            dgvLivros.CellFormatting += dgvLivros_CellFormatting;
+           
+
             btnProcurar.PerformClick();
 
             // Assina o evento global para atualizar a lista automaticamente
@@ -56,12 +61,13 @@ namespace BibliotecaApp.Forms.Livros
             }
 
             AddTextCol("Id", "ID", 50, DataGridViewContentAlignment.MiddleCenter, 40);
-            AddTextCol("Nome", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120);
+            AddTextCol("Nome", "Nome do Livro", 270, DataGridViewContentAlignment.MiddleLeft, 120);
             AddTextCol("Autor", "Autor", 160, DataGridViewContentAlignment.MiddleLeft, 100);
             AddTextCol("Genero", "Gênero", 140, DataGridViewContentAlignment.MiddleLeft, 100);
-            AddTextCol("Quantidade", "Quantidade", 160, DataGridViewContentAlignment.MiddleLeft, 100);
-            AddTextCol("CodigoBarras", "Código de Barras", 160, DataGridViewContentAlignment.MiddleLeft, 120);
-          /*  AddTextCol("Disponibilidade", "Disponivel", 160, DataGridViewContentAlignment.MiddleLeft, 120);*/ /*Verificar Mudança de Disponibilidade do livro*/
+            AddTextCol("Quantidade", "Quantidade", 45, DataGridViewContentAlignment.MiddleCenter, 100);
+            AddTextCol("CodigoBarras", "Código de Barras", 140, DataGridViewContentAlignment.MiddleLeft, 120);
+            AddTextCol("Status", "Status", 120, DataGridViewContentAlignment.MiddleLeft, 100);
+
 
             // Botão Editar
             var btnEditar = new DataGridViewButtonColumn
@@ -134,6 +140,25 @@ namespace BibliotecaApp.Forms.Livros
             return value.Replace("[", "[[]").Replace("%", "[%]").Replace("_", "[_]").Replace("\\", "[\\]");
         }
 
+        private void dgvLivros_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgvLivros.Columns[e.ColumnIndex].Name == "Status" && e.Value != null)
+            {
+                string status = e.Value.ToString();
+
+                if (status.Equals("Disponível", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.ForeColor = Color.Green;
+                    e.CellStyle.Font = new Font(dgvLivros.Font, FontStyle.Bold);
+                }
+                else if (status.Equals("Indisponível", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.ForeColor = Color.Red;
+                    e.CellStyle.Font = new Font(dgvLivros.Font, FontStyle.Bold);
+                }
+            }
+        }
+
         #endregion
 
         #region Eventos do Formulário
@@ -143,9 +168,9 @@ namespace BibliotecaApp.Forms.Livros
         /// </summary>
         private void LivrosForm_Load(object sender, EventArgs e)
         {
-           
-            CarregarLivros();
+
             ConfigurarGridLivros();
+            CarregarLivros();
             cbDisponibilidade.SelectedIndex = 0;
             cbFiltro.SelectedIndex = 0;
         }
@@ -172,58 +197,61 @@ namespace BibliotecaApp.Forms.Livros
                         else if (selecionado == "Nome") campo = "nome";
                     }
 
-                    string query = "SELECT * FROM livros WHERE 1=1";
+                    string query = @"
+                SELECT 
+                    Id,
+                    Nome,
+                    Autor,
+                    Genero,
+                    Quantidade,
+                    CodigoBarras,
+                    CASE
+                        WHEN Quantidade = 0 THEN 'Indisponível'
+                        ELSE 'Disponível'
+                    END AS Status
+                FROM Livros
+                WHERE 1=1";
 
                     // 🔍 Filtro por nome, autor ou gênero
                     if (!string.IsNullOrWhiteSpace(txtNome.Text))
-                    {
                         query += $" AND {campo} LIKE @termo";
-                    }
 
                     // 🔍 Filtro por código de barras (busca por prefixo)
                     if (!string.IsNullOrWhiteSpace(ObterCodigoDeBarrasFormatado()))
-                    {
                         query += " AND CodigoBarras LIKE @codigo";
-                    }
 
                     // 🔍 Filtro por disponibilidade
                     if (cbDisponibilidade.SelectedItem != null)
                     {
                         string status = cbDisponibilidade.SelectedItem.ToString();
                         if (status == "Disponíveis")
-                            query += " AND disponibilidade = '1'";
+                            query += " AND Quantidade > 0";
                         else if (status == "Indisponíveis")
-                            query += " AND disponibilidade = '0'";
+                            query += " AND Quantidade = 0";
                     }
 
-                    query += " ORDER BY nome ASC";
+                    query += " ORDER BY Nome ASC";
 
                     using (SqlCeCommand comando = new SqlCeCommand(query, conexao))
                     {
                         if (!string.IsNullOrWhiteSpace(txtNome.Text))
-                        {
                             comando.Parameters.AddWithValue("@termo", "%" + txtNome.Text.Trim() + "%");
-                        }
 
                         if (!string.IsNullOrWhiteSpace(ObterCodigoDeBarrasFormatado()))
-                        {
-                            // 👇 Busca apenas códigos que comecem com os dígitos digitados
                             comando.Parameters.AddWithValue("@codigo", ObterCodigoDeBarrasFormatado() + "%");
-                        }
 
                         SqlCeDataAdapter adaptador = new SqlCeDataAdapter(comando);
                         DataTable tabela = new DataTable();
                         adaptador.Fill(tabela);
 
-                        dgvLivros.AutoGenerateColumns = true;
+                        dgvLivros.AutoGenerateColumns = false;
                         dgvLivros.DataSource = tabela;
 
                         lblTotal.Text = $"Total de livros encontrados: {tabela.Rows.Count}";
 
+                        // Oculta o campo "disponibilidade" caso ainda exista no banco
                         if (dgvLivros.Columns.Contains("disponibilidade"))
-                        {
                             dgvLivros.Columns["disponibilidade"].Visible = false;
-                        }
                     }
                 }
                 catch (Exception ex)
@@ -233,6 +261,7 @@ namespace BibliotecaApp.Forms.Livros
                 }
             }
         }
+
 
 
         private string ObterCodigoDeBarrasFormatado()
@@ -261,10 +290,10 @@ namespace BibliotecaApp.Forms.Livros
                     Quantidade,
                     CodigoBarras,
                     CASE
-                        WHEN Quantidade = 0 THEN 'Indisponível'
-                        WHEN Disponibilidade = 1 THEN 'Disponível'
-                        
-                    END AS Status
+    WHEN Quantidade = 0 THEN 'Indisponível'
+    WHEN Disponibilidade = 1 THEN 'Disponível'
+    ELSE 'Indisponível'
+END AS Status
                 FROM Livros
                 WHERE 1 = 1";
 
@@ -326,20 +355,18 @@ namespace BibliotecaApp.Forms.Livros
         // Formata células baseado na disponibilidade do livro
         private void Lista_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (dgvLivros.Columns[e.ColumnIndex].Name == "disponibilidade" && e.Value != null)
+            if (dgvLivros.Columns[e.ColumnIndex].Name == "Status" && e.Value != null)
             {
                 string valor = e.Value.ToString();
 
-                if (valor == "0")
+                if (valor == "Indisponível")
                 {
-                    // Destaca a linha toda se indisponível
                     dgvLivros.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGray;
                     dgvLivros.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.DarkRed;
                     dgvLivros.Rows[e.RowIndex].DefaultCellStyle.Font = new Font(dgvLivros.Font, FontStyle.Italic);
                 }
-                else if (valor == "1")
+                else if (valor == "Disponível")
                 {
-                    // Estilo para disponível
                     dgvLivros.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
                     dgvLivros.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Black;
                 }
@@ -434,15 +461,50 @@ namespace BibliotecaApp.Forms.Livros
 
         #endregion
 
-        private void mtxCodigoBarras_KeyDown(object sender, KeyEventArgs e)
+
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            
-            if (e.KeyCode == Keys.Enter)
+            // Verifica se a tecla pressionada foi o ENTER e se o controle ativo (com foco)
+            // é o nosso campo de código de barras.
+            if (keyData == Keys.Enter && this.ActiveControl == mtxCodigoBarras)
             {
-                btnProcurar.PerformClick();
-                e.Handled = true;
-                e.SuppressKeyPress = true;
+                // --- Início da sua lógica de busca ---
+
+                string codigo = new string(mtxCodigoBarras.Text.Where(char.IsDigit).ToArray()).Trim();
+
+                if (!string.IsNullOrWhiteSpace(codigo))
+                {
+                    // Executa a busca
+                    btnProcurar.PerformClick();
+
+                    // Agenda a limpeza e o foco para o próximo escaneamento
+                    Task.Delay(1000).ContinueWith(_ =>
+                    {
+                        try
+                        {
+                            Invoke((MethodInvoker)(() =>
+                            {
+                                mtxCodigoBarras.Text = "";
+                                mtxCodigoBarras.Focus();
+                            }));
+                        }
+                        catch { /* Ignora erro se o form fechar */ }
+                    });
+                }
+
+                // --- Fim da sua lógica de busca ---
+
+                // Retorna 'true' para dizer ao Windows Forms:
+                // "Eu já processei esta tecla, não faça mais nada com ela."
+                return true;
             }
+
+            // Para qualquer outra tecla ou qualquer outro controle,
+            // deixa o Windows Forms continuar com seu comportamento padrão.
+            return base.ProcessCmdKey(ref msg, keyData);
         }
+
+
     }
 }

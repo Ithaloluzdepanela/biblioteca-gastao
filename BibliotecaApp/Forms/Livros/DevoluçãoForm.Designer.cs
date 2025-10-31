@@ -99,7 +99,6 @@
             this.lblNome.Size = new System.Drawing.Size(140, 25);
             this.lblNome.TabIndex = 107;
             this.lblNome.Text = "Nome do livro:";
-            this.lblNome.Click += new System.EventHandler(this.lblNome_Click);
             // 
             // Titulo
             // 
@@ -264,10 +263,11 @@
             this.mtxCodigoBarras.HoverBorderColor = System.Drawing.Color.DarkGray;
             this.mtxCodigoBarras.LeftMargin = 0;
             this.mtxCodigoBarras.Location = new System.Drawing.Point(441, 190);
+            this.mtxCodigoBarras.Margin = new System.Windows.Forms.Padding(0);
             this.mtxCodigoBarras.Mask = "0 000000 000000";
             this.mtxCodigoBarras.MaskTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.mtxCodigoBarras.Name = "mtxCodigoBarras";
-            this.mtxCodigoBarras.Padding = new System.Windows.Forms.Padding(10, 2, 7, 6);
+            this.mtxCodigoBarras.Padding = new System.Windows.Forms.Padding(10, 7, 0, 0);
             this.mtxCodigoBarras.Size = new System.Drawing.Size(188, 40);
             this.mtxCodigoBarras.TabIndex = 115;
             // 

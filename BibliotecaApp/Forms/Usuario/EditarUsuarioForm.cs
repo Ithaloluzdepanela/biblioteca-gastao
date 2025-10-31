@@ -147,6 +147,7 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
+        private bool _suppressSuggestionOnPrefill = false;
         private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
         private Usuarios _usuarioSelecionado;
 
@@ -165,6 +166,10 @@ namespace BibliotecaApp.Forms.Usuario
             }
             this.Close();
         }
+
+        // permite controlar se o form fecha automaticamente depois de salvar
+        public bool FecharAoSalvar { get; set; } = false;
+
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
@@ -187,11 +192,32 @@ namespace BibliotecaApp.Forms.Usuario
 
             // Verificar se houve alterações
             bool haAlteracoes = VerificarAlteracoes();
-
             if (!haAlteracoes)
             {
                 MessageBox.Show("Nenhuma alteração foi feita.");
                 return;
+            }
+
+            // Validar e-mail antes de salvar
+            string email = txtEmail.Text.Trim();
+            if (!string.IsNullOrEmpty(email) && !EmailValido(email))
+            {
+                MessageBox.Show("E-mail inválido. Digite um e-mail válido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Normalizar CPF (apenas dígitos)
+            string cpfRaw = (mtxCPF.Text ?? "");
+            string cpfDigits = Regex.Replace(cpfRaw, @"\D", "");
+
+            // Verificar duplicidade **antes** de atualizar. CPF vazio => permitido.
+            if (!string.IsNullOrEmpty(cpfDigits))
+            {
+                if (CpfJaExiste(cpfRaw, _usuarioSelecionado.Id))
+                {
+                    MessageBox.Show("Já existe outro usuário com esse CPF.", "CPF duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
             }
 
             // Mostrar mensagem de confirmação com as alterações
@@ -204,8 +230,6 @@ namespace BibliotecaApp.Forms.Usuario
                 return;
             }
 
-            
-
             //  código de salvamento...
             try
             {
@@ -213,40 +237,40 @@ namespace BibliotecaApp.Forms.Usuario
                 {
                     conexao.Open();
                     string sql = @"UPDATE usuarios SET 
-                    Nome = @nome, Email = @email, CPF = @cpf,
-                    DataNascimento = @data, Telefone = @tel, Turma = @turma
-                   WHERE Id = @id";
+                Nome = @nome, Email = @email, CPF = @cpf,
+                DataNascimento = @data, Telefone = @tel, Turma = @turma
+                WHERE Id = @id";
 
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        cmd.Parameters.AddWithValue("@nome", txtNome.Text);
-                        cmd.Parameters.AddWithValue("@email", txtEmail.Text);
-                        cmd.Parameters.AddWithValue("@cpf", mtxCPF.Text);
+                        cmd.Parameters.AddWithValue("@nome", txtNome.Text.Trim());
+                        cmd.Parameters.AddWithValue("@email", string.IsNullOrEmpty(email) ? (object)DBNull.Value : email);
+
+                        // Se não houver dígitos no CPF, grava NULL no banco (se a coluna permitir)
+                        if (string.IsNullOrEmpty(cpfDigits))
+                            cmd.Parameters.AddWithValue("@cpf", DBNull.Value);
+                        else
+                            cmd.Parameters.AddWithValue("@cpf", mtxCPF.Text.Trim());
+
                         cmd.Parameters.AddWithValue("@data", dtpDataNasc.Value);
-                        cmd.Parameters.AddWithValue("@tel", mtxTelefone.Text);
-                        cmd.Parameters.AddWithValue("@turma", txtTurma.Text);
+                        cmd.Parameters.AddWithValue("@tel", string.IsNullOrEmpty(mtxTelefone.Text.Trim()) ? (object)DBNull.Value : mtxTelefone.Text.Trim());
+                        cmd.Parameters.AddWithValue("@turma", string.IsNullOrEmpty(txtTurma.Text.Trim()) ? (object)DBNull.Value : txtTurma.Text.Trim());
                         cmd.Parameters.AddWithValue("@id", _usuarioSelecionado.Id);
 
                         cmd.ExecuteNonQuery();
-
                     }
-                }
-
-                if (CpfJaExiste(mtxCPF.Text.Trim(), _usuarioSelecionado.Id))
-                {
-                    MessageBox.Show("Já existe outro usuário com esse CPF.", "CPF duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                string email = txtEmail.Text.Trim();
-                if (!string.IsNullOrEmpty(email) && !EmailValido(email))
-                {
-                    MessageBox.Show("E-mail inválido. Digite um e-mail válido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
                 }
 
                 MessageBox.Show("Usuário atualizado com sucesso!");
                 UsuarioAtualizado?.Invoke(this, EventArgs.Empty);
+
+                if (this.FecharAoSalvar)
+                {
+                    this.Close();
+                    return;
+                }
+
+                
                 LimparCampos();
             }
             catch (Exception ex)
@@ -254,6 +278,7 @@ namespace BibliotecaApp.Forms.Usuario
                 MessageBox.Show("Erro ao atualizar: " + ex.Message);
             }
         }
+
 
         private bool VerificarAlteracoes()
         {
@@ -568,59 +593,63 @@ private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e
         }
 
         // Substitua o método txtNomeUsuario_TextChanged — remove a seleção automática
-private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
-{
-    lstSugestoesUsuario.Items.Clear();
-    lstSugestoesUsuario.Visible = false;
-    _cacheUsuarios.Clear();
-
-    string nomeBusca = txtNomeUsuario.Text.Trim();
-    if (string.IsNullOrWhiteSpace(nomeBusca))
-        return;
-
-    try
-    {
-        using (var conexao = Conexao.ObterConexao())
+        private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
         {
-            conexao.Open();
-            string sql = "SELECT * FROM usuarios WHERE Nome LIKE @nome ORDER BY Nome";
-            using (var cmd = new SqlCeCommand(sql, conexao))
+            // Se estivermos suprimindo por causa do prefill, ignora este evento.
+            if (_suppressSuggestionOnPrefill) return;
+
+            lstSugestoesUsuario.Items.Clear();
+            lstSugestoesUsuario.Visible = false;
+            _cacheUsuarios.Clear();
+
+            string nomeBusca = txtNomeUsuario.Text.Trim();
+            if (string.IsNullOrWhiteSpace(nomeBusca))
+                return;
+
+            try
             {
-                cmd.Parameters.AddWithValue("@nome", nomeBusca + "%");
-                using (var reader = cmd.ExecuteReader())
+                using (var conexao = Conexao.ObterConexao())
                 {
-                    while (reader.Read())
+                    conexao.Open();
+                    string sql = "SELECT * FROM usuarios WHERE Nome LIKE @nome ORDER BY Nome";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        var usuario = new Usuarios
+                        cmd.Parameters.AddWithValue("@nome", nomeBusca + "%");
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            Id = (int)reader["Id"],
-                            Nome = reader["Nome"].ToString(),
-                            Email = reader["Email"].ToString(),
-                            CPF = reader["CPF"].ToString(),
-                            DataNascimento = reader["DataNascimento"] != DBNull.Value ? Convert.ToDateTime(reader["DataNascimento"]) : DateTime.MinValue,
-                            Telefone = reader["Telefone"].ToString(),
-                            Turma = reader["Turma"].ToString(),
-                            TipoUsuario = reader["TipoUsuario"].ToString()
-                        };
-                        _cacheUsuarios.Add(usuario);
-                        lstSugestoesUsuario.Items.Add(usuario); // ToString exibe Nome - Turma
+                            while (reader.Read())
+                            {
+                                var usuario = new Usuarios
+                                {
+                                    Id = (int)reader["Id"],
+                                    Nome = reader["Nome"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    CPF = reader["CPF"].ToString(),
+                                    DataNascimento = reader["DataNascimento"] != DBNull.Value ? Convert.ToDateTime(reader["DataNascimento"]) : DateTime.MinValue,
+                                    Telefone = reader["Telefone"].ToString(),
+                                    Turma = reader["Turma"].ToString(),
+                                    TipoUsuario = reader["TipoUsuario"].ToString()
+                                };
+                                _cacheUsuarios.Add(usuario);
+                                lstSugestoesUsuario.Items.Add(usuario); // ToString exibe Nome - Turma
+                            }
+                        }
                     }
                 }
+
+                lstSugestoesUsuario.Visible = lstSugestoesUsuario.Items.Count > 0;
+                lstSugestoesUsuario.Enabled = lstSugestoesUsuario.Items.Count > 0;
+
+                // NÃO pré-seleciona; permite digitar sem auto-preencher
+                if (lstSugestoesUsuario.Visible)
+                    lstSugestoesUsuario.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro na busca: " + ex.Message);
             }
         }
 
-        lstSugestoesUsuario.Visible = lstSugestoesUsuario.Items.Count > 0;
-        lstSugestoesUsuario.Enabled = lstSugestoesUsuario.Items.Count > 0;
-
-        // NÃO pré-seleciona; permite digitar sem auto-preencher
-        if (lstSugestoesUsuario.Visible)
-            lstSugestoesUsuario.SelectedIndex = -1;
-    }
-    catch (Exception ex)
-    {
-        MessageBox.Show("Erro na busca: " + ex.Message);
-    }
-}
 
         // Configurações de exibição para Edição de Usuário
 
@@ -704,21 +733,34 @@ private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
 
         private bool CpfJaExiste(string cpf, int usuarioIdAtual)
         {
+            // Normaliza: remove tudo que não é dígito
+            string cpfDigits = string.IsNullOrWhiteSpace(cpf) ? "" : Regex.Replace(cpf, @"\D", "");
+
+            // Se não houver dígitos, considerar como vazio -> não é duplicado
+            if (string.IsNullOrEmpty(cpfDigits))
+                return false;
+
             using (var conexao = Conexao.ObterConexao())
             {
                 conexao.Open();
-                string sql = "SELECT COUNT(*) FROM usuarios WHERE CPF = @Cpf AND Id <> @IdAtual";
+
+                // Compara apenas os dígitos armazenados (remove . - e espaços)
+                string sql = @"
+            SELECT COUNT(*) FROM usuarios 
+            WHERE REPLACE(REPLACE(REPLACE(CPF, '.', ''), '-', ''), ' ', '') = @CpfNormalized
+              AND Id <> @IdAtual";
 
                 using (var cmd = new SqlCeCommand(sql, conexao))
                 {
-                    cmd.Parameters.AddWithValue("@Cpf", cpf);
+                    cmd.Parameters.AddWithValue("@CpfNormalized", cpfDigits);
                     cmd.Parameters.AddWithValue("@IdAtual", usuarioIdAtual);
 
-                    int count = (int)cmd.ExecuteScalar();
+                    int count = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
                     return count > 0;
                 }
             }
         }
+
 
         private bool EmailValido(string email)
         {
@@ -892,6 +934,18 @@ private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
             HabilitarCampos(true);
 
             _usuarioSelecionado = usuario;
+
+            // Se o form foi aberto a partir do UsuarioForm (FecharAoSalvar = true),
+            // suprimimos temporariamente as sugestões para evitar que apareçam.
+            if (this.FecharAoSalvar)
+            {
+                _suppressSuggestionOnPrefill = true;
+                lstSugestoesUsuario.Visible = false;
+                lstSugestoesUsuario.SelectedIndex = -1;
+                lstSugestoesTurma.Visible = false;
+                lstSugestoesTurma.SelectedIndex = -1;
+            }
+
             txtNomeUsuario.Text = usuario.Nome;
             txtNome.Text = usuario.Nome;
             txtEmail.Text = usuario.Email;
@@ -904,7 +958,11 @@ private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
 
             AplicarConfiguracaoEdicaoUsuario();
             OnUsuarioSelecionado(true);
+
+            // fim do prefill -> reativa sugestões para próximas edições
+            _suppressSuggestionOnPrefill = false;
         }
+
 
         protected override void OnLoad(EventArgs e)
         {
@@ -964,7 +1022,9 @@ private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
         // Substitua o txtTurma_TextChanged: remove a seleção automática
 private void txtTurma_TextChanged(object sender, EventArgs e)
 {
-    string texto = txtTurma.Text.Trim();
+            if (_suppressSuggestionOnPrefill) return;
+
+            string texto = txtTurma.Text.Trim();
 
     if (string.IsNullOrEmpty(texto))
     {

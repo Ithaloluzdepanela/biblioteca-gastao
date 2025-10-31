@@ -64,8 +64,7 @@ namespace BibliotecaApp.Forms.Inicio
             };
             notifyIcon.DoubleClick += NotifyIcon_DoubleClick;
 
-            // Redireciona minimizar (botão de minimizar ou System) para bandeja
-            this.Resize += MainForm_Resize;
+            
         }
 
         #region Componentes de inicialização
@@ -647,14 +646,21 @@ namespace BibliotecaApp.Forms.Inicio
         #region Control box
         private void picExit_Click(object sender, EventArgs e)
         {
-            const string msg = "Tem certeza de que quer sair da Aplicação?";
-            const string box = "Confirmação de Encerramento";
-            var confirma = MessageBox.Show(msg, box, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var confirma = MessageBox.Show(
+                "Tem certeza de que quer sair da aplicação?",
+                "Confirmação de saída",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
             if (confirma == DialogResult.Yes)
             {
-                HideToTray();
+                try { notifyIcon.Visible = false; notifyIcon.Dispose(); } catch { }
+                Application.Exit(); // Fecha completamente o app
             }
         }
+
+
+
 
         //Funcionalidade dos botões
         private void picMax_Click(object sender, EventArgs e)
@@ -711,8 +717,8 @@ namespace BibliotecaApp.Forms.Inicio
         private void MainForm_Load(object sender, EventArgs e)
         {
 
-           
 
+            
 
             btnIn();
 
@@ -855,17 +861,10 @@ namespace BibliotecaApp.Forms.Inicio
             catch { }
         }
 
-        private void MainForm_Resize(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                HideToTray();
-            }
-        }
+
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            // Se estamos saindo por LOGOUT (sinalizado pelo Program.RequestLogout), deixa fechar normalmente
             if (Program.RequestLogout)
             {
                 try { notifyIcon.Visible = false; notifyIcon.Dispose(); } catch { }
@@ -873,11 +872,11 @@ namespace BibliotecaApp.Forms.Inicio
                 return;
             }
 
-            // Se for fechamento de usuário (clicou no X), cancelamos e mandamos para a bandeja
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                e.Cancel = true;
-                HideToTray();
+                // Fecha normalmente
+                try { notifyIcon.Visible = false; notifyIcon.Dispose(); } catch { }
+                base.OnFormClosing(e);
             }
             else
             {
@@ -888,8 +887,8 @@ namespace BibliotecaApp.Forms.Inicio
 
 
 
-        #endregion
 
+        #endregion
 
     }
 }

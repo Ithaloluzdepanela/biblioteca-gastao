@@ -180,10 +180,10 @@ namespace BibliotecaApp.Forms.Livros
                         query += $" AND {campo} LIKE @termo";
                     }
 
-                    // 🔍 Filtro por código de barras (busca exata)
+                    // 🔍 Filtro por código de barras (busca por prefixo)
                     if (!string.IsNullOrWhiteSpace(ObterCodigoDeBarrasFormatado()))
                     {
-                        query += " AND CodigoBarras = @codigo";
+                        query += " AND CodigoBarras LIKE @codigo";
                     }
 
                     // 🔍 Filtro por disponibilidade
@@ -207,7 +207,8 @@ namespace BibliotecaApp.Forms.Livros
 
                         if (!string.IsNullOrWhiteSpace(ObterCodigoDeBarrasFormatado()))
                         {
-                            comando.Parameters.AddWithValue("@codigo", ObterCodigoDeBarrasFormatado());
+                            // 👇 Busca apenas códigos que comecem com os dígitos digitados
+                            comando.Parameters.AddWithValue("@codigo", ObterCodigoDeBarrasFormatado() + "%");
                         }
 
                         SqlCeDataAdapter adaptador = new SqlCeDataAdapter(comando);
@@ -232,6 +233,7 @@ namespace BibliotecaApp.Forms.Livros
                 }
             }
         }
+
 
         private string ObterCodigoDeBarrasFormatado()
         {
@@ -429,8 +431,18 @@ namespace BibliotecaApp.Forms.Livros
 
 
 
+
         #endregion
 
-
+        private void mtxCodigoBarras_KeyDown(object sender, KeyEventArgs e)
+        {
+            
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnProcurar.PerformClick();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
     }
 }

@@ -718,7 +718,7 @@ namespace BibliotecaApp.Forms.Inicio
         {
 
 
-            
+    
 
             btnIn();
 
@@ -850,16 +850,6 @@ namespace BibliotecaApp.Forms.Inicio
             catch { }
         }
 
-        private void HideToTray()
-        {
-            try
-            {
-                this.Hide();
-                notifyIcon.Visible = true;
-                notifyIcon.ShowBalloonTip(800, "BibliotecaApp", "O aplicativo está minimizado na bandeja.", ToolTipIcon.Info);
-            }
-            catch { }
-        }
 
 
 

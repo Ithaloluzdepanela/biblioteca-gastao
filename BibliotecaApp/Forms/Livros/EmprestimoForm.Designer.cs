@@ -31,8 +31,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
             this.lstLivros = new System.Windows.Forms.ListBox();
-            this.dtpDataDevolucao = new System.Windows.Forms.DateTimePicker();
-            this.dtpDataEmprestimo = new System.Windows.Forms.DateTimePicker();
             this.cbBibliotecaria = new RoundedComboBox();
             this.txtBarcode = new RoundedTextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -46,6 +44,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.dtpDataEmprestimo = new RoundedDatePicker();
+            this.dtpDataDevolucao = new RoundedDatePicker();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,10 +53,10 @@
             // 
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.lstSugestoesUsuario);
-            this.panel1.Controls.Add(this.lstLivros);
             this.panel1.Controls.Add(this.dtpDataDevolucao);
             this.panel1.Controls.Add(this.dtpDataEmprestimo);
+            this.panel1.Controls.Add(this.lstSugestoesUsuario);
+            this.panel1.Controls.Add(this.lstLivros);
             this.panel1.Controls.Add(this.cbBibliotecaria);
             this.panel1.Controls.Add(this.txtBarcode);
             this.panel1.Controls.Add(this.label7);
@@ -114,34 +114,6 @@
             this.lstLivros.Visible = false;
             this.lstLivros.Click += new System.EventHandler(this.lstLivros_Click);
             this.lstLivros.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLivros_KeyDown);
-            // 
-            // dtpDataDevolucao
-            // 
-            this.dtpDataDevolucao.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dtpDataDevolucao.Enabled = false;
-            this.dtpDataDevolucao.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
-            this.dtpDataDevolucao.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDataDevolucao.Location = new System.Drawing.Point(332, 570);
-            this.dtpDataDevolucao.Margin = new System.Windows.Forms.Padding(4);
-            this.dtpDataDevolucao.Name = "dtpDataDevolucao";
-            this.dtpDataDevolucao.Size = new System.Drawing.Size(329, 33);
-            this.dtpDataDevolucao.TabIndex = 105;
-            this.dtpDataDevolucao.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
-            this.dtpDataDevolucao.ValueChanged += new System.EventHandler(this.dtpDataDevolucao_ValueChanged);
-            // 
-            // dtpDataEmprestimo
-            // 
-            this.dtpDataEmprestimo.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dtpDataEmprestimo.Enabled = false;
-            this.dtpDataEmprestimo.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
-            this.dtpDataEmprestimo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDataEmprestimo.Location = new System.Drawing.Point(332, 495);
-            this.dtpDataEmprestimo.Margin = new System.Windows.Forms.Padding(4);
-            this.dtpDataEmprestimo.Name = "dtpDataEmprestimo";
-            this.dtpDataEmprestimo.Size = new System.Drawing.Size(329, 33);
-            this.dtpDataEmprestimo.TabIndex = 104;
-            this.dtpDataEmprestimo.Value = new System.DateTime(2025, 7, 10, 0, 0, 0, 0);
-            this.dtpDataEmprestimo.ValueChanged += new System.EventHandler(this.dtpDataEmprestimo_ValueChanged);
             // 
             // cbBibliotecaria
             // 
@@ -217,7 +189,7 @@
             this.chkDevolucaoPersonalizada.BackColor = System.Drawing.Color.White;
             this.chkDevolucaoPersonalizada.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.chkDevolucaoPersonalizada.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.chkDevolucaoPersonalizada.Location = new System.Drawing.Point(332, 611);
+            this.chkDevolucaoPersonalizada.Location = new System.Drawing.Point(332, 619);
             this.chkDevolucaoPersonalizada.Margin = new System.Windows.Forms.Padding(4);
             this.chkDevolucaoPersonalizada.Name = "chkDevolucaoPersonalizada";
             this.chkDevolucaoPersonalizada.Size = new System.Drawing.Size(162, 24);
@@ -323,7 +295,7 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label5.Location = new System.Drawing.Point(328, 543);
+            this.label5.Location = new System.Drawing.Point(328, 546);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(181, 25);
@@ -383,6 +355,58 @@
             this.label1.TabIndex = 16;
             this.label1.Text = "EMPRÉSTIMO DE LIVRO";
             // 
+            // dtpDataEmprestimo
+            // 
+            this.dtpDataEmprestimo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dtpDataEmprestimo.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpDataEmprestimo.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.dtpDataEmprestimo.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.dtpDataEmprestimo.BorderRadius = 10;
+            this.dtpDataEmprestimo.BorderThickness = 1;
+            this.dtpDataEmprestimo.Enabled = false;
+            this.dtpDataEmprestimo.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
+            this.dtpDataEmprestimo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataEmprestimo.HoverBackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpDataEmprestimo.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataEmprestimo.IconHoverAreaColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.dtpDataEmprestimo.IconHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataEmprestimo.Location = new System.Drawing.Point(332, 496);
+            this.dtpDataEmprestimo.Name = "dtpDataEmprestimo";
+            this.dtpDataEmprestimo.PlaceholderColor = System.Drawing.Color.Gray;
+            this.dtpDataEmprestimo.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12.2F);
+            this.dtpDataEmprestimo.PlaceholderText = "";
+            this.dtpDataEmprestimo.SelectedDate = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
+            this.dtpDataEmprestimo.Size = new System.Drawing.Size(245, 40);
+            this.dtpDataEmprestimo.TabIndex = 127;
+            this.dtpDataEmprestimo.TabStop = false;
+            this.dtpDataEmprestimo.Value = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
+            // 
+            // dtpDataDevolucao
+            // 
+            this.dtpDataDevolucao.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dtpDataDevolucao.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpDataDevolucao.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.dtpDataDevolucao.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.dtpDataDevolucao.BorderRadius = 10;
+            this.dtpDataDevolucao.BorderThickness = 1;
+            this.dtpDataDevolucao.Enabled = false;
+            this.dtpDataDevolucao.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
+            this.dtpDataDevolucao.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataDevolucao.HoverBackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpDataDevolucao.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataDevolucao.IconHoverAreaColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.dtpDataDevolucao.IconHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataDevolucao.Location = new System.Drawing.Point(332, 573);
+            this.dtpDataDevolucao.Name = "dtpDataDevolucao";
+            this.dtpDataDevolucao.PlaceholderColor = System.Drawing.Color.Gray;
+            this.dtpDataDevolucao.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12.2F);
+            this.dtpDataDevolucao.PlaceholderText = "";
+            this.dtpDataDevolucao.SelectedDate = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
+            this.dtpDataDevolucao.Size = new System.Drawing.Size(245, 40);
+            this.dtpDataDevolucao.TabIndex = 128;
+            this.dtpDataDevolucao.TabStop = false;
+            this.dtpDataDevolucao.Value = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
+            // 
             // EmprestimoForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -424,8 +448,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ListBox lstLivros;
         private RoundedComboBox cbBibliotecaria;
-        private System.Windows.Forms.DateTimePicker dtpDataDevolucao;
-        private System.Windows.Forms.DateTimePicker dtpDataEmprestimo;
         public RoundedTextBox txtLivro;
+        private RoundedDatePicker dtpDataDevolucao;
+        private RoundedDatePicker dtpDataEmprestimo;
     }
 }

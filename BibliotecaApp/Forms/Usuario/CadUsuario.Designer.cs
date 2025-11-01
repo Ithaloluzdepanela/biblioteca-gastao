@@ -49,21 +49,21 @@
             this.lblDataNasc = new System.Windows.Forms.Label();
             this.SenhaAst = new System.Windows.Forms.Label();
             this.lblUsuario = new System.Windows.Forms.Label();
-            this.dtpDataNasc = new System.Windows.Forms.DateTimePicker();
             this.btnLimpar = new System.Windows.Forms.Button();
             this.btnCadastrar = new System.Windows.Forms.Button();
             this.EmailAst = new System.Windows.Forms.Label();
             this.lstSugestoesTurma = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.txtNome = new RoundedTextBox();
             this.txtEmail = new RoundedTextBox();
             this.txtTurma = new RoundedTextBox();
             this.cbUsuario = new RoundedComboBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.txtConfirmSenha = new RoundedTextBox();
             this.mtxCPF = new RoundedMaskedTextBox();
             this.mtxTelefone = new RoundedMaskedTextBox();
             this.txtSenha = new RoundedTextBox();
+            this.dtpDataNasc = new RoundedDatePicker();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -336,16 +336,6 @@
             this.lblUsuario.TabIndex = 84;
             this.lblUsuario.Text = "*";
             // 
-            // dtpDataNasc
-            // 
-            this.dtpDataNasc.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dtpDataNasc.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.dtpDataNasc.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDataNasc.Location = new System.Drawing.Point(23, 208);
-            this.dtpDataNasc.Name = "dtpDataNasc";
-            this.dtpDataNasc.Size = new System.Drawing.Size(329, 33);
-            this.dtpDataNasc.TabIndex = 7;
-            // 
             // btnLimpar
             // 
             this.btnLimpar.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -434,31 +424,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1280, 980);
             this.panel1.TabIndex = 0;
-            // 
-            // panel2
-            // 
-            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.panel2.Controls.Add(this.txtConfirmSenha);
-            this.panel2.Controls.Add(this.DataNascAst);
-            this.panel2.Controls.Add(this.btnLimpar);
-            this.panel2.Controls.Add(this.btnCadastrar);
-            this.panel2.Controls.Add(this.mtxCPF);
-            this.panel2.Controls.Add(this.lblSenha);
-            this.panel2.Controls.Add(this.dtpDataNasc);
-            this.panel2.Controls.Add(this.mtxTelefone);
-            this.panel2.Controls.Add(this.txtSenha);
-            this.panel2.Controls.Add(this.lblConfirmSenha);
-            this.panel2.Controls.Add(this.SenhaAst);
-            this.panel2.Controls.Add(this.lblTelefone);
-            this.panel2.Controls.Add(this.lblDataNasc);
-            this.panel2.Controls.Add(this.lblCPF);
-            this.panel2.Controls.Add(this.ConfirmSenhaAst);
-            this.panel2.Controls.Add(this.chkMostrarSenha);
-            this.panel2.Controls.Add(this.TelefoneAst);
-            this.panel2.Location = new System.Drawing.Point(288, 430);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(657, 541);
-            this.panel2.TabIndex = 132;
             // 
             // txtNome
             // 
@@ -581,6 +546,31 @@
             this.cbUsuario.TabIndex = 1;
             this.cbUsuario.SelectedIndexChanged += new System.EventHandler(this.cbUsuario_SelectedIndexChanged);
             // 
+            // panel2
+            // 
+            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.panel2.Controls.Add(this.dtpDataNasc);
+            this.panel2.Controls.Add(this.txtConfirmSenha);
+            this.panel2.Controls.Add(this.DataNascAst);
+            this.panel2.Controls.Add(this.btnLimpar);
+            this.panel2.Controls.Add(this.btnCadastrar);
+            this.panel2.Controls.Add(this.mtxCPF);
+            this.panel2.Controls.Add(this.lblSenha);
+            this.panel2.Controls.Add(this.mtxTelefone);
+            this.panel2.Controls.Add(this.txtSenha);
+            this.panel2.Controls.Add(this.lblConfirmSenha);
+            this.panel2.Controls.Add(this.SenhaAst);
+            this.panel2.Controls.Add(this.lblTelefone);
+            this.panel2.Controls.Add(this.lblDataNasc);
+            this.panel2.Controls.Add(this.lblCPF);
+            this.panel2.Controls.Add(this.ConfirmSenhaAst);
+            this.panel2.Controls.Add(this.chkMostrarSenha);
+            this.panel2.Controls.Add(this.TelefoneAst);
+            this.panel2.Location = new System.Drawing.Point(288, 430);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(657, 541);
+            this.panel2.TabIndex = 132;
+            // 
             // txtConfirmSenha
             // 
             this.txtConfirmSenha.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -683,6 +673,32 @@
             this.txtSenha.UseSystemPasswordChar = true;
             this.txtSenha.Visible = false;
             // 
+            // dtpDataNasc
+            // 
+            this.dtpDataNasc.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dtpDataNasc.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpDataNasc.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.dtpDataNasc.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.dtpDataNasc.BorderRadius = 10;
+            this.dtpDataNasc.BorderThickness = 1;
+            this.dtpDataNasc.Enabled = false;
+            this.dtpDataNasc.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
+            this.dtpDataNasc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataNasc.HoverBackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpDataNasc.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataNasc.IconHoverAreaColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.dtpDataNasc.IconHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataNasc.Location = new System.Drawing.Point(23, 208);
+            this.dtpDataNasc.Name = "dtpDataNasc";
+            this.dtpDataNasc.PlaceholderColor = System.Drawing.Color.Gray;
+            this.dtpDataNasc.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12.2F);
+            this.dtpDataNasc.PlaceholderText = "";
+            this.dtpDataNasc.SelectedDate = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
+            this.dtpDataNasc.Size = new System.Drawing.Size(245, 40);
+            this.dtpDataNasc.TabIndex = 128;
+            this.dtpDataNasc.TabStop = false;
+            this.dtpDataNasc.Value = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
+            // 
             // CadUsuario
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -740,12 +756,12 @@
         private System.Windows.Forms.Label SenhaAst;
         private RoundedTextBox txtNome;
         private System.Windows.Forms.Label lblUsuario;
-        private System.Windows.Forms.DateTimePicker dtpDataNasc;
         private System.Windows.Forms.Button btnLimpar;
         private System.Windows.Forms.Button btnCadastrar;
         private System.Windows.Forms.Label EmailAst;
         private System.Windows.Forms.ListBox lstSugestoesTurma;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
+        private RoundedDatePicker dtpDataNasc;
     }
 }

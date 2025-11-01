@@ -36,7 +36,6 @@
             this.lblTelefone = new System.Windows.Forms.Label();
             this.lblCPF = new System.Windows.Forms.Label();
             this.lblDataNasc = new System.Windows.Forms.Label();
-            this.dtpDataNasc = new System.Windows.Forms.DateTimePicker();
             this.txtTurma = new RoundedTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtEmail = new RoundedTextBox();
@@ -44,6 +43,7 @@
             this.txtNomeAluno = new RoundedTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.dtpDataNasc = new RoundedDatePicker();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -84,12 +84,12 @@
             // 
             this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.panel2.BackColor = System.Drawing.Color.Transparent;
+            this.panel2.Controls.Add(this.dtpDataNasc);
             this.panel2.Controls.Add(this.mtxCPF);
             this.panel2.Controls.Add(this.mtxTelefone);
             this.panel2.Controls.Add(this.lblTelefone);
             this.panel2.Controls.Add(this.lblCPF);
             this.panel2.Controls.Add(this.lblDataNasc);
-            this.panel2.Controls.Add(this.dtpDataNasc);
             this.panel2.Location = new System.Drawing.Point(291, 378);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(364, 251);
@@ -179,18 +179,6 @@
             this.lblDataNasc.Size = new System.Drawing.Size(192, 25);
             this.lblDataNasc.TabIndex = 98;
             this.lblDataNasc.Text = "Data de Nascimento:";
-            // 
-            // dtpDataNasc
-            // 
-            this.dtpDataNasc.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dtpDataNasc.Enabled = false;
-            this.dtpDataNasc.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.dtpDataNasc.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDataNasc.Location = new System.Drawing.Point(12, 203);
-            this.dtpDataNasc.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.dtpDataNasc.Name = "dtpDataNasc";
-            this.dtpDataNasc.Size = new System.Drawing.Size(262, 33);
-            this.dtpDataNasc.TabIndex = 7;
             // 
             // txtTurma
             // 
@@ -337,6 +325,32 @@
             this.label2.TabIndex = 130;
             this.label2.Text = "FICHA DO ALUNO";
             // 
+            // dtpDataNasc
+            // 
+            this.dtpDataNasc.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dtpDataNasc.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpDataNasc.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.dtpDataNasc.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.dtpDataNasc.BorderRadius = 10;
+            this.dtpDataNasc.BorderThickness = 1;
+            this.dtpDataNasc.Enabled = false;
+            this.dtpDataNasc.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
+            this.dtpDataNasc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataNasc.HoverBackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpDataNasc.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataNasc.IconHoverAreaColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.dtpDataNasc.IconHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpDataNasc.Location = new System.Drawing.Point(12, 203);
+            this.dtpDataNasc.Name = "dtpDataNasc";
+            this.dtpDataNasc.PlaceholderColor = System.Drawing.Color.Gray;
+            this.dtpDataNasc.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12.2F);
+            this.dtpDataNasc.PlaceholderText = "";
+            this.dtpDataNasc.SelectedDate = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
+            this.dtpDataNasc.Size = new System.Drawing.Size(262, 40);
+            this.dtpDataNasc.TabIndex = 129;
+            this.dtpDataNasc.TabStop = false;
+            this.dtpDataNasc.Value = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
+            // 
             // FichaAlunoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -372,7 +386,7 @@
         public System.Windows.Forms.Label lblTelefone;
         public System.Windows.Forms.Label lblCPF;
         public System.Windows.Forms.Label lblDataNasc;
-        private System.Windows.Forms.DateTimePicker dtpDataNasc;
         private System.Windows.Forms.Button btnSair;
+        private RoundedDatePicker dtpDataNasc;
     }
 }

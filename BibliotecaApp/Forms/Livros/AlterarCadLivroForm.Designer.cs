@@ -180,7 +180,7 @@
             this.mtxCodigoBarras.Mask = "0 000000 000000";
             this.mtxCodigoBarras.MaskTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.mtxCodigoBarras.Name = "mtxCodigoBarras";
-            this.mtxCodigoBarras.Padding = new System.Windows.Forms.Padding(10, 2, 7, 6);
+            this.mtxCodigoBarras.Padding = new System.Windows.Forms.Padding(13, 7, 0, 0);
             this.mtxCodigoBarras.Size = new System.Drawing.Size(617, 40);
             this.mtxCodigoBarras.TabIndex = 102;
             // 

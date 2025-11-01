@@ -34,22 +34,22 @@
             this.Acao = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Bibliotecaria = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DataAcao = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dtpFim = new System.Windows.Forms.DateTimePicker();
-            this.dtpInicio = new System.Windows.Forms.DateTimePicker();
             this.lblUsuario = new System.Windows.Forms.Label();
             this.lblLivro = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
-            this.lstLivros = new System.Windows.Forms.ListBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.dtpFim = new RoundedDatePicker();
+            this.dtpInicio = new RoundedDatePicker();
             this.btnExportar = new System.Windows.Forms.Button();
-            this.btnFiltrar = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lstLivros = new System.Windows.Forms.ListBox();
             this.cbBibliotecaria = new RoundedComboBox();
             this.txtLivro = new RoundedTextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.btnFiltrar = new System.Windows.Forms.Button();
             this.cmbAcao = new RoundedComboBox();
             this.txtUsuario = new RoundedTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHistorico)).BeginInit();
@@ -104,30 +104,6 @@
             this.DataAcao.HeaderText = "Data da Ação";
             this.DataAcao.Name = "DataAcao";
             this.DataAcao.ReadOnly = true;
-            // 
-            // dtpFim
-            // 
-            this.dtpFim.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dtpFim.CalendarMonthBackground = System.Drawing.SystemColors.Control;
-            this.dtpFim.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.dtpFim.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFim.Location = new System.Drawing.Point(273, 254);
-            this.dtpFim.Name = "dtpFim";
-            this.dtpFim.Size = new System.Drawing.Size(122, 33);
-            this.dtpFim.TabIndex = 113;
-            this.dtpFim.ValueChanged += new System.EventHandler(this.dtpFim_ValueChanged);
-            // 
-            // dtpInicio
-            // 
-            this.dtpInicio.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dtpInicio.CalendarMonthBackground = System.Drawing.SystemColors.Control;
-            this.dtpInicio.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.dtpInicio.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpInicio.Location = new System.Drawing.Point(69, 254);
-            this.dtpInicio.Name = "dtpInicio";
-            this.dtpInicio.Size = new System.Drawing.Size(122, 33);
-            this.dtpInicio.TabIndex = 114;
-            this.dtpInicio.ValueChanged += new System.EventHandler(this.dtpInicio_ValueChanged);
             // 
             // lblUsuario
             // 
@@ -197,9 +173,11 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.lstSugestoesUsuario);
+            this.panel1.Controls.Add(this.dtpFim);
+            this.panel1.Controls.Add(this.dtpInicio);
             this.panel1.Controls.Add(this.btnExportar);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.lstSugestoesUsuario);
             this.panel1.Controls.Add(this.lstLivros);
             this.panel1.Controls.Add(this.cbBibliotecaria);
             this.panel1.Controls.Add(this.txtLivro);
@@ -209,8 +187,6 @@
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.cmbAcao);
-            this.panel1.Controls.Add(this.dtpFim);
-            this.panel1.Controls.Add(this.dtpInicio);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.lblUsuario);
             this.panel1.Controls.Add(this.lblLivro);
@@ -221,18 +197,6 @@
             this.panel1.Size = new System.Drawing.Size(1280, 845);
             this.panel1.TabIndex = 123;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.label1.Location = new System.Drawing.Point(538, 53);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(204, 46);
-            this.label1.TabIndex = 128;
-            this.label1.Text = "RELATÓRIO";
             // 
             // lstSugestoesUsuario
             // 
@@ -249,33 +213,59 @@
             this.lstSugestoesUsuario.TabIndex = 126;
             this.lstSugestoesUsuario.Visible = false;
             // 
-            // lstLivros
+            // dtpFim
             // 
-            this.lstLivros.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lstLivros.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.lstLivros.FormattingEnabled = true;
-            this.lstLivros.ItemHeight = 25;
-            this.lstLivros.Location = new System.Drawing.Point(448, 216);
-            this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
-            this.lstLivros.Name = "lstLivros";
-            this.lstLivros.ScrollAlwaysVisible = true;
-            this.lstLivros.Size = new System.Drawing.Size(429, 102);
-            this.lstLivros.TabIndex = 127;
-            this.lstLivros.Visible = false;
+            this.dtpFim.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dtpFim.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpFim.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.dtpFim.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.dtpFim.BorderRadius = 10;
+            this.dtpFim.BorderThickness = 1;
+            this.dtpFim.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
+            this.dtpFim.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpFim.HoverBackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpFim.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpFim.IconHoverAreaColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.dtpFim.IconHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpFim.Location = new System.Drawing.Point(273, 254);
+            this.dtpFim.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
+            this.dtpFim.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
+            this.dtpFim.Name = "dtpFim";
+            this.dtpFim.PlaceholderColor = System.Drawing.Color.Gray;
+            this.dtpFim.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12.2F);
+            this.dtpFim.PlaceholderText = "";
+            this.dtpFim.SelectedDate = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
+            this.dtpFim.Size = new System.Drawing.Size(162, 40);
+            this.dtpFim.TabIndex = 131;
+            this.dtpFim.TabStop = false;
+            this.dtpFim.Value = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
             // 
-            // label6
+            // dtpInicio
             // 
-            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label6.Location = new System.Drawing.Point(443, 225);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(213, 25);
-            this.label6.TabIndex = 124;
-            this.label6.Text = "Bliotecária responsável:";
+            this.dtpInicio.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dtpInicio.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpInicio.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.dtpInicio.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.dtpInicio.BorderRadius = 10;
+            this.dtpInicio.BorderThickness = 1;
+            this.dtpInicio.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
+            this.dtpInicio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpInicio.HoverBackColor = System.Drawing.Color.WhiteSmoke;
+            this.dtpInicio.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpInicio.IconHoverAreaColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.dtpInicio.IconHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.dtpInicio.Location = new System.Drawing.Point(69, 254);
+            this.dtpInicio.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
+            this.dtpInicio.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
+            this.dtpInicio.Name = "dtpInicio";
+            this.dtpInicio.PlaceholderColor = System.Drawing.Color.Gray;
+            this.dtpInicio.PlaceholderFont = new System.Drawing.Font("Segoe UI", 12.2F);
+            this.dtpInicio.PlaceholderText = "";
+            this.dtpInicio.SelectedDate = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
+            this.dtpInicio.Size = new System.Drawing.Size(162, 40);
+            this.dtpInicio.TabIndex = 130;
+            this.dtpInicio.TabStop = false;
+            this.dtpInicio.Value = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
             // 
             // btnExportar
             // 
@@ -296,25 +286,32 @@
             this.btnExportar.UseVisualStyleBackColor = false;
             this.btnExportar.Click += new System.EventHandler(this.btnExportar_Click);
             // 
-            // btnFiltrar
+            // label1
             // 
-            this.btnFiltrar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnFiltrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.btnFiltrar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnFiltrar.ForeColor = System.Drawing.Color.White;
-            this.btnFiltrar.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
-            this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(912, 246);
-            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnFiltrar.Name = "btnFiltrar";
-            this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
-            this.btnFiltrar.Size = new System.Drawing.Size(134, 52);
-            this.btnFiltrar.TabIndex = 111;
-            this.btnFiltrar.Text = "      Filtrar";
-            this.btnFiltrar.UseVisualStyleBackColor = false;
-            this.btnFiltrar.Click += new System.EventHandler(this.btnFiltrar_Click);
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.label1.Location = new System.Drawing.Point(538, 53);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(204, 46);
+            this.label1.TabIndex = 128;
+            this.label1.Text = "RELATÓRIO";
+            // 
+            // lstLivros
+            // 
+            this.lstLivros.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lstLivros.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.lstLivros.FormattingEnabled = true;
+            this.lstLivros.ItemHeight = 25;
+            this.lstLivros.Location = new System.Drawing.Point(448, 216);
+            this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
+            this.lstLivros.Name = "lstLivros";
+            this.lstLivros.ScrollAlwaysVisible = true;
+            this.lstLivros.Size = new System.Drawing.Size(429, 102);
+            this.lstLivros.TabIndex = 127;
+            this.lstLivros.Visible = false;
             // 
             // cbBibliotecaria
             // 
@@ -366,6 +363,39 @@
             this.txtLivro.TextColor = System.Drawing.Color.Black;
             this.txtLivro.UseSystemPasswordChar = false;
             // 
+            // label6
+            // 
+            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label6.Location = new System.Drawing.Point(443, 225);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(213, 25);
+            this.label6.TabIndex = 124;
+            this.label6.Text = "Bliotecária responsável:";
+            // 
+            // btnFiltrar
+            // 
+            this.btnFiltrar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnFiltrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.btnFiltrar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnFiltrar.ForeColor = System.Drawing.Color.White;
+            this.btnFiltrar.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
+            this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnFiltrar.Location = new System.Drawing.Point(912, 246);
+            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnFiltrar.Name = "btnFiltrar";
+            this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
+            this.btnFiltrar.Size = new System.Drawing.Size(134, 52);
+            this.btnFiltrar.TabIndex = 111;
+            this.btnFiltrar.Text = "      Filtrar";
+            this.btnFiltrar.UseVisualStyleBackColor = false;
+            this.btnFiltrar.Click += new System.EventHandler(this.btnFiltrar_Click);
+            // 
             // cmbAcao
             // 
             this.cmbAcao.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -383,8 +413,7 @@
             "Todas",
             "Empréstimos",
             "Todas",
-            "Empréstimos",
-            });
+            "Empréstimos"});
             this.cmbAcao.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbAcao.Location = new System.Drawing.Point(912, 179);
             this.cmbAcao.Name = "cmbAcao";
@@ -449,8 +478,6 @@
         public RoundedTextBox txtUsuario;
         public RoundedTextBox txtLivro;
         private System.Windows.Forms.Button btnFiltrar;
-        private System.Windows.Forms.DateTimePicker dtpFim;
-        private System.Windows.Forms.DateTimePicker dtpInicio;
         public System.Windows.Forms.Label lblUsuario;
         public System.Windows.Forms.Label lblLivro;
         public System.Windows.Forms.Label label2;
@@ -468,5 +495,7 @@
         private System.Windows.Forms.ListBox lstLivros;
         public System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnExportar;
+        private RoundedDatePicker dtpFim;
+        private RoundedDatePicker dtpInicio;
     }
 }

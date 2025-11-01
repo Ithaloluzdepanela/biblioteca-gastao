@@ -41,6 +41,37 @@ namespace BibliotecaApp.Forms.Livros
             BibliotecaApp.Utils.EventosGlobais.LivroDidaticoCadastrado += (s, e) => CarregarSugestoesECombo();
         }
 
+        private Timer horaTimer;
+        private void AlinharEIniciarTimerMinuto(object sender, EventArgs e)
+        {
+            var now = DateTime.Now;
+            int msUntilNextMinute = 60000 - (now.Second * 1000 + now.Millisecond);
+            horaTimer.Stop();
+            horaTimer.Interval = msUntilNextMinute;
+            horaTimer.Tick -= AlinharEIniciarTimerMinuto;
+            horaTimer.Tick += HoraTimer_Minuto;
+            horaTimer.Start();
+        }
+
+        private void HoraTimer_Minuto(object sender, EventArgs e)
+        {
+            lblHoraEmprestimo.Text = $"Hora do Empréstimo: {DateTime.Now:HH:mm}";
+            // após o primeiro disparo alinhado, seta p/ 60s fixos
+            horaTimer.Interval = 60000;
+        }
+
+        private void EmprestimoRapidoForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (horaTimer != null)
+            {
+                horaTimer.Stop();
+                horaTimer.Tick -= HoraTimer_Minuto; // ok remover qualquer um; não causa erro se não estiver inscrito
+                horaTimer.Dispose();
+                horaTimer = null;
+            }
+        }
+
+
         private void EmprestimoRapidoForm_Load(object sender, EventArgs e)
         {
             AppPaths.EnsureFolders();
@@ -52,7 +83,15 @@ namespace BibliotecaApp.Forms.Livros
 
             txtProfessor.Focus();
 
-            lblHoraEmprestimo.Text = $"Hora do Empréstimo: {DateTime.Now: HH:mm}";
+
+            lblHoraEmprestimo.Text = $"Hora do Empréstimo: {DateTime.Now:HH:mm}";
+
+            horaTimer = new System.Windows.Forms.Timer();
+            horaTimer.Interval = 1000; // curto para alinhamento inicial
+            horaTimer.Tick += AlinharEIniciarTimerMinuto;
+            horaTimer.Start();
+
+            this.FormClosing += EmprestimoRapidoForm_FormClosing;
 
             // Configura DataGrid
             ConfigurarGridRapidos();
@@ -1537,19 +1576,6 @@ ORDER BY r.Id DESC";
             _alterandoTxtLivroProgramaticamente = false;
         }
 
-        private void cbBibliotecaria_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtTurma_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lstSugestoesLivro_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
+       
     }
 }

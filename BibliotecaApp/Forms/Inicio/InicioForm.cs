@@ -1107,11 +1107,15 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
                     return;
                 }
 
-                // 🔥 chama a animação e clique
-                mainForm.btnLivro_Click(null, EventArgs.Empty);
-                mainForm.btnEmprestimoRap_Click(null, EventArgs.Empty);
+                // 🔥 chama a animação e clique — MAS só expande o menu de livros se ele ainda NÃO estiver expandido
+                // (evita fechar o submenu caso já esteja aberto)
+                if (!mainForm.IsLivroExpanded && !mainForm.IsMenuAnimating)
+                {
+                    mainForm.btnLivro_Click(null, EventArgs.Empty);
+                }
 
-                
+                // abrir empréstimo rápido sempre (depois de garantir que submenu de livros esteja aberto)
+                mainForm.btnEmprestimoRap_Click(null, EventArgs.Empty);
             }
             catch (Exception ex)
             {
@@ -1119,6 +1123,7 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
 
 

@@ -53,7 +53,7 @@
             this.lblTotal.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTotal.AutoSize = true;
             this.lblTotal.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotal.Location = new System.Drawing.Point(748, 171);
+            this.lblTotal.Location = new System.Drawing.Point(739, 252);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(0, 19);
             this.lblTotal.TabIndex = 11;
@@ -94,7 +94,7 @@
             this.mtxCodigoBarras.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mtxCodigoBarras.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.mtxCodigoBarras.HoverBackColor = System.Drawing.Color.LightGray;
-            this.mtxCodigoBarras.Location = new System.Drawing.Point(736, 241);
+            this.mtxCodigoBarras.Location = new System.Drawing.Point(743, 164);
             this.mtxCodigoBarras.Margin = new System.Windows.Forms.Padding(4);
             this.mtxCodigoBarras.Name = "mtxCodigoBarras";
             this.mtxCodigoBarras.Padding = new System.Windows.Forms.Padding(8, 10, 8, 10);
@@ -105,11 +105,10 @@
             this.mtxCodigoBarras.SelectedText = "";
             this.mtxCodigoBarras.SelectionLength = 0;
             this.mtxCodigoBarras.SelectionStart = 0;
-            this.mtxCodigoBarras.Size = new System.Drawing.Size(230, 40);
+            this.mtxCodigoBarras.Size = new System.Drawing.Size(418, 40);
             this.mtxCodigoBarras.TabIndex = 135;
             this.mtxCodigoBarras.TextColor = System.Drawing.Color.Black;
             this.mtxCodigoBarras.UseSystemPasswordChar = false;
-           
             // 
             // label3
             // 
@@ -117,7 +116,7 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(731, 209);
+            this.label3.Location = new System.Drawing.Point(738, 135);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(162, 25);
@@ -130,7 +129,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label2.Location = new System.Drawing.Point(125, 136);
+            this.label2.Location = new System.Drawing.Point(127, 135);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(90, 25);
@@ -173,7 +172,7 @@
             this.btnProcurar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnProcurar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnProcurar.ForeColor = System.Drawing.Color.White;
-            this.btnProcurar.Location = new System.Drawing.Point(1011, 229);
+            this.btnProcurar.Location = new System.Drawing.Point(1011, 231);
             this.btnProcurar.Name = "btnProcurar";
             this.btnProcurar.Size = new System.Drawing.Size(150, 60);
             this.btnProcurar.TabIndex = 136;
@@ -213,7 +212,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(126, 218);
+            this.label1.Location = new System.Drawing.Point(127, 216);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(114, 25);
@@ -252,7 +251,7 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label6.Location = new System.Drawing.Point(431, 218);
+            this.label6.Location = new System.Drawing.Point(431, 216);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(150, 25);

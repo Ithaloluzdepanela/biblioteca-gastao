@@ -237,9 +237,9 @@
             this.label5.Font = new System.Drawing.Font("Segoe UI", 12.8F);
             this.label5.Location = new System.Drawing.Point(126, 142);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(149, 25);
+            this.label5.Size = new System.Drawing.Size(161, 25);
             this.label5.TabIndex = 17;
-            this.label5.Text = "Versão: 1.0 Alpha";
+            this.label5.Text = "Versão: 1.0 Release";
             // 
             // panel2
             // 
@@ -310,9 +310,9 @@
             this.lblVersion.ForeColor = System.Drawing.Color.White;
             this.lblVersion.Location = new System.Drawing.Point(3, 576);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(91, 17);
+            this.lblVersion.Size = new System.Drawing.Size(71, 17);
             this.lblVersion.TabIndex = 3;
-            this.lblVersion.Text = "Alpha Version";
+            this.lblVersion.Text = "Version 1.0";
             // 
             // label1
             // 

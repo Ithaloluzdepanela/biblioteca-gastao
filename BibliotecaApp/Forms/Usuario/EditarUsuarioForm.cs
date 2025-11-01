@@ -10,6 +10,7 @@ using System.Data.SqlServerCe;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -47,7 +48,8 @@ namespace BibliotecaApp.Forms.Usuario
 
             this.Resize += EditarUsuarioForm_Resize;
 
-   
+            txtTurma.Enter += txtTurma_Enter;
+            txtTurma.MouseClick += txtTurma_MouseClick;
 
             // Turma
             txtTurma.KeyDown += txtTurma_KeyDown;
@@ -153,19 +155,40 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show(
-                "Tem certeza que deseja cancelar? Todas as alterações serão perdidas.",
-                "Confirmar cancelamento",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
+            // Verifica se há alterações antes de perguntar
+            bool haAlteracoes = (_usuarioSelecionado != null && VerificarAlteracoes());
 
-            if (result == DialogResult.Yes)
+            if (haAlteracoes)
             {
-                LimparCampos();
+                DialogResult result = MessageBox.Show(
+                    "Tem certeza que deseja cancelar? Todas as alterações serão perdidas.",
+                    "Confirmar cancelamento",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (result != DialogResult.Yes)
+                    return;
             }
-            this.Close();
+
+            // limpa campos sempre que cancelar
+            LimparCampos();
+
+            // fecha somente se este form foi aberto pela tela de usuário
+            if (this.FecharAoSalvar)
+            {
+                var mainForm = this.MdiParent as MainForm
+                    ?? Application.OpenForms.OfType<MainForm>().FirstOrDefault();
+
+                if (mainForm != null)
+                {
+                    mainForm.SetUserButtonsEnabled(false, true);
+                }
+                this.Close();
+            }
         }
+
+
 
         // permite controlar se o form fecha automaticamente depois de salvar
         public bool FecharAoSalvar { get; set; } = false;
@@ -352,8 +375,16 @@ namespace BibliotecaApp.Forms.Usuario
         {
             _usuarioSelecionado = _cacheUsuarios[index];
 
+            // suprime temporariamente sugestões enquanto preenche os controles
+            _suppressSuggestionOnPrefill = true;
+
+            // Preenche o campo que dispara TextChanged primeiro
             txtNomeUsuario.Text = _usuarioSelecionado.Nome;
             lstSugestoesUsuario.Visible = false;
+
+            // garantir que a lista de turmas não apareça ao preencher a turma
+            lstSugestoesTurma.Visible = false;
+
             AplicarConfiguracaoEdicaoUsuario();
 
             txtNome.Text = _usuarioSelecionado.Nome;
@@ -362,11 +393,16 @@ namespace BibliotecaApp.Forms.Usuario
             dtpDataNasc.Value = _usuarioSelecionado.DataNascimento == DateTime.MinValue ? DateTime.Today : _usuarioSelecionado.DataNascimento;
             mtxTelefone.Text = _usuarioSelecionado.Telefone;
             txtTurma.Text = _usuarioSelecionado.Turma;
+
+            // fim do prefill -> reativa sugestões para próximas edições
+            _suppressSuggestionOnPrefill = false;
+
             OnUsuarioSelecionado(true);
 
             lblTipoUsuario.Text = $"Tipo: {_usuarioSelecionado.TipoUsuario}";
             lblTipoUsuario.Visible = true;
         }
+
 
         private void btnExcluir_Click(object sender, EventArgs e)
         {
@@ -593,9 +629,9 @@ private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e
         }
 
         // Substitua o método txtNomeUsuario_TextChanged — remove a seleção automática
+        // Substitua o método txtNomeUsuario_TextChanged pelo código abaixo
         private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
         {
-            // Se estivermos suprimindo por causa do prefill, ignora este evento.
             if (_suppressSuggestionOnPrefill) return;
 
             lstSugestoesUsuario.Items.Clear();
@@ -637,12 +673,27 @@ private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e
                     }
                 }
 
-                lstSugestoesUsuario.Visible = lstSugestoesUsuario.Items.Count > 0;
-                lstSugestoesUsuario.Enabled = lstSugestoesUsuario.Items.Count > 0;
+                bool temItens = lstSugestoesUsuario.Items.Count > 0;
+                lstSugestoesUsuario.Visible = temItens;
+                lstSugestoesUsuario.Enabled = temItens;
 
-                // NÃO pré-seleciona; permite digitar sem auto-preencher
-                if (lstSugestoesUsuario.Visible)
+                if (temItens)
+                {
+                    // Ajusta tamanho e posição similar ao que você faz para turma
+                    int visibleItems = Math.Min(5, lstSugestoesUsuario.Items.Count);
+                    int extraPadding = 8;
+                    lstSugestoesUsuario.ItemHeight = 40; // garante consistência com EstilizarListBoxSugestao
+                    lstSugestoesUsuario.Height = visibleItems * lstSugestoesUsuario.ItemHeight + extraPadding;
+                    lstSugestoesUsuario.Width = txtNomeUsuario.Width;
+                    lstSugestoesUsuario.Left = txtNomeUsuario.Left;
+                    lstSugestoesUsuario.Top = txtNomeUsuario.Bottom;
+
+                    // força a lista para frente para evitar que labels (ex: lblTipoUsuario) fiquem por cima
+                    lstSugestoesUsuario.BringToFront();
+
+                    // NÃO pré-seleciona; permite digitar sem auto-preencher
                     lstSugestoesUsuario.SelectedIndex = -1;
+                }
             }
             catch (Exception ex)
             {
@@ -926,8 +977,13 @@ private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e
             _usuarioSelecionado = null;
             lblTipoUsuario.Visible = false;
             lblTipoUsuario.Text = "";
+
+           
+            _suppressSuggestionOnPrefill = false;
+
             OnUsuarioSelecionado(false);
         }
+
 
         public void PreencherUsuario(Usuarios usuario)
         {
@@ -1076,6 +1132,23 @@ private void txtTurma_TextChanged(object sender, EventArgs e)
                     }
                 }
             }));
+        }
+
+        private void txtTurma_Enter(object sender, EventArgs e)
+        {
+            // Ao entrar no campo, entendemos que o usuário possivelmente quer editar a turma:
+            // liberamos a exibição das sugestões para próximas alterações.
+            _suppressSuggestionOnPrefill = false;
+
+            // opcional: não mostrar automaticamente só por entrar — se quiser mostrar já as sugestões
+            // para o texto atual, descomente a linha abaixo:
+            // txtTurma_TextChanged(sender, EventArgs.Empty);
+        }
+
+        private void txtTurma_MouseClick(object sender, MouseEventArgs e)
+        {
+            
+            _suppressSuggestionOnPrefill = false;
         }
 
         private void lstSugestoesTurma_Click(object sender, EventArgs e)

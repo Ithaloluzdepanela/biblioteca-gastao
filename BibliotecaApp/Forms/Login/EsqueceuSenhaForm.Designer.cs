@@ -318,9 +318,9 @@
             this.label6.ForeColor = System.Drawing.Color.White;
             this.label6.Location = new System.Drawing.Point(3, 576);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(91, 17);
+            this.label6.Size = new System.Drawing.Size(71, 17);
             this.label6.TabIndex = 3;
-            this.label6.Text = "Alpha Version";
+            this.label6.Text = "Version 1.0";
             // 
             // label3
             // 

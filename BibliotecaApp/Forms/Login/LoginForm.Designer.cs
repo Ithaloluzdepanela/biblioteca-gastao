@@ -231,9 +231,9 @@
             this.lblVersion.ForeColor = System.Drawing.Color.White;
             this.lblVersion.Location = new System.Drawing.Point(3, 576);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(91, 17);
+            this.lblVersion.Size = new System.Drawing.Size(71, 17);
             this.lblVersion.TabIndex = 3;
-            this.lblVersion.Text = "Alpha Version";
+            this.lblVersion.Text = "Version 1.0";
             this.lblVersion.Click += new System.EventHandler(this.lblVersion_Click);
             this.lblVersion.MouseEnter += new System.EventHandler(this.lblVersion_MouseEnter);
             this.lblVersion.MouseLeave += new System.EventHandler(this.lblVersion_MouseLeave);

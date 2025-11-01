@@ -168,7 +168,7 @@ namespace BibliotecaApp.Forms.Livros
             this.lstSugestoesLivro.TabIndex = 4;
             this.lstSugestoesLivro.Visible = false;
             this.lstSugestoesLivro.Click += new System.EventHandler(this.lstSugestoesLivro_Click);
-            this.lstSugestoesLivro.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesLivro_SelectedIndexChanged);
+           
             // 
             // label1
             // 
@@ -360,7 +360,6 @@ namespace BibliotecaApp.Forms.Livros
             this.cbBibliotecaria.PlaceholderText = "Selecione a bibliotecária ...";
             this.cbBibliotecaria.Size = new System.Drawing.Size(368, 34);
             this.cbBibliotecaria.TabIndex = 8;
-            this.cbBibliotecaria.SelectedIndexChanged += new System.EventHandler(this.cbBibliotecaria_SelectedIndexChanged);
             // 
             // txtTurma
             // 
@@ -391,7 +390,6 @@ namespace BibliotecaApp.Forms.Livros
             this.txtTurma.TextColor = System.Drawing.Color.Black;
             this.txtTurma.UseSystemPasswordChar = false;
             this.txtTurma.TextChanged += new System.EventHandler(this.txtTurma_TextChanged);
-            this.txtTurma.Load += new System.EventHandler(this.txtTurma_Load);
             // 
             // txtLivro
             // 

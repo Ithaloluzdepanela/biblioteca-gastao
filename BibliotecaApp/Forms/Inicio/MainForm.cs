@@ -305,8 +305,17 @@ namespace BibliotecaApp.Forms.Inicio
 
         }
 
+        // MainForm.cs
+        public void SetUserButtonsEnabled(bool userEnabled, bool userEditEnabled)
+        {
+            btnUser.Enabled = userEnabled;
+            btnUserEdit.Enabled = userEditEnabled;
+        }
+
+       
+
         //Botão de cadastro do usuário
-        private void btnUser_Click(object sender, EventArgs e)
+        public void btnUser_Click(object sender, EventArgs e)
         {
             btnUser.Enabled = false;
             btnRel.Enabled = true;
@@ -750,6 +759,11 @@ namespace BibliotecaApp.Forms.Inicio
         //Transição de expansão do livro e usuário
         bool userExpand = false;
         bool livroExpand = false;
+
+        // expor leitura do estado para outros forms
+        public bool IsLivroExpanded => livroExpand;
+        public bool IsMenuAnimating => menuAnimating;
+
         private void userTransition_Tick(object sender, EventArgs e)
         {
             if (userExpand == false)

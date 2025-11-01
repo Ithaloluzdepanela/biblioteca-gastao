@@ -112,7 +112,7 @@
             this.lblUsuario.BackColor = System.Drawing.Color.Transparent;
             this.lblUsuario.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblUsuario.Location = new System.Drawing.Point(64, 151);
+            this.lblUsuario.Location = new System.Drawing.Point(64, 148);
             this.lblUsuario.Name = "lblUsuario";
             this.lblUsuario.Size = new System.Drawing.Size(167, 25);
             this.lblUsuario.TabIndex = 116;
@@ -164,7 +164,7 @@
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label5.Location = new System.Drawing.Point(268, 225);
+            this.label5.Location = new System.Drawing.Point(247, 225);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(146, 25);
             this.label5.TabIndex = 122;
@@ -205,7 +205,7 @@
             this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.lstSugestoesUsuario.FormattingEnabled = true;
             this.lstSugestoesUsuario.ItemHeight = 25;
-            this.lstSugestoesUsuario.Location = new System.Drawing.Point(69, 219);
+            this.lstSugestoesUsuario.Location = new System.Drawing.Point(69, 216);
             this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
             this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
             this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
@@ -227,7 +227,7 @@
             this.dtpFim.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.dtpFim.IconHoverAreaColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.dtpFim.IconHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.dtpFim.Location = new System.Drawing.Point(273, 254);
+            this.dtpFim.Location = new System.Drawing.Point(252, 254);
             this.dtpFim.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtpFim.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtpFim.Name = "dtpFim";
@@ -277,7 +277,7 @@
             this.btnExportar.ForeColor = System.Drawing.Color.White;
             this.btnExportar.Image = global::BibliotecaApp.Properties.Resources.icons8_export_excel_25;
             this.btnExportar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExportar.Location = new System.Drawing.Point(1077, 246);
+            this.btnExportar.Location = new System.Drawing.Point(1077, 248);
             this.btnExportar.Name = "btnExportar";
             this.btnExportar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
             this.btnExportar.Size = new System.Drawing.Size(134, 52);
@@ -326,7 +326,7 @@
             this.cbBibliotecaria.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.cbBibliotecaria.FormattingEnabled = true;
             this.cbBibliotecaria.ItemsFont = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.cbBibliotecaria.Location = new System.Drawing.Point(448, 253);
+            this.cbBibliotecaria.Location = new System.Drawing.Point(448, 257);
             this.cbBibliotecaria.Name = "cbBibliotecaria";
             this.cbBibliotecaria.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F);
             this.cbBibliotecaria.PlaceholderMargin = 10;
@@ -369,7 +369,7 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label6.Location = new System.Drawing.Point(443, 225);
+            this.label6.Location = new System.Drawing.Point(443, 229);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(213, 25);
@@ -386,7 +386,7 @@
             this.btnFiltrar.ForeColor = System.Drawing.Color.White;
             this.btnFiltrar.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(912, 246);
+            this.btnFiltrar.Location = new System.Drawing.Point(912, 248);
             this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
@@ -437,7 +437,7 @@
             this.txtUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtUsuario.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtUsuario.Location = new System.Drawing.Point(69, 179);
+            this.txtUsuario.Location = new System.Drawing.Point(69, 176);
             this.txtUsuario.Name = "txtUsuario";
             this.txtUsuario.Padding = new System.Windows.Forms.Padding(7);
             this.txtUsuario.PlaceholderColor = System.Drawing.Color.Gray;

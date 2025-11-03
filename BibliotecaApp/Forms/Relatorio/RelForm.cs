@@ -175,16 +175,18 @@ namespace BibliotecaApp.Forms.Relatorio
                     // se falhar na detecção, presuma os nomes padrão que já definimos
                 }
 
-                // popula o combobox de ação (garantir ordem esperada)
-                cmbAcao.Items.Clear();
-                cmbAcao.Items.Add("Todas");               // index 0
-                cmbAcao.Items.Add("Empréstimo");          // index 1
-                cmbAcao.Items.Add("Devolução");           // index 2
-                cmbAcao.Items.Add("Empréstimo Rápido");   // index 3
-                cmbAcao.SelectedIndex = 0;
+            // popula o combobox de ação (garantir ordem esperada)
+            cmbAcao.Items.Clear();
+            cmbAcao.Items.Add("Todas");               // index 0
+            cmbAcao.Items.Add("Empréstimo");          // index 1
+            cmbAcao.Items.Add("Devolução");           // index 2
+            cmbAcao.Items.Add("Empréstimo Rápido");   // index 3
+            cmbAcao.Items.Add("Prorrogação");         // index 4 
+            cmbAcao.SelectedIndex = 0;
 
-                // popula combobox de bibliotecárias
-                PopularCbBibliotecaria();
+
+            // popula combobox de bibliotecárias
+            PopularCbBibliotecaria();
 
                 CarregarLog();
 
@@ -220,79 +222,92 @@ namespace BibliotecaApp.Forms.Relatorio
             }
 
 
-            private void TxtUsuario_TextChanged(object sender, EventArgs e)
+        private void TxtUsuario_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = txtUsuario.Text.Trim();
+
+            if (string.IsNullOrEmpty(filtro))
             {
-                string filtro = txtUsuario.Text.Trim();
-
-                if (string.IsNullOrEmpty(filtro))
-                {
-                    lstSugestoesUsuario.Visible = false;
-                    return;
-                }
-
-                using (var conn = Conexao.ObterConexao())
-                {
-                    conn.Open();
-
-                    var cmd = new SqlCeCommand(
-                        $"SELECT Nome, Turma FROM [{tblUsuarios}] WHERE Nome LIKE @filtro ORDER BY Nome", conn);
-                    cmd.Parameters.AddWithValue("@filtro", filtro + "%"); // só nomes começando com o filtro
-
-                    var lista = new List<string>();
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string nome = reader.IsDBNull(0) ? "" : reader.GetString(0);
-                            string turma = reader.IsDBNull(1) ? "" : reader.GetString(1);
-
-                            // Só a ListBox mostra o nome + turma
-                            lista.Add($"{nome} - {turma}");
-                        }
-                    }
-
-                    if (lista.Any())
-                    {
-                        lstSugestoesUsuario.Items.Clear();
-                        lstSugestoesUsuario.Items.AddRange(lista.ToArray());
-                        lstSugestoesUsuario.Visible = true;
-                    }
-                    else
-                    {
-                        lstSugestoesUsuario.Visible = false;
-                    }
-                }
+                lstSugestoesUsuario.Visible = false;
+                return;
             }
 
-
-
-
-
-            private void TxtUsuario_KeyDown(object sender, KeyEventArgs e)
+            using (var conn = Conexao.ObterConexao())
             {
-                if (e.KeyCode == Keys.Enter && lstSugestoesUsuario.Visible && lstSugestoesUsuario.SelectedItem != null)
+                conn.Open();
+
+                // agora também selecionamos o TipoUsuario
+                var cmd = new SqlCeCommand(
+                    $"SELECT Nome, Turma, TipoUsuario FROM [{tblUsuarios}] WHERE Nome LIKE @filtro ORDER BY Nome", conn);
+                cmd.Parameters.AddWithValue("@filtro", filtro + "%"); // só nomes começando com o filtro
+
+                var lista = new List<string>();
+                using (var reader = cmd.ExecuteReader())
                 {
-                    string texto = lstSugestoesUsuario.SelectedItem.ToString();
-                    txtUsuario.Text = texto.Split('-')[0].Trim(); // só o nome
-                    lstSugestoesUsuario.Visible = false;
-                    e.SuppressKeyPress = true;
+                    while (reader.Read())
+                    {
+                        string nome = reader.IsDBNull(0) ? "" : reader.GetString(0);
+                        string turma = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                        string tipo = reader.FieldCount > 2 && !reader.IsDBNull(2) ? reader.GetString(2) : "";
+
+                        // Se houver turma mostra "Nome - Turma", senão mostra "Nome - TipoUsuario" (se existir)
+                        string sufixo = !string.IsNullOrWhiteSpace(turma) ? turma :
+                                        (!string.IsNullOrWhiteSpace(tipo) ? tipo : "");
+                        if (!string.IsNullOrWhiteSpace(sufixo))
+                            lista.Add($"{nome} - {sufixo}");
+                        else
+                            lista.Add(nome);
+                    }
                 }
-            }
 
-            private void LstSugestoesUsuario_Click(object sender, EventArgs e)
-            {
-                if (lstSugestoesUsuario.SelectedItem != null)
+                if (lista.Any())
                 {
-                    string texto = lstSugestoesUsuario.SelectedItem.ToString();
-                    txtUsuario.Text = texto.Split('-')[0].Trim(); // pega só o nome antes do "-"
+                    lstLivros.Visible = false; // caso esteja visível
+                    lstSugestoesUsuario.Items.Clear();
+                    lstSugestoesUsuario.Items.AddRange(lista.ToArray());
+                    lstSugestoesUsuario.Visible = true;
+                }
+                else
+                {
                     lstSugestoesUsuario.Visible = false;
                 }
             }
+        }
 
 
 
 
-            private void PopularCbBibliotecaria()
+
+
+        private void TxtUsuario_KeyDown(object sender, KeyEventArgs e)
+            {
+            if (e.KeyCode == Keys.Enter && lstSugestoesUsuario.Visible && lstSugestoesUsuario.SelectedItem != null)
+            {
+                string texto = lstSugestoesUsuario.SelectedItem.ToString();
+                int idx = texto.IndexOf(" - ");
+                txtUsuario.Text = (idx >= 0) ? texto.Substring(0, idx).Trim() : texto.Trim();
+                lstSugestoesUsuario.Visible = false;
+                e.SuppressKeyPress = true;
+            }
+
+        }
+
+        private void LstSugestoesUsuario_Click(object sender, EventArgs e)
+            {
+            if (lstSugestoesUsuario.SelectedItem != null)
+            {
+                string texto = lstSugestoesUsuario.SelectedItem.ToString();
+                int idx = texto.IndexOf(" - ");
+                txtUsuario.Text = (idx >= 0) ? texto.Substring(0, idx).Trim() : texto.Trim();
+                lstSugestoesUsuario.Visible = false;
+            }
+
+        }
+
+
+
+
+        private void PopularCbBibliotecaria()
             {
                 cbBibliotecaria.Items.Clear();
                 cbBibliotecaria.Items.Add("Todas");
@@ -346,14 +361,15 @@ namespace BibliotecaApp.Forms.Relatorio
 
                         List<string> selects = new List<string>();
 
-                        // 1) Empréstimo (registro inicial)
-                        if (!string.IsNullOrEmpty(tblEmprestimo))
-                        {
+                    // 1) Empréstimo (registro inicial)
+                    if (!string.IsNullOrEmpty(tblEmprestimo))
+                    {
                         selects.Add($@"
         SELECT 
             e.Id,
+            u.Id AS UsuarioId,
             COALESCE(u.Nome, 'Excluído') AS NomeU,
-           CASE WHEN l.Id IS NULL THEN e.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
+            CASE WHEN l.Id IS NULL THEN e.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
             'Empréstimo' AS Acao,
             e.DataEmprestimo AS DataAcao,
             b.Nome AS Bibliotecaria
@@ -365,12 +381,13 @@ namespace BibliotecaApp.Forms.Relatorio
     ");
                     }
 
-                        // 2) Devolução (quando DataRealDevolucao preenchida)
-                        if (!string.IsNullOrEmpty(tblEmprestimo))
-                        {
+                    // 2) Devolução (quando DataRealDevolucao preenchida)
+                    if (!string.IsNullOrEmpty(tblEmprestimo))
+                    {
                         selects.Add($@"
         SELECT 
             e.Id,
+            u.Id AS UsuarioId,
             COALESCE(u.Nome, 'Excluído') AS NomeU,
             CASE WHEN l.Id IS NULL THEN e.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
             'Devolução' AS Acao,
@@ -384,14 +401,35 @@ namespace BibliotecaApp.Forms.Relatorio
     ");
                     }
 
-                        // 3) Empréstimo Rápido
-                        if (!string.IsNullOrEmpty(tblEmprestimoRapido))
-                        {
+                    // 2.5) Prorrogação (quando DataProrrogacao preenchida)
+                    if (!string.IsNullOrEmpty(tblEmprestimo))
+                    {
+                        selects.Add($@"
+        SELECT 
+            e.Id,
+            u.Id AS UsuarioId,
+            COALESCE(u.Nome, 'Excluído') AS NomeU,
+            CASE WHEN l.Id IS NULL THEN e.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
+            'Prorrogação' AS Acao,
+            e.DataProrrogacao AS DataAcao,
+            b.Nome AS Bibliotecaria
+        FROM [{tblEmprestimo}] e
+        LEFT JOIN [{tblUsuarios}] u ON e.Alocador = u.Id
+        LEFT JOIN [{tblLivros}] l ON e.Livro = l.Id
+        LEFT JOIN [{tblUsuarios}] b ON e.Responsavel = b.Id
+        WHERE e.DataProrrogacao IS NOT NULL
+    ");
+                    }
+
+                    // 3) Empréstimo Rápido (empréstimo / devolução)
+                    if (!string.IsNullOrEmpty(tblEmprestimoRapido))
+                    {
                         selects.Add($@"
         SELECT
             r.Id,
+            u.Id AS UsuarioId,
             COALESCE(u.Nome, 'Excluído') AS NomeU,
-           CASE WHEN l.Id IS NULL THEN r.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
+            CASE WHEN l.Id IS NULL THEN r.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
             'Empréstimo Rápido' AS Acao,
             r.DataHoraEmprestimo AS DataAcao,
             r.Bibliotecaria AS Bibliotecaria
@@ -404,6 +442,7 @@ namespace BibliotecaApp.Forms.Relatorio
                         selects.Add($@"
         SELECT
             r.Id,
+            u.Id AS UsuarioId,
             COALESCE(u.Nome, 'Excluído') AS NomeU,
             CASE WHEN l.Id IS NULL THEN r.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
             'Devolução' AS Acao,
@@ -416,8 +455,9 @@ namespace BibliotecaApp.Forms.Relatorio
     ");
                     
 
-                       
-                    }
+
+
+                }
 
                         if (selects.Count == 0)
                         {
@@ -447,44 +487,49 @@ namespace BibliotecaApp.Forms.Relatorio
                         if (usaUsuario) final.AppendLine(" AND NomeU LIKE @usuario");
                         if (usaLivro) final.AppendLine(" AND NomeL LIKE @livro");
 
-                        // filtro por ação conforme cmbAcao selection
-                        // cmbAcao: 0 Todas, 1 Empréstimo, 2 Devolução, 3 Empréstimo Rápido
-                        if (cmbAcao.SelectedIndex == 1)
-                            final.AppendLine(" AND Acao = 'Empréstimo'");
-                        else if (cmbAcao.SelectedIndex == 2)
-                            final.AppendLine(" AND Acao = 'Devolução'");
-                        else if (cmbAcao.SelectedIndex == 3)
-                            final.AppendLine(" AND Acao = 'Empréstimo Rápido'");
-                        
 
-                        if (usaCbBibl) final.AppendLine(" AND Bibliotecaria LIKE @bibliotecaria");
+                    var acaoSelecionada = cmbAcao.SelectedItem?.ToString();
+                    if (!string.IsNullOrWhiteSpace(acaoSelecionada) && acaoSelecionada != "Todas")
+                    {
+                        final.AppendLine(" AND Acao = @acaoSelecionada");
+                    }
+
+
+
+                    if (usaCbBibl) final.AppendLine(" AND Bibliotecaria LIKE @bibliotecaria");
 
                         final.AppendLine(" AND DataAcao >= @inicio AND DataAcao <= @fim");
                         final.AppendLine(" ORDER BY DataAcao DESC");
 
                         string sqlFinal = final.ToString();
 
-                        using (var cmd = new SqlCeCommand(sqlFinal, conexao))
+                    using (var cmd = new SqlCeCommand(sqlFinal, conexao))
+                    {
+                        if (usaUsuario) cmd.Parameters.AddWithValue("@usuario", "%" + txtUsuario.Text.Trim() + "%");
+                        if (usaLivro) cmd.Parameters.AddWithValue("@livro", "%" + txtLivro.Text.Trim() + "%");
+                        if (usaCbBibl) cmd.Parameters.AddWithValue("@bibliotecaria", "%" + cbBibliotecaria.SelectedItem.ToString() + "%");
+
+                        
+                        if (!string.IsNullOrWhiteSpace(acaoSelecionada) && acaoSelecionada != "Todas")
+                            cmd.Parameters.AddWithValue("@acaoSelecionada", acaoSelecionada);
+
+
+                        // intervalo: inicio 00:00:00, fim 23:59:59
+                        cmd.Parameters.AddWithValue("@inicio", dtpInicio.Value.Date);
+                        cmd.Parameters.AddWithValue("@fim", dtpFim.Value.Date.AddDays(1).AddSeconds(-1));
+
+                        var tabela = new DataTable();
+                        using (var adapter = new SqlCeDataAdapter(cmd))
                         {
-                            if (usaUsuario) cmd.Parameters.AddWithValue("@usuario", "%" + txtUsuario.Text.Trim() + "%");
-                            if (usaLivro) cmd.Parameters.AddWithValue("@livro", "%" + txtLivro.Text.Trim() + "%");
-                            if (usaCbBibl) cmd.Parameters.AddWithValue("@bibliotecaria", "%" + cbBibliotecaria.SelectedItem.ToString() + "%");
+                            adapter.Fill(tabela);
+                        }
 
-                            // intervalo: inicio 00:00:00, fim 23:59:59
-                            cmd.Parameters.AddWithValue("@inicio", dtpInicio.Value.Date);
-                            cmd.Parameters.AddWithValue("@fim", dtpFim.Value.Date.AddDays(1).AddSeconds(-1));
-
-                            var tabela = new DataTable();
-                            using (var adapter = new SqlCeDataAdapter(cmd))
-                            {
-                                adapter.Fill(tabela);
-                            }
-
-                            dgvHistorico.DataSource = tabela;
+                        dgvHistorico.DataSource = tabela;
                         dgvHistorico.Refresh();
                     }
-                    }
+
                 }
+            }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Erro ao carregar relatório: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -518,13 +563,15 @@ namespace BibliotecaApp.Forms.Relatorio
                     return col;
                 }
 
-                AddTextCol("NomeU", "Nome do Usuário", 180, DataGridViewContentAlignment.MiddleLeft, 120);
-                AddTextCol("NomeL", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120);
-                AddTextCol("Acao", "Ação", 110, DataGridViewContentAlignment.MiddleLeft, 90);
-                AddTextCol("Bibliotecaria", "Bibliotecária", 140, DataGridViewContentAlignment.MiddleLeft, 110);
-                AddTextCol("DataAcao", "Data da Ação", 130, DataGridViewContentAlignment.MiddleLeft, 110, "dd/MM/yyyy HH:mm");
+            AddTextCol("UsuarioId", "ID", 30,DataGridViewContentAlignment.MiddleCenter, 40);
+            AddTextCol("NomeU", "Nome do Usuário", 180, DataGridViewContentAlignment.MiddleLeft, 120);
+            AddTextCol("NomeL", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120);
+            AddTextCol("Acao", "Ação", 110, DataGridViewContentAlignment.MiddleLeft, 90);
+            AddTextCol("Bibliotecaria", "Bibliotecária", 140, DataGridViewContentAlignment.MiddleLeft, 110);
+            AddTextCol("DataAcao", "Data da Ação", 130, DataGridViewContentAlignment.MiddleLeft, 110, "dd/MM/yyyy HH:mm");
+            
 
-                dgvHistorico.BackgroundColor = Color.White;
+            dgvHistorico.BackgroundColor = Color.White;
                 dgvHistorico.BorderStyle = BorderStyle.None;
                 dgvHistorico.GridColor = Color.FromArgb(235, 239, 244);
                 dgvHistorico.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
@@ -555,7 +602,9 @@ namespace BibliotecaApp.Forms.Relatorio
 
                 dgvHistorico.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-                foreach (DataGridViewColumn col in dgvHistorico.Columns)
+           
+
+            foreach (DataGridViewColumn col in dgvHistorico.Columns)
                 {
                     col.SortMode = DataGridViewColumnSortMode.Automatic;
                     col.Resizable = DataGridViewTriState.False;
@@ -569,7 +618,24 @@ namespace BibliotecaApp.Forms.Relatorio
                     new object[] { true }
                 );
 
-                dgvHistorico.ResumeLayout();
+            if (dgvHistorico.Columns.Contains("UsuarioId"))
+            {
+                var colId = dgvHistorico.Columns["UsuarioId"];
+
+                colId.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+                
+                var headerStyle = (DataGridViewCellStyle)dgvHistorico.ColumnHeadersDefaultCellStyle.Clone();
+                headerStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                colId.HeaderCell.Style = headerStyle;
+                colId.HeaderCell.Style.Padding = new Padding(14, 0, 0, 0);
+
+                colId.MinimumWidth = 60;   // largura mínima em pixels (ajuste conforme desejar)
+                colId.FillWeight = 30f;    // peso relativo (aumente para dar mais espaço proporcional)
+            }
+
+
+            dgvHistorico.ResumeLayout();
 
             dgvHistorico.CellFormatting -= DgvHistorico_CellFormatting;
             dgvHistorico.CellFormatting += DgvHistorico_CellFormatting;

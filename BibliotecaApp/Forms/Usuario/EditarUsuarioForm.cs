@@ -20,7 +20,10 @@ namespace BibliotecaApp.Forms.Usuario
 {
     public partial class EditarUsuarioForm : Form
     {
-        
+        private static bool IsAdminLogado()
+       => string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase);
+
+
         private Size originalSize;
         private List<string> turmasCadastradas = new List<string>();
         
@@ -196,6 +199,13 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
+
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode editar usuários.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             if (_usuarioSelecionado == null)
             {
                 MessageBox.Show("Selecione um usuário primeiro.");
@@ -406,6 +416,12 @@ namespace BibliotecaApp.Forms.Usuario
 
         private void btnExcluir_Click(object sender, EventArgs e)
         {
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode excluir usuários.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             if (_usuarioSelecionado == null)
             {
                 MessageBox.Show("Selecione um usuário primeiro.");
@@ -628,8 +644,7 @@ private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e
             }
         }
 
-        // Substitua o método txtNomeUsuario_TextChanged — remove a seleção automática
-        // Substitua o método txtNomeUsuario_TextChanged pelo código abaixo
+
         private void txtNomeUsuario_TextChanged(object sender, EventArgs e)
         {
             if (_suppressSuggestionOnPrefill) return;
@@ -666,8 +681,22 @@ private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e
                                     Turma = reader["Turma"].ToString(),
                                     TipoUsuario = reader["TipoUsuario"].ToString()
                                 };
+
                                 _cacheUsuarios.Add(usuario);
-                                lstSugestoesUsuario.Items.Add(usuario); // ToString exibe Nome - Turma
+
+                                // Monta o texto a ser exibido na lista:
+                                // Nome - Turma (se existir), caso contrário Nome - TipoUsuario
+                                string exibicao = usuario.Nome;
+                                if (!string.IsNullOrWhiteSpace(usuario.Turma))
+                                {
+                                    exibicao += " - " + usuario.Turma;
+                                }
+                                else if (!string.IsNullOrWhiteSpace(usuario.TipoUsuario))
+                                {
+                                    exibicao += " - " + usuario.TipoUsuario;
+                                }
+
+                                lstSugestoesUsuario.Items.Add(exibicao);
                             }
                         }
                     }
@@ -679,19 +708,17 @@ private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e
 
                 if (temItens)
                 {
-                    // Ajusta tamanho e posição similar ao que você faz para turma
                     int visibleItems = Math.Min(5, lstSugestoesUsuario.Items.Count);
                     int extraPadding = 8;
-                    lstSugestoesUsuario.ItemHeight = 40; // garante consistência com EstilizarListBoxSugestao
+                    lstSugestoesUsuario.ItemHeight = 40;
                     lstSugestoesUsuario.Height = visibleItems * lstSugestoesUsuario.ItemHeight + extraPadding;
                     lstSugestoesUsuario.Width = txtNomeUsuario.Width;
                     lstSugestoesUsuario.Left = txtNomeUsuario.Left;
                     lstSugestoesUsuario.Top = txtNomeUsuario.Bottom;
 
-                    // força a lista para frente para evitar que labels (ex: lblTipoUsuario) fiquem por cima
                     lstSugestoesUsuario.BringToFront();
 
-                    // NÃO pré-seleciona; permite digitar sem auto-preencher
+                    // não pré-seleciona; permite digitar sem auto-preencher
                     lstSugestoesUsuario.SelectedIndex = -1;
                 }
             }
@@ -700,6 +727,7 @@ private void lstSugestoesUsuario_SelectedIndexChanged(object sender, EventArgs e
                 MessageBox.Show("Erro na busca: " + ex.Message);
             }
         }
+
 
 
         // Configurações de exibição para Edição de Usuário

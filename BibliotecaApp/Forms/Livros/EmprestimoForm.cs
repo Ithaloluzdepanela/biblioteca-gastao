@@ -360,7 +360,7 @@ namespace BibliotecaApp.Forms.Livros
         #endregion
 
 
-        
+
 
 
         #region Métodos de Usuário
@@ -400,7 +400,14 @@ namespace BibliotecaApp.Forms.Livros
                                     TipoUsuario = reader["TipoUsuario"].ToString()
                                 };
                                 _cacheUsuarios.Add(usuario);
-                                lstSugestoesUsuario.Items.Add($"{usuario.Nome} - {usuario.Turma}");
+
+                                // Se houver turma mostra "Nome - Turma", senão mostra "Nome - TipoUsuario"
+                                string sufixo = !string.IsNullOrWhiteSpace(usuario.Turma) ? usuario.Turma :
+                                                (!string.IsNullOrWhiteSpace(usuario.TipoUsuario) ? usuario.TipoUsuario : "");
+                                if (!string.IsNullOrWhiteSpace(sufixo))
+                                    lstSugestoesUsuario.Items.Add($"{usuario.Nome} - {sufixo}");
+                                else
+                                    lstSugestoesUsuario.Items.Add(usuario.Nome);
                             }
                         }
                     }
@@ -417,6 +424,7 @@ namespace BibliotecaApp.Forms.Livros
                 MessageBox.Show("Erro na busca: " + ex.Message);
             }
         }
+
 
         private void lstSugestoesUsuario_Click(object sender, EventArgs e)
         {

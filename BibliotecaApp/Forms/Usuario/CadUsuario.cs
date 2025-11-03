@@ -1,13 +1,14 @@
-﻿using System;
+﻿using BibliotecaApp.Models;
+using BibliotecaApp.Utils;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using BibliotecaApp.Utils;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.ComponentModel;
 
 namespace BibliotecaApp.Froms.Usuario
 {
@@ -17,7 +18,7 @@ namespace BibliotecaApp.Froms.Usuario
         private List<string> turmasCadastradas = new List<string>();
 
 
-       
+        private static bool IsAdminLogado()=> string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase);
 
         private List<string> todasTurmasPadrao;
         public event EventHandler UsuarioCriado;
@@ -213,13 +214,22 @@ namespace BibliotecaApp.Froms.Usuario
 
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
+            string tipoUsuario = cbUsuario.SelectedItem?.ToString() ?? string.Empty;
+            if(tipoUsuario!= "Bibliotecário(a)")
+            {
+                if (IsAdminLogado())
+                {
+                    MessageBox.Show("Administradores não podem cadastrar usuários diferentes do tipo: Bibliotecário(a).", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return;
+                }
+            }
+
             if (!ValidarCamposObrigatorios())
                 return;
 
             if (!ValidarDadosUsuario())
                 return;
 
-            // Removido: a validação de turma permitida agora ocorre no Validating do txtTurma
 
             CadastrarNovoUsuario();
         }
@@ -543,12 +553,15 @@ namespace BibliotecaApp.Froms.Usuario
         #region Métodos de Validação
         private bool ValidarCamposObrigatorios()
         {
+            
+
             string nome = txtNome.Text.Trim();
             string tipoUsuario = cbUsuario.SelectedItem?.ToString() ?? string.Empty;
             string telefone = RemoverMascara(mtxTelefone.Text);
             string turma = txtTurma.Text.Trim();
             string senha = txtSenha.Text.Trim();
             string confirmar = txtConfirmSenha.Text.Trim();
+
 
             if (string.IsNullOrWhiteSpace(nome) ||
                 string.IsNullOrWhiteSpace(tipoUsuario) ||

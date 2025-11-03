@@ -30,14 +30,14 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblEmprestimo = new System.Windows.Forms.Label();
-            this.cmbEmprestimo = new RoundedComboBox();
             this.btnFiltrar = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.cmbTipoUsuario = new RoundedComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.Titulo = new System.Windows.Forms.Label();
-            this.txtNome = new RoundedTextBox();
             this.dgvUsuarios = new System.Windows.Forms.DataGridView();
+            this.cmbEmprestimo = new RoundedComboBox();
+            this.cmbTipoUsuario = new RoundedComboBox();
+            this.txtNome = new RoundedTextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsuarios)).BeginInit();
             this.SuspendLayout();
@@ -59,7 +59,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1280, 845);
-            this.panel1.TabIndex = 3;
+            this.panel1.TabIndex = 6;
             // 
             // lblEmprestimo
             // 
@@ -73,6 +73,76 @@
             this.lblEmprestimo.Size = new System.Drawing.Size(224, 25);
             this.lblEmprestimo.TabIndex = 112;
             this.lblEmprestimo.Text = "Situação de Empréstimo:";
+            // 
+            // btnFiltrar
+            // 
+            this.btnFiltrar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnFiltrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.btnFiltrar.ForeColor = System.Drawing.Color.White;
+            this.btnFiltrar.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
+            this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnFiltrar.Location = new System.Drawing.Point(1121, 117);
+            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnFiltrar.Name = "btnFiltrar";
+            this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
+            this.btnFiltrar.Size = new System.Drawing.Size(116, 53);
+            this.btnFiltrar.TabIndex = 4;
+            this.btnFiltrar.Text = "      Filtrar";
+            this.btnFiltrar.UseVisualStyleBackColor = false;
+            this.btnFiltrar.Click += new System.EventHandler(this.btnFiltrar_Click);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.White;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label3.Location = new System.Drawing.Point(787, 95);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(122, 25);
+            this.label3.TabIndex = 89;
+            this.label3.Text = "Tipo usuário:";
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.White;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.label1.Location = new System.Drawing.Point(38, 95);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(70, 25);
+            this.label1.TabIndex = 87;
+            this.label1.Text = "Nome:";
+            // 
+            // Titulo
+            // 
+            this.Titulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.Titulo.AutoSize = true;
+            this.Titulo.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
+            this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.Titulo.Location = new System.Drawing.Point(452, 9);
+            this.Titulo.Name = "Titulo";
+            this.Titulo.Size = new System.Drawing.Size(447, 46);
+            this.Titulo.TabIndex = 86;
+            this.Titulo.Text = "USUARIOS CADASTRADOS";
+            // 
+            // dgvUsuarios
+            // 
+            this.dgvUsuarios.AllowUserToAddRows = false;
+            this.dgvUsuarios.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvUsuarios.Location = new System.Drawing.Point(15, 196);
+            this.dgvUsuarios.Name = "dgvUsuarios";
+            this.dgvUsuarios.ReadOnly = true;
+            this.dgvUsuarios.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dgvUsuarios.Size = new System.Drawing.Size(1251, 646);
+            this.dgvUsuarios.TabIndex = 5;
+            this.dgvUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUsuarios_CellContentClick);
             // 
             // cmbEmprestimo
             // 
@@ -99,39 +169,7 @@
             this.cmbEmprestimo.PlaceholderMargin = 10;
             this.cmbEmprestimo.PlaceholderText = "Filtre por situação...";
             this.cmbEmprestimo.Size = new System.Drawing.Size(274, 34);
-            this.cmbEmprestimo.TabIndex = 111;
-            // 
-            // btnFiltrar
-            // 
-            this.btnFiltrar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnFiltrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
-            this.btnFiltrar.ForeColor = System.Drawing.Color.White;
-            this.btnFiltrar.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
-            this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(1121, 117);
-            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnFiltrar.Name = "btnFiltrar";
-            this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
-            this.btnFiltrar.Size = new System.Drawing.Size(116, 53);
-            this.btnFiltrar.TabIndex = 110;
-            this.btnFiltrar.Text = "      Filtrar";
-            this.btnFiltrar.UseVisualStyleBackColor = false;
-            this.btnFiltrar.Click += new System.EventHandler(this.btnFiltrar_Click);
-            // 
-            // label3
-            // 
-            this.label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.White;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(787, 95);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(122, 25);
-            this.label3.TabIndex = 89;
-            this.label3.Text = "Tipo usuário:";
+            this.cmbEmprestimo.TabIndex = 2;
             // 
             // cmbTipoUsuario
             // 
@@ -159,32 +197,7 @@
             this.cmbTipoUsuario.PlaceholderMargin = 10;
             this.cmbTipoUsuario.PlaceholderText = "Filtre por tipo de usuario...";
             this.cmbTipoUsuario.Size = new System.Drawing.Size(274, 34);
-            this.cmbTipoUsuario.TabIndex = 88;
-            // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.White;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(38, 95);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 25);
-            this.label1.TabIndex = 87;
-            this.label1.Text = "Nome:";
-            // 
-            // Titulo
-            // 
-            this.Titulo.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Titulo.AutoSize = true;
-            this.Titulo.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
-            this.Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.Titulo.Location = new System.Drawing.Point(452, 9);
-            this.Titulo.Name = "Titulo";
-            this.Titulo.Size = new System.Drawing.Size(447, 46);
-            this.Titulo.TabIndex = 86;
-            this.Titulo.Text = "USUARIOS CADASTRADOS";
+            this.cmbTipoUsuario.TabIndex = 3;
             // 
             // txtNome
             // 
@@ -211,22 +224,9 @@
             this.txtNome.SelectionLength = 0;
             this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(442, 40);
-            this.txtNome.TabIndex = 85;
+            this.txtNome.TabIndex = 1;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
-            // 
-            // dgvUsuarios
-            // 
-            this.dgvUsuarios.AllowUserToAddRows = false;
-            this.dgvUsuarios.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgvUsuarios.Location = new System.Drawing.Point(43, 196);
-            this.dgvUsuarios.Name = "dgvUsuarios";
-            this.dgvUsuarios.ReadOnly = true;
-            this.dgvUsuarios.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dgvUsuarios.Size = new System.Drawing.Size(1194, 638);
-            this.dgvUsuarios.TabIndex = 0;
-            this.dgvUsuarios.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUsuarios_CellContentClick);
             // 
             // UsuarioForm
             // 

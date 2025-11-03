@@ -21,6 +21,9 @@ namespace BibliotecaApp
         private int livroId;
         private IButtonControl _acceptBackup, _cancelBackup;
 
+        private static bool IsAdminLogado()
+=> string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase);
+
         // Flags de controle do autocomplete
         private bool _suppressGeneroSuggest = false;   // evita loop ao setar Text programaticamente
         private bool _isClickingSugestoes = false;     // zona segura ao clicar na lista
@@ -174,6 +177,13 @@ namespace BibliotecaApp
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
+
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode editar livros.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             string nome = txtNome.Text.Trim();
             string autor = txtAutor.Text.Trim();
             string genero = txtGenero.Text.Trim();
@@ -237,6 +247,12 @@ namespace BibliotecaApp
 
         private void btnExcluir_Click(object sender, EventArgs e)
         {
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode excluir livros.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             // >>> Somente UMA senha
             var senha = ObterSenha("Confirmação de Senha", "Digite sua senha para confirmar a exclusão:");
             if (string.IsNullOrEmpty(senha)) { MessageBox.Show("Operação cancelada."); return; }

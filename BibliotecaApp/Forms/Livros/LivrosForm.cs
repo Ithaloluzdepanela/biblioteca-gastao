@@ -21,7 +21,9 @@ namespace BibliotecaApp.Forms.Livros
             InitializeComponent();
 
             dgvLivros.CellFormatting += dgvLivros_CellFormatting;
-           
+
+            mtxCodigoBarras.KeyPress += mtxCodigoBarras_KeyPressLimiter;
+            mtxCodigoBarras.TextChanged += mtxCodigoBarras_TextChangedLimiter;
 
             btnProcurar.PerformClick();
 
@@ -126,6 +128,24 @@ namespace BibliotecaApp.Forms.Livros
                 dgvLivros,
                 new object[] { true }
             );
+
+
+            if (dgvLivros.Columns.Contains("Id"))
+            {
+                var colId = dgvLivros.Columns["Id"];
+
+                colId.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+
+                var headerStyle = (DataGridViewCellStyle)dgvLivros.ColumnHeadersDefaultCellStyle.Clone();
+                headerStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                colId.HeaderCell.Style = headerStyle;
+                colId.HeaderCell.Style.Padding = new Padding(14, 0, 0, 0);
+
+                colId.MinimumWidth = 60;   // largura mínima em pixels (ajuste conforme desejar)
+                colId.FillWeight = 30f;    // peso relativo (aumente para dar mais espaço proporcional)
+            }
+
 
             dgvLivros.ResumeLayout();
         }
@@ -262,11 +282,37 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
+        private const int LIMITE_CODIGO_BARRAS = 13;
 
 
         private string ObterCodigoDeBarrasFormatado()
         {
             return new string(mtxCodigoBarras.Text.Where(char.IsDigit).ToArray());
+        }
+
+        private void mtxCodigoBarras_KeyPressLimiter(object sender, KeyPressEventArgs e)
+        {
+            // Bloqueia entrada quando atingir o limite (permitindo teclas de controle e substituição de seleção)
+            if (!char.IsControl(e.KeyChar))
+            {
+                int textoAtual = mtxCodigoBarras.Text?.Length ?? 0;
+                int selecao = mtxCodigoBarras.SelectionLength;
+                int novoTamanho = textoAtual - selecao + 1; // +1 pelo novo char
+                if (novoTamanho > LIMITE_CODIGO_BARRAS)
+                    e.Handled = true;
+            }
+        }
+
+        private void mtxCodigoBarras_TextChangedLimiter(object sender, EventArgs e)
+        {
+            // Trunca conteúdo excedente (cobre colagens, entrada do leitor, etc.)
+            var texto = mtxCodigoBarras.Text ?? string.Empty;
+            if (texto.Length > LIMITE_CODIGO_BARRAS)
+            {
+                int caret = mtxCodigoBarras.SelectionStart;
+                mtxCodigoBarras.Text = texto.Substring(0, LIMITE_CODIGO_BARRAS);
+                mtxCodigoBarras.SelectionStart = Math.Min(caret, LIMITE_CODIGO_BARRAS);
+            }
         }
 
 
@@ -505,6 +551,9 @@ END AS Status
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-       
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

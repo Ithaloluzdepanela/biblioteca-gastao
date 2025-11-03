@@ -1,5 +1,7 @@
-﻿using BibliotecaApp.Utils;
+﻿using BibliotecaApp.Models;
+using BibliotecaApp.Utils;
 using BibliotecaApp.Utils.Etiquetas;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
@@ -7,10 +9,9 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
+using System.Windows.Forms;
 
 namespace BibliotecaApp.Forms.Livros
 {
@@ -18,6 +19,8 @@ namespace BibliotecaApp.Forms.Livros
     {
         #region Propriedades e Campos
         public event EventHandler LivroAtualizado;
+
+        private static bool IsAdminLogado() => string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase);
 
         private readonly List<string> generosPadronizados = new List<string>
         {
@@ -139,6 +142,13 @@ namespace BibliotecaApp.Forms.Livros
 
         private void btnCadastrar_Click(object sender, EventArgs e)
         {
+
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode cadastrar livros.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             if (!ValidarCampos()) return;
             if (!ValidarQuantidade(out int quantidade)) return;
 

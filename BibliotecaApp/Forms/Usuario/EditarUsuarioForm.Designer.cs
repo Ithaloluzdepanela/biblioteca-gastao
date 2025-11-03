@@ -28,8 +28,8 @@
         private void InitializeComponent()
         {
             this.panel2 = new System.Windows.Forms.Panel();
-            this.lstSugestoesTurma = new System.Windows.Forms.ListBox();
             this.lstSugestoesUsuario = new System.Windows.Forms.ListBox();
+            this.lstSugestoesTurma = new System.Windows.Forms.ListBox();
             this.lblTipoUsuario = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.btnCancelar = new System.Windows.Forms.Button();
@@ -79,7 +79,23 @@
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1280, 905);
-            this.panel2.TabIndex = 0;
+            this.panel2.TabIndex = 132;
+            // 
+            // lstSugestoesUsuario
+            // 
+            this.lstSugestoesUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14F);
+            this.lstSugestoesUsuario.FormattingEnabled = true;
+            this.lstSugestoesUsuario.ItemHeight = 25;
+            this.lstSugestoesUsuario.Location = new System.Drawing.Point(334, 192);
+            this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
+            this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(618, 104);
+            this.lstSugestoesUsuario.TabIndex = 2;
+            this.lstSugestoesUsuario.Visible = false;
+            this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
+            this.lstSugestoesUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtNomeUsuario_KeyDown);
             // 
             // lstSugestoesTurma
             // 
@@ -94,22 +110,6 @@
             this.lstSugestoesTurma.Size = new System.Drawing.Size(618, 104);
             this.lstSugestoesTurma.TabIndex = 132;
             this.lstSugestoesTurma.Visible = false;
-            // 
-            // lstSugestoesUsuario
-            // 
-            this.lstSugestoesUsuario.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14F);
-            this.lstSugestoesUsuario.FormattingEnabled = true;
-            this.lstSugestoesUsuario.ItemHeight = 25;
-            this.lstSugestoesUsuario.Location = new System.Drawing.Point(334, 192);
-            this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
-            this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
-            this.lstSugestoesUsuario.Size = new System.Drawing.Size(618, 104);
-            this.lstSugestoesUsuario.TabIndex = 130;
-            this.lstSugestoesUsuario.Visible = false;
-            this.lstSugestoesUsuario.SelectedIndexChanged += new System.EventHandler(this.lstSugestoesUsuario_SelectedIndexChanged);
-            this.lstSugestoesUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtNomeUsuario_KeyDown);
             // 
             // lblTipoUsuario
             // 
@@ -130,7 +130,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.label2.Location = new System.Drawing.Point(457, 34);
+            this.label2.Location = new System.Drawing.Point(457, 14);
             this.label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(372, 46);
@@ -253,7 +253,7 @@
             this.txtNome.SelectionLength = 0;
             this.txtNome.SelectionStart = 0;
             this.txtNome.Size = new System.Drawing.Size(617, 40);
-            this.txtNome.TabIndex = 2;
+            this.txtNome.TabIndex = 3;
             this.txtNome.TextColor = System.Drawing.Color.Black;
             this.txtNome.UseSystemPasswordChar = false;
             // 
@@ -398,7 +398,7 @@
             this.dtpDataNasc.PlaceholderText = "";
             this.dtpDataNasc.SelectedDate = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
             this.dtpDataNasc.Size = new System.Drawing.Size(245, 40);
-            this.dtpDataNasc.TabIndex = 129;
+            this.dtpDataNasc.TabIndex = 7;
             this.dtpDataNasc.TabStop = false;
             this.dtpDataNasc.Value = new System.DateTime(2025, 11, 1, 0, 0, 0, 0);
             // 

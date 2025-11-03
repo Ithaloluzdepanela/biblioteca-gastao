@@ -68,11 +68,11 @@
             this.Acao,
             this.Bibliotecaria,
             this.DataAcao});
-            this.dgvHistorico.Location = new System.Drawing.Point(69, 357);
+            this.dgvHistorico.Location = new System.Drawing.Point(33, 294);
             this.dgvHistorico.Name = "dgvHistorico";
             this.dgvHistorico.ReadOnly = true;
             this.dgvHistorico.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dgvHistorico.Size = new System.Drawing.Size(1142, 437);
+            this.dgvHistorico.Size = new System.Drawing.Size(1214, 548);
             this.dgvHistorico.TabIndex = 23;
             // 
             // NomeU
@@ -112,7 +112,7 @@
             this.lblUsuario.BackColor = System.Drawing.Color.Transparent;
             this.lblUsuario.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblUsuario.Location = new System.Drawing.Point(64, 148);
+            this.lblUsuario.Location = new System.Drawing.Point(28, 101);
             this.lblUsuario.Name = "lblUsuario";
             this.lblUsuario.Size = new System.Drawing.Size(167, 25);
             this.lblUsuario.TabIndex = 116;
@@ -125,7 +125,7 @@
             this.lblLivro.BackColor = System.Drawing.Color.Transparent;
             this.lblLivro.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLivro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblLivro.Location = new System.Drawing.Point(443, 148);
+            this.lblLivro.Location = new System.Drawing.Point(463, 101);
             this.lblLivro.Name = "lblLivro";
             this.lblLivro.Size = new System.Drawing.Size(144, 25);
             this.lblLivro.TabIndex = 117;
@@ -138,7 +138,7 @@
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label2.Location = new System.Drawing.Point(907, 148);
+            this.label2.Location = new System.Drawing.Point(943, 101);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(128, 25);
             this.label2.TabIndex = 119;
@@ -151,7 +151,7 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(64, 225);
+            this.label3.Location = new System.Drawing.Point(28, 178);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(161, 25);
             this.label3.TabIndex = 120;
@@ -164,7 +164,7 @@
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label5.Location = new System.Drawing.Point(247, 225);
+            this.label5.Location = new System.Drawing.Point(253, 178);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(146, 25);
             this.label5.TabIndex = 122;
@@ -205,11 +205,11 @@
             this.lstSugestoesUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.lstSugestoesUsuario.FormattingEnabled = true;
             this.lstSugestoesUsuario.ItemHeight = 25;
-            this.lstSugestoesUsuario.Location = new System.Drawing.Point(69, 216);
+            this.lstSugestoesUsuario.Location = new System.Drawing.Point(33, 169);
             this.lstSugestoesUsuario.Margin = new System.Windows.Forms.Padding(4);
             this.lstSugestoesUsuario.Name = "lstSugestoesUsuario";
             this.lstSugestoesUsuario.ScrollAlwaysVisible = true;
-            this.lstSugestoesUsuario.Size = new System.Drawing.Size(345, 102);
+            this.lstSugestoesUsuario.Size = new System.Drawing.Size(387, 102);
             this.lstSugestoesUsuario.TabIndex = 126;
             this.lstSugestoesUsuario.Visible = false;
             // 
@@ -227,7 +227,7 @@
             this.dtpFim.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.dtpFim.IconHoverAreaColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.dtpFim.IconHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.dtpFim.Location = new System.Drawing.Point(252, 254);
+            this.dtpFim.Location = new System.Drawing.Point(258, 207);
             this.dtpFim.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtpFim.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtpFim.Name = "dtpFim";
@@ -254,7 +254,7 @@
             this.dtpInicio.IconColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.dtpInicio.IconHoverAreaColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.dtpInicio.IconHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.dtpInicio.Location = new System.Drawing.Point(69, 254);
+            this.dtpInicio.Location = new System.Drawing.Point(33, 207);
             this.dtpInicio.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.dtpInicio.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.dtpInicio.Name = "dtpInicio";
@@ -277,7 +277,7 @@
             this.btnExportar.ForeColor = System.Drawing.Color.White;
             this.btnExportar.Image = global::BibliotecaApp.Properties.Resources.icons8_export_excel_25;
             this.btnExportar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExportar.Location = new System.Drawing.Point(1077, 248);
+            this.btnExportar.Location = new System.Drawing.Point(1113, 201);
             this.btnExportar.Name = "btnExportar";
             this.btnExportar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
             this.btnExportar.Size = new System.Drawing.Size(134, 52);
@@ -291,7 +291,7 @@
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.label1.Location = new System.Drawing.Point(538, 53);
+            this.label1.Location = new System.Drawing.Point(538, 8);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(204, 46);
@@ -305,7 +305,7 @@
             this.lstLivros.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.lstLivros.FormattingEnabled = true;
             this.lstLivros.ItemHeight = 25;
-            this.lstLivros.Location = new System.Drawing.Point(448, 216);
+            this.lstLivros.Location = new System.Drawing.Point(468, 169);
             this.lstLivros.Margin = new System.Windows.Forms.Padding(4);
             this.lstLivros.Name = "lstLivros";
             this.lstLivros.ScrollAlwaysVisible = true;
@@ -326,7 +326,7 @@
             this.cbBibliotecaria.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.cbBibliotecaria.FormattingEnabled = true;
             this.cbBibliotecaria.ItemsFont = new System.Drawing.Font("Segoe UI", 14.25F);
-            this.cbBibliotecaria.Location = new System.Drawing.Point(448, 257);
+            this.cbBibliotecaria.Location = new System.Drawing.Point(468, 210);
             this.cbBibliotecaria.Name = "cbBibliotecaria";
             this.cbBibliotecaria.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14F);
             this.cbBibliotecaria.PlaceholderMargin = 10;
@@ -348,7 +348,7 @@
             this.txtLivro.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtLivro.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtLivro.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtLivro.Location = new System.Drawing.Point(448, 176);
+            this.txtLivro.Location = new System.Drawing.Point(468, 129);
             this.txtLivro.Name = "txtLivro";
             this.txtLivro.Padding = new System.Windows.Forms.Padding(7);
             this.txtLivro.PlaceholderColor = System.Drawing.Color.Gray;
@@ -369,7 +369,7 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label6.Location = new System.Drawing.Point(443, 229);
+            this.label6.Location = new System.Drawing.Point(463, 182);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(213, 25);
@@ -386,7 +386,7 @@
             this.btnFiltrar.ForeColor = System.Drawing.Color.White;
             this.btnFiltrar.Image = global::BibliotecaApp.Properties.Resources.material_symbols___tab_search_rounded_25px;
             this.btnFiltrar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFiltrar.Location = new System.Drawing.Point(912, 248);
+            this.btnFiltrar.Location = new System.Drawing.Point(948, 201);
             this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 10, 0, 10);
@@ -415,7 +415,7 @@
             "Todas",
             "Empréstimos"});
             this.cmbAcao.ItemsFont = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbAcao.Location = new System.Drawing.Point(912, 179);
+            this.cmbAcao.Location = new System.Drawing.Point(948, 132);
             this.cmbAcao.Name = "cmbAcao";
             this.cmbAcao.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbAcao.PlaceholderMargin = 10;
@@ -437,7 +437,7 @@
             this.txtUsuario.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtUsuario.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtUsuario.Location = new System.Drawing.Point(69, 176);
+            this.txtUsuario.Location = new System.Drawing.Point(33, 129);
             this.txtUsuario.Name = "txtUsuario";
             this.txtUsuario.Padding = new System.Windows.Forms.Padding(7);
             this.txtUsuario.PlaceholderColor = System.Drawing.Color.Gray;
@@ -447,8 +447,8 @@
             this.txtUsuario.SelectedText = "";
             this.txtUsuario.SelectionLength = 0;
             this.txtUsuario.SelectionStart = 0;
-            this.txtUsuario.Size = new System.Drawing.Size(345, 40);
-            this.txtUsuario.TabIndex = 89;
+            this.txtUsuario.Size = new System.Drawing.Size(387, 40);
+            this.txtUsuario.TabIndex = 1;
             this.txtUsuario.TextColor = System.Drawing.Color.Black;
             this.txtUsuario.UseSystemPasswordChar = false;
             this.txtUsuario.Load += new System.EventHandler(this.txtUsuario_Load);

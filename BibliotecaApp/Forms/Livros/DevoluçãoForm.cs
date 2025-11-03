@@ -1,15 +1,16 @@
 ﻿using BibliotecaApp.Models;
 using BibliotecaApp.Utils;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Usuarios;
-using System.Threading.Tasks;
 
 namespace BibliotecaApp.Forms.Livros
 {
@@ -17,10 +18,100 @@ namespace BibliotecaApp.Forms.Livros
     {
         #region Construtor
 
+        private int hoveredIndex = -1;
+        private List<Usuarios> _cacheUsuarios = new List<Usuarios>();
+        private bool _suppressSuggestionOnSetText = false;
+
         public DevoluçãoForm()
         {
             InitializeComponent();
+
+       
+            InicializarSugestoesUsuario();
+
+          
+        }
+        private void InicializarSugestoesUsuario()
+        {
+            // garante que o listbox tenha o mesmo estilo/behavior dos outros forms
+            EstilizarListBoxSugestao(lstSugestoesUsuario);
+
             
+
+            // eventos (se já estiverem ligados no designer, não tem problema — estamos só garantindo)
+            txtUsuario.TextChanged += txtUsuario_TextChanged;
+            txtUsuario.KeyDown += txtUsuario_KeyDown;
+            lstSugestoesUsuario.Click += lstSugestoesUsuario_Click;
+            lstSugestoesUsuario.KeyDown += lstSugestoesUsuario_KeyDown;
+            lstSugestoesUsuario.Leave += lstSugestoesUsuario_Leave;
+
+            mtxCodigoBarras.KeyPress += mtxCodigoBarras_KeyPressLimiter;
+            mtxCodigoBarras.TextChanged += mtxCodigoBarras_TextChangedLimiter;
+        }
+
+        private void EstilizarListBoxSugestao(ListBox listBox)
+        {
+            listBox.DrawMode = DrawMode.OwnerDrawFixed;
+            listBox.Font = new Font("Segoe UI", 12, FontStyle.Regular);
+            listBox.ItemHeight = 40;
+
+            listBox.BackColor = Color.White;
+            listBox.ForeColor = Color.FromArgb(30, 61, 88);
+            listBox.BorderStyle = BorderStyle.FixedSingle;
+            listBox.IntegralHeight = false;
+
+            listBox.DrawItem -= ListBoxSugestao_DrawItem;
+            listBox.DrawItem += ListBoxSugestao_DrawItem;
+
+            listBox.MouseMove -= ListBoxSugestao_MouseMove;
+            listBox.MouseMove += ListBoxSugestao_MouseMove;
+
+            listBox.MouseLeave -= ListBoxSugestao_MouseLeave;
+            listBox.MouseLeave += ListBoxSugestao_MouseLeave;
+        }
+
+        private void ListBoxSugestao_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            if (e.Index < 0) return;
+
+            bool hovered = (e.Index == hoveredIndex);
+
+            Color backColor = hovered ? Color.FromArgb(235, 235, 235) : Color.White;
+            Color textColor = Color.FromArgb(60, 60, 60);
+
+            using (SolidBrush b = new SolidBrush(backColor))
+                e.Graphics.FillRectangle(b, e.Bounds);
+
+            string text = listBox.Items[e.Index].ToString();
+            Font font = listBox.Font;
+
+            Rectangle textRect = new Rectangle(e.Bounds.Left + 12, e.Bounds.Top, e.Bounds.Width - 24, e.Bounds.Height);
+            TextRenderer.DrawText(e.Graphics, text, font, textRect, textColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+
+            // linha divisória suave entre itens
+            if (e.Index < listBox.Items.Count - 1)
+            {
+                using (Pen p = new Pen(Color.FromArgb(220, 220, 220)))
+                    e.Graphics.DrawLine(p, e.Bounds.Left + 8, e.Bounds.Bottom - 1, e.Bounds.Right - 8, e.Bounds.Bottom - 1);
+            }
+        }
+
+        private void ListBoxSugestao_MouseMove(object sender, MouseEventArgs e)
+        {
+            var listBox = sender as ListBox;
+            int index = listBox.IndexFromPoint(e.Location);
+            if (index != hoveredIndex)
+            {
+                hoveredIndex = index;
+                listBox.Invalidate();
+            }
+        }
+
+        private void ListBoxSugestao_MouseLeave(object sender, EventArgs e)
+        {
+            hoveredIndex = -1;
+            (sender as ListBox).Invalidate();
         }
 
         #endregion
@@ -37,6 +128,151 @@ namespace BibliotecaApp.Forms.Livros
             BuscarEmprestimos(); // Exibe todos os empréstimos atualizados no grid
         }
 
+        // ---- INÍCIO: handlers e helpers para sugestões de usuário ----
+
+        private void txtUsuario_TextChanged(object sender, EventArgs e)
+        {
+            if (_suppressSuggestionOnSetText) return;
+
+            lstSugestoesUsuario.Items.Clear();
+            lstSugestoesUsuario.Visible = false;
+            _cacheUsuarios.Clear();
+
+            string termo = txtUsuario.Text.Trim();
+            if (string.IsNullOrWhiteSpace(termo)) return;
+
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string sql = "SELECT Id, Nome, Turma, TipoUsuario FROM Usuarios WHERE Nome LIKE @nome ORDER BY Nome";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@nome", termo + "%");
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var usuario = new Usuarios
+                                {
+                                    Id = reader["Id"] != DBNull.Value ? Convert.ToInt32(reader["Id"]) : 0,
+                                    Nome = reader["Nome"]?.ToString() ?? "",
+                                    Turma = reader["Turma"]?.ToString() ?? "",
+                                    TipoUsuario = reader["TipoUsuario"]?.ToString() ?? ""
+                                };
+
+                                _cacheUsuarios.Add(usuario);
+
+                                string sufixo = !string.IsNullOrWhiteSpace(usuario.Turma)
+                                                ? usuario.Turma
+                                                : (!string.IsNullOrWhiteSpace(usuario.TipoUsuario) ? usuario.TipoUsuario : "");
+                                string exibicao = !string.IsNullOrWhiteSpace(sufixo) ? $"{usuario.Nome} - {sufixo}" : usuario.Nome;
+                                lstSugestoesUsuario.Items.Add(exibicao);
+                            }
+                        }
+                    }
+                }
+
+                if (lstSugestoesUsuario.Items.Count > 0)
+                {
+                    lstSugestoesUsuario.Visible = true;
+                    lstSugestoesUsuario.SelectedIndex = 0;
+
+                    int visibleItems = Math.Min(6, lstSugestoesUsuario.Items.Count);
+                    int extraPadding = 6;
+                    lstSugestoesUsuario.ItemHeight = 40; // garante consistência com EstilizarListBoxSugestao
+                    lstSugestoesUsuario.Height = visibleItems * lstSugestoesUsuario.ItemHeight + extraPadding;
+                    lstSugestoesUsuario.Width = txtUsuario.Width;
+                    lstSugestoesUsuario.Left = txtUsuario.Left;
+                    lstSugestoesUsuario.Top = txtUsuario.Bottom;
+                    lstSugestoesUsuario.BringToFront();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro na busca de usuários: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void txtUsuario_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!lstSugestoesUsuario.Visible) return;
+
+            if (e.KeyCode == Keys.Down)
+            {
+                if (lstSugestoesUsuario.SelectedIndex < lstSugestoesUsuario.Items.Count - 1)
+                    lstSugestoesUsuario.SelectedIndex++;
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Up)
+            {
+                if (lstSugestoesUsuario.SelectedIndex > 0)
+                    lstSugestoesUsuario.SelectedIndex--;
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                if (lstSugestoesUsuario.SelectedItem != null)
+                    SelecionarSugestaoUsuario(lstSugestoesUsuario.SelectedItem.ToString());
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                lstSugestoesUsuario.Visible = false;
+            }
+        }
+
+        private void lstSugestoesUsuario_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                if (lstSugestoesUsuario.SelectedIndex < 0 && lstSugestoesUsuario.Items.Count > 0)
+                    lstSugestoesUsuario.SelectedIndex = 0;
+                SelecionarSugestaoUsuario(lstSugestoesUsuario.SelectedItem.ToString());
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                lstSugestoesUsuario.Visible = false;
+                txtUsuario.Focus();
+            }
+        }
+
+        private void lstSugestoesUsuario_Click(object sender, EventArgs e)
+        {
+            if (lstSugestoesUsuario.SelectedItem != null)
+                SelecionarSugestaoUsuario(lstSugestoesUsuario.SelectedItem.ToString());
+        }
+
+        private void lstSugestoesUsuario_Leave(object sender, EventArgs e)
+        {
+            // Fecha a lista quando o foco sair (comportamento padrão nos outros forms)
+            lstSugestoesUsuario.Visible = false;
+        }
+
+        private void SelecionarSugestaoUsuario(string texto)
+        {
+            int idx = texto.IndexOf(" - ");
+            string nome = (idx >= 0) ? texto.Substring(0, idx).Trim() : texto.Trim();
+
+            _suppressSuggestionOnSetText = true;
+            try
+            {
+                txtUsuario.Text = nome;
+                lstSugestoesUsuario.Visible = false;
+            }
+            finally
+            {
+                _suppressSuggestionOnSetText = false;
+            }
+        }
+
+
+
+
         private void btnBuscarEmprestimo_Click(object sender, EventArgs e)
         {
             BuscarEmprestimos();
@@ -44,6 +280,13 @@ namespace BibliotecaApp.Forms.Livros
 
         private void btnProrrogar_Click(object sender, EventArgs e)
         {
+
+            if (IsAdminLogado())
+            {
+                MessageBox.Show("Administrador não pode prorrogar empréstimo.", "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
             if (dgvEmprestimos.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Selecione um empréstimo para prorrogar.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -166,12 +409,7 @@ namespace BibliotecaApp.Forms.Livros
 
        
 
-        private void LimparCampos()
-        {
-            txtNome.Text = "";
-            mtxCodigoBarras.Text = "";
-            txtNome.Focus();
-        }
+      
 
         private Color ObterCorStatus(string status)
         {
@@ -231,32 +469,35 @@ namespace BibliotecaApp.Forms.Livros
         {
             return new FiltrosBusca
             {
-                NomeLivro = txtNome.Text.Trim(),
+                NomeLivro = txtLivro.Text.Trim(),
                 CodigoBarras = ObterCodigoDeBarrasFormatado(),
-                StatusFiltro = cbFiltroEmprestimo.SelectedItem?.ToString()
+                StatusFiltro = cbFiltroEmprestimo.SelectedItem?.ToString(),
+                NomeUsuario = txtUsuario.Text.Trim()
             };
         }
+
+
 
         private string ObterCodigoDeBarrasFormatado() { return new string(mtxCodigoBarras.Text.Where(char.IsDigit).ToArray()); }
 
         private string ConstruirQueryBusca(FiltrosBusca filtros)
         {
             string queryBase = @"
-                SELECT 
-                    e.Id AS [ID do Empréstimo],
-                    uAlocador.Nome AS [Alocador],
-                    uResponsavel.Nome AS [Responsável],
-                    e.Alocador AS [IdResponsavel],
-                    COALESCE(l.Nome, e.LivroNome) AS [Livro],
-                    l.CodigoBarras AS [Código De Barras],
-                    e.DataEmprestimo AS [Data do Empréstimo],
-                    e.DataDevolucao AS [Data de Devolução],
-                    e.Status AS [Status]
-                FROM Emprestimo e
-                JOIN Usuarios uAlocador ON e.Alocador = uAlocador.Id
-                JOIN Usuarios uResponsavel ON e.Responsavel = uResponsavel.Id
-                JOIN Livros l ON e.Livro = l.Id
-                WHERE l.Nome LIKE @LivroNome";
+        SELECT 
+            e.Id AS [ID do Empréstimo],
+            uAlocador.Nome AS [Alocador],
+            uResponsavel.Nome AS [Responsável],
+            e.Alocador AS [IdResponsavel],
+            COALESCE(l.Nome, e.LivroNome) AS [Livro],
+            l.CodigoBarras AS [Código De Barras],
+            e.DataEmprestimo AS [Data do Empréstimo],
+            e.DataDevolucao AS [Data de Devolução],
+            e.Status AS [Status]
+        FROM Emprestimo e
+        JOIN Usuarios uAlocador ON e.Alocador = uAlocador.Id
+        JOIN Usuarios uResponsavel ON e.Responsavel = uResponsavel.Id
+        JOIN Livros l ON e.Livro = l.Id
+        WHERE l.Nome LIKE @LivroNome";
 
             if (filtros.FiltrarCodigoBarras)
                 queryBase += " AND l.CodigoBarras LIKE @CodigoBarras";
@@ -264,17 +505,21 @@ namespace BibliotecaApp.Forms.Livros
             if (filtros.FiltrarStatus)
                 queryBase += " AND e.Status = @Status";
 
+            if (filtros.FiltrarUsuario)
+                queryBase += " AND (uAlocador.Nome LIKE @UsuarioNome OR uResponsavel.Nome LIKE @UsuarioNome)";
+
             queryBase += @"
-                ORDER BY 
-                    CASE e.Status
-                        WHEN 'Atrasado' THEN 1
-                        WHEN 'Ativo' THEN 2
-                        WHEN 'Devolvido' THEN 3
-                        ELSE 4
-                    END";
+        ORDER BY 
+            CASE e.Status
+                WHEN 'Atrasado' THEN 1
+                WHEN 'Ativo' THEN 2
+                WHEN 'Devolvido' THEN 3
+                ELSE 4
+            END";
 
             return queryBase;
         }
+
 
         private void AdicionarParametrosBusca(SqlCeCommand comando, FiltrosBusca filtros)
         {
@@ -285,7 +530,11 @@ namespace BibliotecaApp.Forms.Livros
 
             if (filtros.FiltrarStatus)
                 comando.Parameters.AddWithValue("@Status", filtros.StatusFiltro);
+
+            if (filtros.FiltrarUsuario)
+                comando.Parameters.AddWithValue("@UsuarioNome", "%" + filtros.NomeUsuario + "%");
         }
+
 
         #endregion
 
@@ -299,6 +548,23 @@ namespace BibliotecaApp.Forms.Livros
             ConfigurarEstiloGrid();
             ConfigurarEventosGrid();
             AdicionarBotaoFicha();
+
+            if (dgvEmprestimos.Columns.Contains("ID do Empréstimo"))
+            {
+                var colId = dgvEmprestimos.Columns["ID do Empréstimo"];
+
+                colId.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+
+                var headerStyle = (DataGridViewCellStyle)dgvEmprestimos.ColumnHeadersDefaultCellStyle.Clone();
+                headerStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                colId.HeaderCell.Style = headerStyle;
+                colId.HeaderCell.Style.Padding = new Padding(14, 0, 0, 0);
+
+                colId.MinimumWidth = 60;   // largura mínima em pixels (ajuste conforme desejar)
+                colId.FillWeight = 30f;    // peso relativo (aumente para dar mais espaço proporcional)
+            }
+
 
             dgvEmprestimos.ResumeLayout();
         }
@@ -326,7 +592,7 @@ namespace BibliotecaApp.Forms.Livros
                 new DefinicaoColuna("Alocador", "Alocador", 160, DataGridViewContentAlignment.MiddleLeft, 100),
                 new DefinicaoColuna("Responsável", "Responsável", 160, DataGridViewContentAlignment.MiddleLeft, 100),
                 new DefinicaoColuna("Livro", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120),
-                new DefinicaoColuna("Código De Barras", "Código de Barras", 160, DataGridViewContentAlignment.MiddleLeft, 120),
+                new DefinicaoColuna("Código De Barras", "Código de Barras", 140, DataGridViewContentAlignment.MiddleLeft, 120),
                 new DefinicaoColuna("Data do Empréstimo", "Data de Empréstimo", 150, DataGridViewContentAlignment.MiddleCenter, 110),
                 new DefinicaoColuna("Data de Devolução", "Data de Devolução", 140, DataGridViewContentAlignment.MiddleCenter, 100),
                 new DefinicaoColuna("Status", "Status", 100, DataGridViewContentAlignment.MiddleCenter, 80),
@@ -826,6 +1092,33 @@ namespace BibliotecaApp.Forms.Livros
             VerificarAtrasos();
         }
 
+
+        private const int LIMITE_CODIGO_BARRAS = 13;
+        private void mtxCodigoBarras_KeyPressLimiter(object sender, KeyPressEventArgs e)
+        {
+            // Bloqueia entrada quando atingir o limite (permitindo teclas de controle e substituição de seleção)
+            if (!char.IsControl(e.KeyChar))
+            {
+                int textoAtual = mtxCodigoBarras.Text?.Length ?? 0;
+                int selecao = mtxCodigoBarras.SelectionLength;
+                int novoTamanho = textoAtual - selecao + 1; // +1 pelo novo char
+                if (novoTamanho > LIMITE_CODIGO_BARRAS)
+                    e.Handled = true;
+            }
+        }
+
+        private void mtxCodigoBarras_TextChangedLimiter(object sender, EventArgs e)
+        {
+            // Trunca conteúdo excedente (cobre colagens, entrada do leitor, etc.)
+            var texto = mtxCodigoBarras.Text ?? string.Empty;
+            if (texto.Length > LIMITE_CODIGO_BARRAS)
+            {
+                int caret = mtxCodigoBarras.SelectionStart;
+                mtxCodigoBarras.Text = texto.Substring(0, LIMITE_CODIGO_BARRAS);
+                mtxCodigoBarras.SelectionStart = Math.Min(caret, LIMITE_CODIGO_BARRAS);
+            }
+        }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             // 1. Verifica se a tecla pressionada é ENTER e se o foco está no campo mtxCodigoBarras
@@ -879,10 +1172,14 @@ namespace BibliotecaApp.Forms.Livros
         public string NomeLivro { get; set; } = "";
         public string CodigoBarras { get; set; } = "";
         public string StatusFiltro { get; set; } = "";
+        public string NomeUsuario { get; set; } = "";
 
         public bool FiltrarCodigoBarras => !string.IsNullOrEmpty(CodigoBarras);
         public bool FiltrarStatus => StatusFiltro != "Todos" && !string.IsNullOrEmpty(StatusFiltro);
+        public bool FiltrarUsuario => !string.IsNullOrWhiteSpace(NomeUsuario);
     }
+
+
 
     public class DefinicaoColuna
     {

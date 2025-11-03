@@ -305,6 +305,23 @@ namespace BibliotecaApp.Forms.Usuario
                 new object[] { true }
             );
 
+
+            if (dgvUsuarios.Columns.Contains("Id"))
+            {
+                var colId = dgvUsuarios.Columns["ID"];
+
+                colId.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+
+                var headerStyle = (DataGridViewCellStyle)dgvUsuarios.ColumnHeadersDefaultCellStyle.Clone();
+                headerStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                colId.HeaderCell.Style = headerStyle;
+                colId.HeaderCell.Style.Padding = new Padding(14, 0, 0, 0);
+
+                colId.MinimumWidth = 60;   // largura mínima em pixels (ajuste conforme desejar)
+                colId.FillWeight = 30f;    // peso relativo (aumente para dar mais espaço proporcional)
+            }
+
             dgvUsuarios.ResumeLayout();
             dgvUsuarios.CellPainting += DgvUsuarios_CellPainting;
 

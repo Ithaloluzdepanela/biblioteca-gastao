@@ -2,10 +2,12 @@
 using BibliotecaApp.Forms.Livros;
 using BibliotecaApp.Utils; // ADICIONE ESTA LINHA
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -98,35 +100,55 @@ namespace BibliotecaApp.Forms.Usuario
                     conexao.Open();
 
                     string sql = @"
-                SELECT
-                    u.id              AS Id,
-                    u.nome            AS Nome,
-                    u.email           AS Email,
-                    u.tipousuario     AS TipoUsuario,
-                    u.cpf             AS CPF,
-                    u.telefone        AS Telefone,
-                    u.turma           AS Turma,
-                    u.datanascimento  AS DataNascimento,
-                    CASE
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM Emprestimo e
-                            WHERE e.Alocador = u.id
-                              AND e.Status = 'Atrasado'
-                        ) THEN 'Atrasado'
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM Emprestimo e
-                            WHERE e.Alocador = u.id
-                              AND e.Status <> 'Devolvido'
-                        ) THEN 'Ativo'
-                        ELSE 'Sem empréstimo'
-                    END AS EmprestimoStatus
-                FROM Usuarios u
-                WHERE 1 = 1";
+            SELECT
+                u.id              AS Id,
+                u.nome            AS Nome,
+                u.email           AS Email,
+                u.tipousuario     AS TipoUsuario,
+                u.cpf             AS CPF,
+                u.telefone        AS Telefone,
+                u.turma           AS Turma,
+                u.datanascimento  AS DataNascimento,
+                CASE
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM Emprestimo e
+                        WHERE e.Alocador = u.id
+                          AND e.Status = 'Atrasado'
+                    ) THEN 'Atrasado'
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM Emprestimo e
+                        WHERE e.Alocador = u.id
+                          AND e.Status <> 'Devolvido'
+                    ) THEN 'Ativo'
+                    ELSE 'Sem empréstimo'
+                END AS EmprestimoStatus
+            FROM Usuarios u
+            WHERE 1 = 1";
 
+                    // FILTRO POR NOME: agora suporta busca por qualquer parte do nome
+                    List<string> nomeTokens = new List<string>();
                     if (!string.IsNullOrWhiteSpace(nomeFiltro))
-                        sql += " AND u.nome LIKE @nome ESCAPE '\\'";
+                    {
+                        // quebra em tokens (por espaços) e remove vazios
+                        nomeTokens = nomeFiltro
+                                        .Trim()
+                                        .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                                        .ToList();
+
+                        if (nomeTokens.Count > 0)
+                        {
+                            // para cada token adiciona uma cláusula AND u.nome LIKE @nome{i}
+                            sql += " AND (";
+                            for (int i = 0; i < nomeTokens.Count; i++)
+                            {
+                                if (i > 0) sql += " AND ";
+                                sql += $"u.nome LIKE @nome{i} ESCAPE '\\'";
+                            }
+                            sql += ")";
+                        }
+                    }
 
                     if (!string.Equals(tipoFiltro, "Todos", StringComparison.OrdinalIgnoreCase))
                         sql += " AND u.tipousuario LIKE @tipo";
@@ -137,32 +159,32 @@ namespace BibliotecaApp.Forms.Usuario
                         {
                             case "Sem empréstimo":
                                 sql += @"
-                            AND NOT EXISTS (
-                                SELECT 1
-                                FROM Emprestimo e
-                                WHERE e.Alocador = u.id
-                                  AND e.Status <> 'Devolvido'
-                            )";
+                        AND NOT EXISTS (
+                            SELECT 1
+                            FROM Emprestimo e
+                            WHERE e.Alocador = u.id
+                              AND e.Status <> 'Devolvido'
+                        )";
                                 break;
 
                             case "Ativo":
                                 sql += @"
-                            AND EXISTS (
-                                SELECT 1
-                                FROM Emprestimo e
-                                WHERE e.Alocador = u.id
-                                  AND e.Status = 'Ativo'
-                            )";
+                        AND EXISTS (
+                            SELECT 1
+                            FROM Emprestimo e
+                            WHERE e.Alocador = u.id
+                              AND e.Status = 'Ativo'
+                        )";
                                 break;
 
                             case "Atrasado":
                                 sql += @"
-                            AND EXISTS (
-                                SELECT 1
-                                FROM Emprestimo e
-                                WHERE e.Alocador = u.id
-                                  AND e.Status = 'Atrasado'
-                            )";
+                        AND EXISTS (
+                            SELECT 1
+                            FROM Emprestimo e
+                            WHERE e.Alocador = u.id
+                              AND e.Status = 'Atrasado'
+                        )";
                                 break;
                         }
                     }
@@ -171,11 +193,16 @@ namespace BibliotecaApp.Forms.Usuario
 
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        if (!string.IsNullOrWhiteSpace(nomeFiltro))
+                        // adiciona parâmetros para cada token: '%token%'
+                        if (nomeTokens.Count > 0)
                         {
-                            var seguro = EscapeLikeValue(nomeFiltro.Trim());
-                            cmd.Parameters.AddWithValue("@nome", seguro + "%"); // prefixo
+                            for (int i = 0; i < nomeTokens.Count; i++)
+                            {
+                                var seguro = EscapeLikeValue(nomeTokens[i]);
+                                cmd.Parameters.AddWithValue($"@nome{i}", "%" + seguro + "%"); // contains
+                            }
                         }
+
                         if (!string.Equals(tipoFiltro, "Todos", StringComparison.OrdinalIgnoreCase))
                             cmd.Parameters.AddWithValue("@tipo", "%" + tipoFiltro + "%");
 

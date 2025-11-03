@@ -164,7 +164,7 @@ namespace BibliotecaApp.Forms.Livros
             this.lstSugestoesLivro.ItemHeight = 21;
             this.lstSugestoesLivro.Location = new System.Drawing.Point(456, 168);
             this.lstSugestoesLivro.Name = "lstSugestoesLivro";
-            this.lstSugestoesLivro.Size = new System.Drawing.Size(368, 109);
+            this.lstSugestoesLivro.Size = new System.Drawing.Size(368, 151);
             this.lstSugestoesLivro.TabIndex = 4;
             this.lstSugestoesLivro.Visible = false;
             this.lstSugestoesLivro.Click += new System.EventHandler(this.lstSugestoesLivro_Click);
@@ -200,7 +200,7 @@ namespace BibliotecaApp.Forms.Livros
             this.lstSugestoesTurma.ItemHeight = 21;
             this.lstSugestoesTurma.Location = new System.Drawing.Point(46, 252);
             this.lstSugestoesTurma.Name = "lstSugestoesTurma";
-            this.lstSugestoesTurma.Size = new System.Drawing.Size(372, 109);
+            this.lstSugestoesTurma.Size = new System.Drawing.Size(372, 130);
             this.lstSugestoesTurma.TabIndex = 7;
             this.lstSugestoesTurma.Visible = false;
             this.lstSugestoesTurma.Click += new System.EventHandler(this.lstSugestoesTurma_Click);

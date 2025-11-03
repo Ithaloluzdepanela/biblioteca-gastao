@@ -33,28 +33,19 @@ public class RoundedDatePicker : UserControl
 
     public RoundedDatePicker()
     {
-        // ---------- DEFAULTS (conforme solicitado) ----------
+        // ---------- DEFAULTS MÍNIMOS (não chamam AdjustLayout imediatamente) ----------
         this.DoubleBuffered = true;
-        this.BackColor = Color.WhiteSmoke;
-        this.BorderColor = Color.FromArgb(204, 204, 204);
-        this.BorderFocusColor = Color.FromArgb(30, 61, 88);
-        this.BorderRadius = 10;
-        this.BorderThickness = 1;
         base.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold);
         this.ForeColor = Color.FromArgb(20, 42, 60);
-        this.HoverBackColor = Color.LightGray;
-        this.PlaceholderColor = Color.Gray;
-        this.PlaceholderText = "Selecione uma data...";
-        this.PlaceholderFont = new Font("Segoe UI", 12.2F, FontStyle.Regular);
         this.Size = new Size(199, 35);
         this.TabStop = false;
 
-        // defaults do ícone
+        // defaults do ícone (guardados em campos simples)
         _iconColor = Color.FromArgb(80, 80, 80);
         _iconHoverColor = Color.FromArgb(30, 61, 88);
         _iconHoverAreaColor = Color.FromArgb(220, 220, 220);
 
-        // ---------- Inner controls ----------
+        // ---------- CRIA CONTROLES INTERNOS PRIMEIRO ----------
         innerTextBox = new TextBox
         {
             BorderStyle = BorderStyle.None,
@@ -62,7 +53,7 @@ public class RoundedDatePicker : UserControl
             ForeColor = this.ForeColor,
             ReadOnly = false,
             Location = new Point(10, 7),
-            Width = this.Width - 54,
+            Width = Math.Max(40, this.Width - 54),
             TabStop = true,
             Font = base.Font
         };
@@ -73,6 +64,15 @@ public class RoundedDatePicker : UserControl
             isFocused = false;
             ValidateAndApplyTextDate();
             Invalidate();
+
+            // fechar calendário se o foco saiu do controle e não foi pro calendário
+            this.BeginInvoke((Action)(() =>
+            {
+                bool calendarHasFocus = calendarPopup != null && calendarPopup.ContainsFocus;
+                bool controlHasFocus = this.ContainsFocus;
+                if (!calendarHasFocus && !controlHasFocus)
+                    HideCalendar();
+            }));
         };
 
         innerTextBox.KeyDown += (s, e) =>
@@ -84,12 +84,11 @@ public class RoundedDatePicker : UserControl
             }
         };
 
-        // formatação ao digitar / colar
         innerTextBox.TextChanged += InnerTextBox_TextChanged;
 
         placeholderLabel = new Label
         {
-            Text = this.PlaceholderText,
+            Text = "Selecione uma data...",
             ForeColor = _placeholderColor,
             BackColor = Color.Transparent,
             AutoSize = false,
@@ -98,7 +97,6 @@ public class RoundedDatePicker : UserControl
         };
         placeholderLabel.Click += (s, e) => ToggleCalendar();
 
-        // Ícone do calendário (área maior)
         calendarIcon = new PictureBox
         {
             Size = new Size(24, 24),
@@ -109,9 +107,40 @@ public class RoundedDatePicker : UserControl
         calendarIcon.Paint += DrawCalendarIcon;
         calendarIcon.MouseEnter += (s, e) => { isIconHover = true; Invalidate(); };
         calendarIcon.MouseLeave += (s, e) => { isIconHover = false; Invalidate(); };
-        calendarIcon.Click += (s, e) => ToggleCalendar();
 
-        // Popup do calendário
+        calendarIcon.Click += (s, e) =>
+        {
+            // solicita foco para o TextBox
+            innerTextBox.Focus();
+
+            // executa depois da troca de foco para abrir o calendário sem roubar o foco
+            this.BeginInvoke((Action)(() =>
+            {
+                if (calendarPopup != null)
+                {
+                    if (!calendarPopup.Visible)
+                    {
+                        ToggleCalendar(); // abre o calendário
+                    }
+                    // NÃO traze o foco para o calendarPopup (assim o innerTextBox mantém o foco)
+                }
+                else
+                {
+                    ToggleCalendar();
+                }
+
+                // posiciona o cursor no final do texto
+                try
+                {
+                    innerTextBox.SelectionStart = innerTextBox.Text?.Length ?? 0;
+                    innerTextBox.SelectionLength = 0;
+                    innerTextBox.Focus(); // reforça o foco no TextBox
+                }
+                catch { /* ignore */ }
+            }));
+        };
+
+
         calendarPopup = new MonthCalendar
         {
             Visible = false,
@@ -128,19 +157,32 @@ public class RoundedDatePicker : UserControl
             HideCalendar();
         };
 
-        // Eventos gerais
+        // adiciona controles à coleção do UserControl
+        Controls.Add(innerTextBox);
+        Controls.Add(placeholderLabel);
+        Controls.Add(calendarIcon);
+
+        // ---------- AGORA DEFINIMOS AS PROPRIEDADES QUE PODEM CHAMAR AdjustLayout/Invalidate ----------
+        this.BorderColor = Color.FromArgb(204, 204, 204);
+        this.BorderFocusColor = Color.FromArgb(30, 61, 88);
+        this.BorderRadius = 10;
+        this.BorderThickness = 1;
+        this.HoverBackColor = Color.LightGray;
+        this.PlaceholderColor = Color.Gray;
+        this.PlaceholderText = "Selecione uma data...";
+        this.PlaceholderFont = new Font("Segoe UI", 12.2F, FontStyle.Regular);
+
+        // eventos gerais (após controles)
         this.MouseEnter += (s, e) => { isMouseOver = true; Invalidate(); };
         this.MouseLeave += (s, e) => { isMouseOver = false; isIconHover = false; Invalidate(); };
         this.MouseMove += RoundedDatePicker_MouseMove;
         this.Resize += (s, e) => AdjustLayout();
 
-        Controls.Add(innerTextBox);
-        Controls.Add(placeholderLabel);
-        Controls.Add(calendarIcon);
-
+        // layout inicial
         AdjustLayout();
         UpdatePlaceholderVisibility();
     }
+
 
     private void RoundedDatePicker_MouseMove(object sender, MouseEventArgs e)
     {
@@ -292,6 +334,8 @@ public class RoundedDatePicker : UserControl
 
         // Linha separadora entre a data e o ícone (desenhada no controle principal OnPaint para melhor alinhamento)
     }
+
+
 
 
     protected override void OnPaint(PaintEventArgs e)

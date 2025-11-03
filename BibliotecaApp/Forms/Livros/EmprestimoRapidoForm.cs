@@ -612,18 +612,38 @@ namespace BibliotecaApp.Forms.Livros
         #endregion
 
         #region Autocomplete listboxes (Professor / Livro)
+
+
+        private bool NomeContemTodosTokens(string nome, string query)
+        {
+            if (string.IsNullOrWhiteSpace(query)) return true;
+            if (string.IsNullOrWhiteSpace(nome)) return false;
+
+            var tokens = query
+                .Trim()
+                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var t in tokens)
+            {
+                // busca "contains" case-insensitive para cada token
+                if (nome.IndexOf(t, StringComparison.CurrentCultureIgnoreCase) < 0)
+                    return false;
+            }
+            return true;
+        }
+
         private void txtProfessor_TextChanged(object sender, EventArgs e)
         {
-            var prefixo = txtProfessor.Text.Trim();
+            var texto = txtProfessor.Text.Trim();
             lstSugestoesProfessor.Items.Clear();
-            if (string.IsNullOrWhiteSpace(prefixo))
+            if (string.IsNullOrWhiteSpace(texto))
             {
                 lstSugestoesProfessor.Visible = false;
                 return;
             }
 
             var sugest = professoresCadastrados
-                .Where(x => x != null && x.StartsWith(prefixo, StringComparison.CurrentCultureIgnoreCase))
+                .Where(x => x != null && NomeContemTodosTokens(x, texto))
                 .ToArray();
 
             if (sugest.Length > 0)
@@ -679,7 +699,7 @@ namespace BibliotecaApp.Forms.Livros
             }
 
             var sugest = livrosCadastrados
-                .Where(x => x != null && x.StartsWith(prefixo, StringComparison.CurrentCultureIgnoreCase))
+                .Where(x => x != null && NomeContemTodosTokens(x, prefixo))
                 .ToArray();
 
             if (sugest.Length > 0)

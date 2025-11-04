@@ -60,9 +60,9 @@ namespace BibliotecaApp.Forms.Livros
             this.labelTitle.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.labelTitle.Font = new System.Drawing.Font("Segoe UI", 25.25F, System.Drawing.FontStyle.Bold);
             this.labelTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.labelTitle.Location = new System.Drawing.Point(450, 14);
+            this.labelTitle.Location = new System.Drawing.Point(451, 12);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(380, 41);
+            this.labelTitle.Size = new System.Drawing.Size(379, 41);
             this.labelTitle.TabIndex = 0;
             this.labelTitle.Text = "EMPRÉSTIMO RÁPIDO";
             // 

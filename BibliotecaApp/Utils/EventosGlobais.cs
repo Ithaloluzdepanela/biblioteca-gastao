@@ -40,5 +40,12 @@ namespace BibliotecaApp.Utils
             EmprestimoRealizado?.Invoke(null, EventArgs.Empty);
         }
 
+        public static event EventHandler EmprestimoProrrogado;
+        public static void OnEmprestimoProrrogado()
+        {
+            EmprestimoProrrogado?.Invoke(null, EventArgs.Empty);
+        }
+
+
     }
 }

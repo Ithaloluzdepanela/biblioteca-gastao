@@ -331,24 +331,62 @@ namespace BibliotecaApp.Forms.Livros
                     return;
 
                 // Atualiza no banco
+                // -- início do bloco de atualização + insert de log --
                 using (SqlCeConnection conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string query = @"
-        UPDATE Emprestimo 
-        SET DataDevolucao = @NovaData, DataProrrogacao = @NovaData, Status = @Status
-        WHERE Id = @Id";
-                    using (SqlCeCommand cmd = new SqlCeCommand(query, conexao))
+                    using (var trans = conexao.BeginTransaction())
                     {
-                        cmd.Parameters.AddWithValue("@NovaData", novaData);
-                        cmd.Parameters.AddWithValue("@Status", novoStatus);
-                        cmd.Parameters.AddWithValue("@Id", idEmprestimo);
-                        cmd.ExecuteNonQuery();
+                        try
+                        {
+                            // 1) atualiza o empréstimo (DataDevolucao / DataProrrogacao / Status)
+                            string updateSql = @"
+                UPDATE Emprestimo
+                SET DataDevolucao = @NovaData,
+                    DataProrrogacao = @NovaData,
+                    Status = @Status
+                WHERE Id = @Id";
+                            using (var cmdUpd = new SqlCeCommand(updateSql, conexao, trans))
+                            {
+                                cmdUpd.Parameters.AddWithValue("@NovaData", novaData);
+                                cmdUpd.Parameters.AddWithValue("@Status", novoStatus);
+                                cmdUpd.Parameters.AddWithValue("@Id", idEmprestimo);
+                                cmdUpd.ExecuteNonQuery();
+                            }
+
+                            // 2) insere no log de prorrogações (LogProrrogacoes)
+                            string insertLog = @"
+                INSERT INTO LogProrrogacoes (EmprestimoId, DataDaAcao, NovaDataDevolucao, BibliotecariaNome)
+                VALUES (@EmprestimoId, @DataDaAcao, @NovaDataDevolucao, @BibliotecariaNome)";
+                            using (var cmdLog = new SqlCeCommand(insertLog, conexao, trans))
+                            {
+                                cmdLog.Parameters.AddWithValue("@EmprestimoId", idEmprestimo);
+                                cmdLog.Parameters.AddWithValue("@DataDaAcao", DateTime.Now);
+                                cmdLog.Parameters.AddWithValue("@NovaDataDevolucao", novaData);
+                                // ajuste aqui para o nome da bibliotecária logada no seu sistema (ex.: Sessao.NomeBibliotecariaLogada)
+                                cmdLog.Parameters.AddWithValue("@BibliotecariaNome", Sessao.NomeBibliotecariaLogada ?? "");
+                                cmdLog.ExecuteNonQuery();
+                            }
+
+                            trans.Commit();
+                        }
+                        catch
+                        {
+                            trans.Rollback();
+                            throw;
+                        }
                     }
                 }
 
+                // notificação UX
                 MessageBox.Show("Empréstimo prorrogado com sucesso.", "Prorrogação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Atualiza grid local
                 BuscarEmprestimos();
+
+                // dispara evento global para que outros forms (ex.: InicioForm) atualizem automaticamente
+                BibliotecaApp.Utils.EventosGlobais.OnEmprestimoProrrogado();
+
             }
         }
 

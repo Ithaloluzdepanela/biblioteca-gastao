@@ -67,6 +67,8 @@ namespace BibliotecaApp.Forms.Inicio
             BibliotecaApp.Utils.EventosGlobais.ProfessorCadastrado += (s, e) => _ = CarregarEstatisticasAsync();
             BibliotecaApp.Utils.EventosGlobais.LivroDidaticoCadastrado += (s, e) => _ = CarregarEstatisticasAsync();
             BibliotecaApp.Utils.EventosGlobais.LivroDevolvido += (s, e) => _ = CarregarEstatisticasAsync();
+            BibliotecaApp.Utils.EventosGlobais.EmprestimoProrrogado += (s, e) => _ = CarregarEstatisticasAsync();
+
 
             this.Activated += (s, e) => _ = CarregarEstatisticasAsync();
 

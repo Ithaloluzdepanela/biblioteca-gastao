@@ -30,6 +30,8 @@ namespace BibliotecaApp.Forms.Usuario
         {
             BibliotecaApp.Utils.EventosGlobais.EmprestimoRealizado -= EventosGlobais_EmprestimoRealizado;
             BibliotecaApp.Utils.EventosGlobais.EmprestimoRealizado += EventosGlobais_EmprestimoRealizado;
+            BibliotecaApp.Utils.EventosGlobais.EmprestimoProrrogado += (s, e) => CarregarUsuarios();
+
 
             var caminho = Conexao.CaminhoBanco;
             if (!File.Exists(caminho))

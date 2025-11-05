@@ -45,7 +45,9 @@ namespace BibliotecaApp.Forms.Relatorio
                 lstLivros.Click += LstLivros_Click;
 
                 BibliotecaApp.Utils.EventosGlobais.BibliotecariaCadastrada += (s, e) => PopularCbBibliotecaria();
-            }
+            BibliotecaApp.Utils.EventosGlobais.EmprestimoProrrogado += (s, e) => CarregarLog();
+
+        }
 
         private void TxtLivro_TextChanged(object sender, EventArgs e)
         {
@@ -401,25 +403,28 @@ namespace BibliotecaApp.Forms.Relatorio
     ");
                     }
 
+                    string tblLogProrrogacoes = GetExistingTableName(conexao, new[] { "LogProrrogacoes", "LogProrrogacao", "logprorrogacoes" });
+
                     // 2.5) Prorrogação (quando DataProrrogacao preenchida)
-                    if (!string.IsNullOrEmpty(tblEmprestimo))
+                    if (!string.IsNullOrEmpty(tblLogProrrogacoes))
                     {
                         selects.Add($@"
-        SELECT 
-            e.Id,
+        SELECT
+            lp.LogId AS Id,
             u.Id AS UsuarioId,
             COALESCE(u.Nome, 'Excluído') AS NomeU,
             CASE WHEN l.Id IS NULL THEN e.LivroNome + ' (Excluído)' ELSE l.Nome END AS NomeL,
             'Prorrogação' AS Acao,
-            e.DataProrrogacao AS DataAcao,
-            b.Nome AS Bibliotecaria
-        FROM [{tblEmprestimo}] e
+            lp.DataDaAcao AS DataAcao,
+            lp.BibliotecariaNome AS Bibliotecaria
+        FROM [{tblLogProrrogacoes}] lp
+        LEFT JOIN [{tblEmprestimo}] e ON lp.EmprestimoId = e.Id
         LEFT JOIN [{tblUsuarios}] u ON e.Alocador = u.Id
         LEFT JOIN [{tblLivros}] l ON e.Livro = l.Id
-        LEFT JOIN [{tblUsuarios}] b ON e.Responsavel = b.Id
-        WHERE e.DataProrrogacao IS NOT NULL
+        WHERE lp.DataDaAcao IS NOT NULL
     ");
-                    }
+                    
+                }
 
                     // 3) Empréstimo Rápido (empréstimo / devolução)
                     if (!string.IsNullOrEmpty(tblEmprestimoRapido))

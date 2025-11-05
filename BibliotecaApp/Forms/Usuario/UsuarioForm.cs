@@ -24,13 +24,31 @@ namespace BibliotecaApp.Forms.Usuario
             this.Load += UsuarioForm_Load;
         }
 
-        
+        private EventHandler _empProrrogadoHandler;
+
+        private void EventosGlobais_EmprestimoProrrogado(object sender, EventArgs e)
+        {
+            // Garantir execução na UI thread
+            if (this.IsHandleCreated && !this.IsDisposed)
+            {
+                try
+                {
+                    this.BeginInvoke(new Action(() => CarregarUsuarios()));
+                }
+                catch
+                {
+                    // se BeginInvoke falhar por algum motivo (form fechando), ignore
+                }
+            }
+        }
+
 
         private void UsuarioForm_Load(object sender, EventArgs e)
         {
             BibliotecaApp.Utils.EventosGlobais.EmprestimoRealizado -= EventosGlobais_EmprestimoRealizado;
             BibliotecaApp.Utils.EventosGlobais.EmprestimoRealizado += EventosGlobais_EmprestimoRealizado;
-            BibliotecaApp.Utils.EventosGlobais.EmprestimoProrrogado += (s, e) => CarregarUsuarios();
+            BibliotecaApp.Utils.EventosGlobais.EmprestimoProrrogado -= EventosGlobais_EmprestimoProrrogado;
+            BibliotecaApp.Utils.EventosGlobais.EmprestimoProrrogado += EventosGlobais_EmprestimoProrrogado;
 
 
             var caminho = Conexao.CaminhoBanco;

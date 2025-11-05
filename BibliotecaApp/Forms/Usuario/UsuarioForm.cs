@@ -16,6 +16,8 @@ namespace BibliotecaApp.Forms.Usuario
 {
     public partial class UsuarioForm : Form
     {
+
+        private Timer filtroTimer;
         public UsuarioForm()
         {
             InitializeComponent();
@@ -71,6 +73,13 @@ namespace BibliotecaApp.Forms.Usuario
             // Estilo e colunas do grid antes de carregar
             ConfigurarGrid();
             CarregarUsuarios();
+
+            filtroTimer = new Timer();
+            filtroTimer.Interval = 200; // 200ms de espera
+            filtroTimer.Tick += FiltroTimer_Tick;
+
+            // Assina o evento TextChanged
+            txtNome.TextChanged += TxtNome_TextChanged;
         }
 
         private void btnFiltrar_Click(object sender, EventArgs e)
@@ -88,6 +97,25 @@ namespace BibliotecaApp.Forms.Usuario
             {
                 CarregarUsuarios();
             }));
+        }
+
+        private void TxtNome_TextChanged(object sender, EventArgs e)
+        {
+            // Reinicia o timer a cada tecla
+            filtroTimer.Stop();
+            filtroTimer.Start();
+        }
+
+        private void FiltroTimer_Tick(object sender, EventArgs e)
+        {
+            // O timer disparou, pare-o e execute a busca
+            filtroTimer.Stop();
+
+            // Reutiliza a lógica de filtragem (igual ao btnFiltrar_Click)
+            string nome = txtNome.Text?.Trim() ?? string.Empty;
+            string tipo = cmbTipoUsuario.SelectedItem?.ToString() ?? "Todos";
+            string emprestimo = cmbEmprestimo?.SelectedItem?.ToString() ?? "Todos";
+            CarregarUsuarios(nome, tipo, emprestimo);
         }
 
 

@@ -15,6 +15,8 @@ namespace BibliotecaApp.Forms.Livros
     {
         #region Construtor e Inicialização
 
+        private Timer filtroTimer;
+
         // Inicializa uma nova instância do formulário LivrosForm
         public LivrosForm()
         {
@@ -29,6 +31,13 @@ namespace BibliotecaApp.Forms.Livros
 
             // Assina o evento global para atualizar a lista automaticamente
             BibliotecaApp.Utils.EventosGlobais.LivroCadastradoOuAlterado += (s, e) => CarregarLivros();
+
+            filtroTimer = new Timer();
+            filtroTimer.Interval = 250; // 250ms de espera
+            filtroTimer.Tick += FiltroTimer_Tick;
+
+            // Assina o evento TextChanged
+            txtNome.TextChanged += TxtNome_TextChanged;
         }
 
         #endregion
@@ -507,7 +516,20 @@ END AS Status
 
         #endregion
 
+        private void TxtNome_TextChanged(object sender, EventArgs e)
+        {
+            // Reinicia o timer a cada tecla
+            filtroTimer.Stop();
+            filtroTimer.Start();
+        }
 
+        private void FiltroTimer_Tick(object sender, EventArgs e)
+        {
+            // O timer disparou, pare-o e execute a busca
+            filtroTimer.Stop();
+
+            btnProcurar_Click(sender, e);
+        }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {

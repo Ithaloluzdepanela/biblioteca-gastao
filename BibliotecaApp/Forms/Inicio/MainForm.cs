@@ -223,6 +223,22 @@ namespace BibliotecaApp.Forms.Inicio
         }
         private void AbrirMapeamentoModal()
         {
+            // --- INÍCIO DA MODIFICAÇÃO ---
+            // Verificamos se o usuário logado é o "Administrador"
+            // Conforme LoginForm.cs, apenas o admin terá esse nome exato na sessão.
+            if (string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show(
+                    "O Mapeamento de Turmas é uma função restrita a usuários do tipo 'Bibliotecário(a)'.",
+                    "Acesso Negado",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return; // Impede a abertura do formulário de mapeamento
+            }
+            // --- FIM DA MODIFICAÇÃO ---
+
+
             var mapeamentoForm = new BibliotecaApp.Forms.Usuario.MapeamentoDeTurmasWizardForm();
 
             // Configurar como modal dialog
@@ -237,6 +253,7 @@ namespace BibliotecaApp.Forms.Inicio
 
             if (resultado == DialogResult.OK)
             {
+                
                 MessageBox.Show(
                     "Mapeamento de turmas concluído com sucesso!",
                     "Sucesso",

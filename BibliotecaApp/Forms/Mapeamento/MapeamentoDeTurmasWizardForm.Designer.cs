@@ -37,6 +37,8 @@
             this.btnAnterior = new System.Windows.Forms.Button();
             this.btnProximo = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
+            this.lblFiltroNomeEtapa2 = new System.Windows.Forms.Label();
+            this.txtBuscaAlunoEtapa2 = new RoundedTextBox();
             this.panelPrincipal.SuspendLayout();
             this.pnlTutorial.SuspendLayout();
             this.panelEtapa1.SuspendLayout();
@@ -53,10 +55,10 @@
             this.panelPrincipal.Controls.Add(this.pnlTutorial);
             this.panelPrincipal.Controls.Add(this.progressBarWizard);
             this.panelPrincipal.Controls.Add(this.lblProgressoWizard);
+            this.panelPrincipal.Controls.Add(this.panelBotoes);
             this.panelPrincipal.Controls.Add(this.panelEtapa1);
             this.panelPrincipal.Controls.Add(this.panelEtapa2);
             this.panelPrincipal.Controls.Add(this.panelEtapa3);
-            this.panelPrincipal.Controls.Add(this.panelBotoes);
             this.panelPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelPrincipal.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panelPrincipal.Location = new System.Drawing.Point(0, 0);
@@ -159,6 +161,8 @@
             // panelEtapa2
             // 
             this.panelEtapa2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.panelEtapa2.Controls.Add(this.txtBuscaAlunoEtapa2);
+            this.panelEtapa2.Controls.Add(this.lblFiltroNomeEtapa2);
             this.panelEtapa2.Controls.Add(this.lblInstrucaoEtapa2);
             this.panelEtapa2.Controls.Add(this.lblFiltroEtapa2);
             this.panelEtapa2.Controls.Add(this.cmbFiltroTurmaEtapa2);
@@ -296,6 +300,46 @@
             this.btnCancelar.UseVisualStyleBackColor = false;
             this.btnCancelar.Click += new System.EventHandler(this.BtnCancelar_Click);
             // 
+            // lblFiltroNomeEtapa2
+            // 
+            this.lblFiltroNomeEtapa2.AutoSize = true;
+            this.lblFiltroNomeEtapa2.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
+            this.lblFiltroNomeEtapa2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.lblFiltroNomeEtapa2.Location = new System.Drawing.Point(486, 47);
+            this.lblFiltroNomeEtapa2.Name = "lblFiltroNomeEtapa2";
+            this.lblFiltroNomeEtapa2.Size = new System.Drawing.Size(100, 20);
+            this.lblFiltroNomeEtapa2.TabIndex = 4;
+            this.lblFiltroNomeEtapa2.Text = "Filtrar Nome:";
+            // 
+            // txtBuscaAlunoEtapa2
+            // 
+            this.txtBuscaAlunoEtapa2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtBuscaAlunoEtapa2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtBuscaAlunoEtapa2.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtBuscaAlunoEtapa2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtBuscaAlunoEtapa2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtBuscaAlunoEtapa2.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtBuscaAlunoEtapa2.BorderRadius = 10;
+            this.txtBuscaAlunoEtapa2.BorderThickness = 1;
+            this.txtBuscaAlunoEtapa2.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtBuscaAlunoEtapa2.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.txtBuscaAlunoEtapa2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtBuscaAlunoEtapa2.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtBuscaAlunoEtapa2.Location = new System.Drawing.Point(594, 41);
+            this.txtBuscaAlunoEtapa2.Name = "txtBuscaAlunoEtapa2";
+            this.txtBuscaAlunoEtapa2.Padding = new System.Windows.Forms.Padding(7);
+            this.txtBuscaAlunoEtapa2.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtBuscaAlunoEtapa2.PlaceholderFont = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.txtBuscaAlunoEtapa2.PlaceholderMarginLeft = 12;
+            this.txtBuscaAlunoEtapa2.PlaceholderText = "Digite aqui o nome para filtrar...";
+            this.txtBuscaAlunoEtapa2.SelectedText = "";
+            this.txtBuscaAlunoEtapa2.SelectionLength = 0;
+            this.txtBuscaAlunoEtapa2.SelectionStart = 0;
+            this.txtBuscaAlunoEtapa2.Size = new System.Drawing.Size(324, 31);
+            this.txtBuscaAlunoEtapa2.TabIndex = 5;
+            this.txtBuscaAlunoEtapa2.TextColor = System.Drawing.Color.Black;
+            this.txtBuscaAlunoEtapa2.UseSystemPasswordChar = false;
+            // 
             // MapeamentoDeTurmasWizardForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -356,5 +400,7 @@
         private System.Windows.Forms.Panel pnlTutorial;
         private System.Windows.Forms.Label lblTutorialTexto;
         private System.Windows.Forms.Label lblTutorialTitulo;
+        private System.Windows.Forms.Label lblFiltroNomeEtapa2;
+        private RoundedTextBox txtBuscaAlunoEtapa2;
     }
 }

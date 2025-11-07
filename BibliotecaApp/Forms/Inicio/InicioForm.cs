@@ -41,8 +41,9 @@ namespace BibliotecaApp.Forms.Inicio
         }
 
 
-        // Adicione este campo para armazenar o top usuário
-        private (string Nome, int Qtd) topUsuarioMaisEmprestimos = ("-", 0);
+        
+        private (int Id, string Nome, int Qtd) topUsuarioMaisEmprestimos = (0, "-", 0);
+
 
         // controls dinâmicos
         private FlowLayoutPanel flowCards;
@@ -780,7 +781,6 @@ ORDER BY DiasAtraso DESC, DataLimite ASC";
                 SetStatus("Carregando estatísticas...");
                 var stats = await Task.Run(() => ObterEstatisticas());
 
-                // NOVO: buscar top usuário (não-professor)
                 var topUser = await Task.Run(() => ObterTopUsuarioMaisEmprestimos());
                 topUsuarioMaisEmprestimos = topUser;
 
@@ -797,7 +797,7 @@ ORDER BY DiasAtraso DESC, DataLimite ASC";
                             var lbl = card.Controls.Find("val_TopUsuario", true).FirstOrDefault() as Label;
                             if (lbl != null)
                             {
-                                if (!string.IsNullOrWhiteSpace(topUsuarioMaisEmprestimos.Nome))
+                                if (!string.IsNullOrWhiteSpace(topUsuarioMaisEmprestimos.Nome) && topUsuarioMaisEmprestimos.Id > 0)
                                     lbl.Text = $"{topUsuarioMaisEmprestimos.Nome}\n({topUsuarioMaisEmprestimos.Qtd} empréstimos)";
                                 else
                                     lbl.Text = "-";
@@ -805,6 +805,7 @@ ORDER BY DiasAtraso DESC, DataLimite ASC";
                         }
                     }));
                 }
+
 
                 var estatisticasEmprestimos = await Task.Run(() => ObterEstatisticasEmprestimos());
                 var livrosPopulares = await Task.Run(() => ObterLivrosPopulares(10));
@@ -858,8 +859,9 @@ ORDER BY DiasAtraso DESC, DataLimite ASC";
 
         /// <summary>
         /// Retorna o usuário (exceto professores) que mais fez empréstimos.
+        /// Agora retorna (Id, Nome, Qtd) para evitar ambiguidade por nomes iguais.
         /// </summary>
-        private (string Nome, int Qtd) ObterTopUsuarioMaisEmprestimos()
+        private (int Id, string Nome, int Qtd) ObterTopUsuarioMaisEmprestimos()
         {
             try
             {
@@ -867,29 +869,42 @@ ORDER BY DiasAtraso DESC, DataLimite ASC";
                 {
                     conexao.Open();
                     string sql = @"
-SELECT TOP 1 u.Nome, COUNT(e.Id) AS Qtd
+SELECT TOP 1 u.Id, u.Nome, COUNT(e.Id) AS Qtd
 FROM Emprestimo e
 INNER JOIN Usuarios u ON e.Alocador = u.Id
 LEFT JOIN EmprestimoRapido er ON er.EmprestimoId = e.Id
 WHERE er.EmprestimoId IS NULL
   AND (u.TipoUsuario IS NULL OR u.TipoUsuario NOT LIKE 'Professor%')
-GROUP BY u.Nome
+GROUP BY u.Id, u.Nome
 ORDER BY Qtd DESC, u.Nome";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            string nome = reader.IsDBNull(0) ? "-" : reader.GetString(0);
-                            int qtd = reader.IsDBNull(1) ? 0 : Convert.ToInt32(reader.GetValue(1));
-                            return (nome, qtd);
+                            int id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
+                            string nome = reader.IsDBNull(1) ? "-" : reader.GetString(1);
+                            int qtd = reader.IsDBNull(2) ? 0 : Convert.ToInt32(reader.GetValue(2));
+                            return (id, nome, qtd);
                         }
                     }
                 }
             }
-            catch (Exception ex) { try { var logDir = Path.Combine(Application.StartupPath, "logs"); Directory.CreateDirectory(logDir); File.AppendAllText(Path.Combine(logDir, "inicio_obter_top_usuario.log"), DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine); } catch { } }
-            return ("-", 0);
+            catch (Exception ex)
+            {
+                try
+                {
+                    var logDir = Path.Combine(Application.StartupPath, "logs");
+                    Directory.CreateDirectory(logDir);
+                    File.AppendAllText(Path.Combine(logDir, "inicio_obter_top_usuario.log"),
+                        DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
+                }
+                catch { }
+            }
+            return (0, "-", 0);
         }
+
+
 
         #region Métodos de obtenção (mantidos do seu código original)
         private List<EstatisticaEmprestimo> ObterEstatisticasEmprestimos()
@@ -1032,8 +1047,12 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
                     using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM Usuarios", conexao))
                         dict["Usuarios"] = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
 
-                    using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM Livros", conexao))
-                        dict["Livros"] = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                    
+                    using (var cmd = new SqlCeCommand("SELECT COALESCE(SUM(Quantidade), 0) FROM Livros", conexao))
+                    {
+                        var result = cmd.ExecuteScalar();
+                        dict["Livros"] = result != null ? Convert.ToInt32(result) : 0;
+                    }
 
                     using (var cmd = new SqlCeCommand("SELECT COUNT(*) FROM Emprestimo WHERE Status <> 'Devolvido'", conexao))
                         dict["EmpAtivos"] = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
@@ -1370,13 +1389,13 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
                 var waNumber = NormalizePhoneForWa(telefone);
                 if (!string.IsNullOrEmpty(waNumber))
                 {
-                    // Monta mensagem do WhatsApp: só menciona turma se houver turma válida
+                    // Monta mensagem do WhatsApp usando a Versão 2 (cordial)
                     string turmaParaMsg = string.IsNullOrWhiteSpace(devedor?.Turma) ? "" : $" da Turma {devedor.Turma}";
                     string nomeParaMsg = string.IsNullOrWhiteSpace(devedor?.Nome) ? "responsável" : devedor.Nome;
-                    string livroParaMsg= string.IsNullOrWhiteSpace(devedor?.Livro) ? "livro" : $"do livro *{devedor.Livro}*";
-                  
+                    string livroParaMsg = string.IsNullOrWhiteSpace(devedor?.Livro) ? "livro" : $@"o livro *""{devedor.Livro}""*";
 
-                    string msg = $"Olá! Aqui é da Biblioteca da Gastão Valle. Estamos entrando em contato referente ao empréstimo em atraso {livroParaMsg} em nome de *{nomeParaMsg}*{turmaParaMsg}. Podemos falar?";
+                    // Versão 2: cordial e direta
+                    string msg = $"📚 Biblioteca Gastão Valle\nOlá! Tudo bem? Verificamos que {livroParaMsg}, emprestado em nome de *{nomeParaMsg}*{turmaParaMsg}, está com atraso na devolução.\nPodemos conversar sobre isso?";
                     string waUrl = $"https://wa.me/{waNumber}?text={Uri.EscapeDataString(msg)}";
 
                     var qrWriter = new ZXing.BarcodeWriter
@@ -1397,7 +1416,7 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
                     {
                         qrBmp.Save(msQr, System.Drawing.Imaging.ImageFormat.Png);
                         var qrImg = iTextSharp.text.Image.GetInstance(msQr.ToArray());
-                        qrImg.ScaleAbsolute(105f, 105f); // tamanho maior
+                        qrImg.ScaleAbsolute(106f, 106f); // tamanho maior
                         qrImg.Alignment = Element.ALIGN_RIGHT;
                         rightCell.AddElement(qrImg);
                     }
@@ -1418,6 +1437,7 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
             MessageBox.Show("Carta de cobrança gerada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             try { Process.Start(dlg.FileName); } catch { }
         }
+
 
 
 

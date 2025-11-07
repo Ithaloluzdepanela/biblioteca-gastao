@@ -276,7 +276,17 @@ namespace BibliotecaApp.Forms.Livros
                         dgvLivros.AutoGenerateColumns = false;
                         dgvLivros.DataSource = tabela;
 
-                        lblTotal.Text = $"Total de livros encontrados: {tabela.Rows.Count}";
+                        lblTitulos.Text = $"Títulos encontrados: {tabela.Rows.Count}";
+
+                        // Soma todas as unidades (coluna "Quantidade")
+                        int totalUnidades = 0;
+                        foreach (DataRow r in tabela.Rows)
+                        {
+                            int q = 0;
+                            int.TryParse(r["Quantidade"]?.ToString() ?? "0", out q);
+                            totalUnidades += q;
+                        }
+                        lblUnidades.Text = $"Unidades encontradas: {totalUnidades}";
 
                         // Oculta o campo "disponibilidade" caso ainda exista no banco
                         if (dgvLivros.Columns.Contains("disponibilidade"))
@@ -287,6 +297,9 @@ namespace BibliotecaApp.Forms.Livros
                 {
                     dgvLivros.DataSource = null;
                     MessageBox.Show("Erro ao procurar: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    lblTitulos.Text = "Títulos encontrados: 0";
+                    lblUnidades.Text = "Unidades encontradas: 0";
                 }
             }
         }
@@ -392,12 +405,30 @@ END AS Status
                         }
 
                         dgvLivros.DataSource = tabela;
+
+
+
+                        // Atualiza os contadores
+                        lblTitulos.Text = $"Títulos encontrados: {tabela.Rows.Count}";
+
+                        int totalUnidades = 0;
+                        foreach (DataRow r in tabela.Rows)
+                        {
+                            int q = 0;
+                            int.TryParse(r["Quantidade"]?.ToString() ?? "0", out q);
+                            totalUnidades += q;
+                        }
+                        lblUnidades.Text = $"Unidades encontradas: {totalUnidades}";
+
                     }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao carregar livros: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                lblTitulos.Text = "Títulos encontrados: 0";
+                lblUnidades.Text = "Unidades encontradas: 0";
             }
         }
 

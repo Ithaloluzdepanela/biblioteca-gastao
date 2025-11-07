@@ -32,12 +32,14 @@ namespace BibliotecaApp.Forms.Inicio
         private class EmprestimoAtrasadoInfo
         {
             public int Id { get; set; }
+            public int UsuarioId { get; set; }    // <-- novo: id do usuário (PK)
             public string Nome { get; set; }
             public string Turma { get; set; }
             public string Livro { get; set; }
             public DateTime DataDevolucao { get; set; }
             public int DiasAtraso { get; set; }
         }
+
 
         // Adicione este campo para armazenar o top usuário
         private (string Nome, int Qtd) topUsuarioMaisEmprestimos = ("-", 0);
@@ -136,7 +138,7 @@ namespace BibliotecaApp.Forms.Inicio
             };
             topPanelInside.Controls.Add(flowCards);
 
-            var cardsInfo = new[] 
+            var cardsInfo = new[]
             {
                 new { Key = "Usuarios", Title = "Usuários", Sub = "Total de usuários", Color = Color.FromArgb(30,61,88) },
                 new { Key = "Livros", Title = "Livros", Sub = "Total de livros", Color = Color.FromArgb(9,74,158) },
@@ -259,7 +261,7 @@ namespace BibliotecaApp.Forms.Inicio
                 using (var pen = new Pen(borderColor)) e.Graphics.DrawRectangle(pen, rect);
 
                 TextRenderer.DrawText(e.Graphics, tabPage.Text,
-                    new System.Drawing. Font("Segoe UI", 9, isSelected ? FontStyle.Bold : FontStyle.Regular),
+                    new System.Drawing.Font("Segoe UI", 9, isSelected ? FontStyle.Bold : FontStyle.Regular),
                     rect, textColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             };
 
@@ -298,7 +300,7 @@ namespace BibliotecaApp.Forms.Inicio
 
             tabDevedores.Controls.Add(dgvDevedores);
 
-           
+
 
             var dgvEstatEmp = CriarDataGridBasico("dgvEstatisticasEmprestimos");
             dgvEstatEmp.Margin = new Padding(12, topMarginDataGrid, 12, 12);
@@ -307,15 +309,15 @@ namespace BibliotecaApp.Forms.Inicio
                 new DataGridViewTextBoxColumn { Name = "Valor", HeaderText = "Valor", DataPropertyName = "Valor", Width = 100 },
                 new DataGridViewTextBoxColumn { Name = "Detalhes", HeaderText = "Detalhes", DataPropertyName = "Detalhes", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill }
             });
-          
+
             tabEstEmp.Controls.Add(dgvEstatEmp);
 
-           
+
 
             // === Livros Populares: ajustar colunas para evitar truncamento do título ===
             var dgvLivrosPop = CriarDataGridBasico("dgvLivrosPopulares");
             dgvLivrosPop.Margin = new Padding(12, topMarginDataGrid, 12, 12);
-            
+
 
 
             // Fazemos colunas com sizing misto:
@@ -337,7 +339,7 @@ namespace BibliotecaApp.Forms.Inicio
                         if (pos == 1)
                         {
                             e.CellStyle.ForeColor = Color.Gold; // dourado
-                            e.CellStyle.Font = new System.Drawing.Font(grid.Font, FontStyle.Bold); 
+                            e.CellStyle.Font = new System.Drawing.Font(grid.Font, FontStyle.Bold);
                             e.Value = "🏆 #1"; // troféu e #1
                         }
                         else
@@ -352,7 +354,7 @@ namespace BibliotecaApp.Forms.Inicio
             };
 
             // adiciona na ordem
-            dgvLivrosPop.Columns.AddRange(new DataGridViewColumn[] { colRanking,colTitulo, colAutor, colEmp, colDisp });
+            dgvLivrosPop.Columns.AddRange(new DataGridViewColumn[] { colRanking, colTitulo, colAutor, colEmp, colDisp });
 
             // Depois que o controle estiver em tela, definimos colTitulo como Fill para aproveitar espaço restante.
             // (Aplicamos FillWeight para priorizar bastante espaço ao título)
@@ -363,7 +365,7 @@ namespace BibliotecaApp.Forms.Inicio
             colDisp.FillWeight = 30;
 
             // Ajustes visuais
-            colRanking.DefaultCellStyle.Alignment=DataGridViewContentAlignment.MiddleCenter;
+            colRanking.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             colTitulo.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
             colTitulo.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             colAutor.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -371,7 +373,7 @@ namespace BibliotecaApp.Forms.Inicio
             colDisp.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
 
-           
+
 
             tabLivros.Controls.Add(dgvLivrosPop);
 
@@ -410,8 +412,8 @@ namespace BibliotecaApp.Forms.Inicio
                     return;
                 }
                 // Busca todos os livros atrasados do aluno
-                var livros = this.ObterLivrosAtrasadosPorAluno(emprestimo.Nome, emprestimo.Turma);
-                GerarCartaCobrancaPDF(emprestimo, livros);
+                var livros = this.ObterLivrosAtrasadosPorUsuario(emprestimo.UsuarioId);
+                GerarCartaCobrancaPDF(emprestimo, livros);  
             }
         }
 
@@ -463,7 +465,7 @@ namespace BibliotecaApp.Forms.Inicio
                 Name = "val_" + key,
                 Text = "0",
                 ForeColor = Color.FromArgb(20, 42, 60),
-                Font = new  System.Drawing.Font("Segoe UI", 20F, FontStyle.Bold),
+                Font = new System.Drawing.Font("Segoe UI", 20F, FontStyle.Bold),
                 Location = new Point(12, header.Bottom + 6),
                 AutoSize = false,
                 Size = new Size(card.Width - 24, 36)
@@ -509,7 +511,7 @@ namespace BibliotecaApp.Forms.Inicio
             AplicarEstiloDataGridView(dgv);
             dgv.DefaultCellStyle.SelectionBackColor = ColorTranslator.FromHtml("#E7EEF7");
             dgv.DefaultCellStyle.SelectionForeColor = Color.FromArgb(20, 42, 60);
-        
+
 
             dgv.CellMouseEnter += DataGrid_CellMouseEnter;
             dgv.CellMouseLeave += DataGrid_CellMouseLeave;
@@ -544,8 +546,8 @@ namespace BibliotecaApp.Forms.Inicio
             dgv.ColumnHeadersHeight = 36;
             dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 
-            
-      
+
+
             dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = dgv.ColumnHeadersDefaultCellStyle.BackColor;
             dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = dgv.ColumnHeadersDefaultCellStyle.ForeColor;
 
@@ -658,7 +660,7 @@ namespace BibliotecaApp.Forms.Inicio
             {
                 existing.Visible = false;
             }
-}
+        }
 
         private List<EmprestimoAtrasadoInfo> ObterEmprestimosAtrasados()
         {
@@ -668,10 +670,11 @@ namespace BibliotecaApp.Forms.Inicio
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    // Considera DataProrrogacao quando existir; senão, DataDevolucao
+                    // agora trazemos também u.Id (UsuarioId)
                     string sql = @"
 SELECT 
     e.Id,
+    u.Id AS UsuarioId,
     u.Nome,
     u.Turma,
     l.Nome AS Livro,
@@ -691,12 +694,12 @@ ORDER BY DiasAtraso DESC, DataLimite ASC";
                             lista.Add(new EmprestimoAtrasadoInfo
                             {
                                 Id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0),
-                                Nome = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                                Turma = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                                Livro = reader.IsDBNull(3) ? "" : reader.GetString(3),
-                                // Exibimos DataLimite na coluna "Data Devolução" (sem mudar o layout)
-                                DataDevolucao = reader.IsDBNull(4) ? DateTime.MinValue : reader.GetDateTime(4),
-                                DiasAtraso = reader.IsDBNull(5) ? 0 : reader.GetInt32(5)
+                                UsuarioId = reader.IsDBNull(1) ? 0 : reader.GetInt32(1),
+                                Nome = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                                Turma = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                                Livro = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                                DataDevolucao = reader.IsDBNull(5) ? DateTime.MinValue : reader.GetDateTime(5),
+                                DiasAtraso = reader.IsDBNull(6) ? 0 : reader.GetInt32(6)
                             });
                         }
                     }
@@ -872,21 +875,21 @@ WHERE er.EmprestimoId IS NULL
   AND (u.TipoUsuario IS NULL OR u.TipoUsuario NOT LIKE 'Professor%')
 GROUP BY u.Nome
 ORDER BY Qtd DESC, u.Nome";
-            using (var cmd = new SqlCeCommand(sql, conexao))
-            using (var reader = cmd.ExecuteReader())
-            {
-                if (reader.Read())
-                {
-                    string nome = reader.IsDBNull(0) ? "-" : reader.GetString(0);
-                    int qtd = reader.IsDBNull(1) ? 0 : Convert.ToInt32(reader.GetValue(1));
-                    return (nome, qtd);
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string nome = reader.IsDBNull(0) ? "-" : reader.GetString(0);
+                            int qtd = reader.IsDBNull(1) ? 0 : Convert.ToInt32(reader.GetValue(1));
+                            return (nome, qtd);
+                        }
+                    }
                 }
             }
+            catch (Exception ex) { try { var logDir = Path.Combine(Application.StartupPath, "logs"); Directory.CreateDirectory(logDir); File.AppendAllText(Path.Combine(logDir, "inicio_obter_top_usuario.log"), DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine); } catch { } }
+            return ("-", 0);
         }
-    }
-    catch (Exception ex) { try { var logDir = Path.Combine(Application.StartupPath, "logs"); Directory.CreateDirectory(logDir); File.AppendAllText(Path.Combine(logDir, "inicio_obter_top_usuario.log"), DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine); } catch { } }
-    return ("-", 0);
-}
 
         #region Métodos de obtenção (mantidos do seu código original)
         private List<EstatisticaEmprestimo> ObterEstatisticasEmprestimos()
@@ -953,51 +956,51 @@ WHERE
 GROUP BY l.Id, l.Nome, l.Autor, l.Quantidade
 ORDER BY TotalEmprestimos DESC, l.Nome";
 
-            using (var cmd = new SqlCeCommand(sql, conexao))
-            {
-                cmd.Parameters.AddWithValue("@inicio", inicioJanela);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    int posicao = 1;
-                    while (reader.Read())
+                    using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        var nome = reader.IsDBNull(0) ? "" : reader.GetString(0);
-                        var autor = reader.IsDBNull(1) ? "" : reader.GetString(1);
-                        int emprestimos = 0;
-                        int quantidade = 0;
-                        try { emprestimos = reader.IsDBNull(2) ? 0 : Convert.ToInt32(reader.GetValue(2)); } catch { }
-                        try { quantidade = reader.IsDBNull(3) ? 0 : Convert.ToInt32(reader.GetValue(3)); } catch { }
+                        cmd.Parameters.AddWithValue("@inicio", inicioJanela);
 
-                        string disponibilidade = quantidade > 0 ? "Disponível" : "Indisponível";
-                        if (quantidade > 0 && quantidade < 5) disponibilidade = "Poucas unidades";
-
-                        lista.Add(new LivroPopular
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            Posicao = posicao++,
-                            Titulo = nome,
-                            Autor = autor,
-                            Emprestimos = emprestimos,
-                            Disponibilidade = disponibilidade
-                        });
+                            int posicao = 1;
+                            while (reader.Read())
+                            {
+                                var nome = reader.IsDBNull(0) ? "" : reader.GetString(0);
+                                var autor = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                                int emprestimos = 0;
+                                int quantidade = 0;
+                                try { emprestimos = reader.IsDBNull(2) ? 0 : Convert.ToInt32(reader.GetValue(2)); } catch { }
+                                try { quantidade = reader.IsDBNull(3) ? 0 : Convert.ToInt32(reader.GetValue(3)); } catch { }
+
+                                string disponibilidade = quantidade > 0 ? "Disponível" : "Indisponível";
+                                if (quantidade > 0 && quantidade < 5) disponibilidade = "Poucas unidades";
+
+                                lista.Add(new LivroPopular
+                                {
+                                    Posicao = posicao++,
+                                    Titulo = nome,
+                                    Autor = autor,
+                                    Emprestimos = emprestimos,
+                                    Disponibilidade = disponibilidade
+                                });
+                            }
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                try
+                {
+                    var logDir = Path.Combine(Application.StartupPath, "logs");
+                    Directory.CreateDirectory(logDir);
+                    File.AppendAllText(Path.Combine(logDir, "inicio_obter_livros.log"),
+                        DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
+                }
+                catch { }
+            }
+            return lista;
         }
-    }
-    catch (Exception ex)
-    {
-        try
-        {
-            var logDir = Path.Combine(Application.StartupPath, "logs");
-            Directory.CreateDirectory(logDir);
-            File.AppendAllText(Path.Combine(logDir, "inicio_obter_livros.log"),
-                DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
-        }
-        catch { }
-    }
-    return lista;
-}
 
         public class EstatisticaEmprestimo { public string Categoria { get; set; } public double Valor { get; set; } public string Detalhes { get; set; } }
         public class LivroPopular { public int Posicao { get; set; } public string Titulo { get; set; } public string Autor { get; set; } public int Emprestimos { get; set; } public string Disponibilidade { get; set; } }
@@ -1205,233 +1208,254 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
             }
 
             // Buscar os livros em atraso do aluno
-            var livros = this.ObterLivrosAtrasadosPorAluno(emprestimo.Nome, emprestimo.Turma);
+            var livros = this.ObterLivrosAtrasadosPorUsuario(emprestimo.UsuarioId);
             GerarCartaCobrancaPDF(emprestimo, livros);
         }
 
-private void GerarCartaCobrancaPDF(EmprestimoAtrasadoInfo devedor, List<(int Id, string Nome, string Autor)> livros)
-{
-    // Buscar telefone do usuário
-    string telefone = "";
-    try
-    {
-        using (var conexao = Conexao.ObterConexao())
+        private void GerarCartaCobrancaPDF(EmprestimoAtrasadoInfo devedor, List<(int Id, string Nome, string Autor)> livros)
         {
-            conexao.Open();
-            string sql = @"SELECT Telefone FROM Usuarios WHERE Nome = @nome AND Turma = @turma";
-            using (var cmd = new SqlCeCommand(sql, conexao))
+            // Buscar telefone do usuário (agora por Id)
+            string telefone = "";
+            try
             {
-                cmd.Parameters.AddWithValue("@nome", devedor.Nome);
-                cmd.Parameters.AddWithValue("@turma", devedor.Turma);
-                var result = cmd.ExecuteScalar();
-                telefone = result != null ? result.ToString() : "";
-            }
-        }
-    }
-    catch { telefone = ""; }
-
-    var dlg = new SaveFileDialog
-    {
-        Filter = "PDF (*.pdf)|*.pdf",
-        FileName = $"Carta_Cobranca_{devedor.Nome}.pdf"
-    };
-    if (dlg.ShowDialog() != DialogResult.OK) return;
-
-    // Criação do documento PDF
-    Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
-    using (var fs = new FileStream(dlg.FileName, FileMode.Create, FileAccess.Write, FileShare.None))
-    {
-        PdfWriter writer = PdfWriter.GetInstance(doc, fs);
-        doc.Open();
-
-        // Fontes
-        var fontTitle = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14);
-        var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 11);
-        var fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11);
-        var fontSmall = FontFactory.GetFont(FontFactory.HELVETICA, 9);
-
-        // Cabeçalho com brasões
-        iTextSharp.text.Image imgEsq = null, imgDir = null;
-        using (var ms = new MemoryStream())
-        {
-            Properties.Resources.Brasao_mg.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-            imgEsq = iTextSharp.text.Image.GetInstance(ms.ToArray());
-            imgEsq.ScaleAbsolute(48f, 48f);
-            imgEsq.Alignment = Element.ALIGN_LEFT;
-        }
-        using (var ms = new MemoryStream())
-        {
-            Properties.Resources.brasao_Gastao_Black.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-            imgDir = iTextSharp.text.Image.GetInstance(ms.ToArray());
-            imgDir.ScaleAbsolute(48f, 48f);
-            imgDir.Alignment = Element.ALIGN_RIGHT;
-        }
-
-        var headerTable = new PdfPTable(3) { WidthPercentage = 100 };
-        headerTable.SetWidths(new float[] { 1.2f, 5f, 1.2f });
-
-        var cellImgEsq = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_LEFT, VerticalAlignment = Element.ALIGN_MIDDLE };
-        if (imgEsq != null) cellImgEsq.AddElement(imgEsq);
-        headerTable.AddCell(cellImgEsq);
-
-        var cellTitle = new PdfPCell(new Phrase("ESCOLA ESTADUAL PROFESSOR GASTÃO VALLE   EEPGV", fontTitle))
-        { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER, VerticalAlignment = Element.ALIGN_MIDDLE };
-        headerTable.AddCell(cellTitle);
-
-        var cellImgDir = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE };
-        if (imgDir != null) cellImgDir.AddElement(imgDir);
-        headerTable.AddCell(cellImgDir);
-        headerTable.SpacingAfter = 30f;
-        doc.Add(headerTable);
-
-        // Corpo
-        doc.Add(new Paragraph("Eu ____________________________________________________________", fontNormal) { SpacingAfter = 20f });
-
-        var pCompromisso = new Paragraph();
-        pCompromisso.Add(new Chunk("Assumo a responsabilidade de devolver todos os livros (descritos abaixo) que estão em meu poder. Ciente que a ", fontNormal));
-        pCompromisso.Add(new Chunk("não devolução", fontBold));
-        pCompromisso.Add(new Chunk(" dos mesmos, poderá gerar pendência na liberação da bibliotecária, podendo impedir a expedição dos meus documentos quando for solicitado.", fontNormal));
-        pCompromisso.SpacingAfter = 18f;
-        doc.Add(pCompromisso);
-
-        // Livros
-        doc.Add(new Paragraph("Livro:", fontBold) { SpacingAfter = 6f });
-        if (livros.Count == 0)
-        {
-            doc.Add(new Paragraph("Nenhum livro em atraso encontrado.", fontSmall) { SpacingAfter = 13f });
-        }
-        else
-        {
-            foreach (var livro in livros)
-            {
-                doc.Add(new Paragraph($"ID: {livro.Id}", fontNormal));
-                doc.Add(new Paragraph($"Nome: {livro.Nome}", fontNormal));
-                doc.Add(new Paragraph($"Autor: {livro.Autor}", fontNormal) { SpacingAfter = 14f });
-            }
-        }
-        for (int i = livros.Count; i < 4; i++)
-            doc.Add(new Paragraph("________________________________________________________________________________", fontNormal) { SpacingAfter = 3f });
-
-        doc.Add(new Paragraph("\n", fontNormal));
-
-        // ===== Bloco Único: Esquerda (Turma/Data/Contato) + Direita (QR Code) =====
-        // Normalizador de telefone para wa.me
-        string NormalizePhoneForWa(string phone)
-        {
-            if (string.IsNullOrWhiteSpace(phone)) return null;
-            var digits = new string(phone.Where(char.IsDigit).ToArray());
-            if (string.IsNullOrEmpty(digits)) return null;
-            if (digits.StartsWith("55")) return digits;           // já tem DDI Brasil
-            if (digits.Length >= 10 && digits.Length <= 11) return "55" + digits; // DDD + número
-            return digits; // fallback
-        }
-
-        var infoTable = new PdfPTable(2) { WidthPercentage = 100, SpacingBefore = 4f, SpacingAfter = 26f };
-        infoTable.SetWidths(new float[] { 3.6f, 1.4f });
-
-        // Esquerda: textos empilhados
-        var leftCell = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, PaddingRight = 10f, VerticalAlignment = Element.ALIGN_MIDDLE };
-        var pTurma = new Paragraph();
-        pTurma.Add(new Chunk("Turma: ", fontNormal));
-        pTurma.Add(new Chunk(devedor.Turma + "    ", fontBold));
-        pTurma.Add(new Chunk("Turno: ___________", fontNormal));
-
-        var dataAtual = DateTime.Now;
-        var pData = new Paragraph($"Data da comunicação: ____/ {dataAtual:MM/yyyy}", fontNormal);
-        string contatoStr = "Contato do Aluno/Responsável: " + (string.IsNullOrWhiteSpace(telefone) ? "___________________________" : telefone);
-        var pContato = new Paragraph(contatoStr, fontNormal);
-
-        leftCell.AddElement(pTurma);
-        leftCell.AddElement(new Paragraph(" ", fontSmall)); // pequeno espaçamento
-        leftCell.AddElement(pData);
-        leftCell.AddElement(new Paragraph(" ", fontSmall));
-        leftCell.AddElement(pContato);
-        infoTable.AddCell(leftCell);
-
-        // Direita: somente QR Code (maior) ou vazio se não houver telefone
-        var rightCell = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE };
-        var waNumber = NormalizePhoneForWa(telefone);
-        if (!string.IsNullOrEmpty(waNumber))
-        {
-            string msg = $"Olá! Aqui é da biblioteca. Referente ao empréstimo em atraso do(a) {devedor.Nome} (da Turma {devedor.Turma}). Podemos falar?";
-            string waUrl = $"https://wa.me/{waNumber}?text={Uri.EscapeDataString(msg)}";
-
-            var qrWriter = new ZXing.BarcodeWriter
-            {
-                Format = ZXing.BarcodeFormat.QR_CODE,
-                Options = new QrCodeEncodingOptions
+                using (var conexao = Conexao.ObterConexao())
                 {
-                    Width = 280,
-                    Height = 280,
-                    Margin = 1,
-                    CharacterSet = "UTF-8",
-                    ErrorCorrection = ZXing.QrCode.Internal.ErrorCorrectionLevel.M
-                }
-            };
-
-            using (var qrBmp = qrWriter.Write(waUrl))
-            using (var msQr = new MemoryStream())
-            {
-                qrBmp.Save(msQr, System.Drawing.Imaging.ImageFormat.Png);
-                var qrImg = iTextSharp.text.Image.GetInstance(msQr.ToArray());
-                qrImg.ScaleAbsolute(105f, 105f); // maior que antes
-                qrImg.Alignment = Element.ALIGN_RIGHT;
-                rightCell.AddElement(qrImg);
-            }
-        }
-        infoTable.AddCell(rightCell);
-
-        doc.Add(infoTable);
-        // ===== Fim do bloco único =====
-
-        // Assinatura
-        doc.Add(new Paragraph("___________________________________________________", fontNormal) { Alignment = Element.ALIGN_CENTER, SpacingAfter = 2f });
-        doc.Add(new Paragraph("ASSINATURA DO ALUNO/RESPONSÁVEL", fontNormal) { Alignment = Element.ALIGN_CENTER });
-
-        doc.Close();
-    }
-
-    MessageBox.Show("Carta de cobrança gerada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-    try { Process.Start(dlg.FileName); } catch { }
-}
-
-        private List<(int Id, string Nome, string Autor)> ObterLivrosAtrasadosPorAluno(string nomeAluno, string turma)
-{
-    var livros = new List<(int, string, string)>();
-    try
-    {
-        using (var conexao = Conexao.ObterConexao())
-        {
-            conexao.Open();
-            string sql = @"
-SELECT l.Id, l.Nome, l.Autor
-FROM Emprestimo e
-INNER JOIN Usuarios u ON e.Alocador = u.Id
-INNER JOIN Livros l ON e.Livro = l.Id
-WHERE u.Nome = @nome
-  AND u.Turma = @turma
-  AND e.Status <> 'Devolvido'
-  AND COALESCE(e.DataProrrogacao, e.DataDevolucao) < GETDATE()";
-            using (var cmd = new SqlCeCommand(sql, conexao))
-            {
-                cmd.Parameters.AddWithValue("@nome", nomeAluno);
-                cmd.Parameters.AddWithValue("@turma", turma);
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
+                    conexao.Open();
+                    string sql = @"SELECT Telefone FROM Usuarios WHERE Id = @id";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        int id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
-                        string nome = reader.IsDBNull(1) ? "" : reader.GetString(1);
-                        string autor = reader.IsDBNull(2) ? "" : reader.GetString(2);
-                        livros.Add((id, nome, autor));
+                        cmd.Parameters.AddWithValue("@id", devedor.UsuarioId);
+                        var result = cmd.ExecuteScalar();
+                        telefone = result != null ? result.ToString() : "";
                     }
                 }
             }
+            catch { telefone = ""; }
+
+            // Nome de arquivo seguro
+            string safeName = string.IsNullOrWhiteSpace(devedor?.Nome) ? "Carta_Cobranca" : string.Concat(devedor.Nome.Split(Path.GetInvalidFileNameChars()));
+            var dlg = new SaveFileDialog
+            {
+                Filter = "PDF (*.pdf)|*.pdf",
+                FileName = $"Carta_Cobranca_{safeName}.pdf"
+            };
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+
+            // Criação do documento PDF
+            Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
+            using (var fs = new FileStream(dlg.FileName, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+                doc.Open();
+
+                // Fontes
+                var fontTitle = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14);
+                var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 11);
+                var fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11);
+                var fontSmall = FontFactory.GetFont(FontFactory.HELVETICA, 9);
+
+                // Cabeçalho com brasões
+                iTextSharp.text.Image imgEsq = null, imgDir = null;
+                using (var ms = new MemoryStream())
+                {
+                    Properties.Resources.Brasao_mg.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                    imgEsq = iTextSharp.text.Image.GetInstance(ms.ToArray());
+                    imgEsq.ScaleAbsolute(48f, 48f);
+                    imgEsq.Alignment = Element.ALIGN_LEFT;
+                }
+                using (var ms = new MemoryStream())
+                {
+                    Properties.Resources.brasao_Gastao_Black.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                    imgDir = iTextSharp.text.Image.GetInstance(ms.ToArray());
+                    imgDir.ScaleAbsolute(48f, 48f);
+                    imgDir.Alignment = Element.ALIGN_RIGHT;
+                }
+
+                var headerTable = new PdfPTable(3) { WidthPercentage = 100 };
+                headerTable.SetWidths(new float[] { 1.2f, 5f, 1.2f });
+
+                var cellImgEsq = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_LEFT, VerticalAlignment = Element.ALIGN_MIDDLE };
+                if (imgEsq != null) cellImgEsq.AddElement(imgEsq);
+                headerTable.AddCell(cellImgEsq);
+
+                var cellTitle = new PdfPCell(new Phrase("ESCOLA ESTADUAL PROFESSOR GASTÃO VALLE   EEPGV", fontTitle))
+                { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER, VerticalAlignment = Element.ALIGN_MIDDLE };
+                headerTable.AddCell(cellTitle);
+
+                var cellImgDir = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE };
+                if (imgDir != null) cellImgDir.AddElement(imgDir);
+                headerTable.AddCell(cellImgDir);
+                headerTable.SpacingAfter = 30f;
+                doc.Add(headerTable);
+
+                // Corpo
+                doc.Add(new Paragraph("Eu ____________________________________________________________", fontNormal) { SpacingAfter = 20f });
+
+                var pCompromisso = new Paragraph();
+                pCompromisso.Add(new Chunk("Assumo a responsabilidade de devolver todos os livros (descritos abaixo) que estão em meu poder. Ciente que a ", fontNormal));
+                pCompromisso.Add(new Chunk("não devolução", fontBold));
+                pCompromisso.Add(new Chunk(" dos mesmos, poderá gerar pendência na liberação da bibliotecária, podendo impedir a expedição dos meus documentos quando for solicitado.", fontNormal));
+                pCompromisso.SpacingAfter = 18f;
+                doc.Add(pCompromisso);
+
+                // Livros
+                doc.Add(new Paragraph("Livro:", fontBold) { SpacingAfter = 6f });
+                if (livros == null || livros.Count == 0)
+                {
+                    doc.Add(new Paragraph("Nenhum livro em atraso encontrado.", fontSmall) { SpacingAfter = 13f });
+                }
+                else
+                {
+                    foreach (var livro in livros)
+                    {
+                        doc.Add(new Paragraph($"ID: {livro.Id}", fontNormal));
+                        doc.Add(new Paragraph($"Nome: {livro.Nome}", fontNormal));
+                        doc.Add(new Paragraph($"Autor: {livro.Autor}", fontNormal) { SpacingAfter = 14f });
+                    }
+                }
+                for (int i = (livros?.Count ?? 0); i < 4; i++)
+                    doc.Add(new Paragraph("________________________________________________________________________________", fontNormal) { SpacingAfter = 3f });
+
+                doc.Add(new Paragraph("\n", fontNormal));
+
+                // ===== Bloco Único: Esquerda (Nome/Turma/Data/Contato) + Direita (QR Code) =====
+                // Normalizador de telefone para wa.me (adiciona DDI 55 quando apropriado)
+                string NormalizePhoneForWa(string phone)
+                {
+                    if (string.IsNullOrWhiteSpace(phone)) return null;
+                    var digits = new string(phone.Where(char.IsDigit).ToArray());
+                    if (string.IsNullOrEmpty(digits)) return null;
+                    // já tem DDI Brasil?
+                    if (digits.StartsWith("55")) return digits;
+                    // números locais com 10 ou 11 dígitos: adiciona 55
+                    if (digits.Length == 10 || digits.Length == 11) return "55" + digits;
+                    // se estiver no formato internacional mas sem 55, tenta usar como está
+                    if (digits.Length > 4) return digits;
+                    return null;
+                }
+
+                var infoTable = new PdfPTable(2) { WidthPercentage = 100, SpacingBefore = 4f, SpacingAfter = 26f };
+                infoTable.SetWidths(new float[] { 3.6f, 1.4f });
+
+                var leftCell = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, PaddingRight = 10f, VerticalAlignment = Element.ALIGN_MIDDLE };
+
+                // Montagem condicional: se não houver turma, mostrar só "Nome: {Nome}".
+                // Se houver turma, mostrar "Nome: {Nome}    Turma: {Turma}    Turno: ______"
+                var pInfoTopo = new Paragraph();
+                string nomeDisplay = string.IsNullOrWhiteSpace(devedor?.Nome) ? "________________" : devedor.Nome;
+                pInfoTopo.Add(new Chunk("Nome: ", fontNormal));
+                pInfoTopo.Add(new Chunk(nomeDisplay + "    ", fontBold));
+
+                if (!string.IsNullOrWhiteSpace(devedor?.Turma))
+                {
+                    pInfoTopo.Add(new Chunk("Turma: ", fontNormal));
+                    pInfoTopo.Add(new Chunk(devedor.Turma + "    ", fontBold));
+                    pInfoTopo.Add(new Chunk("Turno: ___________", fontNormal));
+                }
+
+                var dataAtual = DateTime.Now;
+                var pData = new Paragraph($"Data da comunicação: ____/ {dataAtual:MM/yyyy}", fontNormal);
+                string contatoStr = "Contato do Aluno/Responsável: " + (string.IsNullOrWhiteSpace(telefone) ? "___________________________" : telefone);
+                var pContato = new Paragraph(contatoStr, fontNormal);
+
+                leftCell.AddElement(pInfoTopo);
+                leftCell.AddElement(new Paragraph(" ", fontSmall)); // pequeno espaçamento
+                leftCell.AddElement(pData);
+                leftCell.AddElement(new Paragraph(" ", fontSmall));
+                leftCell.AddElement(pContato);
+                infoTable.AddCell(leftCell);
+
+                // Direita: somente QR Code (maior) ou vazio se não houver telefone
+                var rightCell = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE };
+                var waNumber = NormalizePhoneForWa(telefone);
+                if (!string.IsNullOrEmpty(waNumber))
+                {
+                    // Monta mensagem do WhatsApp: só menciona turma se houver turma válida
+                    string turmaParaMsg = string.IsNullOrWhiteSpace(devedor?.Turma) ? "" : $" da Turma {devedor.Turma}";
+                    string nomeParaMsg = string.IsNullOrWhiteSpace(devedor?.Nome) ? "responsável" : devedor.Nome;
+                    string livroParaMsg= string.IsNullOrWhiteSpace(devedor?.Livro) ? "livro" : $"do livro *{devedor.Livro}*";
+                  
+
+                    string msg = $"Olá! Aqui é da Biblioteca da Gastão Valle. Estamos entrando em contato referente ao empréstimo em atraso {livroParaMsg} em nome de *{nomeParaMsg}*{turmaParaMsg}. Podemos falar?";
+                    string waUrl = $"https://wa.me/{waNumber}?text={Uri.EscapeDataString(msg)}";
+
+                    var qrWriter = new ZXing.BarcodeWriter
+                    {
+                        Format = ZXing.BarcodeFormat.QR_CODE,
+                        Options = new QrCodeEncodingOptions
+                        {
+                            Width = 280,
+                            Height = 280,
+                            Margin = 1,
+                            CharacterSet = "UTF-8",
+                            ErrorCorrection = ZXing.QrCode.Internal.ErrorCorrectionLevel.M
+                        }
+                    };
+
+                    using (var qrBmp = qrWriter.Write(waUrl))
+                    using (var msQr = new MemoryStream())
+                    {
+                        qrBmp.Save(msQr, System.Drawing.Imaging.ImageFormat.Png);
+                        var qrImg = iTextSharp.text.Image.GetInstance(msQr.ToArray());
+                        qrImg.ScaleAbsolute(105f, 105f); // tamanho maior
+                        qrImg.Alignment = Element.ALIGN_RIGHT;
+                        rightCell.AddElement(qrImg);
+                    }
+                }
+                // se waNumber for null/empty, rightCell fica vazio (sem QR)
+                infoTable.AddCell(rightCell);
+
+                doc.Add(infoTable);
+                // ===== Fim do bloco único =====
+
+                // Assinatura
+                doc.Add(new Paragraph("___________________________________________________", fontNormal) { Alignment = Element.ALIGN_CENTER, SpacingAfter = 2f });
+                doc.Add(new Paragraph("ASSINATURA DO ALUNO/RESPONSÁVEL", fontNormal) { Alignment = Element.ALIGN_CENTER });
+
+                doc.Close();
+            }
+
+            MessageBox.Show("Carta de cobrança gerada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try { Process.Start(dlg.FileName); } catch { }
+        }
+
+
+
+        private List<(int Id, string Nome, string Autor)> ObterLivrosAtrasadosPorUsuario(int usuarioId)
+        {
+            var livros = new List<(int, string, string)>();
+            try
+            {
+                using (var conexao = Conexao.ObterConexao())
+                {
+                    conexao.Open();
+                    string sql = @"
+SELECT l.Id, l.Nome, l.Autor
+FROM Emprestimo e
+INNER JOIN Livros l ON e.Livro = l.Id
+WHERE e.Alocador = @usuarioId
+  AND e.Status <> 'Devolvido'
+  AND COALESCE(e.DataProrrogacao, e.DataDevolucao) < GETDATE()";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
+                    {
+                        cmd.Parameters.AddWithValue("@usuarioId", usuarioId);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
+                                string nome = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                                string autor = reader.IsDBNull(2) ? "" : reader.GetString(2);
+                                livros.Add((id, nome, autor));
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+            return livros;
         }
     }
-    catch { }
-    return livros;
 }
-    }
-}
+
 #endregion

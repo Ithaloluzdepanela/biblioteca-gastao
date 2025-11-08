@@ -40,9 +40,11 @@ namespace BibliotecaApp.Forms.Inicio
             public int DiasAtraso { get; set; }
         }
 
+      
 
-        
-        private (int Id, string Nome, int Qtd) topUsuarioMaisEmprestimos = (0, "-", 0);
+        private (int Id, string Nome, string Turma, int Qtd) topUsuarioMaisEmprestimos = (0, "-", "", 0);
+
+
 
 
         // controls dinâmicos
@@ -71,11 +73,22 @@ namespace BibliotecaApp.Forms.Inicio
             BibliotecaApp.Utils.EventosGlobais.LivroDidaticoCadastrado += (s, e) => _ = CarregarEstatisticasAsync();
             BibliotecaApp.Utils.EventosGlobais.LivroDevolvido += (s, e) => _ = CarregarEstatisticasAsync();
             BibliotecaApp.Utils.EventosGlobais.EmprestimoProrrogado += (s, e) => _ = CarregarEstatisticasAsync();
+            BibliotecaApp.Utils.EventosGlobais.EmprestimoRealizado += (s, e) => SafeInvoke(() => _ = CarregarEstatisticasAsync());
 
 
             this.Activated += (s, e) => _ = CarregarEstatisticasAsync();
 
             // timerAutoRefresh pode ser mantido ou removido conforme sua preferência
+        }
+
+
+        private void SafeInvoke(Action action)
+        {
+            if (this.IsHandleCreated && !this.IsDisposed && !this.Disposing)
+            {
+                try { this.BeginInvoke(action); }
+                catch { /* nada — evita crash se o form estiver sendo fechado */ }
+            }
         }
 
         private void InicioForm_Load(object sender, EventArgs e)
@@ -440,7 +453,7 @@ namespace BibliotecaApp.Forms.Inicio
                 Margin = new Padding(8),
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.None,
-                Padding = new Padding(0),
+                Padding = new Padding(1), // reserva 1px para a borda
                 Tag = key
             };
             card.Paint += (s, e) =>
@@ -448,7 +461,8 @@ namespace BibliotecaApp.Forms.Inicio
                 using (var p = new Pen(Color.FromArgb(235, 239, 244)))
                     e.Graphics.DrawRectangle(p, 0, 0, card.Width - 1, card.Height - 1);
             };
-            var header = new Panel { BackColor = headerColor, Height = 36, Dock = DockStyle.Top };
+
+            var header = new Panel { BackColor = headerColor, Height = 36, Dock = DockStyle.Top, Margin = new Padding(0) };
             card.Controls.Add(header);
 
             var lblTitle = new Label
@@ -461,30 +475,113 @@ namespace BibliotecaApp.Forms.Inicio
             };
             header.Controls.Add(lblTitle);
 
-            var lblValue = new Label
+            // ---------- Card padrão ----------
+            if (!string.Equals(key, "TopUsuario", StringComparison.OrdinalIgnoreCase))
             {
-                Name = "val_" + key,
-                Text = "0",
-                ForeColor = Color.FromArgb(20, 42, 60),
-                Font = new System.Drawing.Font("Segoe UI", 20F, FontStyle.Bold),
-                Location = new Point(12, header.Bottom + 6),
-                AutoSize = false,
-                Size = new Size(card.Width - 24, 36)
-            };
-            card.Controls.Add(lblValue);
+                var lblValue = new Label
+                {
+                    Name = "val_" + key,
+                    Text = "0",
+                    ForeColor = Color.FromArgb(20, 42, 60),
+                    Font = new System.Drawing.Font("Segoe UI", 20F, FontStyle.Bold),
+                    Location = new Point(12, header.Bottom + 6),
+                    AutoSize = false,
+                    Size = new Size(card.Width - 24, 36)
+                };
+                card.Controls.Add(lblValue);
 
-            var lblSub = new Label
+                var lblSub = new Label
+                {
+                    Text = subtitle,
+                    ForeColor = Color.Gray,
+                    Font = new System.Drawing.Font("Segoe UI", 8.5F),
+                    Location = new Point(12, lblValue.Bottom + 2),
+                    AutoSize = true
+                };
+                card.Controls.Add(lblSub);
+            }
+            else
             {
-                Text = subtitle,
-                ForeColor = Color.Gray,
-                Font = new System.Drawing.Font("Segoe UI", 8.5F),
-                Location = new Point(12, lblValue.Bottom + 2),
-                AutoSize = true
-            };
-            card.Controls.Add(lblSub);
+                // ---------- Card Top Usuário com TableLayoutPanel para vertical centering ----------
+                var container = new Panel
+                {
+                    Dock = DockStyle.Fill,
+                    BackColor = Color.White,
+                    Margin = new Padding(0),
+                    Padding = new Padding(8, 43, 8, 0) // leve padding interno
+                };
+
+                var table = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    BackColor = Color.White,
+                    ColumnCount = 1,
+                    RowCount = 4
+                };
+                // linhas: flex (30%), nome (Auto), turma (Auto), flex (30%)
+                table.RowStyles.Clear();
+                table.RowStyles.Add(new RowStyle(SizeType.Percent, 30f));
+                table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                table.RowStyles.Add(new RowStyle(SizeType.Percent, 30f));
+
+                // Label do nome: dois primeiros nomes (maior)
+                var lblName = new Label
+                {
+                    Name = "lblTopName",
+                    AutoSize = true,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Font = new System.Drawing.Font("Segoe UI Semibold", 12F, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(20, 42, 60),
+                    Text = "-",
+                    MaximumSize = new Size(cardWidth - 40, 0) // evita overflow horizontal
+                };
+                // centralizar horizontalmente na célula
+                lblName.Anchor = AnchorStyles.None;
+
+                // Label da turma: menor e logo abaixo do nome (mais próximo)
+                var lblTurma = new Label
+                {
+                    Name = "lblTopTurma",
+                    AutoSize = true,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Regular),
+                    ForeColor = Color.Gray,
+                    Text = "",
+                    MaximumSize = new Size(cardWidth - 40, 0),
+                    
+                };
+                lblTurma.Anchor = AnchorStyles.None;
+
+                // Subtítulo embaixo (quem mais emprestou)
+                var lblSub = new Label
+                {
+                    Text = subtitle,
+                    Dock = DockStyle.Bottom,
+                    Height = 35,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    ForeColor = Color.Gray,
+                    Font = new System.Drawing.Font("Segoe UI", 8.5F)
+                };
+
+                // adicionar aos lugares corretos: row 1 = nome, row 2 = turma
+                table.Controls.Add(lblName, 0, 1);
+                table.Controls.Add(lblTurma, 0, 2);
+
+                container.Controls.Add(table);
+                container.Controls.Add(lblSub); // ficará embaixo do container (Dock = Bottom do lblSub)
+
+                card.Controls.Add(container);
+            }
 
             return card;
         }
+
+
+
+
+
+
 
         private DataGridView CriarDataGridBasico(string name)
         {
@@ -791,18 +888,61 @@ ORDER BY DiasAtraso DESC, DataLimite ASC";
                         AtualizarCards(stats);
 
                         // Atualiza o card do Top Usuário
+                        // Atualiza o card do Top Usuário
+                        // Atualiza o card do Top Usuário
                         var card = flowCards.Controls.OfType<Panel>().FirstOrDefault(p => (string)p.Tag == "TopUsuario");
                         if (card != null)
                         {
-                            var lbl = card.Controls.Find("val_TopUsuario", true).FirstOrDefault() as Label;
-                            if (lbl != null)
+                            var lblName = card.Controls.Find("lblTopName", true).FirstOrDefault() as Label;
+                            var lblTurma = card.Controls.Find("lblTopTurma", true).FirstOrDefault() as Label;
+
+                            if (lblName != null && lblTurma != null)
                             {
-                                if (!string.IsNullOrWhiteSpace(topUsuarioMaisEmprestimos.Nome) && topUsuarioMaisEmprestimos.Id > 0)
-                                    lbl.Text = $"{topUsuarioMaisEmprestimos.Nome}\n({topUsuarioMaisEmprestimos.Qtd} empréstimos)";
+                                if (!string.IsNullOrWhiteSpace(topUsuarioMaisEmprestimos.Nome))
+                                {
+                                    // Pega os dois primeiros nomes
+                                    var matches = System.Text.RegularExpressions.Regex.Matches(topUsuarioMaisEmprestimos.Nome.Trim(), @"\S+");
+                                    var primeiros = matches.Cast<System.Text.RegularExpressions.Match>().Select(m => m.Value).Take(2).ToArray();
+                                    var doisNomes = string.Join(" ", primeiros);
+
+                                    // Normaliza a turma: remove quebras de linha e espaços duplicados
+                                    string turmaDisplay = topUsuarioMaisEmprestimos.Turma?.Trim() ?? "";
+                                    turmaDisplay = turmaDisplay.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+                                    turmaDisplay = System.Text.RegularExpressions.Regex.Replace(turmaDisplay, @"\s+", " ");
+
+                                    // Trunca visualmente se muito longa
+                                    if (turmaDisplay.Length > 25)
+                                        turmaDisplay = turmaDisplay.Substring(0, 25) + "...";
+
+                                    // Exibe os valores
+                                    lblName.Text = doisNomes;
+                                    lblTurma.Text = string.IsNullOrWhiteSpace(turmaDisplay) ? "" : turmaDisplay;
+                                    lblTurma.Visible = !string.IsNullOrWhiteSpace(turmaDisplay);
+
+                                    // Tooltip detalhado (nome completo + turma + qtd)
+                                    try
+                                    {
+                                        if (formToolTip == null) formToolTip = new ToolTip();
+                                        string tip = $"{topUsuarioMaisEmprestimos.Nome}";
+                                        if (!string.IsNullOrWhiteSpace(topUsuarioMaisEmprestimos.Turma))
+                                            tip += $" • Turma: {topUsuarioMaisEmprestimos.Turma}";
+                                        tip += $" • {topUsuarioMaisEmprestimos.Qtd} empréstimos";
+                                        formToolTip.SetToolTip(lblName, tip);
+                                        formToolTip.SetToolTip(lblTurma, tip);
+                                    }
+                                    catch { }
+                                }
                                 else
-                                    lbl.Text = "-";
+                                {
+                                    lblName.Text = "-";
+                                    lblTurma.Text = "";
+                                    lblTurma.Visible = false;
+                                }
                             }
                         }
+
+
+
                     }));
                 }
 
@@ -856,27 +996,31 @@ ORDER BY DiasAtraso DESC, DataLimite ASC";
                 BeginInvoke(new Action(() => SetStatus($"Erro ao carregar: {ex.Message}")));
             }
         }
-
         /// <summary>
-        /// Retorna o usuário (exceto professores) que mais fez empréstimos.
-        /// Agora retorna (Id, Nome, Qtd) para evitar ambiguidade por nomes iguais.
+        /// Retorna o usuário (exceto professores) que mais realizou empréstimos (apenas tabela Emprestimo).
         /// </summary>
-        private (int Id, string Nome, int Qtd) ObterTopUsuarioMaisEmprestimos()
+        private (int Id, string Nome, string Turma, int Qtd) ObterTopUsuarioMaisEmprestimos()
         {
             try
             {
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
+
                     string sql = @"
-SELECT TOP 1 u.Id, u.Nome, COUNT(e.Id) AS Qtd
+SELECT TOP 1 
+    u.Id, 
+    u.Nome, 
+    COALESCE(u.Turma, '') AS Turma, 
+    COUNT(e.Id) AS Qtd,
+    MAX(e.DataEmprestimo) AS UltimoEmprestimo
 FROM Emprestimo e
 INNER JOIN Usuarios u ON e.Alocador = u.Id
-LEFT JOIN EmprestimoRapido er ON er.EmprestimoId = e.Id
-WHERE er.EmprestimoId IS NULL
-  AND (u.TipoUsuario IS NULL OR u.TipoUsuario NOT LIKE 'Professor%')
-GROUP BY u.Id, u.Nome
-ORDER BY Qtd DESC, u.Nome";
+WHERE (u.TipoUsuario IS NULL OR UPPER(u.TipoUsuario) NOT LIKE 'PROFESSOR%')
+GROUP BY u.Id, u.Nome, u.Turma
+ORDER BY Qtd DESC, UltimoEmprestimo DESC;
+";
+
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -884,8 +1028,9 @@ ORDER BY Qtd DESC, u.Nome";
                         {
                             int id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
                             string nome = reader.IsDBNull(1) ? "-" : reader.GetString(1);
-                            int qtd = reader.IsDBNull(2) ? 0 : Convert.ToInt32(reader.GetValue(2));
-                            return (id, nome, qtd);
+                            string turma = reader.IsDBNull(2) ? "" : reader.GetString(2);
+                            int qtd = reader.IsDBNull(3) ? 0 : Convert.ToInt32(reader.GetValue(3));
+                            return (id, nome, turma, qtd);
                         }
                     }
                 }
@@ -901,8 +1046,10 @@ ORDER BY Qtd DESC, u.Nome";
                 }
                 catch { }
             }
-            return (0, "-", 0);
+            return (0, "-", "", 0);
         }
+
+
 
 
 
@@ -1094,6 +1241,8 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
             return dict;
         }
 
+
+
         private void AtualizarCards(Dictionary<string, int> stats)
         {
             if (stats == null) return;
@@ -1101,6 +1250,10 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
             {
                 if (c is Panel card && card.Tag is string key)
                 {
+                    // não sobrescrever o card "TopUsuario" aqui (ele mostra texto, não número)
+                    if (string.Equals(key, "TopUsuario", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
                     var valLabel = card.Controls.Find("val_" + key, true).FirstOrDefault() as Label;
                     if (valLabel != null)
                     {
@@ -1110,6 +1263,7 @@ ORDER BY TotalEmprestimos DESC, l.Nome";
                 }
             }
         }
+
 
         #endregion
 

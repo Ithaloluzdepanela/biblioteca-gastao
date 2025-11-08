@@ -496,7 +496,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="scripts\install.bat" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -21,6 +21,9 @@ namespace BibliotecaApp.Forms.Login
         // Variável para controle externo de login
         public static bool cancelar = false;
 
+        // Indica se o login atual foi realizado por uma bibliotecária
+        public static bool UsuarioBibliotecaria { get; set; } = false;
+
         // Evita reentrância no clique (duplo Enter/click)
         private bool _isAuthenticating = false;
         #endregion
@@ -106,8 +109,9 @@ namespace BibliotecaApp.Forms.Login
                         if (LoginAdmin(conexao, email, senha))
                         {
                             Sessao.NomeBibliotecariaLogada = "Administrador";
+                            LoginForm.UsuarioBibliotecaria = false; // não é bibliotecária
                             cancelar = true;
-                            await AtualizarStatusEmprestimosAsync(false); // NÃO envia relatório para admin
+                            await AtualizarStatusEmprestimosAsync(false); // conforme suas alterações anteriores
                             this.DialogResult = DialogResult.OK;
                             this.Close();
                             return;
@@ -134,13 +138,13 @@ namespace BibliotecaApp.Forms.Login
                                     if (senhaCorreta)
                                     {
                                         Sessao.NomeBibliotecariaLogada = nomeUsuario;
-
-                                        await AtualizarStatusEmprestimosAsync(true); // envia relatório apenas se quem logou for bibliotecária
-
+                                        LoginForm.UsuarioBibliotecaria = true; // é bibliotecária
+                                        await AtualizarStatusEmprestimosAsync(true);
                                         cancelar = true;
                                         this.DialogResult = DialogResult.OK;
                                         this.Close();
                                         return;
+
                                     }
                                     else
                                     {

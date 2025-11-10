@@ -160,7 +160,7 @@ namespace BibliotecaApp.Forms.Inicio
                 new { Key = "Atrasados", Title = "Atrasados", Sub = "Empréstimos em atraso", Color = Color.FromArgb(178,34,34) },
                 new { Key = "RapidosHoje", Title = "Rápidos (hoje)", Sub = "Empréstimos rápidos hoje", Color = Color.FromArgb(92,92,205) },
                 new { Key = "MediaMes", Title = "Média/Mês", Sub = "Média de empréstimos deste mês", Color = Color.FromArgb(255, 140, 0) },
-                new { Key = "TopUsuario", Title = "Top Usuário 🏆", Sub = "Quem mais emprestou", Color = Color.FromArgb(0, 123, 167) }
+                new { Key = "TopUsuario", Title = "Top Usuário 🏆", Sub = "Usuário que mais emprestou", Color = Color.FromArgb(0, 123, 167) }
             };
 
             // Calcula o tamanho ideal para os cards

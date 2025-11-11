@@ -148,56 +148,34 @@ namespace BibliotecaApp.Forms.Usuario
                     conexao.Open();
 
                     string sql = @"
-            SELECT
-                u.id              AS Id,
-                u.nome            AS Nome,
-                u.email           AS Email,
-                u.tipousuario     AS TipoUsuario,
-                u.cpf             AS CPF,
-                u.telefone        AS Telefone,
-                u.turma           AS Turma,
-                u.datanascimento  AS DataNascimento,
-                CASE
-                    WHEN EXISTS (
-                        SELECT 1
-                        FROM Emprestimo e
-                        WHERE e.Alocador = u.id
-                          AND e.Status = 'Atrasado'
-                    ) THEN 'Atrasado'
-                    WHEN EXISTS (
-                        SELECT 1
-                        FROM Emprestimo e
-                        WHERE e.Alocador = u.id
-                          AND e.Status <> 'Devolvido'
-                    ) THEN 'Ativo'
-                    ELSE 'Sem empréstimo'
-                END AS EmprestimoStatus
-            FROM Usuarios u
-            WHERE 1 = 1";
+                SELECT
+                    u.id              AS Id,
+                    u.nome            AS Nome,
+                    u.email           AS Email,
+                    u.tipousuario     AS TipoUsuario,
+                    u.cpf             AS CPF,
+                    u.telefone        AS Telefone,
+                    u.turma           AS Turma,
+                    u.datanascimento  AS DataNascimento,
+                    CASE
+                        WHEN EXISTS (
+                            SELECT 1
+                            FROM Emprestimo e
+                            WHERE e.Alocador = u.id
+                              AND e.Status = 'Atrasado'
+                        ) THEN 'Atrasado'
+                        WHEN EXISTS (
+                            SELECT 1
+                            FROM Emprestimo e
+                            WHERE e.Alocador = u.id
+                              AND e.Status <> 'Devolvido'
+                        ) THEN 'Ativo'
+                        ELSE 'Sem empréstimo'
+                    END AS EmprestimoStatus
+                FROM Usuarios u
+                WHERE 1 = 1";
 
-                    // FILTRO POR NOME: agora suporta busca por qualquer parte do nome
-                    List<string> nomeTokens = new List<string>();
-                    if (!string.IsNullOrWhiteSpace(nomeFiltro))
-                    {
-                        // quebra em tokens (por espaços) e remove vazios
-                        nomeTokens = nomeFiltro
-                                        .Trim()
-                                        .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                                        .ToList();
-
-                        if (nomeTokens.Count > 0)
-                        {
-                            // para cada token adiciona uma cláusula AND u.nome LIKE @nome{i}
-                            sql += " AND (";
-                            for (int i = 0; i < nomeTokens.Count; i++)
-                            {
-                                if (i > 0) sql += " AND ";
-                                sql += $"u.nome LIKE @nome{i} ESCAPE '\\'";
-                            }
-                            sql += ")";
-                        }
-                    }
-
+                    // Mantemos filtros por tipo/emprestimo no SQL — mas **NÃO** aplicamos filtro por nome aqui.
                     if (!string.Equals(tipoFiltro, "Todos", StringComparison.OrdinalIgnoreCase))
                         sql += " AND u.tipousuario LIKE @tipo";
 
@@ -207,32 +185,32 @@ namespace BibliotecaApp.Forms.Usuario
                         {
                             case "Sem empréstimo":
                                 sql += @"
-                        AND NOT EXISTS (
-                            SELECT 1
-                            FROM Emprestimo e
-                            WHERE e.Alocador = u.id
-                              AND e.Status <> 'Devolvido'
-                        )";
+                            AND NOT EXISTS (
+                                SELECT 1
+                                FROM Emprestimo e
+                                WHERE e.Alocador = u.id
+                                  AND e.Status <> 'Devolvido'
+                            )";
                                 break;
 
                             case "Ativo":
                                 sql += @"
-                        AND EXISTS (
-                            SELECT 1
-                            FROM Emprestimo e
-                            WHERE e.Alocador = u.id
-                              AND e.Status = 'Ativo'
-                        )";
+                            AND EXISTS (
+                                SELECT 1
+                                FROM Emprestimo e
+                                WHERE e.Alocador = u.id
+                                  AND e.Status = 'Ativo'
+                            )";
                                 break;
 
                             case "Atrasado":
                                 sql += @"
-                        AND EXISTS (
-                            SELECT 1
-                            FROM Emprestimo e
-                            WHERE e.Alocador = u.id
-                              AND e.Status = 'Atrasado'
-                        )";
+                            AND EXISTS (
+                                SELECT 1
+                                FROM Emprestimo e
+                                WHERE e.Alocador = u.id
+                                  AND e.Status = 'Atrasado'
+                            )";
                                 break;
                         }
                     }
@@ -241,16 +219,6 @@ namespace BibliotecaApp.Forms.Usuario
 
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
-                        // adiciona parâmetros para cada token: '%token%'
-                        if (nomeTokens.Count > 0)
-                        {
-                            for (int i = 0; i < nomeTokens.Count; i++)
-                            {
-                                var seguro = EscapeLikeValue(nomeTokens[i]);
-                                cmd.Parameters.AddWithValue($"@nome{i}", "%" + seguro + "%"); // contains
-                            }
-                        }
-
                         if (!string.Equals(tipoFiltro, "Todos", StringComparison.OrdinalIgnoreCase))
                             cmd.Parameters.AddWithValue("@tipo", "%" + tipoFiltro + "%");
 
@@ -259,7 +227,26 @@ namespace BibliotecaApp.Forms.Usuario
                         {
                             adapter.Fill(tabela);
                         }
-                        dgvUsuarios.DataSource = tabela;
+
+                        // --- AQUI: filtro por nome no C# sem acentuação ---
+                        if (!string.IsNullOrWhiteSpace(nomeFiltro))
+                        {
+                            string nomeSemAcentoFiltro = RemoverAcentos(nomeFiltro).ToLowerInvariant();
+
+                            var linhas = tabela.AsEnumerable()
+                                .Where(r =>
+                                {
+                                    string nomeDb = r.Field<string>("Nome") ?? "";
+                                    string nomeDbSemAcento = RemoverAcentos(nomeDb).ToLowerInvariant();
+                                    return nomeDbSemAcento.Contains(nomeSemAcentoFiltro);
+                                });
+
+                            dgvUsuarios.DataSource = linhas.Any() ? linhas.CopyToDataTable() : tabela.Clone();
+                        }
+                        else
+                        {
+                            dgvUsuarios.DataSource = tabela;
+                        }
                     }
                 }
             }
@@ -269,12 +256,8 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
-        //proteçao contra caracteres especiais no LIKE
-        private static string EscapeLikeValue(string value)
-        {
-            if (string.IsNullOrEmpty(value)) return value;
-            return value.Replace("\\", "\\\\").Replace("%", "\\%").Replace("_", "\\_");
-        }
+
+
 
 
         private void ConfigurarGrid()
@@ -654,6 +637,23 @@ namespace BibliotecaApp.Forms.Usuario
             // chama o método que já existe; se quiser, pode passar filtros padrão
             CarregarUsuarios();
         }
+
+        private static string RemoverAcentos(string texto)
+        {
+            if (string.IsNullOrEmpty(texto)) return texto;
+            var normalized = texto.Normalize(System.Text.NormalizationForm.FormD);
+            var sb = new System.Text.StringBuilder();
+
+            foreach (var c in normalized)
+            {
+                var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+                if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+                    sb.Append(c);
+            }
+
+            return sb.ToString().Normalize(System.Text.NormalizationForm.FormC);
+        }
+
 
 
 

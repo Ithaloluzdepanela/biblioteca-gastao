@@ -75,15 +75,15 @@ namespace BibliotecaApp.Utils
             return @"{\rtf1\ansi
 {\b Termos de Uso — BibliotecaApp}\line
 \line
-{\b Última atualização:} 01/10/2025\line
+{\b Última atualização:} 15/11/2025\line
 \line
-Este documento estabelece os termos e condições aplicáveis ao uso do software {\b BibliotecaApp}\b0  (doravante, “Sistema”), desenvolvido e licenciado por {\b Beverso}\b0  (doravante, “Beverso” ou “Licenciante”). O Licenciado indicado neste Termo é a {\b Escola Estadual Professor Gastão Valle}\b0  (doravante, “Instituição” ou “Licenciado”).\line
+Este documento estabelece os termos e condições aplicáveis ao uso do software {\b BibliotecaApp}\b0  (doravante, “Sistema”), desenvolvido por {\b Beverso}\b0  (doravante, “Beverso”). A Beverso, representada pelos alunos responsáveis pelo projeto, transfere à {\b Escola Estadual Professor Gastão Valle}\b0  (doravante, “Instituição”) a titularidade patrimonial da edição do Sistema objeto deste documento, nos termos e condições abaixo.\line
 \line
 Ao utilizar o Sistema, a Instituição concorda integralmente com estes Termos. Caso não concorde, não instale, ative ou utilize o Sistema.\line
 \line
 {\b 1. Concessão de Licença}\line
 1.1. A Beverso concede à Instituição uma {\b licença limitada, não exclusiva, intransferível e revogável} para utilização do Sistema, exclusivamente para fins administrativos da biblioteca da Instituição.\line
-1.2. Esta licença refere-se {\b apenas à edição única e exclusiva} do Sistema disponibilizada gratuitamente à Instituição nesta data. Essa edição única {\b não implicará transferência de titularidade} do software nem de quaisquer direitos de propriedade intelectual.\line
+1.2. Em decorrência do presente instrumento, a Beverso transfere à Instituição a titularidade patrimonial da edição única e exclusiva do Sistema fornecida gratuitamente à Instituição nesta data. Contudo, tal transferência está condicionada à observância, pela Instituição, das restrições previstas nestes Termos, em especial a vedação à venda, sublicenciamento, cessão ou comercialização do Sistema sem autorização expressa e por escrito da Beverso.\line
 1.3. A licença é válida somente nas máquinas ou ambientes em que a chave de ativação fornecida pela Beverso for corretamente ativada, observados os limites de ativações comunicados pela Beverso.\line
 \line
 {\b 2. Ativação e Controle de Chaves}\line
@@ -96,9 +96,10 @@ Ao utilizar o Sistema, a Instituição concorda integralmente com estes Termos. 
 3.3. A Instituição declara que não realizará publicações, distribuições ou disponibilizações do Sistema ou de quaisquer partes do mesmo sem autorização escrita e prévia da Beverso.\line
 \line
 {\b 4. Propriedade Intelectual}\line
-4.1. Todo o código-fonte, documentação, design, interfaces, banco de dados, imagens, fluxos, marcas, e demais componentes do Sistema são {\b propriedade exclusiva da Beverso}.\line
-4.2. Nenhum direito de propriedade intelectual é transferido à Instituição em razão destes Termos, salvo o direito limitado de uso descrito na cláusula 1.\line
+4.1. A partir da data de disponibilização, a titularidade patrimonial do código-fonte, documentação, design, interfaces, banco de dados, imagens, fluxos, marcas, e demais componentes do Sistema passa a ser da Instituição, nos termos da cláusula 1.2. Entretanto, a Beverso mantém os direitos morais de autoria sobre o Sistema, e a Instituição reconhece a paternidade da Beverso.\line
+4.2. Nenhum direito de propriedade intelectual distinto dos direitos patrimoniais ora transferidos é automaticamente cedido à Instituição, salvo o direito limitado de uso descrito na cláusula 1.\line
 4.3. A Instituição reconhece a autoria e paternidade da Beverso sobre o Sistema e concorda em não contestar tais direitos.\line
+4.4. A transferência prevista não autoriza a Instituição a comercializar, vender, sublicenciar, ceder ou de outra forma dispor economicamente do Sistema sem prévia e expressa autorização escrita da Beverso. Qualquer autorização em sentido contrário deverá ser formalizada por escrito entre as partes.\line
 \line
 {\b 5. Edição Única e Sem Custos Adicionais}\line
 5.1. A edição do Sistema fornecida à Instituição nesta data foi disponibilizada {\b uma única vez} e {\b sem custos de licenciamento adicionais}.\line
@@ -149,11 +150,12 @@ Ao utilizar o Sistema, a Instituição concorda integralmente com estes Termos. 
 \line
 Ao clicar em “Li e aceito os termos de uso”, a Instituição declara ter lido, compreendido e concordado com todos os termos e condições aqui descritos.\line
 \line
-{\b Beverso.}\line
+{\b Beverso, representada pelos alunos responsáveis pelo projeto.}\line
 \line
 {\b Licenciado:} Escola Estadual Professor Gastão Valle\line
 }";
         }
+
 
         private void rtbTerms_VScroll(object sender, EventArgs e) => CheckIfBottomReached();
         private void rtbTerms_Resize(object sender, EventArgs e) => CheckIfBottomReached();

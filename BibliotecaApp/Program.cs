@@ -79,7 +79,6 @@ namespace BibliotecaApp
                 {
                     if (login.ShowDialog() == DialogResult.OK)
                     {
-                        //ative na versao final
 
                         // ---- Backup diario: executa APENAS se o login foi feito por bibliotecária ----
                         //if (LoginForm.UsuarioBibliotecaria)

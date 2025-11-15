@@ -72,12 +72,12 @@ namespace BibliotecaApp.Forms.Livros
             }
 
             AddTextCol("Id", "ID", 50, DataGridViewContentAlignment.MiddleCenter, 40);
-            AddTextCol("Nome", "Nome do Livro", 270, DataGridViewContentAlignment.MiddleLeft, 120);
+            AddTextCol("Nome", "Nome do Livro", 310, DataGridViewContentAlignment.MiddleLeft, 120);
             AddTextCol("Autor", "Autor", 160, DataGridViewContentAlignment.MiddleLeft, 100);
             AddTextCol("Genero", "Gênero", 140, DataGridViewContentAlignment.MiddleLeft, 100);
             AddTextCol("Quantidade", "Quantidade", 45, DataGridViewContentAlignment.MiddleCenter, 100);
-            AddTextCol("CodigoBarras", "Código de Barras", 140, DataGridViewContentAlignment.MiddleLeft, 120);
-            AddTextCol("Status", "Status", 120, DataGridViewContentAlignment.MiddleLeft, 100);
+            AddTextCol("CodigoBarras", "Código de Barras", 110, DataGridViewContentAlignment.MiddleLeft, 120);
+            AddTextCol("Status", "Status", 60, DataGridViewContentAlignment.MiddleLeft, 100);
 
 
             // Botão Editar

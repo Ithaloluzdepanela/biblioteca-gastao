@@ -771,6 +771,17 @@ namespace BibliotecaApp.Forms.Livros
 
         private async void btnBuscar_Click(object sender, EventArgs e)
         {
+            if (Program.IsOfflineMode)
+            {
+                MessageBox.Show("A busca online de livros (Google Books/OpenLibrary) está indisponível no Modo Offline.\n\n" +
+                                "Por favor, preencha os dados do livro manualmente.",
+                                "Modo Offline", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Foca no campo Nome para agilizar o preenchimento manual
+                txtNome.Focus();
+                return; // Interrompe a execução para não tentar conectar
+            }
+
             string isbn = new string(mtxCodigoBarras.Text.Where(char.IsDigit).ToArray());
             if (isbn.Length != 13)
             {

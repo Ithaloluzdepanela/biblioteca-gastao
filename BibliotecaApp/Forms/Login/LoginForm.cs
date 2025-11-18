@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BibliotecaApp.Utils;
+using System.Net.NetworkInformation;
 
 namespace BibliotecaApp.Forms.Login
 {
@@ -109,9 +110,10 @@ namespace BibliotecaApp.Forms.Login
                         if (LoginAdmin(conexao, email, senha))
                         {
                             Sessao.NomeBibliotecariaLogada = "Administrador";
-                            LoginForm.UsuarioBibliotecaria = false; // não é bibliotecária
+                            LoginForm.UsuarioBibliotecaria = false;
                             cancelar = true;
-                            await AtualizarStatusEmprestimosAsync(false); // conforme suas alterações anteriores
+                            await AtualizarStatusEmprestimosAsync(false, Program.IsOfflineMode);
+
                             this.DialogResult = DialogResult.OK;
                             this.Close();
                             return;
@@ -137,14 +139,54 @@ namespace BibliotecaApp.Forms.Login
 
                                     if (senhaCorreta)
                                     {
+                                        // --- INÍCIO DA VERIFICAÇÃO DE INTERNET ---
+                                        bool internetOk = VerificarConexaoInternet();
+                                        Program.IsOfflineMode = false; // Assume online por padrão
+
+                                        while (!internetOk)
+                                        {
+                                            string mensagemOffline =
+                                                "Não foi possível conectar à internet.\n\n" +
+                                                "No MODO OFFLINE, as seguintes funções estarão INDISPONÍVEIS:\n" +
+                                                "• Backup automático na nuvem\n" +
+                                                "• Envio de notificações por e-mail\n" +
+                                                "• Envio do relatório semanal\n" +
+                                                "• Consultas de livros online (API)\n\n" +
+                                                "Deseja tentar conectar novamente ou continuar offline?";
+
+                                            var result = MessageBox.Show(mensagemOffline,
+                                                "Sem Conexão com Internet",
+                                                MessageBoxButtons.RetryCancel,
+                                                MessageBoxIcon.Warning);
+
+                                            if (result == DialogResult.Retry)
+                                            {
+                                                // Tenta verificar novamente
+                                                internetOk = VerificarConexaoInternet();
+                                                if (internetOk)
+                                                {
+                                                    MessageBox.Show("Conexão restabelecida com sucesso!", "Conectado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                                    Program.IsOfflineMode = false;
+                                                }
+                                            }
+                                            else // Cancel (Entendido como Continuar Offline)
+                                            {
+                                                Program.IsOfflineMode = true;
+                                                break; // Sai do loop e prossegue offline
+                                            }
+                                        }
+                                        // --- FIM DA VERIFICAÇÃO ---
+
                                         Sessao.NomeBibliotecariaLogada = nomeUsuario;
-                                        LoginForm.UsuarioBibliotecaria = true; // é bibliotecária
-                                        await AtualizarStatusEmprestimosAsync(true);
+                                        LoginForm.UsuarioBibliotecaria = true;
+
+                                        // Passamos o status offline para o método de atualização
+                                        await AtualizarStatusEmprestimosAsync(true, Program.IsOfflineMode);
+
                                         cancelar = true;
                                         this.DialogResult = DialogResult.OK;
                                         this.Close();
                                         return;
-
                                     }
                                     else
                                     {
@@ -207,7 +249,7 @@ namespace BibliotecaApp.Forms.Login
         #endregion
 
         #region Métodos de Atualização
-        private async Task AtualizarStatusEmprestimosAsync(bool usuarioEhBibliotecaria)
+        private async Task AtualizarStatusEmprestimosAsync(bool usuarioEhBibliotecaria, bool isOffline)
         {
             using (var progressForm = new frmProgresso())
             {
@@ -215,16 +257,33 @@ namespace BibliotecaApp.Forms.Login
 
                 await Task.Run(() =>
                 {
-                    AtualizarEmprestimos(progressForm);
-                    AtualizarNotificacoesDisponibilidade(progressForm);
+                    // Se estiver offline, passamos essa info para dentro dos métodos ou pulamos a execução
+                    AtualizarEmprestimos(progressForm, isOffline);
 
-                    // ---- Envio Semanal Relatorio (só se for bibliotecária) ----
+                    if (isOffline)
+                    {
+                        progressForm.AtualizarProgresso(50, "Modo Offline: Pulando notificações e relatórios...");
+                        System.Threading.Thread.Sleep(1000); // Pequena pausa para o usuário ler
+                    }
+                    else
+                    {
+                        // Só executa se estiver online
+                        AtualizarNotificacoesDisponibilidade(progressForm);
+                    }
+
+                    // ---- Envio Semanal Relatorio ----
                     try
                     {
+                        // Se não for bibliotecária OU se estiver Offline, aborta o relatório
                         if (!usuarioEhBibliotecaria)
                         {
-                            // Não enviar relatório se quem logou não for bibliotecária
-                            progressForm.AtualizarProgresso(100, "Atualizações concluídas (relatório não enviado - usuário não é bibliotecária).");
+                            progressForm.AtualizarProgresso(100, "Atualizações concluídas.");
+                            return;
+                        }
+
+                        if (isOffline)
+                        {
+                            progressForm.AtualizarProgresso(100, "Modo Offline: Relatório semanal não enviado.");
                             return;
                         }
 
@@ -296,7 +355,7 @@ namespace BibliotecaApp.Forms.Login
                     catch (Exception ex)
                     {
                         LogRelatorio($"Erro no processo de envio do relatório semanal: {ex}");
-                        progressForm.AtualizarProgresso(100, "Erro ao processar relatório semanal.");
+                        progressForm.AtualizarProgresso(100, "Erro ao processar relatório.");
                     }
                 });
             }
@@ -499,7 +558,7 @@ string corpo = $@"
             }
         }
 
-        private void AtualizarEmprestimos(frmProgresso progressForm)
+        private void AtualizarEmprestimos(frmProgresso progressForm, bool isOffline)
         {
             try
             {
@@ -565,34 +624,35 @@ string corpo = $@"
 
                         if (diferenca.Days == 3 && !notificadoLembrete)
                         {
-                            if (!string.IsNullOrWhiteSpace(emailUsuario))
+                            // Só envia se NÃO estiver offline
+                            if (!isOffline && !string.IsNullOrWhiteSpace(emailUsuario))
                             {
                                 EnviarEmailLembrete(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
                             }
-                            else
-                            {
-                                System.Diagnostics.Debug.WriteLine($"Usuário '{nomeUsuario}' sem e-mail cadastrado para lembrete de empréstimo.");
-                            }
 
-                            var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET NotificadoLembrete = 1 WHERE Id = @Id", connection);
-                            updateFlagCmd.Parameters.AddWithValue("@Id", id);
-                            updateFlagCmd.ExecuteNonQuery();
+                            // Opcional: Se estiver offline, você pode optar por NÃO marcar como notificado 
+                            // para tentar enviar amanhã, ou marcar mesmo assim.
+                            // Abaixo, marcamos apenas se conseguimos enviar (se online) OU se preferir não acumular, marque sempre.
+                            // Recomendação: Marcar apenas se enviou.
+
+                            if (!isOffline && !string.IsNullOrWhiteSpace(emailUsuario))
+                            {
+                                var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET NotificadoLembrete = 1 WHERE Id = @Id", connection);
+                                updateFlagCmd.Parameters.AddWithValue("@Id", id);
+                                updateFlagCmd.ExecuteNonQuery();
+                            }
                         }
 
                         if (diferenca.Days < 0 && !notificadoAtraso)
                         {
-                            if (!string.IsNullOrWhiteSpace(emailUsuario))
+                            if (!isOffline && !string.IsNullOrWhiteSpace(emailUsuario))
                             {
                                 EnviarEmailAtraso(emailUsuario, nomeUsuario, tituloLivro, dataReferencia);
-                            }
-                            else
-                            {
-                                System.Diagnostics.Debug.WriteLine($"Usuário '{nomeUsuario}' sem e-mail cadastrado para notificação de atraso.");
-                            }
 
-                            var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET NotificadoAtraso = 1 WHERE Id = @Id", connection);
-                            updateFlagCmd.Parameters.AddWithValue("@Id", id);
-                            updateFlagCmd.ExecuteNonQuery();
+                                var updateFlagCmd = new SqlCeCommand("UPDATE Emprestimo SET NotificadoAtraso = 1 WHERE Id = @Id", connection);
+                                updateFlagCmd.Parameters.AddWithValue("@Id", id);
+                                updateFlagCmd.ExecuteNonQuery();
+                            }
                         }
 
                         processados++;
@@ -810,6 +870,24 @@ string corpo = $@"
         {
             lblVersion.ForeColor = Color.White;
 
+        }
+
+
+        private bool VerificarConexaoInternet()
+        {
+            try
+            {
+                // Tenta pingar o DNS do Google (8.8.8.8) para garantir saída para internet
+                using (var ping = new Ping())
+                {
+                    var reply = ping.Send("8.8.8.8", 2000); // 2 segundos de timeout
+                    return reply != null && reply.Status == IPStatus.Success;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

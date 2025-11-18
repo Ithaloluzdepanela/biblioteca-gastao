@@ -15,8 +15,6 @@ namespace BibliotecaApp
     {
         public static bool RequestLogout = false;
 
-        public static bool IsOfflineMode = false;
-
         /// <summary>
         /// Ponto de entrada principal para o aplicativo.
         /// </summary>

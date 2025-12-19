@@ -620,40 +620,43 @@ namespace BibliotecaApp.Forms.Inicio
 
         private void EnsureEmptyOverlay(DataGridView dgv, string message)
         {
-            var existing = panel1.Controls.Find("emptyOverlay_" + dgv.Name, true).FirstOrDefault() as Label;
+            var name = "emptyOverlay_" + dgv.Name;
+            var parent = dgv.Parent ?? panel1;
+            var existing = parent.Controls.Find(name, true).FirstOrDefault() as Label;
+
             if (dgv.Rows.Count == 0)
             {
                 if (existing == null)
                 {
                     var lbl = new Label
                     {
-                        Name = "emptyOverlay_" + dgv.Name,
+                        Name = name,
                         Text = message,
                         AutoSize = false,
-                        Width = dgv.Width,
-                        Height = dgv.Height,
+                        Size = dgv.Size,
+                        Location = dgv.Location,
                         TextAlign = ContentAlignment.MiddleCenter,
                         ForeColor = Color.Gray,
                         BackColor = Color.Transparent,
                         Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Regular)
                     };
-                    lbl.Location = dgv.PointToScreen(Point.Empty);
-                    lbl.Left = dgv.Left;
-                    lbl.Top = dgv.Top;
-                    dgv.Parent?.Controls.Add(lbl);
+                    parent.Controls.Add(lbl);
                     lbl.BringToFront();
                 }
                 else
                 {
                     existing.Text = message;
                     existing.Visible = true;
+                    existing.Location = dgv.Location;
+                    existing.Size = dgv.Size;
+                    existing.BringToFront();
                 }
             }
-            else
+            else if (existing != null)
             {
-                if (existing != null) existing.Visible = false;
+                existing.Visible = false;
             }
-        }
+}
 
         private List<EmprestimoAtrasadoInfo> ObterEmprestimosAtrasados()
         {
@@ -929,6 +932,10 @@ ORDER BY Qtd DESC, u.Nome";
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
+
+                    // Janela de popularidade (ajuste se quiser outro período)
+                    DateTime inicioJanela = DateTime.Now.AddMonths(-12);
+
                     string sql = $@"
 SELECT TOP {topN}
     l.Nome,
@@ -936,41 +943,59 @@ SELECT TOP {topN}
     COUNT(e.Id) AS TotalEmprestimos,
     l.Quantidade
 FROM Livros l
-LEFT JOIN Emprestimo e ON l.Id = e.Livro
+INNER JOIN Emprestimo e 
+    ON l.Id = e.Livro
+    AND e.DataEmprestimo >= @inicio
+WHERE 
+    (l.Genero IS NULL OR (l.Genero NOT LIKE 'Didático%' AND l.Genero NOT LIKE 'Didatico%'))
 GROUP BY l.Id, l.Nome, l.Autor, l.Quantidade
 ORDER BY TotalEmprestimos DESC, l.Nome";
-                    using (var cmd = new SqlCeCommand(sql, conexao))
-                    using (var reader = cmd.ExecuteReader())
+
+            using (var cmd = new SqlCeCommand(sql, conexao))
+            {
+                cmd.Parameters.AddWithValue("@inicio", inicioJanela);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    int posicao = 1;
+                    while (reader.Read())
                     {
-                        int posicao = 1;
-                        while (reader.Read())
+                        var nome = reader.IsDBNull(0) ? "" : reader.GetString(0);
+                        var autor = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                        int emprestimos = 0;
+                        int quantidade = 0;
+                        try { emprestimos = reader.IsDBNull(2) ? 0 : Convert.ToInt32(reader.GetValue(2)); } catch { }
+                        try { quantidade = reader.IsDBNull(3) ? 0 : Convert.ToInt32(reader.GetValue(3)); } catch { }
+
+                        string disponibilidade = quantidade > 0 ? "Disponível" : "Indisponível";
+                        if (quantidade > 0 && quantidade < 5) disponibilidade = "Poucas unidades";
+
+                        lista.Add(new LivroPopular
                         {
-                            var nome = reader.IsDBNull(0) ? "" : reader.GetString(0);
-                            var autor = reader.IsDBNull(1) ? "" : reader.GetString(1);
-                            int emprestimos = 0;
-                            int quantidade = 0;
-                            try { emprestimos = reader.IsDBNull(2) ? 0 : Convert.ToInt32(reader.GetValue(2)); } catch { }
-                            try { quantidade = reader.IsDBNull(3) ? 0 : Convert.ToInt32(reader.GetValue(3)); } catch { }
-                            string disponibilidade = quantidade > 0 ? "Disponível" : "Indisponível";
-                            if (quantidade > 0 && quantidade < 5) disponibilidade = "Poucas unidades";
-                            lista.Add(new LivroPopular
-                            {
-                                Posicao = posicao++,
-                                Titulo = nome,
-                                Autor = autor,
-                                Emprestimos = emprestimos,
-                                Disponibilidade = disponibilidade
-                            });
-                        }
+                            Posicao = posicao++,
+                            Titulo = nome,
+                            Autor = autor,
+                            Emprestimos = emprestimos,
+                            Disponibilidade = disponibilidade
+                        });
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                try { var logDir = Path.Combine(Application.StartupPath, "logs"); Directory.CreateDirectory(logDir); File.AppendAllText(Path.Combine(logDir, "inicio_obter_livros.log"), DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine); } catch { }
-            }
-            return lista;
         }
+    }
+    catch (Exception ex)
+    {
+        try
+        {
+            var logDir = Path.Combine(Application.StartupPath, "logs");
+            Directory.CreateDirectory(logDir);
+            File.AppendAllText(Path.Combine(logDir, "inicio_obter_livros.log"),
+                DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
+        }
+        catch { }
+    }
+    return lista;
+}
 
         public class EstatisticaEmprestimo { public string Categoria { get; set; } public double Valor { get; set; } public string Detalhes { get; set; } }
         public class LivroPopular { public int Posicao { get; set; } public string Titulo { get; set; } public string Autor { get; set; } public int Emprestimos { get; set; } public string Disponibilidade { get; set; } }

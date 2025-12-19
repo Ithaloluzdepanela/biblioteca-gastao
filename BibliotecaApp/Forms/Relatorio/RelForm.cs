@@ -579,53 +579,26 @@ namespace BibliotecaApp.Forms.Relatorio
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
-            // Verificar se é a coluna do nome do usuário
             if (dgvHistorico.Columns[e.ColumnIndex].Name == "NomeU")
             {
-                var cellValue = dgvHistorico.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
-
-                // Se o valor for "Excluído", aplicar formatação vermelha
-                if (cellValue == "Excluído")
+                var v = e.Value?.ToString();
+                if (string.Equals(v, "Excluído", StringComparison.Ordinal))
                 {
                     e.CellStyle.ForeColor = Color.Red;
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
-                }
-                else
-                {
-                    // Resetar para a formatação padrão
-                    e.CellStyle.ForeColor = dgvHistorico.DefaultCellStyle.ForeColor;
-                    e.CellStyle.Font = dgvHistorico.DefaultCellStyle.Font;
                 }
             }
 
             if (dgvHistorico.Columns[e.ColumnIndex].Name == "NomeL")
             {
-                var cellValue = dgvHistorico.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
-
-                // Se o livro não existe mais na tabela Livros, pintar de vermelho
-                if (!string.IsNullOrEmpty(cellValue))
+                var v = e.Value?.ToString() ?? "";
+                if (v.EndsWith("(Excluído)", StringComparison.Ordinal))
                 {
-                    using (var conexao = Conexao.ObterConexao())
-                    {
-                        conexao.Open();
-                        string sql = "SELECT COUNT(*) FROM Livros WHERE Nome = @nome";
-                        using (var cmd = new SqlCeCommand(sql, conexao))
-                        {
-                            cmd.Parameters.AddWithValue("@nome", cellValue);
-                            int count = (int)cmd.ExecuteScalar();
-
-                            if (count == 0)
-                            {
-                                e.CellStyle.ForeColor = Color.Red;
-                                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
-                            }
-                        }
-                    }
+                    e.CellStyle.ForeColor = Color.Red;
+                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
                 }
             }
-        }
-
-
+}
         #region estilizacao listbox
         private int hoveredIndex = -1;
 

@@ -20,6 +20,10 @@ using System.Windows.Forms;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.Diagnostics;
+using ZXing;
+using ZXing.QrCode;
+using ZXing.Common;
+using System.Drawing.Imaging;
 
 namespace BibliotecaApp.Forms.Inicio
 {
@@ -142,7 +146,7 @@ namespace BibliotecaApp.Forms.Inicio
             };
 
             // Calcula o tamanho ideal para os cards
-            int cardWidth = (topPanelInside.Width - 24) / cardsInfo.Length - 16; // 16 = margem
+            int cardWidth = 210; // 16 = margem
             int cardHeight = 110;
 
             foreach (var c in cardsInfo) flowCards.Controls.Add(CriarCard(c.Key, c.Title, c.Sub, c.Color, cardWidth, cardHeight));
@@ -503,7 +507,7 @@ namespace BibliotecaApp.Forms.Inicio
             AplicarEstiloDataGridView(dgv);
             dgv.DefaultCellStyle.SelectionBackColor = ColorTranslator.FromHtml("#E7EEF7");
             dgv.DefaultCellStyle.SelectionForeColor = Color.FromArgb(20, 42, 60);
-         
+        
 
             dgv.CellMouseEnter += DataGrid_CellMouseEnter;
             dgv.CellMouseLeave += DataGrid_CellMouseLeave;
@@ -539,7 +543,7 @@ namespace BibliotecaApp.Forms.Inicio
             dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 
             
-       
+      
             dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = dgv.ColumnHeadersDefaultCellStyle.BackColor;
             dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = dgv.ColumnHeadersDefaultCellStyle.ForeColor;
 
@@ -659,19 +663,21 @@ namespace BibliotecaApp.Forms.Inicio
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
+                    // Considera DataProrrogacao quando existir; senão, DataDevolucao
                     string sql = @"
 SELECT 
     e.Id,
     u.Nome,
     u.Turma,
     l.Nome AS Livro,
-    e.DataDevolucao,
-    DATEDIFF(day, e.DataDevolucao, GETDATE()) AS DiasAtraso
+    COALESCE(e.DataProrrogacao, e.DataDevolucao) AS DataLimite,
+    DATEDIFF(day, COALESCE(e.DataProrrogacao, e.DataDevolucao), GETDATE()) AS DiasAtraso
 FROM Emprestimo e
 INNER JOIN Usuarios u ON e.Alocador = u.Id
 INNER JOIN Livros l ON e.Livro = l.Id
-WHERE e.Status = 'Atrasado'
-ORDER BY DiasAtraso DESC, e.DataDevolucao ASC";
+WHERE e.Status <> 'Devolvido'
+  AND COALESCE(e.DataProrrogacao, e.DataDevolucao) < GETDATE()
+ORDER BY DiasAtraso DESC, DataLimite ASC";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -679,18 +685,29 @@ ORDER BY DiasAtraso DESC, e.DataDevolucao ASC";
                         {
                             lista.Add(new EmprestimoAtrasadoInfo
                             {
-                                Id = reader.GetInt32(0),
-                                Nome = reader.GetString(1),
-                                Turma = reader.GetString(2),
-                                Livro = reader.GetString(3),
-                                DataDevolucao = reader.GetDateTime(4),
-                                DiasAtraso = reader.GetInt32(5)
+                                Id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0),
+                                Nome = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                                Turma = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                                Livro = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                                // Exibimos DataLimite na coluna "Data Devolução" (sem mudar o layout)
+                                DataDevolucao = reader.IsDBNull(4) ? DateTime.MinValue : reader.GetDateTime(4),
+                                DiasAtraso = reader.IsDBNull(5) ? 0 : reader.GetInt32(5)
                             });
                         }
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                try
+                {
+                    var logDir = Path.Combine(Application.StartupPath, "logs");
+                    Directory.CreateDirectory(logDir);
+                    File.AppendAllText(Path.Combine(logDir, "inicio_obter_devedores.log"),
+                        DateTime.Now + " - " + ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
+                }
+                catch { }
+            }
             return lista;
         }
 
@@ -799,7 +816,7 @@ ORDER BY DiasAtraso DESC, e.DataDevolucao ASC";
                             {
                                 var emprestimosAtrasados = ObterEmprestimosAtrasados();
                                 dgvDevedores.DataSource = null;
-                                dgvDevedores.DataSource = ObterEmprestimosAtrasados();
+                                dgvDevedores.DataSource = emprestimosAtrasados;
                                 dgvDevedores.ClearSelection();
                                 dgvDevedores.Refresh();
                                 EnsureEmptyOverlay(dgvDevedores, "Nenhum empréstimo atrasado no momento.");
@@ -1201,7 +1218,7 @@ private void GerarCartaCobrancaPDF(EmprestimoAtrasadoInfo devedor, List<(int Id,
         var fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11);
         var fontSmall = FontFactory.GetFont(FontFactory.HELVETICA, 9);
 
-        // Carregar imagens dos recursos do projeto
+        // Cabeçalho com brasões
         iTextSharp.text.Image imgEsq = null, imgDir = null;
         using (var ms = new MemoryStream())
         {
@@ -1218,48 +1235,26 @@ private void GerarCartaCobrancaPDF(EmprestimoAtrasadoInfo devedor, List<(int Id,
             imgDir.Alignment = Element.ALIGN_RIGHT;
         }
 
-        // Tabela para alinhar imagens e título
-        PdfPTable headerTable = new PdfPTable(3);
-        headerTable.WidthPercentage = 100;
+        var headerTable = new PdfPTable(3) { WidthPercentage = 100 };
         headerTable.SetWidths(new float[] { 1.2f, 5f, 1.2f });
 
-        // Celula imagem esquerda
-        PdfPCell cellImgEsq = new PdfPCell();
+        var cellImgEsq = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_LEFT, VerticalAlignment = Element.ALIGN_MIDDLE };
         if (imgEsq != null) cellImgEsq.AddElement(imgEsq);
-        cellImgEsq.Border = iTextSharp.text.Rectangle.NO_BORDER;
-        cellImgEsq.HorizontalAlignment = Element.ALIGN_LEFT;
-        cellImgEsq.VerticalAlignment = Element.ALIGN_MIDDLE;
         headerTable.AddCell(cellImgEsq);
 
-        // Celula título centralizado
-        PdfPCell cellTitle = new PdfPCell(new Phrase("ESCOLA ESTADUAL PROFESSOR GASTÃO VALLE   EEPGV", fontTitle));
-        cellTitle.Border = iTextSharp.text.Rectangle.NO_BORDER;
-        cellTitle.HorizontalAlignment = Element.ALIGN_CENTER;
-        cellTitle.VerticalAlignment = Element.ALIGN_MIDDLE;
+        var cellTitle = new PdfPCell(new Phrase("ESCOLA ESTADUAL PROFESSOR GASTÃO VALLE   EEPGV", fontTitle))
+        { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_CENTER, VerticalAlignment = Element.ALIGN_MIDDLE };
         headerTable.AddCell(cellTitle);
 
-        // Celula imagem direita
-        PdfPCell cellImgDir = new PdfPCell();
+        var cellImgDir = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE };
         if (imgDir != null) cellImgDir.AddElement(imgDir);
-        cellImgDir.Border = iTextSharp.text.Rectangle.NO_BORDER;
-        cellImgDir.HorizontalAlignment = Element.ALIGN_RIGHT;
-        cellImgDir.VerticalAlignment = Element.ALIGN_MIDDLE;
         headerTable.AddCell(cellImgDir);
-
-        // Espaçamento após o header
         headerTable.SpacingAfter = 30f;
-
-        // Adiciona a tabela ao documento
         doc.Add(headerTable);
 
-        // Linha "Eu ____________________________"
-        var pEu = new Paragraph("Eu ____________________________________________________________", fontNormal)
-        {
-            SpacingAfter = 20f
-        };
-        doc.Add(pEu);
+        // Corpo
+        doc.Add(new Paragraph("Eu ____________________________________________________________", fontNormal) { SpacingAfter = 20f });
 
-        // Texto de compromisso
         var pCompromisso = new Paragraph();
         pCompromisso.Add(new Chunk("Assumo a responsabilidade de devolver todos os livros (descritos abaixo) que estão em meu poder. Ciente que a ", fontNormal));
         pCompromisso.Add(new Chunk("não devolução", fontBold));
@@ -1277,53 +1272,94 @@ private void GerarCartaCobrancaPDF(EmprestimoAtrasadoInfo devedor, List<(int Id,
         {
             foreach (var livro in livros)
             {
-                // Cada informação em uma linha separada
                 doc.Add(new Paragraph($"ID: {livro.Id}", fontNormal));
                 doc.Add(new Paragraph($"Nome: {livro.Nome}", fontNormal));
                 doc.Add(new Paragraph($"Autor: {livro.Autor}", fontNormal) { SpacingAfter = 14f });
             }
         }
-        // Linhas extras para preenchimento manual
         for (int i = livros.Count; i < 4; i++)
-        {
             doc.Add(new Paragraph("________________________________________________________________________________", fontNormal) { SpacingAfter = 3f });
-        }
 
         doc.Add(new Paragraph("\n", fontNormal));
 
-        // Turma e Turno
+        // ===== Bloco Único: Esquerda (Turma/Data/Contato) + Direita (QR Code) =====
+        // Normalizador de telefone para wa.me
+        string NormalizePhoneForWa(string phone)
+        {
+            if (string.IsNullOrWhiteSpace(phone)) return null;
+            var digits = new string(phone.Where(char.IsDigit).ToArray());
+            if (string.IsNullOrEmpty(digits)) return null;
+            if (digits.StartsWith("55")) return digits;           // já tem DDI Brasil
+            if (digits.Length >= 10 && digits.Length <= 11) return "55" + digits; // DDD + número
+            return digits; // fallback
+        }
+
+        var infoTable = new PdfPTable(2) { WidthPercentage = 100, SpacingBefore = 4f, SpacingAfter = 26f };
+        infoTable.SetWidths(new float[] { 3.6f, 1.4f });
+
+        // Esquerda: textos empilhados
+        var leftCell = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, PaddingRight = 10f, VerticalAlignment = Element.ALIGN_MIDDLE };
         var pTurma = new Paragraph();
         pTurma.Add(new Chunk("Turma: ", fontNormal));
         pTurma.Add(new Chunk(devedor.Turma + "    ", fontBold));
         pTurma.Add(new Chunk("Turno: ___________", fontNormal));
-        pTurma.SpacingAfter = 10f;
-        doc.Add(pTurma);
 
-        // Data da comunicação (ano e mês atual)
         var dataAtual = DateTime.Now;
-        string dataComunicacao = $"Data da comunicação: ____/ {dataAtual:MM/yyyy}";
-        doc.Add(new Paragraph(dataComunicacao, fontNormal) { SpacingAfter = 8f });
-
-        // Contato (telefone do usuário)
+        var pData = new Paragraph($"Data da comunicação: ____/ {dataAtual:MM/yyyy}", fontNormal);
         string contatoStr = "Contato do Aluno/Responsável: " + (string.IsNullOrWhiteSpace(telefone) ? "___________________________" : telefone);
-        doc.Add(new Paragraph(contatoStr, fontNormal) { SpacingAfter = 45f });
+        var pContato = new Paragraph(contatoStr, fontNormal);
 
-        // Linha para assinatura
-        doc.Add(new Paragraph("___________________________________________________", fontNormal) { Alignment = Element.ALIGN_CENTER, SpacingAfter = 2f });
+        leftCell.AddElement(pTurma);
+        leftCell.AddElement(new Paragraph(" ", fontSmall)); // pequeno espaçamento
+        leftCell.AddElement(pData);
+        leftCell.AddElement(new Paragraph(" ", fontSmall));
+        leftCell.AddElement(pContato);
+        infoTable.AddCell(leftCell);
 
-
-        var pAssinatura = new Paragraph("ASSINATURA DO ALUNO/RESPONSÁVEL", fontNormal)
+        // Direita: somente QR Code (maior) ou vazio se não houver telefone
+        var rightCell = new PdfPCell { Border = iTextSharp.text.Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE };
+        var waNumber = NormalizePhoneForWa(telefone);
+        if (!string.IsNullOrEmpty(waNumber))
         {
-            Alignment = Element.ALIGN_CENTER
-        };
-        doc.Add(pAssinatura);
+            string msg = $"Olá! Aqui é da biblioteca. Referente ao empréstimo em atraso do(a) {devedor.Nome} (da Turma {devedor.Turma}). Podemos falar?";
+            string waUrl = $"https://wa.me/{waNumber}?text={Uri.EscapeDataString(msg)}";
+
+            var qrWriter = new ZXing.BarcodeWriter
+            {
+                Format = ZXing.BarcodeFormat.QR_CODE,
+                Options = new QrCodeEncodingOptions
+                {
+                    Width = 280,
+                    Height = 280,
+                    Margin = 1,
+                    CharacterSet = "UTF-8",
+                    ErrorCorrection = ZXing.QrCode.Internal.ErrorCorrectionLevel.M
+                }
+            };
+
+            using (var qrBmp = qrWriter.Write(waUrl))
+            using (var msQr = new MemoryStream())
+            {
+                qrBmp.Save(msQr, System.Drawing.Imaging.ImageFormat.Png);
+                var qrImg = iTextSharp.text.Image.GetInstance(msQr.ToArray());
+                qrImg.ScaleAbsolute(105f, 105f); // maior que antes
+                qrImg.Alignment = Element.ALIGN_RIGHT;
+                rightCell.AddElement(qrImg);
+            }
+        }
+        infoTable.AddCell(rightCell);
+
+        doc.Add(infoTable);
+        // ===== Fim do bloco único =====
+
+        // Assinatura
+        doc.Add(new Paragraph("___________________________________________________", fontNormal) { Alignment = Element.ALIGN_CENTER, SpacingAfter = 2f });
+        doc.Add(new Paragraph("ASSINATURA DO ALUNO/RESPONSÁVEL", fontNormal) { Alignment = Element.ALIGN_CENTER });
 
         doc.Close();
     }
 
     MessageBox.Show("Carta de cobrança gerada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-    // (Opcional) Abrir PDF após gerar
     try { Process.Start(dlg.FileName); } catch { }
 }
 
@@ -1340,7 +1376,10 @@ SELECT l.Id, l.Nome, l.Autor
 FROM Emprestimo e
 INNER JOIN Usuarios u ON e.Alocador = u.Id
 INNER JOIN Livros l ON e.Livro = l.Id
-WHERE e.Status = 'Atrasado' AND u.Nome = @nome AND u.Turma = @turma";
+WHERE u.Nome = @nome
+  AND u.Turma = @turma
+  AND e.Status <> 'Devolvido'
+  AND COALESCE(e.DataProrrogacao, e.DataDevolucao) < GETDATE()";
             using (var cmd = new SqlCeCommand(sql, conexao))
             {
                 cmd.Parameters.AddWithValue("@nome", nomeAluno);

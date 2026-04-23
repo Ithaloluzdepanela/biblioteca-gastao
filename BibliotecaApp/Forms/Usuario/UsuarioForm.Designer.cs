@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnGerenciarTurmas = new System.Windows.Forms.Button();
             this.lblEmprestimo = new System.Windows.Forms.Label();
             this.btnFiltrar = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -45,6 +46,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.btnGerenciarTurmas);
             this.panel1.Controls.Add(this.lblEmprestimo);
             this.panel1.Controls.Add(this.cmbEmprestimo);
             this.panel1.Controls.Add(this.btnFiltrar);
@@ -60,6 +62,26 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1280, 845);
             this.panel1.TabIndex = 6;
+            // 
+            // btnGerenciarTurmas
+            // 
+            this.btnGerenciarTurmas.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGerenciarTurmas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.btnGerenciarTurmas.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnGerenciarTurmas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGerenciarTurmas.Font = new System.Drawing.Font("Segoe UI Semibold", 12.25F, System.Drawing.FontStyle.Bold);
+            this.btnGerenciarTurmas.ForeColor = System.Drawing.Color.White;
+            this.btnGerenciarTurmas.Image = global::BibliotecaApp.Properties.Resources.icons8_configurações_27;
+            this.btnGerenciarTurmas.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnGerenciarTurmas.Location = new System.Drawing.Point(1149, 786);
+            this.btnGerenciarTurmas.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnGerenciarTurmas.Name = "btnGerenciarTurmas";
+            this.btnGerenciarTurmas.Padding = new System.Windows.Forms.Padding(3, 8, 0, 10);
+            this.btnGerenciarTurmas.Size = new System.Drawing.Size(107, 47);
+            this.btnGerenciarTurmas.TabIndex = 113;
+            this.btnGerenciarTurmas.Text = "     Turmas";
+            this.btnGerenciarTurmas.UseVisualStyleBackColor = false;
+            this.btnGerenciarTurmas.Click += new System.EventHandler(this.btnGerenciarTurmas_Click);
             // 
             // lblEmprestimo
             // 
@@ -78,6 +100,7 @@
             // 
             this.btnFiltrar.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnFiltrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.btnFiltrar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnFiltrar.ForeColor = System.Drawing.Color.White;
@@ -100,7 +123,7 @@
             this.label3.BackColor = System.Drawing.Color.White;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(787, 95);
+            this.label3.Location = new System.Drawing.Point(810, 95);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(122, 25);
             this.label3.TabIndex = 89;
@@ -261,5 +284,6 @@
         public System.Windows.Forms.Label lblEmprestimo;
         private RoundedComboBox cmbEmprestimo;
         public RoundedTextBox txtNome;
+        private System.Windows.Forms.Button btnGerenciarTurmas;
     }
 }

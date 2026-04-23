@@ -22,10 +22,16 @@
             this.lblTutorialTitulo = new System.Windows.Forms.Label();
             this.progressBarWizard = new System.Windows.Forms.ProgressBar();
             this.lblProgressoWizard = new System.Windows.Forms.Label();
+            this.panelBotoes = new System.Windows.Forms.Panel();
+            this.btnAnterior = new System.Windows.Forms.Button();
+            this.btnProximo = new System.Windows.Forms.Button();
+            this.btnCancelar = new System.Windows.Forms.Button();
             this.panelEtapa1 = new System.Windows.Forms.Panel();
             this.lblInstrucaoEtapa1 = new System.Windows.Forms.Label();
             this.dgvPadroes = new System.Windows.Forms.DataGridView();
             this.panelEtapa2 = new System.Windows.Forms.Panel();
+            this.txtBuscaAlunoEtapa2 = new RoundedTextBox();
+            this.lblFiltroNomeEtapa2 = new System.Windows.Forms.Label();
             this.lblInstrucaoEtapa2 = new System.Windows.Forms.Label();
             this.lblFiltroEtapa2 = new System.Windows.Forms.Label();
             this.cmbFiltroTurmaEtapa2 = new System.Windows.Forms.ComboBox();
@@ -33,20 +39,14 @@
             this.panelEtapa3 = new System.Windows.Forms.Panel();
             this.lblInstrucaoEtapa3 = new System.Windows.Forms.Label();
             this.txtResumoFinal = new System.Windows.Forms.TextBox();
-            this.panelBotoes = new System.Windows.Forms.Panel();
-            this.btnAnterior = new System.Windows.Forms.Button();
-            this.btnProximo = new System.Windows.Forms.Button();
-            this.btnCancelar = new System.Windows.Forms.Button();
-            this.lblFiltroNomeEtapa2 = new System.Windows.Forms.Label();
-            this.txtBuscaAlunoEtapa2 = new RoundedTextBox();
             this.panelPrincipal.SuspendLayout();
             this.pnlTutorial.SuspendLayout();
+            this.panelBotoes.SuspendLayout();
             this.panelEtapa1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPadroes)).BeginInit();
             this.panelEtapa2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAjustesIndividuais)).BeginInit();
             this.panelEtapa3.SuspendLayout();
-            this.panelBotoes.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelPrincipal
@@ -124,6 +124,59 @@
             this.lblProgressoWizard.TabIndex = 2;
             this.lblProgressoWizard.Text = "Etapa 1 de 3";
             // 
+            // panelBotoes
+            // 
+            this.panelBotoes.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.panelBotoes.Controls.Add(this.btnAnterior);
+            this.panelBotoes.Controls.Add(this.btnProximo);
+            this.panelBotoes.Controls.Add(this.btnCancelar);
+            this.panelBotoes.Location = new System.Drawing.Point(30, 720);
+            this.panelBotoes.Name = "panelBotoes";
+            this.panelBotoes.Size = new System.Drawing.Size(1140, 60);
+            this.panelBotoes.TabIndex = 6;
+            // 
+            // btnAnterior
+            // 
+            this.btnAnterior.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
+            this.btnAnterior.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAnterior.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.btnAnterior.ForeColor = System.Drawing.Color.White;
+            this.btnAnterior.Location = new System.Drawing.Point(400, 10);
+            this.btnAnterior.Name = "btnAnterior";
+            this.btnAnterior.Size = new System.Drawing.Size(120, 40);
+            this.btnAnterior.TabIndex = 0;
+            this.btnAnterior.Text = "← Anterior";
+            this.btnAnterior.UseVisualStyleBackColor = false;
+            this.btnAnterior.Click += new System.EventHandler(this.BtnAnterior_Click);
+            // 
+            // btnProximo
+            // 
+            this.btnProximo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.btnProximo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnProximo.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.btnProximo.ForeColor = System.Drawing.Color.White;
+            this.btnProximo.Location = new System.Drawing.Point(540, 10);
+            this.btnProximo.Name = "btnProximo";
+            this.btnProximo.Size = new System.Drawing.Size(120, 40);
+            this.btnProximo.TabIndex = 1;
+            this.btnProximo.Text = "Avançar →";
+            this.btnProximo.UseVisualStyleBackColor = false;
+            this.btnProximo.Click += new System.EventHandler(this.BtnProximo_Click);
+            // 
+            // btnCancelar
+            // 
+            this.btnCancelar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
+            this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancelar.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.btnCancelar.ForeColor = System.Drawing.Color.White;
+            this.btnCancelar.Location = new System.Drawing.Point(680, 10);
+            this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Size = new System.Drawing.Size(120, 40);
+            this.btnCancelar.TabIndex = 2;
+            this.btnCancelar.Text = "Cancelar";
+            this.btnCancelar.UseVisualStyleBackColor = false;
+            this.btnCancelar.Click += new System.EventHandler(this.BtnCancelar_Click);
+            // 
             // panelEtapa1
             // 
             this.panelEtapa1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
@@ -172,6 +225,46 @@
             this.panelEtapa2.Size = new System.Drawing.Size(1140, 600);
             this.panelEtapa2.TabIndex = 4;
             this.panelEtapa2.Visible = false;
+            // 
+            // txtBuscaAlunoEtapa2
+            // 
+            this.txtBuscaAlunoEtapa2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtBuscaAlunoEtapa2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtBuscaAlunoEtapa2.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtBuscaAlunoEtapa2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtBuscaAlunoEtapa2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtBuscaAlunoEtapa2.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtBuscaAlunoEtapa2.BorderRadius = 10;
+            this.txtBuscaAlunoEtapa2.BorderThickness = 1;
+            this.txtBuscaAlunoEtapa2.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtBuscaAlunoEtapa2.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.txtBuscaAlunoEtapa2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtBuscaAlunoEtapa2.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtBuscaAlunoEtapa2.Location = new System.Drawing.Point(594, 41);
+            this.txtBuscaAlunoEtapa2.Name = "txtBuscaAlunoEtapa2";
+            this.txtBuscaAlunoEtapa2.Padding = new System.Windows.Forms.Padding(7);
+            this.txtBuscaAlunoEtapa2.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtBuscaAlunoEtapa2.PlaceholderFont = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.txtBuscaAlunoEtapa2.PlaceholderMarginLeft = 12;
+            this.txtBuscaAlunoEtapa2.PlaceholderText = "Digite aqui o nome para filtrar...";
+            this.txtBuscaAlunoEtapa2.SelectedText = "";
+            this.txtBuscaAlunoEtapa2.SelectionLength = 0;
+            this.txtBuscaAlunoEtapa2.SelectionStart = 0;
+            this.txtBuscaAlunoEtapa2.Size = new System.Drawing.Size(324, 31);
+            this.txtBuscaAlunoEtapa2.TabIndex = 5;
+            this.txtBuscaAlunoEtapa2.TextColor = System.Drawing.Color.Black;
+            this.txtBuscaAlunoEtapa2.UseSystemPasswordChar = false;
+            // 
+            // lblFiltroNomeEtapa2
+            // 
+            this.lblFiltroNomeEtapa2.AutoSize = true;
+            this.lblFiltroNomeEtapa2.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
+            this.lblFiltroNomeEtapa2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.lblFiltroNomeEtapa2.Location = new System.Drawing.Point(486, 47);
+            this.lblFiltroNomeEtapa2.Name = "lblFiltroNomeEtapa2";
+            this.lblFiltroNomeEtapa2.Size = new System.Drawing.Size(100, 20);
+            this.lblFiltroNomeEtapa2.TabIndex = 4;
+            this.lblFiltroNomeEtapa2.Text = "Filtrar Nome:";
             // 
             // lblInstrucaoEtapa2
             // 
@@ -247,99 +340,6 @@
             this.txtResumoFinal.Size = new System.Drawing.Size(1120, 545);
             this.txtResumoFinal.TabIndex = 1;
             // 
-            // panelBotoes
-            // 
-            this.panelBotoes.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.panelBotoes.Controls.Add(this.btnAnterior);
-            this.panelBotoes.Controls.Add(this.btnProximo);
-            this.panelBotoes.Controls.Add(this.btnCancelar);
-            this.panelBotoes.Location = new System.Drawing.Point(30, 720);
-            this.panelBotoes.Name = "panelBotoes";
-            this.panelBotoes.Size = new System.Drawing.Size(1140, 60);
-            this.panelBotoes.TabIndex = 6;
-            // 
-            // btnAnterior
-            // 
-            this.btnAnterior.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(117)))), ((int)(((byte)(125)))));
-            this.btnAnterior.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAnterior.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            this.btnAnterior.ForeColor = System.Drawing.Color.White;
-            this.btnAnterior.Location = new System.Drawing.Point(400, 10);
-            this.btnAnterior.Name = "btnAnterior";
-            this.btnAnterior.Size = new System.Drawing.Size(120, 40);
-            this.btnAnterior.TabIndex = 0;
-            this.btnAnterior.Text = "← Anterior";
-            this.btnAnterior.UseVisualStyleBackColor = false;
-            this.btnAnterior.Click += new System.EventHandler(this.BtnAnterior_Click);
-            // 
-            // btnProximo
-            // 
-            this.btnProximo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.btnProximo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnProximo.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            this.btnProximo.ForeColor = System.Drawing.Color.White;
-            this.btnProximo.Location = new System.Drawing.Point(540, 10);
-            this.btnProximo.Name = "btnProximo";
-            this.btnProximo.Size = new System.Drawing.Size(120, 40);
-            this.btnProximo.TabIndex = 1;
-            this.btnProximo.Text = "Avançar →";
-            this.btnProximo.UseVisualStyleBackColor = false;
-            this.btnProximo.Click += new System.EventHandler(this.BtnProximo_Click);
-            // 
-            // btnCancelar
-            // 
-            this.btnCancelar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
-            this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancelar.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            this.btnCancelar.ForeColor = System.Drawing.Color.White;
-            this.btnCancelar.Location = new System.Drawing.Point(680, 10);
-            this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(120, 40);
-            this.btnCancelar.TabIndex = 2;
-            this.btnCancelar.Text = "Cancelar";
-            this.btnCancelar.UseVisualStyleBackColor = false;
-            this.btnCancelar.Click += new System.EventHandler(this.BtnCancelar_Click);
-            // 
-            // lblFiltroNomeEtapa2
-            // 
-            this.lblFiltroNomeEtapa2.AutoSize = true;
-            this.lblFiltroNomeEtapa2.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
-            this.lblFiltroNomeEtapa2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblFiltroNomeEtapa2.Location = new System.Drawing.Point(486, 47);
-            this.lblFiltroNomeEtapa2.Name = "lblFiltroNomeEtapa2";
-            this.lblFiltroNomeEtapa2.Size = new System.Drawing.Size(100, 20);
-            this.lblFiltroNomeEtapa2.TabIndex = 4;
-            this.lblFiltroNomeEtapa2.Text = "Filtrar Nome:";
-            // 
-            // txtBuscaAlunoEtapa2
-            // 
-            this.txtBuscaAlunoEtapa2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtBuscaAlunoEtapa2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
-            this.txtBuscaAlunoEtapa2.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
-            this.txtBuscaAlunoEtapa2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.txtBuscaAlunoEtapa2.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.txtBuscaAlunoEtapa2.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
-            this.txtBuscaAlunoEtapa2.BorderRadius = 10;
-            this.txtBuscaAlunoEtapa2.BorderThickness = 1;
-            this.txtBuscaAlunoEtapa2.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtBuscaAlunoEtapa2.Font = new System.Drawing.Font("Segoe UI", 11.25F);
-            this.txtBuscaAlunoEtapa2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.txtBuscaAlunoEtapa2.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtBuscaAlunoEtapa2.Location = new System.Drawing.Point(594, 41);
-            this.txtBuscaAlunoEtapa2.Name = "txtBuscaAlunoEtapa2";
-            this.txtBuscaAlunoEtapa2.Padding = new System.Windows.Forms.Padding(7);
-            this.txtBuscaAlunoEtapa2.PlaceholderColor = System.Drawing.Color.Gray;
-            this.txtBuscaAlunoEtapa2.PlaceholderFont = new System.Drawing.Font("Segoe UI", 11.25F);
-            this.txtBuscaAlunoEtapa2.PlaceholderMarginLeft = 12;
-            this.txtBuscaAlunoEtapa2.PlaceholderText = "Digite aqui o nome para filtrar...";
-            this.txtBuscaAlunoEtapa2.SelectedText = "";
-            this.txtBuscaAlunoEtapa2.SelectionLength = 0;
-            this.txtBuscaAlunoEtapa2.SelectionStart = 0;
-            this.txtBuscaAlunoEtapa2.Size = new System.Drawing.Size(324, 31);
-            this.txtBuscaAlunoEtapa2.TabIndex = 5;
-            this.txtBuscaAlunoEtapa2.TextColor = System.Drawing.Color.Black;
-            this.txtBuscaAlunoEtapa2.UseSystemPasswordChar = false;
-            // 
             // MapeamentoDeTurmasWizardForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -358,6 +358,7 @@
             this.panelPrincipal.PerformLayout();
             this.pnlTutorial.ResumeLayout(false);
             this.pnlTutorial.PerformLayout();
+            this.panelBotoes.ResumeLayout(false);
             this.panelEtapa1.ResumeLayout(false);
             this.panelEtapa1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPadroes)).EndInit();
@@ -366,7 +367,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvAjustesIndividuais)).EndInit();
             this.panelEtapa3.ResumeLayout(false);
             this.panelEtapa3.PerformLayout();
-            this.panelBotoes.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

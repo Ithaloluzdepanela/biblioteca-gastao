@@ -2,40 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace BibliotecaApp.Utils
 {
     public static class TurmasUtil
     {
         // --- Lista padronizada de turmas permitidas (adicione aqui outras que precise) ---
-        public static readonly List<string> TurmasPermitidas = new List<string>
+        private static List<string> _turmasPermitidas;
+        public static List<string> TurmasPermitidas
         {
-            "1º ADMINISTRAÇÃO EP PRO 1",
-            "1º DESENV DE SISTEMAS EM INT 1",
-            "1º DESENV DE SISTEMAS EM INT 2",
-            "1º EM INT 1",
-            "1º EM INT 2",
-            "1º EM REG 1",
-
-            "2º AGRONEGÓCIO EM INT 1",
-            "2º DESENV DE SISTEMAS EM INT 1",
-            "2º DESENV DE SISTEMAS EM INT 2",
-            "2º ELETROMECÂNICA EP PRO 1",
-            "2º ELETROMECÂNICA EP PRO 2",
-            "2º EM INT 1",
-            "2º EM REG 1",
-
-            "3º AGRONEGÓCIO EM INT 1",
-            "3º DESENV DE SISTEMAS EM INT 1",
-            "3º EM INT 1",
-            "3º EM REG 1",
-            "3º EM REG 2",
-
-            "6º EF AF REG 1", "6º EF AF REG 2", "6º EF AF REG 3", "6º EF AF REG 4",
-            "7º EF AF REG 1", "7º EF AF REG 2", "7º EF AF REG 3", "7º EF AF REG 4",
-            "8º EF AF REG 1", "8º EF AF REG 2", "8º EF AF REG 3", "8º EF AF REG 4", "8º EF AF REG 5",
-            "9º EF AF REG 1", "9º EF AF REG 2", "9º EF AF REG 3", "9º EF AF REG 4", "9º EF AF REG 5"
-        };
+            get
+            {
+                if (_turmasPermitidas == null)
+                    CarregarTurmas();
+                return _turmasPermitidas;
+            }
+        }
 
         // Abreviações que os usuários podem digitar (mapeia pra forma curta usada na normalização)
         private static readonly Dictionary<string, string> Abreviacoes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
@@ -46,6 +30,9 @@ namespace BibliotecaApp.Utils
             { "pro", "pro" }, { "eletro", "eletromec" }, { "sis", "sistemas" }
         };
 
+        private static readonly string CaminhoTurmasJson = 
+    Path.Combine(BibliotecaApp.Utils.AppPaths.MappingFolder, "turmas.json");
+
         /// <summary>
         /// Busca sugestões inteligentes a partir do texto digitado pelo usuário.
         /// Suporta variações como "2d", "2 d", "2 des", "2ºd", abreviações e erros leves de digitação.
@@ -55,7 +42,7 @@ namespace BibliotecaApp.Utils
             if (string.IsNullOrWhiteSpace(texto)) return new List<string>();
 
             string entradaOriginal = texto.Trim();
-            var variantesEntrada = GerarVariantesEntrada(entradaOriginal);
+            var variants = GerarVariantesEntrada(entradaOriginal);
 
             // Preprocessa turmas
             var tabelaTurmas = TurmasPermitidas
@@ -81,7 +68,7 @@ namespace BibliotecaApp.Utils
             var candidatos = new List<(string Turma, int Score)>();
             var vistos = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var varEnt in variantesEntrada)
+            foreach (var varEnt in variants)
             {
                 string varNorm = NormalizarParaComparacao(varEnt);
 
@@ -271,5 +258,181 @@ namespace BibliotecaApp.Utils
 
             return d[s.Length, t.Length];
         }
+
+        /// <summary>
+        /// Adiciona uma turma dinamicamente ao sistema sem alterar o banco de dados.
+        /// A turma é armazenada em arquivo JSON local e persiste entre sessões.
+        /// </summary>
+        public static void AdicionarTurmaDinamicamente(string turma)
+        {
+            if (string.IsNullOrWhiteSpace(turma))
+                return;
+
+            string turmaNormalizada = turma.Trim().ToUpperInvariant();
+
+            // Verifica se já existe (case-insensitive)
+            if (TurmasPermitidas.Any(t => t.Equals(turmaNormalizada, StringComparison.OrdinalIgnoreCase)))
+                return;
+
+            // Adiciona à lista em memória
+            TurmasPermitidas.Add(turmaNormalizada);
+            TurmasPermitidas.Sort(); // Manter ordenado
+
+            // Persiste em arquivo JSON local
+            PersistirTurmasDinamicas();
+        }
+
+        /// <summary>
+        /// Salva as turmas dinâmicas em arquivo JSON na pasta de mapeamento.
+        /// </summary>
+        private static void PersistirTurmasDinamicas()
+        {
+            try
+            {
+                BibliotecaApp.Utils.AppPaths.EnsureFolders();
+                string pastaMapeamento = BibliotecaApp.Utils.AppPaths.MappingFolder;
+                string caminhoArquivo = Path.Combine(pastaMapeamento, "turmas_dinamicas.json");
+
+                var dados = new
+                {
+                    Turmas = TurmasPermitidas,
+                    DataUltimaAtualizacao = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+
+                string json = JsonConvert.SerializeObject(dados, Formatting.Indented);
+                File.WriteAllText(caminhoArquivo, json);
+
+                System.Diagnostics.Trace.WriteLine($"[TurmasUtil] Turmas dinâmicas persistidas: {caminhoArquivo}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"[TurmasUtil] Erro ao persistir turmas: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Carrega turmas dinâmicas do arquivo JSON se ele existir.
+        /// Chamado durante inicialização para restaurar turmas de sessões anteriores.
+        /// </summary>
+        public static void CarregarTurmasDinamicas()
+        {
+            try
+            {
+                BibliotecaApp.Utils.AppPaths.EnsureFolders();
+                string pastaMapeamento = BibliotecaApp.Utils.AppPaths.MappingFolder;
+                string caminhoArquivo = Path.Combine(pastaMapeamento, "turmas_dinamicas.json");
+
+                if (File.Exists(caminhoArquivo))
+                {
+                    string json = File.ReadAllText(caminhoArquivo);
+                    dynamic dados = JsonConvert.DeserializeObject(json);
+
+                    if (dados?.Turmas != null)
+                    {
+                        foreach (var turma in dados.Turmas)
+                        {
+                            string turmaNormalizada = ((string)turma).Trim().ToUpperInvariant();
+                            if (!TurmasPermitidas.Any(t => t.Equals(turmaNormalizada, StringComparison.OrdinalIgnoreCase)))
+                            {
+                                TurmasPermitidas.Add(turmaNormalizada);
+                            }
+                        }
+                        TurmasPermitidas.Sort();
+                        System.Diagnostics.Trace.WriteLine($"[TurmasUtil] {dados.Turmas.Count} turmas dinâmicas carregadas");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"[TurmasUtil] Erro ao carregar turmas dinâmicas: {ex.Message}");
+            }
+        }
+
+        public static void Salvar(List<string> turmas)
+{
+    _turmasPermitidas = new List<string>(turmas);
+    try
+    {
+        BibliotecaApp.Utils.AppPaths.EnsureFolders();
+        var dados = new
+        {
+            Turmas = _turmasPermitidas,
+            DataUltimaAtualizacao = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+        };
+        string json = JsonConvert.SerializeObject(dados, Formatting.Indented);
+        File.WriteAllText(CaminhoTurmasJson, json);
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("Erro ao salvar turmas: " + ex.Message, ex);
+    }
+}
+
+public static List<string> Carregar()
+{
+    CarregarTurmas();
+    return new List<string>(_turmasPermitidas);
+}
+
+private static void CarregarTurmas()
+{
+    BibliotecaApp.Utils.AppPaths.EnsureFolders();
+    if (File.Exists(CaminhoTurmasJson))
+    {
+        try
+        {
+            string json = File.ReadAllText(CaminhoTurmasJson);
+            dynamic dados = JsonConvert.DeserializeObject(json);
+            var lista = new List<string>();
+            if (dados?.Turmas != null)
+            {
+                foreach (var turma in dados.Turmas)
+                {
+                    string t = ((string)turma).Trim();
+                    if (!string.IsNullOrEmpty(t))
+                        lista.Add(t);
+                }
+            }
+            if (lista.Count > 0)
+            {
+                _turmasPermitidas = lista;
+                return;
+            }
+        }
+        catch { /* fallback para padrão */ }
+    }
+    _turmasPermitidas = TurmasPadrao();
+}
+
+public static List<string> TurmasPadrao()
+{
+    return new List<string>
+    {
+        "1º ADMINISTRAÇÃO EP PRO 1",
+        "1º DESENV DE SISTEMAS EM INT 1",
+        "1º DESENV DE SISTEMAS EM INT 2",
+        "1º EM INT 1",
+        "1º EM INT 2",
+        "1º EM REG 1",
+        "2º AGRONEGÓCIO EM INT 1",
+        "2º DESENV DE SISTEMAS EM INT 1",
+        "2º DESENV DE SISTEMAS EM INT 2",
+        "2º ELETROMECÂNICA EP PRO 1",
+        "2º ELETROMECÂNICA EP PRO 2",
+        "2º EM INT 1",
+        "2º EM INT 2",
+        "2º EM REG 1",
+        "3º AGRONEGÓCIO EM INT 1",
+        "3º DESENV DE SISTEMAS EM INT 1",
+        "3º DESENV DE SISTEMAS EM INT 2",
+        "3º EM INT 1",
+        "3º EM REG 1",
+        "3º EM REG 2",
+        "6º EF AF REG 1", "6º EF AF REG 2", "6º EF AF REG 3", "6º EF AF REG 4",
+        "7º EF AF REG 1", "7º EF AF REG 2", "7º EF AF REG 3", "7º EF AF REG 4",
+        "8º EF AF REG 1", "8º EF AF REG 2", "8º EF AF REG 3", "8º EF AF REG 4", "8º EF AF REG 5",
+        "9º EF AF REG 1", "9º EF AF REG 2", "9º EF AF REG 3", "9º EF AF REG 4", "9º EF AF REG 5"
+    };
+}
     }
 }

@@ -768,7 +768,7 @@ namespace BibliotecaApp.Forms.Inicio
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    // agora trazemos também u.Id (UsuarioId)
+                    // agora trazemos também u.Id (UsuarioId) ,
                     string sql = @"
 SELECT 
     e.Id,
@@ -783,6 +783,7 @@ INNER JOIN Usuarios u ON e.Alocador = u.Id
 INNER JOIN Livros l ON e.Livro = l.Id
 WHERE e.Status <> 'Devolvido'
   AND COALESCE(e.DataProrrogacao, e.DataDevolucao) < GETDATE()
+  AND DATEDIFF(day, COALESCE(e.DataProrrogacao, e.DataDevolucao), GETDATE()) > 0
 ORDER BY DiasAtraso DESC, DataLimite ASC";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     using (var reader = cmd.ExecuteReader())

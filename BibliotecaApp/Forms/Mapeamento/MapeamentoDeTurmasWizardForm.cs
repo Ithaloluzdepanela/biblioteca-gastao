@@ -409,6 +409,7 @@ namespace BibliotecaApp.Forms.Usuario
                         "Nesta etapa você define as **turmas padrão**.\n" +
                         "➡ Cada turma atual do sistema terá uma sugestão automática do próximo ano ou curso técnico.\n" +
                         "💡 Dica: revise as sugestões e ajuste apenas se necessário para evitar inconsistências.\n" +
+                        "🆕 Clique em \"Criar Nova Turma\" se uma turma não estiver na lista de opções.\n" +
                         "✅ O sistema aplicará automaticamente essas escolhas na Etapa 2.";
                     break;
 
@@ -497,6 +498,24 @@ namespace BibliotecaApp.Forms.Usuario
 
             EstilizarDataGrid(dgvPadroes);
             GarantirApenasComboEditavel(dgvPadroes, new[] { "NovoPadrao" }, alturaLinhaFixa: 35);
+
+            // Adicionar botão "Criar Nova Turma" dinamicamente na Etapa 1 (P1 - Turmas Dinâmicas)
+            if (panelEtapa1.Controls.Find("btnCriarNovaTurma", false).Length == 0)
+            {
+                var btnCriarNovaTurma = new System.Windows.Forms.Button
+                {
+                    Name = "btnCriarNovaTurma",
+                    Text = "➕ Criar Nova Turma",
+                    Location = new System.Drawing.Point(dgvPadroes.Left, dgvPadroes.Bottom + 10),
+                    Size = new System.Drawing.Size(200, 30),
+                    BackColor = System.Drawing.Color.FromArgb(34, 139, 34),
+                    ForeColor = System.Drawing.Color.White,
+                    FlatStyle = System.Windows.Forms.FlatStyle.Flat,
+                    Cursor = System.Windows.Forms.Cursors.Hand
+                };
+                btnCriarNovaTurma.Click += (s, e) => CriarNovaturmaDinamicamente();
+                panelEtapa1.Controls.Add(btnCriarNovaTurma);
+            }
         }
 
         // Torna o tratamento de erro do combo mais resiliente na Etapa 1
@@ -657,6 +676,52 @@ namespace BibliotecaApp.Forms.Usuario
             opcoes = FiltrarEpProSeNecessario(opcoes).ToList();
 
             return opcoes.Distinct().OrderBy(o => o).ToList();
+        }
+
+        /// <summary>
+        /// Permite que o usuário crie uma nova turma dinamicamente durante o mapeamento.
+        /// A turma é adicionada à lista persistente de turmas permitidas (sem alterar DB).
+        /// </summary>
+        private void CriarNovaturmaDinamicamente()
+        {
+            using (var dialog = new Form())
+            {
+                dialog.Text = "Criar Nova Turma";
+                dialog.Width = 400;
+                dialog.Height = 150;
+                dialog.StartPosition = FormStartPosition.CenterParent;
+                dialog.FormBorderStyle = FormBorderStyle.FixedDialog;
+                dialog.MaximizeBox = false;
+                dialog.MinimizeBox = false;
+
+                var label = new Label { Text = "Nome da nova turma:", Left = 10, Top = 20, Width = 360 };
+                var txtNovaTurma = new TextBox { Left = 10, Top = 50, Width = 360, Height = 25 };
+                var btnOk = new Button { Text = "Criar", DialogResult = DialogResult.OK, Left = 230, Top = 85, Width = 70, Height = 25 };
+                var btnCancelar = new Button { Text = "Cancelar", DialogResult = DialogResult.Cancel, Left = 310, Top = 85, Width = 70, Height = 25 };
+
+                dialog.Controls.Add(label);
+                dialog.Controls.Add(txtNovaTurma);
+                dialog.Controls.Add(btnOk);
+                dialog.Controls.Add(btnCancelar);
+
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    string novaTurma = txtNovaTurma.Text.Trim();
+                    if (string.IsNullOrWhiteSpace(novaTurma))
+                    {
+                        MessageBox.Show("Por favor, digite um nome válido para a turma.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // Adiciona a turma dinamicamente (sem alterar DB)
+                    TurmasUtil.AdicionarTurmaDinamicamente(novaTurma);
+
+                    MessageBox.Show($"Turma '{novaTurma}' criada com sucesso e será disponível para seleção!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Recarregar a Etapa 1 para refletir a nova turma
+                    ConfigurarEtapa1();
+                }
+            }
         }
 
         /// <summary>

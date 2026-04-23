@@ -82,28 +82,39 @@ namespace BibliotecaApp
                     if (login.ShowDialog() == DialogResult.OK)
                     {
 
-                        //// ---- Backup diario: executa APENAS se o login foi feito por bibliotecária ----
-                        //if (LoginForm.UsuarioBibliotecaria)
-                        //{
-                        //    try
-                        //    {
-                        //        AppPaths.EnsureFolders();
+                        // ---- Backup diario: executa APENAS se o login foi feito por bibliotecária ----
+                        if (LoginForm.UsuarioBibliotecaria)
+                        {
+                            try
+                            {
+                                AppPaths.EnsureFolders();
 
-                        //        var caminhoSdf = Path.Combine(Application.StartupPath, "bibliotecaDB", "bibliotecaDB.sdf"); // não movemos o DB
-                        //        var registroPath = AppPaths.RegistroBackupFile;
-                        //        var backuplocais = AppPaths.BackupCacheFolder;
-                        //        var credentials = Path.Combine(Application.StartupPath, "credentials.json"); // onde guarda credenciais
+                                var caminhoSdf = Path.Combine(Application.StartupPath, "bibliotecaDB", "bibliotecaDB.sdf"); // não movemos o DB
+                                var registroPath = AppPaths.RegistroBackupFile;
+                                var backuplocais = AppPaths.BackupCacheFolder;
+                                var credentials = Path.Combine(Application.StartupPath, "credentials.json"); // onde guarda credenciais
 
-                        //        // Reenvia backups pendentes e executa backup de hoje (bloqueante)
-                        //        BibliotecaApp.Services.BackupDiario.ReenviarPendentes(AppPaths.AppDataFolder, backuplocais, credentials);
-                        //        BibliotecaApp.Services.BackupDiario.Executar(caminhoSdf, registroPath, AppPaths.AppDataFolder, backuplocais, credentials);
-                        //    }
-                        //    catch (Exception ex)
-                        //    {
-                        //        MessageBox.Show("Erro ao tentar realizar backup automático:\n" + ex.Message,
-                        //            "Backup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        //    }
-                        //}
+                                // Reenvia backups pendentes e executa backup de hoje (bloqueante)
+                                BibliotecaApp.Services.BackupDiario.ReenviarPendentes(AppPaths.AppDataFolder, backuplocais, credentials);
+                                BibliotecaApp.Services.BackupDiario.Executar(caminhoSdf, registroPath, AppPaths.AppDataFolder, backuplocais, credentials);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Erro ao tentar realizar backup automático:\n" + ex.Message,
+                                    "Backup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                        }
+
+                        // Carregar turmas dinâmicas (P1 - antes de abrir MainForm)
+                        try
+                        {
+                            AppPaths.EnsureFolders();
+                            BibliotecaApp.Utils.TurmasUtil.CarregarTurmasDinamicas();
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Trace.WriteLine("Erro ao carregar turmas dinâmicas: " + ex.Message);
+                        }
 
                         Application.Run(new MainForm());
                     }

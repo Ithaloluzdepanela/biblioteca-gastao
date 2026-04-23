@@ -1,5 +1,6 @@
 ﻿using BibliotecaApp.Forms.Inicio;
 using BibliotecaApp.Forms.Livros;
+using BibliotecaApp.Models;
 using BibliotecaApp.Utils; // ADICIONE ESTA LINHA
 using System;
 using System.Collections.Generic;
@@ -691,5 +692,21 @@ namespace BibliotecaApp.Forms.Usuario
             }
         }
 
+        private void btnGerenciarTurmas_Click(object sender, EventArgs e)
+        {
+            if (string.Equals(Sessao.NomeBibliotecariaLogada, "Administrador",
+          StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show(
+        "Apenas bibliotecárias podem gerenciar as turmas padrão do sistema.",
+        "Acesso restrito",
+        MessageBoxButtons.OK,
+        MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (var frm = new GerenciarTurmasForm())
+                frm.ShowDialog(this);
+        }
     }
 }

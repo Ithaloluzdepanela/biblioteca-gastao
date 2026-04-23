@@ -321,7 +321,7 @@ namespace BibliotecaApp.Forms.Livros
 
                 // dispara atualização global
                 BibliotecaApp.Utils.EventosGlobais.OnEmprestimoRealizado();
-                MessageBox.Show("Empréstimo registrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SafeMessageBox("Empréstimo registrado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimparCampos();
                 LivroAtualizado?.Invoke(this, EventArgs.Empty);
 
@@ -1114,6 +1114,27 @@ private void SetLivroTextProgrammatic(string value, bool origemBarcode)
     txtLivro.Text = value;
 
     _alterandoTxtLivroProgramaticamente = false;
+}
+
+// Helper thread-safe para MessageBox (P4 - Fix invoke error)
+private void SafeMessageBox(string texto, string titulo, MessageBoxButtons botoes = MessageBoxButtons.OK, MessageBoxIcon icone = MessageBoxIcon.Information)
+{
+    if (this.IsHandleCreated && !this.IsDisposed && !this.Disposing)
+    {
+        try
+        {
+            this.BeginInvoke(new Action(() =>
+            {
+                if (!this.IsDisposed)
+                    MessageBox.Show(texto, titulo, botoes, icone);
+            }));
+        }
+        catch
+        {
+            // Se ainda assim falhar, tenta direto
+            try { MessageBox.Show(texto, titulo, botoes, icone); } catch { }
+        }
+    }
 }
     }
 }

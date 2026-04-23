@@ -14,6 +14,8 @@ namespace BibliotecaApp.Utils
         public static string ReportsFolder => Path.Combine(AppDataFolder, "Relatorios");
         public static string GoogleTokenFolder => Path.Combine(AppDataFolder, "google-token");
 
+        public static string TurmasFile => Path.Combine(AppDataFolder, "turmas.json");
+
         public static string RegistroBackupFile => Path.Combine(AppDataFolder, "ultimo_backup.txt");
 
         public static void EnsureFolders()

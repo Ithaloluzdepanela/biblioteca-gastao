@@ -45,12 +45,16 @@
             this.txtNome = new RoundedTextBox();
             this.lblNome = new System.Windows.Forms.Label();
             this.Titulo = new System.Windows.Forms.Label();
+            this.txtPrateleira = new RoundedTextBox();
+            this.lblPrateleira = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.txtPrateleira);
+            this.panel1.Controls.Add(this.lblPrateleira);
             this.panel1.Controls.Add(this.btnGerarEtiqueta);
             this.panel1.Controls.Add(this.lstSugestoesGenero);
             this.panel1.Controls.Add(this.btnCancelar);
@@ -111,7 +115,7 @@
             this.btnCancelar.BackColor = System.Drawing.Color.DimGray;
             this.btnCancelar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnCancelar.ForeColor = System.Drawing.Color.White;
-            this.btnCancelar.Location = new System.Drawing.Point(566, 701);
+            this.btnCancelar.Location = new System.Drawing.Point(566, 703);
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(5);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(149, 57);
@@ -126,7 +130,7 @@
             this.btnExcluir.BackColor = System.Drawing.Color.DarkRed;
             this.btnExcluir.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnExcluir.ForeColor = System.Drawing.Color.White;
-            this.btnExcluir.Location = new System.Drawing.Point(332, 701);
+            this.btnExcluir.Location = new System.Drawing.Point(332, 703);
             this.btnExcluir.Margin = new System.Windows.Forms.Padding(5);
             this.btnExcluir.Name = "btnExcluir";
             this.btnExcluir.Size = new System.Drawing.Size(149, 57);
@@ -141,7 +145,7 @@
             this.btnSalvar.BackColor = System.Drawing.Color.DarkGreen;
             this.btnSalvar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnSalvar.ForeColor = System.Drawing.Color.White;
-            this.btnSalvar.Location = new System.Drawing.Point(800, 701);
+            this.btnSalvar.Location = new System.Drawing.Point(800, 703);
             this.btnSalvar.Margin = new System.Windows.Forms.Padding(5);
             this.btnSalvar.Name = "btnSalvar";
             this.btnSalvar.Size = new System.Drawing.Size(149, 57);
@@ -157,11 +161,11 @@
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label4.Location = new System.Drawing.Point(335, 525);
+            this.label4.Location = new System.Drawing.Point(327, 523);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(157, 25);
+            this.label4.Size = new System.Drawing.Size(162, 25);
             this.label4.TabIndex = 103;
-            this.label4.Text = "Codigo de Barras";
+            this.label4.Text = "Codigo de Barras:";
             // 
             // mtxCodigoBarras
             // 
@@ -176,7 +180,7 @@
             this.mtxCodigoBarras.HoverBackColor = System.Drawing.Color.LightGray;
             this.mtxCodigoBarras.HoverBorderColor = System.Drawing.Color.DarkGray;
             this.mtxCodigoBarras.LeftMargin = 0;
-            this.mtxCodigoBarras.Location = new System.Drawing.Point(332, 553);
+            this.mtxCodigoBarras.Location = new System.Drawing.Point(332, 551);
             this.mtxCodigoBarras.Mask = "0 000000 000000";
             this.mtxCodigoBarras.MaskTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.mtxCodigoBarras.Name = "mtxCodigoBarras";
@@ -198,7 +202,7 @@
             this.txtAutor.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtAutor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtAutor.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtAutor.Location = new System.Drawing.Point(332, 466);
+            this.txtAutor.Location = new System.Drawing.Point(332, 465);
             this.txtAutor.Name = "txtAutor";
             this.txtAutor.Padding = new System.Windows.Forms.Padding(7);
             this.txtAutor.PlaceholderColor = System.Drawing.Color.Gray;
@@ -220,11 +224,11 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(335, 438);
+            this.label3.Location = new System.Drawing.Point(327, 437);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(61, 25);
+            this.label3.Size = new System.Drawing.Size(67, 25);
             this.label3.TabIndex = 100;
-            this.label3.Text = "Autor";
+            this.label3.Text = "Autor:";
             // 
             // txtQuantidade
             // 
@@ -262,11 +266,11 @@
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label2.Location = new System.Drawing.Point(335, 354);
+            this.label2.Location = new System.Drawing.Point(327, 354);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(112, 25);
+            this.label2.Size = new System.Drawing.Size(117, 25);
             this.label2.TabIndex = 98;
-            this.label2.Text = "Quantidade";
+            this.label2.Text = "Quantidade:";
             // 
             // txtGenero
             // 
@@ -304,11 +308,11 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label1.Location = new System.Drawing.Point(335, 273);
+            this.label1.Location = new System.Drawing.Point(327, 273);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(74, 25);
+            this.label1.Size = new System.Drawing.Size(79, 25);
             this.label1.TabIndex = 96;
-            this.label1.Text = "Gênero";
+            this.label1.Text = "Gênero:";
             // 
             // txtNome
             // 
@@ -346,11 +350,11 @@
             this.lblNome.BackColor = System.Drawing.Color.Transparent;
             this.lblNome.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.lblNome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.lblNome.Location = new System.Drawing.Point(335, 191);
+            this.lblNome.Location = new System.Drawing.Point(327, 191);
             this.lblNome.Name = "lblNome";
-            this.lblNome.Size = new System.Drawing.Size(142, 25);
+            this.lblNome.Size = new System.Drawing.Size(147, 25);
             this.lblNome.TabIndex = 94;
-            this.lblNome.Text = "Nome Do Livro";
+            this.lblNome.Text = "Nome Do Livro:";
             // 
             // Titulo
             // 
@@ -362,6 +366,48 @@
             this.Titulo.Size = new System.Drawing.Size(301, 46);
             this.Titulo.TabIndex = 93;
             this.Titulo.Text = "EDITOR DE LIVRO";
+            // 
+            // txtPrateleira
+            // 
+            this.txtPrateleira.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtPrateleira.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtPrateleira.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtPrateleira.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtPrateleira.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtPrateleira.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtPrateleira.BorderRadius = 10;
+            this.txtPrateleira.BorderThickness = 1;
+            this.txtPrateleira.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtPrateleira.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPrateleira.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtPrateleira.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtPrateleira.Location = new System.Drawing.Point(332, 633);
+            this.txtPrateleira.Name = "txtPrateleira";
+            this.txtPrateleira.Padding = new System.Windows.Forms.Padding(7);
+            this.txtPrateleira.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtPrateleira.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.txtPrateleira.PlaceholderMarginLeft = 12;
+            this.txtPrateleira.PlaceholderText = "Digite aqui a prateleira...";
+            this.txtPrateleira.SelectedText = "";
+            this.txtPrateleira.SelectionLength = 0;
+            this.txtPrateleira.SelectionStart = 0;
+            this.txtPrateleira.Size = new System.Drawing.Size(283, 40);
+            this.txtPrateleira.TabIndex = 134;
+            this.txtPrateleira.TextColor = System.Drawing.Color.Black;
+            this.txtPrateleira.UseSystemPasswordChar = false;
+            // 
+            // lblPrateleira
+            // 
+            this.lblPrateleira.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblPrateleira.AutoSize = true;
+            this.lblPrateleira.BackColor = System.Drawing.Color.Transparent;
+            this.lblPrateleira.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.lblPrateleira.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.lblPrateleira.Location = new System.Drawing.Point(327, 605);
+            this.lblPrateleira.Name = "lblPrateleira";
+            this.lblPrateleira.Size = new System.Drawing.Size(99, 25);
+            this.lblPrateleira.TabIndex = 135;
+            this.lblPrateleira.Text = "Prateleira:";
             // 
             // AlterarCadLivroForm
             // 
@@ -384,7 +430,6 @@
         public System.Windows.Forms.Label label4;
         private RoundedMaskedTextBox mtxCodigoBarras;
         private RoundedTextBox txtAutor;
-        public System.Windows.Forms.Label label3;
         private RoundedTextBox txtQuantidade;
         public System.Windows.Forms.Label label2;
         private RoundedTextBox txtGenero;
@@ -397,5 +442,8 @@
         private System.Windows.Forms.Button btnSalvar;
         private System.Windows.Forms.ListBox lstSugestoesGenero;
         private System.Windows.Forms.Button btnGerarEtiqueta;
+        private RoundedTextBox txtPrateleira;
+        public System.Windows.Forms.Label lblPrateleira;
+        public System.Windows.Forms.Label label3;
     }
 }

@@ -94,12 +94,7 @@ namespace BibliotecaApp.Forms.Livros
         private void txtBarcode_Load(object sender, EventArgs e) { }
         private void txtBarcode_KeyDown(object sender, KeyEventArgs e) { }
         private void label4_Click(object sender, EventArgs e) { }
-        private void cbBibliotecaria_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            cbBibliotecaria.DrawMode = DrawMode.OwnerDrawFixed;
-            cbBibliotecaria.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbBibliotecaria.ItemHeight = 35;
-        }
+        private void cbBibliotecaria_SelectedIndexChanged(object sender, EventArgs e) { }
         #endregion
 
         #region Métodos de Empréstimo
@@ -264,7 +259,69 @@ namespace BibliotecaApp.Forms.Livros
                 return; // interrompe o fluxo de empréstimo
             }
 
+            // --- Confirmação/correção da prateleira do livro ---
+            string prateleiraRetirada = string.Empty;
+            if (!string.IsNullOrWhiteSpace(livro.Prateleira))
+            {
+                using (Form input = new Form())
+                using (System.Windows.Forms.TextBox txt = new System.Windows.Forms.TextBox())
+                using (Label lbl = new Label())
+                using (System.Windows.Forms.Button btnOk = new System.Windows.Forms.Button())
+                using (System.Windows.Forms.Button btnCancel = new System.Windows.Forms.Button())
+                {
+                    input.Text = "Confirmar localização";
+                    input.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    input.StartPosition = FormStartPosition.CenterParent;
+                    input.ClientSize = new Size(420, 150);
+                    input.MinimizeBox = false;
+                    input.MaximizeBox = false;
+                    input.ShowIcon = false;
+                    input.ShowInTaskbar = false;
+                    input.Font = new Font("Segoe UI", 11F);
 
+                    lbl.Text = $"O livro está na prateleira {livro.Prateleira}. Confirme ou corrija a localização atual antes de registrar o empréstimo.";
+                    lbl.AutoSize = false;
+                    lbl.Size = new Size(400, 50);
+                    lbl.Location = new Point(10, 10);
+
+                    txt.Text = livro.Prateleira.Trim();
+                    txt.CharacterCasing = CharacterCasing.Upper;
+                    txt.MaxLength = 20;
+                    txt.Size = new Size(390, 28);
+                    txt.Location = new Point(10, 65);
+
+                    btnOk.Text = "Confirmar";
+                    btnOk.DialogResult = DialogResult.OK;
+                    btnOk.BackColor = Color.FromArgb(30, 61, 88);
+                    btnOk.ForeColor = Color.White;
+                    btnOk.FlatStyle = FlatStyle.Flat;
+                    btnOk.Size = new Size(120, 36);
+                    btnOk.Location = new Point(200, 105);
+
+                    btnCancel.Text = "Cancelar";
+                    btnCancel.DialogResult = DialogResult.Cancel;
+                    btnCancel.BackColor = Color.LightGray;
+                    btnCancel.FlatStyle = FlatStyle.Flat;
+                    btnCancel.Size = new Size(120, 36);
+                    btnCancel.Location = new Point(80, 105);
+
+                    input.Controls.Add(lbl);
+                    input.Controls.Add(txt);
+                    input.Controls.Add(btnOk);
+                    input.Controls.Add(btnCancel);
+                    input.AcceptButton = btnOk;
+                    input.CancelButton = btnCancel;
+
+                    if (input.ShowDialog(this) != DialogResult.OK)
+                        return; // Aborta o empréstimo
+
+                    prateleiraRetirada = txt.Text.Trim();
+                }
+            }
+            else
+            {
+                prateleiraRetirada = string.Empty;
+            }
 
             try
             {
@@ -273,11 +330,11 @@ namespace BibliotecaApp.Forms.Livros
                     conexao.Open();
 
                     // Inserção do novo empréstimo
-                    string sqlInserir = @"
-    INSERT INTO Emprestimo 
-        (Alocador, Livro, LivroNome, Responsavel, DataEmprestimo, DataDevolucao, DataProrrogacao, DataRealDevolucao, Status, CodigoBarras)
-    VALUES 
-        (@alocador, @livro, @livroNome, @responsavel, @dataEmprestimo, @dataDevolucao, NULL, NULL, 'Ativo', @codigoBarras)";
+                    string sqlInserir = @"INSERT INTO Emprestimo (Alocador, Livro, LivroNome, Responsavel,
+    DataEmprestimo, DataDevolucao, DataProrrogacao, DataRealDevolucao,
+    Status, CodigoBarras, PrateleiraRetirada)
+    VALUES (@alocador, @livro, @livroNome, @responsavel, @dataEmprestimo,
+    @dataDevolucao, NULL, NULL, 'Ativo', @codigoBarras, @prateleiraRetirada)";
 
                     using (var cmdInsert = new SqlCeCommand(sqlInserir, conexao))
                     {
@@ -286,6 +343,7 @@ namespace BibliotecaApp.Forms.Livros
                         cmdInsert.Parameters.AddWithValue("@livroNome", livro.Nome);
                         cmdInsert.Parameters.AddWithValue("@responsavel", responsavel.Id);
                         cmdInsert.Parameters.AddWithValue("@dataEmprestimo", DateTime.Now);
+                        cmdInsert.Parameters.AddWithValue("@prateleiraRetirada", prateleiraRetirada);
 
                         var dataDevolucaoParaInserir = dtpDataDevolucao.Value; // respeita o DTP (professor pode ter prazo maior)
                         cmdInsert.Parameters.AddWithValue("@dataDevolucao", dataDevolucaoParaInserir);
@@ -592,10 +650,7 @@ namespace BibliotecaApp.Forms.Livros
                 using (var conexao = Conexao.ObterConexao())
                 {
                     conexao.Open();
-                    string sql = @"SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade 
-                           FROM Livros 
-                           WHERE Nome LIKE @nome
-                           ORDER BY Nome";
+                    string sql = "SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade, Prateleira FROM Livros WHERE Nome LIKE @nome ORDER BY Nome";
                     using (var cmd = new SqlCeCommand(sql, conexao))
                     {
                         // Busca só nomes que começam com o filtro
@@ -710,11 +765,8 @@ private void lstLivros_KeyDown(object sender, KeyEventArgs e)
         using (var conexao = Conexao.ObterConexao())
         {
             conexao.Open();
-            string sql = @"SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade 
-                           FROM Livros 
-                           WHERE Nome LIKE @nome
-                           ORDER BY Nome";
-            using (var cmd = new SqlCeCommand(sql, conexao))
+                    string sql = "SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade, Prateleira FROM Livros WHERE Nome LIKE @nome ORDER BY Nome";
+                    using (var cmd = new SqlCeCommand(sql, conexao))
             {
                 cmd.Parameters.AddWithValue("@nome", filtro + "%");
                 using (var reader = cmd.ExecuteReader())
@@ -765,7 +817,7 @@ private void CarregarLivrosDoBanco()
         using (var conexao = Conexao.ObterConexao())
         {
             conexao.Open();
-            string sql = "SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade FROM Livros";
+            string sql = "SELECT Id, Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade, Prateleira FROM Livros";
 
             using (var cmd = new SqlCeCommand(sql, conexao))
             using (var reader = cmd.ExecuteReader())
@@ -778,7 +830,8 @@ private void CarregarLivrosDoBanco()
                         reader.GetString(3), // Genero
                         reader.GetBoolean(6), // Disponibilidade
                         reader.GetInt32(4),   // Quantidade
-                        reader.GetString(5)   // CodigoBarras
+                        reader.GetString(5),  // CodigoBarras
+                        reader.IsDBNull(7) ? string.Empty : reader.GetString(7)   // Prateleira
                     );
 
                     // Setando o ID (tornar public set temporariamente ou criar outro construtor com ID)
@@ -1135,6 +1188,21 @@ private void SafeMessageBox(string texto, string titulo, MessageBoxButtons botoe
             try { MessageBox.Show(texto, titulo, botoes, icone); } catch { }
         }
     }
+}
+
+private string MontarMensagemConfirmacaoLivro(string nA, string aA, string gA, int qA, string cbA, string pA,
+                                              string nN, string aN, string gN, int qN, string cbN, string pN)
+{
+    var sb = new System.Text.StringBuilder();
+    sb.AppendLine("Confirme as alterações a serem salvas:\n");
+    if (nA != nN) sb.AppendLine($"Nome: {nA} → {nN}");
+    if (aA != aN) sb.AppendLine($"Autor: {aA} → {aN}");
+    if (gA != gN) sb.AppendLine($"Gênero: {gA} → {gN}");
+    if (qA != qN) sb.AppendLine($"Quantidade: {qA} → {qN}");
+    if (cbA != cbN) sb.AppendLine($"Código de Barras: {cbA} → {cbN}");
+    if (pA != pN) sb.AppendLine($"Prateleira: {pA} → {pN}");
+    sb.AppendLine("\nDeseja salvar estas alterações?");
+    return sb.ToString();
 }
     }
 }

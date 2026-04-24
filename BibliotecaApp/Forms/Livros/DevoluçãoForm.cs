@@ -530,6 +530,7 @@ namespace BibliotecaApp.Forms.Livros
             l.CodigoBarras AS [Código De Barras],
             e.DataEmprestimo AS [Data do Empréstimo],
             e.DataDevolucao AS [Data de Devolução],
+            e.PrateleiraRetirada AS [Prateleira],
             e.Status AS [Status]
         FROM Emprestimo e
         JOIN Usuarios uAlocador ON e.Alocador = uAlocador.Id
@@ -631,6 +632,7 @@ namespace BibliotecaApp.Forms.Livros
                 new DefinicaoColuna("Responsável", "Responsável", 160, DataGridViewContentAlignment.MiddleLeft, 100),
                 new DefinicaoColuna("Livro", "Nome do Livro", 180, DataGridViewContentAlignment.MiddleLeft, 120),
                 new DefinicaoColuna("Código De Barras", "Código de Barras", 140, DataGridViewContentAlignment.MiddleLeft, 120),
+                new DefinicaoColuna("Prateleira", "Prateleira", 80,DataGridViewContentAlignment.MiddleCenter, 70),
                 new DefinicaoColuna("Data do Empréstimo", "Data de Empréstimo", 150, DataGridViewContentAlignment.MiddleCenter, 110),
                 new DefinicaoColuna("Data de Devolução", "Data de Devolução", 140, DataGridViewContentAlignment.MiddleCenter, 100),
                 new DefinicaoColuna("Status", "Status", 100, DataGridViewContentAlignment.MiddleCenter, 80),
@@ -910,13 +912,19 @@ namespace BibliotecaApp.Forms.Livros
             string dataEmprestimo = row.Cells["Data do Empréstimo"].Value != null
                 ? Convert.ToDateTime(row.Cells["Data do Empréstimo"].Value).ToString("dd/MM/yyyy")
                 : "";
- 
 
+            string prateleira = row.Cells["Prateleira"].Value?.ToString();
+            string prateleiraInfo = !string.IsNullOrWhiteSpace(prateleira)
+                ? $"\nDevolver na prateleira: {prateleira}"
+                : "\nPrateleira não registrada.";
+
+            // Atualize a mensagem:
             string msg = $"Confirma a devolução deste empréstimo?\n\n" +
                          $"Livro: {livro}\n" +
                          $"Alocador: {alocador}\n" +
-                         $"Data do Empréstimo: {dataEmprestimo}\n";
-                        
+                         $"Data do Empréstimo: {dataEmprestimo}" +
+                         prateleiraInfo;  // <- aqui
+
 
             var confirm = MessageBox.Show(msg, "Confirmação de Devolução", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes)

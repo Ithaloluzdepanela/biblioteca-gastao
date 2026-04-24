@@ -75,6 +75,7 @@ namespace BibliotecaApp.Forms.Livros
             AddTextCol("Nome", "Nome do Livro", 310, DataGridViewContentAlignment.MiddleLeft, 120);
             AddTextCol("Autor", "Autor", 160, DataGridViewContentAlignment.MiddleLeft, 100);
             AddTextCol("Genero", "Gênero", 140, DataGridViewContentAlignment.MiddleLeft, 100);
+            AddTextCol("Prateleira", "Prateleira", 100, DataGridViewContentAlignment.MiddleLeft, 100);
             AddTextCol("Quantidade", "Quantidade", 45, DataGridViewContentAlignment.MiddleCenter, 100);
             AddTextCol("CodigoBarras", "Código de Barras", 110, DataGridViewContentAlignment.MiddleLeft, 120);
             AddTextCol("Status", "Status", 60, DataGridViewContentAlignment.MiddleLeft, 100);
@@ -217,13 +218,14 @@ namespace BibliotecaApp.Forms.Livros
                 {
                     conexao.Open();
 
-                    string campo = "nome"; // padrão
+                    string campo = "nome";
                     if (cbFiltro.SelectedItem != null)
                     {
                         string selecionado = cbFiltro.SelectedItem.ToString();
                         if (selecionado == "Autor") campo = "autor";
                         else if (selecionado == "Gênero") campo = "genero";
                         else if (selecionado == "Nome") campo = "nome";
+                        else if (selecionado == "Prateleira") campo = "prateleira";
                     }
 
                     string query = @"
@@ -234,6 +236,7 @@ namespace BibliotecaApp.Forms.Livros
                     Genero,
                     Quantidade,
                     CodigoBarras,
+                    Prateleira,
                     CASE
                         WHEN Quantidade = 0 THEN 'Indisponível'
                         ELSE 'Disponível'

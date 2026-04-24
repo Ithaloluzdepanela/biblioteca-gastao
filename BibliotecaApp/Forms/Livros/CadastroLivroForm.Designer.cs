@@ -37,6 +37,8 @@
             this.btnLimpar = new System.Windows.Forms.Button();
             this.btnCadastrar = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtPrateleira = new RoundedTextBox();
+            this.lblPrateleira = new System.Windows.Forms.Label();
             this.btnBuscar = new System.Windows.Forms.Button();
             this.lstSugestoesGenero = new System.Windows.Forms.ListBox();
             this.mtxCodigoBarras = new RoundedMaskedTextBox();
@@ -105,7 +107,7 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
-            this.label3.Location = new System.Drawing.Point(327, 493);
+            this.label3.Location = new System.Drawing.Point(327, 491);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(67, 25);
             this.label3.TabIndex = 100;
@@ -130,7 +132,7 @@
             this.btnLimpar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.btnLimpar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnLimpar.ForeColor = System.Drawing.Color.White;
-            this.btnLimpar.Location = new System.Drawing.Point(332, 636);
+            this.btnLimpar.Location = new System.Drawing.Point(332, 660);
             this.btnLimpar.Name = "btnLimpar";
             this.btnLimpar.Size = new System.Drawing.Size(150, 60);
             this.btnLimpar.TabIndex = 104;
@@ -144,7 +146,7 @@
             this.btnCadastrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
             this.btnCadastrar.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.btnCadastrar.ForeColor = System.Drawing.Color.White;
-            this.btnCadastrar.Location = new System.Drawing.Point(799, 636);
+            this.btnCadastrar.Location = new System.Drawing.Point(799, 660);
             this.btnCadastrar.Name = "btnCadastrar";
             this.btnCadastrar.Size = new System.Drawing.Size(150, 60);
             this.btnCadastrar.TabIndex = 6;
@@ -156,6 +158,8 @@
             // 
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.txtPrateleira);
+            this.panel1.Controls.Add(this.lblPrateleira);
             this.panel1.Controls.Add(this.btnBuscar);
             this.panel1.Controls.Add(this.lstSugestoesGenero);
             this.panel1.Controls.Add(this.btnCadastrar);
@@ -178,6 +182,48 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1280, 845);
             this.panel1.TabIndex = 6;
+            // 
+            // txtPrateleira
+            // 
+            this.txtPrateleira.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtPrateleira.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.txtPrateleira.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.None;
+            this.txtPrateleira.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.txtPrateleira.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.txtPrateleira.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(61)))), ((int)(((byte)(88)))));
+            this.txtPrateleira.BorderRadius = 10;
+            this.txtPrateleira.BorderThickness = 1;
+            this.txtPrateleira.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtPrateleira.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPrateleira.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.txtPrateleira.HoverBackColor = System.Drawing.Color.LightGray;
+            this.txtPrateleira.Location = new System.Drawing.Point(332, 606);
+            this.txtPrateleira.Name = "txtPrateleira";
+            this.txtPrateleira.Padding = new System.Windows.Forms.Padding(7);
+            this.txtPrateleira.PlaceholderColor = System.Drawing.Color.Gray;
+            this.txtPrateleira.PlaceholderFont = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.txtPrateleira.PlaceholderMarginLeft = 12;
+            this.txtPrateleira.PlaceholderText = "Digite aqui a prateleira...";
+            this.txtPrateleira.SelectedText = "";
+            this.txtPrateleira.SelectionLength = 0;
+            this.txtPrateleira.SelectionStart = 0;
+            this.txtPrateleira.Size = new System.Drawing.Size(283, 40);
+            this.txtPrateleira.TabIndex = 107;
+            this.txtPrateleira.TextColor = System.Drawing.Color.Black;
+            this.txtPrateleira.UseSystemPasswordChar = false;
+            // 
+            // lblPrateleira
+            // 
+            this.lblPrateleira.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblPrateleira.AutoSize = true;
+            this.lblPrateleira.BackColor = System.Drawing.Color.Transparent;
+            this.lblPrateleira.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
+            this.lblPrateleira.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
+            this.lblPrateleira.Location = new System.Drawing.Point(327, 578);
+            this.lblPrateleira.Name = "lblPrateleira";
+            this.lblPrateleira.Size = new System.Drawing.Size(99, 25);
+            this.lblPrateleira.TabIndex = 108;
+            this.lblPrateleira.Text = "Prateleira:";
             // 
             // btnBuscar
             // 
@@ -245,7 +291,7 @@
             this.txtAutor.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtAutor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(42)))), ((int)(((byte)(60)))));
             this.txtAutor.HoverBackColor = System.Drawing.Color.LightGray;
-            this.txtAutor.Location = new System.Drawing.Point(332, 521);
+            this.txtAutor.Location = new System.Drawing.Point(332, 519);
             this.txtAutor.Name = "txtAutor";
             this.txtAutor.Padding = new System.Windows.Forms.Padding(7);
             this.txtAutor.PlaceholderColor = System.Drawing.Color.Gray;
@@ -386,5 +432,7 @@
         private System.Windows.Forms.Label Titulo;
         private System.Windows.Forms.ListBox lstSugestoesGenero;
         private System.Windows.Forms.Button btnBuscar;
+        private RoundedTextBox txtPrateleira;
+        public System.Windows.Forms.Label lblPrateleira;
     }
 }

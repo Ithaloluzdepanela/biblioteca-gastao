@@ -108,8 +108,10 @@ namespace BibliotecaApp
             livroId = livro.Id;
             txtNome.Text = livro.Nome;
             txtAutor.Text = livro.Autor;
+            txtPrateleira.Text = livro.Prateleira ?? "";
             txtGenero.Text = livro.Genero;
             txtQuantidade.Text = livro.Quantidade.ToString();
+           
 
             // Mostra no UI exatamente o que veio do BD (com/sem máscara)
             mtxCodigoBarras.Text = livro.CodigoDeBarras;
@@ -187,6 +189,7 @@ namespace BibliotecaApp
             string nome = txtNome.Text.Trim();
             string autor = txtAutor.Text.Trim();
             string genero = txtGenero.Text.Trim();
+            string prateleira = txtPrateleira.Text.Trim();
             int quantidade = int.Parse(txtQuantidade.Text.Trim());
 
             // >>> Salvar COM máscara, sempre que possível
@@ -196,10 +199,10 @@ namespace BibliotecaApp
             {
                 conn.Open();
                 // FIX: recolocar cbA na declaração
-                string nA = "", aA = "", gA = "", cbA = ""; int qA = 0; bool mudou = false;
+                string nA = "", aA = "", gA = "", cbA = "", pA = ""; int qA = 0; bool mudou = false;
 
                 using (var cmdL = new SqlCeCommand(
-                    "SELECT Nome, Autor, Genero, Quantidade, CodigoBarras FROM Livros WHERE Id=@id", conn))
+                    "SELECT Nome, Autor, Genero, Quantidade, CodigoBarras, Prateleira FROM Livros WHERE Id=@id", conn))
                 {
                     cmdL.Parameters.AddWithValue("@id", livroId);
                     using (var rd = cmdL.ExecuteReader())
@@ -207,27 +210,28 @@ namespace BibliotecaApp
                         if (rd.Read())
                         {
                             nA = rd.GetString(0); aA = rd.GetString(1); gA = rd.GetString(2);
-                            qA = rd.GetInt32(3); cbA = rd.GetString(4);
-                            mudou = nome != nA || autor != aA || genero != gA || quantidade != qA || codigoBarras != cbA;
+                            qA = rd.GetInt32(3); cbA = rd.GetString(4); pA = rd.IsDBNull(5) ? "" : rd.GetString(5);
+                            mudou = nome != nA || autor != aA || genero != gA || quantidade != qA || codigoBarras != cbA || prateleira != pA;
                         }
                     }
                 }
 
                 if (!mudou) { MessageBox.Show("Nenhuma alteração foi feita."); return; }
 
-                var msg = MontarMensagemConfirmacaoLivro(nA, aA, gA, qA, cbA, nome, autor, genero, quantidade, codigoBarras);
+                var msg = MontarMensagemConfirmacaoLivro(nA, aA, gA, qA, cbA, pA, nome, autor, genero, quantidade, codigoBarras, prateleira);
                 if (MessageBox.Show(msg, "Confirmar Alterações", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
 
                 using (var cmd = new SqlCeCommand(
                     @"UPDATE Livros 
-                      SET Nome=@n, Autor=@a, Genero=@g, Quantidade=@q, CodigoBarras=@c 
-                      WHERE Id=@id", conn))
+      SET Nome=@n, Autor=@a, Genero=@g, Quantidade=@q, CodigoBarras=@c, Prateleira=@p 
+      WHERE Id=@id", conn))
                 {
                     cmd.Parameters.AddWithValue("@n", nome);
                     cmd.Parameters.AddWithValue("@a", autor);
                     cmd.Parameters.AddWithValue("@g", genero);
                     cmd.Parameters.AddWithValue("@q", quantidade);
                     cmd.Parameters.AddWithValue("@c", codigoBarras);
+                    cmd.Parameters.AddWithValue("@p", prateleira);
                     cmd.Parameters.AddWithValue("@id", livroId);
 
                     if (cmd.ExecuteNonQuery() > 0)
@@ -490,8 +494,8 @@ namespace BibliotecaApp
         #endregion
 
         #region Mensagem de Confirmação
-        private string MontarMensagemConfirmacaoLivro(string nA, string aA, string gA, int qA, string cbA,
-                                                      string nN, string aN, string gN, int qN, string cbN)
+        private string MontarMensagemConfirmacaoLivro(string nA, string aA, string gA, int qA, string cbA, string pA,
+                                                      string nN, string aN, string gN, int qN, string cbN, string pN)
         {
             var sb = new System.Text.StringBuilder();
             sb.AppendLine("Confirme as alterações a serem salvas:\n");
@@ -500,6 +504,7 @@ namespace BibliotecaApp
             if (gA != gN) sb.AppendLine($"Gênero: {gA} → {gN}");
             if (qA != qN) sb.AppendLine($"Quantidade: {qA} → {qN}");
             if (cbA != cbN) sb.AppendLine($"Código de Barras: {cbA} → {cbN}");
+            if (pA != pN) sb.AppendLine($"Prateleira: {pA} → {pN}");
             sb.AppendLine("\nDeseja salvar estas alterações?");
             return sb.ToString();
         }

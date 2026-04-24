@@ -200,6 +200,7 @@
             this.cbFiltro.Items.AddRange(new object[] {
             "Nome",
             "Autor",
+            "Prateleira",
             "Gênero"});
             this.cbFiltro.ItemsFont = new System.Drawing.Font("Segoe UI", 14.25F);
             this.cbFiltro.Location = new System.Drawing.Point(131, 195);

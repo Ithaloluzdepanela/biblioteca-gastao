@@ -18,13 +18,13 @@ namespace BibliotecaApp
         public bool Disponibilidade { get; set; }
         public int Quantidade { get; set; }
         public string CodigoDeBarras { get; set; }
-
+        public string Prateleira { get; set; } // NOVO
         
 
         public Livro() { }
 
        
-        public Livro(string nome, string autor, string genero, bool disponivel, int quantidade, string codigoDeBarras)
+        public Livro(string nome, string autor, string genero, bool disponivel, int quantidade, string codigoDeBarras, string prateleira)
         {
             Nome = nome;
             Autor = autor;
@@ -32,6 +32,7 @@ namespace BibliotecaApp
             Disponibilidade = disponivel;
             Quantidade = quantidade;
             CodigoDeBarras = codigoDeBarras;
+            Prateleira = prateleira ?? "";
         }
     }
 }

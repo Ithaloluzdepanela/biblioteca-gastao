@@ -378,6 +378,7 @@ namespace BibliotecaApp.Forms.Livros
             if (string.IsNullOrWhiteSpace(txtNome.Text) ||
                 string.IsNullOrWhiteSpace(txtAutor.Text) ||
                 string.IsNullOrWhiteSpace(txtGenero.Text) ||
+                string.IsNullOrWhiteSpace(lblPrateleira.Text) || 
                 string.IsNullOrWhiteSpace(txtQuantidade.Text))
             {
                 MessageBox.Show("Por favor, preencha todos os campos antes de cadastrar.",
@@ -468,9 +469,9 @@ namespace BibliotecaApp.Forms.Livros
                         {
                             comando.Transaction = trans;
                             comando.CommandText = @"INSERT INTO Livros 
-                        (Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade)
-                        VALUES
-                        (@Nome, @Autor, @Genero, @Quantidade, @CodigoBarras, @Disponibilidade)";
+    (Nome, Autor, Genero, Quantidade, CodigoBarras, Disponibilidade, Prateleira)
+    VALUES
+    (@Nome, @Autor, @Genero, @Quantidade, @CodigoBarras, @Disponibilidade, @Prateleira)";
 
                             comando.Parameters.AddWithValue("@Nome", txtNome.Text.Trim());
                             comando.Parameters.AddWithValue("@Autor", txtAutor.Text.Trim());
@@ -478,6 +479,7 @@ namespace BibliotecaApp.Forms.Livros
                             comando.Parameters.AddWithValue("@Quantidade", quantidade);
                             comando.Parameters.AddWithValue("@CodigoBarras", codigoBarras);
                             comando.Parameters.AddWithValue("@Disponibilidade", 1);
+                            comando.Parameters.AddWithValue("@Prateleira", txtPrateleira.Text.Trim()); // Adicionado
 
                             comando.ExecuteNonQuery();
                         }
@@ -652,6 +654,7 @@ namespace BibliotecaApp.Forms.Livros
             txtGenero.Text = "";
             txtQuantidade.Text = "";
             mtxCodigoBarras.Text = "";
+            txtPrateleira.Text = "";
             lstSugestoesGenero.Visible = false;
             lstSugestoesGenero.DataSource = null;
             MutarAcceptCancelEnquantoSugestao(false);
@@ -927,6 +930,7 @@ namespace BibliotecaApp.Forms.Livros
             }
         }
 
+      
 
         #endregion
 
